@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "supervisor app.js",
     "debug": "nodemon -r dotenv/config app.js",
     "dev": "nodemon -r dotenv/config app.js"
   },
