@@ -13,6 +13,7 @@ const { envPort, sessionKey, dbDatabase } = require('./config');
 // Routes imports
 const authRouter = require('./routes/auth');
 
+
 // Creates the express application
 const app = express();
 const port = envPort || 3000;
@@ -20,6 +21,9 @@ const port = envPort || 3000;
 // Configure to use sessions
 const session = require('express-session');
 const flash = require('connect-flash');
+
+// serve static files
+app.use(express.static('public'));
 
 // Listening to the port provided
 app.listen(port, () => {
