@@ -46,3 +46,29 @@ exports.getMaterials = function(type, filter, next){
 }
 
 //Purchase history
+exports.addPurchase = function(data, next){
+	var sql;
+	sql = "INSERT INTO purchase_table SET ?";
+	sql = mysql.format(sql, data);
+
+	mysql.query(sql, next);
+}
+
+exports.getPurchases = function(filter, next){
+	var sql;
+	if(filter == null){
+		sql = "SELECT * FROM purchase_table;";
+	}
+	else{
+		sql = "SELECT * FROM purchase_table WHERE ?";
+		sql = mysql.format(sql, filter);
+	}
+	mysql.query(sql, next);
+}
+
+exports.updatePurchase = function(id, data, next){
+	var sql = "UPDATE purchase_table SET ? WHERE ?;";
+	sql = mysql.format(sql, data);
+	sql = mysql.format(sql, id);
+	mysql.query(sql, next);
+};
