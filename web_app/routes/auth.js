@@ -16,5 +16,6 @@ router.get('/addMaterials', controller.addMaterials);
 
 //ajax
 router.get('/addPesticide', controller.getMaterials);
+router.get('/addSeed', controller.addSeed);
 
 module.exports = router;

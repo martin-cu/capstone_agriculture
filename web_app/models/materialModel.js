@@ -6,16 +6,17 @@ exports.registerMaterial = function(type, data, next) {
 	var sql;
 
 	if (type == "seed") {
-		sql = "insert into farm_table (seed_name, seed_desc, current_amount, maturity_days, average_yield) values ?";
+		sql = "insert into seed_table set ?";
 	}
 	else if (type == "pesticide") {
-		sql = "insert into pesticide_table (pesticide_name, pesticide_desc, current_amount) values ?";
+		sql = "insert into pesticide_table set ?";
 	}
 	else if (type == "fertilizer") {
-		sql = "insert into fertilizer_table (fertilizer_name, fertilizer_desc, current_amount) values ?"
+		sql = "insert into fertilizer_table set ?"
 	}
 
 	sql = mysql.format(sql, data);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

@@ -29,3 +29,11 @@ exports.getMaterials = function(req,res){
     res.send(html_data);
 }
 
+
+exports.addSeed = function(req,res){
+    materialModel.registerMaterial("seed", {seed_name:"SEED1",seed_desc:'Used for dinorado32', current_amount: 500, maturity_days:140, average_yield:100}, function(result){
+    });
+    html_data = {msg : "Added."}
+    res.send(html_data);
+}
+
