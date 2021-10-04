@@ -24,11 +24,9 @@ exports.createCropCalendar = function(data, next) {
 exports.getActiveCropCalendars = function(query, next) {
 	var filter;
 	if (!query) {
-		filter = '%';
+		query = '%';
 	}
-	else {
-		filter = query;
-	}
+
 	var sql = "select * from crop_calendar_table where status = ? order by harvest_date desc";
 	sql = mysql.format(sql, query);
 	mysql.query(sql, next);

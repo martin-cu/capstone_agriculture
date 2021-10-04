@@ -29,13 +29,15 @@ exports.queryEmployee = function(type, data, next) {
 		sql = "select * from employee_table where assigned_farm = ?";
 	}
 	else if (type == "allEmployees") {
-		sql = "select * fromemployee_table";
+		sql = "select * from employee_table";
 	}
 	else if (type == "allUsers") {
 		var sql = "select ut.user_id, ut.employee_id, et.last_name, et.first_name, ut.username, ut.password, et.position, et.assigned_form, et.phone_number, ut.access_level from employee_table et join user_table ut on et.employee_id = ut.employee_id";
 	}
 
-	sql = mysql.format(sql, data);
+	if (!data) {
+		sql = mysql.format(sql, data);
+	}
 	mysql.query(sql, next);
 }
 

@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const controller = require('../controllers/controller');
+const farmController = require('../controllers/farmController');
 
 router.get('/login', (req, res) => {
 	res.render('home', {});
@@ -13,6 +14,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/addMaterials', controller.addMaterials);
+
+//Geotagging test
+router.get('/geotagging', farmController.getGeoMap);
 
 //ajax
 router.get('/addPesticide', controller.getMaterials);
