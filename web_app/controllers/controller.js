@@ -10,20 +10,22 @@ exports.addMaterials = function(req,res){
     res.render("test",{test_data : "SELECT"});
 }
 
-exports.addPesticide = function(req,res){
-    console.log("Added one pesticide");
-    materialModel.addPesticide(function(err,result){
+exports.getMaterials = function(req,res){
+    // materialModel.addPesticide(function(err,result){
+    // });
+    var filter = null;
+    var type = "pesticide"
+    materialModel.getMaterials(type, filter, function(err, result){
+        if (err)
+			throw err;
+        else{
+            for(var i = 0; i < result.length ; i++){
+                console.log(result[i]);
+            }
+        }
     });
-    
-    html_data = {msg : "Done. Pesticide added."}
+
+    html_data = {msg : "Done."}
     res.send(html_data);
 }
 
-exports.addSeed = function(req,res){
-    seed = "Dinorado2"
-    materialModel.addSeed(seed, function(err,result){
-    });
-
-    html_data = {msg : "Done. Seed added."}
-    res.send(html_data);
-}

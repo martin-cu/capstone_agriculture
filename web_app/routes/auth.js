@@ -15,7 +15,6 @@ router.get('/', (req, res) => {
 router.get('/addMaterials', controller.addMaterials);
 
 //ajax
-router.get('/addPesticide', controller.addPesticide);
-router.get('/addSeed', controller.addSeed);
+router.get('/addPesticide', controller.getMaterials);
 
 module.exports = router;

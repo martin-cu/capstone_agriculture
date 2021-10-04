@@ -19,4 +19,29 @@ exports.registerMaterial = function(type, data, next) {
 	mysql.query(sql, next);
 }
 
+//get pesticides, seeds fertilizers
+exports.getMaterials = function(type, filter, next){
+	var sql;
+	var table;
+	if (type == "seed") {
+		table = "seed_table";
+	}
+	else if (type == "pesticide") {
+		table = "pesticide_table";
+	}
+	else if (type == "fertilizer") {
+		table = "fertilizer_table";
+	}
+
+	if(filter == null){
+		sql = "SELECT * FROM " + table + ";";
+	}
+	else{
+		sql = "SELECT * FROM " + table +" WHERE ?";
+		sql = mysql.format(sql, filter);
+	}
+
+	mysql.query(sql, next);
+}
+
 //Purchase history
