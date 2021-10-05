@@ -45,6 +45,44 @@ exports.getMaterials = function(type, filter, next){
 	mysql.query(sql, next);
 }
 
+exports.updateMaterial = function(type, filter, data, next){
+	var sql;
+	if (type == "seed") {
+		sql = "UPDATE seed_table set ?";
+	}
+	else if (type == "pesticide") {
+		sql = "UPDATE pesticide_table set ?";
+	}
+	else if (type == "fertilizer") {
+		sql = "UPDATE fertilizer_table set ?"
+	}
+	sql = mysql.format(sql, data);
+	if(filter != null){
+		sql = sql + " WHERE ?";
+		sql = mysql.format(sql, filter);
+	}
+	mysql.query(sql, next);
+}
+
+exports.materialAddUpdate = function(type, filter, data, next){
+	var sql;
+	if (type == "Seed") {
+		sql = "UPDATE seed_table set current_amount = current_amount + ? WHERE seed_id = " + filter.item_id;
+	}
+	else if (type == "Pesticide") {
+		sql = "UPDATE pesticide_table set current_amount = current_amount + ? WHERE pesticide_id = " + filter.item_id;
+	}
+	else if (type == "Fertilizer") {
+		sql = "UPDATE fertilizer_table set current_amount = current_amount + ? WHERE pesticide_id = " + filter.item_id;
+	}
+	sql = mysql.format(sql, data);
+	// if(filter != null){
+	// 	sql = sql + " WHERE ?";
+	// 	sql = mysql.format(sql, filter);
+	// }
+	console.log(sql);
+	mysql.query(sql, next);
+}
 //Purchase history
 exports.addPurchase = function(data, next){
 	var sql;
