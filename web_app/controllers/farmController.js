@@ -19,9 +19,8 @@ exports.getGeoMap = function(req, res) {
 						}
 						else {
 							var html_data = { farm_data: dataformatter.aggregateFarmData(farm_data, plot_data, employee_data)};
-							//console.log(html_data);
-
-							res.render('home', html_data);
+							console.log(html_data);
+							res.render('home', {});
 						}
 					})
 				}
