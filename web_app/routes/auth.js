@@ -14,13 +14,16 @@ router.get('/', (req, res) => {
 });
 
 router.get('/addMaterials', controller.addMaterials);
+router.get('/testAPI', controller.testAPI);
+router.get('/getWeather', controller.getWeather);
 
 //Geotagging test
 router.get('/geotagging', farmController.getGeoMap);
 
+
 //ajax
 router.get('/addPesticide', controller.getMaterials);
-router.get('/addSeed', controller.addSeed);
+router.get('/updatePesticide', controller.updateMaterial);
 
 router.get('/addPurchase', controller.addPurchase);
 router.get('/getPurchases', controller.getPurchases);

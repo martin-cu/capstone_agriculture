@@ -1,7 +1,4 @@
 function addSeed(){
-    $.get("/addSeed", {}, function(result){
-        alert(result.msg);
-    });
 }
 
 $(document).ready(function(){
@@ -12,6 +9,11 @@ $(document).ready(function(){
         });
     });
 
+    $("#updatepesticide").on("click", function(){
+        $.get("/updatePesticide", {type : "seed"}, function(result){
+            alert(result.msg);
+        });
+    });
 
     $("#purchase").on("click", function(){
         $.get("/addPurchase", {}, function(result){
@@ -27,9 +29,22 @@ $(document).ready(function(){
     });
 
     $("#updatepurchase").on("click", function(){
-        $.get("/updatePurchase", {}, function(result){
+        var data = {
+            status : "Purchased",
+            type : "Seed",
+            item_id : 1,
+            amount : -45
+        }
+        $.get("/updatePurchase", data, function(result){
             alert(result.msg);
         });
     });
 
+
+
+    $("#weather").on("click", function(){
+        $.get("/getWeather", {}, function(result){
+            alert(result.msg);
+        });
+    });
 });
