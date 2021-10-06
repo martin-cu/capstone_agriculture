@@ -43,11 +43,15 @@ exports.aggregateFarmData = function(farms, plots, employees) {
 	return objArr;
 }
 
-exports.toUnixTimeStamp = function(date) {
+exports.dateToUnix = function(date) {
 	let x = new Date(date);
 	if (!x instanceof Date) {
 		date = Date.parse(date);
 	}
 
 	return parseInt((new Date(date).getTime() / 1000).toFixed(0));
+}
+
+exports.unixtoDate = function(timestamp) {
+	return new Date(timestamp * 1000);
 }

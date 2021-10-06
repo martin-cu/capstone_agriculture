@@ -35,13 +35,15 @@ exports.getGeoMap = function(req, res) {
 
 
 //Environment Variable Queries
+
+//**** NDVI and Satellite Imagery ****//
 exports.getHistoricalNDVI = function(req, res) {
 	var polygon_id = '603cd48056545d00081a7e33';
 	var start_date = '2020-07-01', end_date = new Date("2021-07-01");
 	var obj;
 
-	start_date = dataformatter.toUnixTimeStamp(start_date);
-	end_date = dataformatter.toUnixTimeStamp(end_date);
+	start_date = dataformatter.dateToUnix(start_date);
+	end_date = dataformatter.dateToUnix(end_date);
 
 	var data = {
 		polygon_id: polygon_id,
@@ -67,23 +69,24 @@ exports.getHistoricalNDVI = function(req, res) {
 			var ndvi_data = analyzer.analyzeHistoricalNDVI(JSON.parse(body));
 
 			console.log(ndvi_data.stats);
+
+			res.render('home', {});
 		}
 	})
-
-	res.render('home', {});
 }
 
 exports.getSatelliteImageryData = function(req, res) {
 	var polygon_id = '603cd48056545d00081a7e33';
-	var start_date = '2021-06-26', end_date = new Date("2021-06-28");
+	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
 	var obj;
 
-	start_date = dataformatter.toUnixTimeStamp(start_date);
-	end_date = dataformatter.toUnixTimeStamp(end_date);
+	start_date = dataformatter.dateToUnix(start_date);
+	end_date = dataformatter.dateToUnix(end_date);
 
 	var data = {
 		polygon_id: polygon_id,
 		start: start_date,
+
 		end: end_date
 	};
 
@@ -100,37 +103,140 @@ exports.getSatelliteImageryData = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			obj = body;
-			console.log(JSON.parse(body));
-			// var ndvi_data = analyzer.analyzeHistoricalNDVI(JSON.parse(body));
+			body = JSON.parse(body);
 
-			// console.log(ndvi_data.stats);
+			var result = body[body.length-1];
+			result.dt = dataformatter.unixtoDate(result.dt);
+
+			console.log(result.dt);
+
+			res.render('home', {});
 		}
 	})
-
-	res.render('home', {});
 }
 
-// exports.getHistoricalNDVI = function(req, res) {
-// 	var data = {
+//**** Soil Data ****//
+exports.getCurrentSoilData = function(req, res){
+	var polygon_id = '603cd48056545d00081a7e33';
+	var url = 'http://api.agromonitoring.com/agro/1.0/soil?polyid='+polygon_id+'&appid='+key;
 
-// 	};
-// 	var options = {
-// 		url: '',
-// 		method: '',
-// 		headers: {
+    request(url, { json: true }, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	body = JSON.parse(body);
+			body.dt = dataformatter.unixtoDate(body.dt);
 
-// 		}
-// 	};
-// 	request(options, function(err, response, body) {
-// 		if (err)
-// 			throw err;
-// 		console.log(body);
-// 	})
+        	console.log(body);
 
-// 	res.render('home', {});
-// }
+        	res.render('home', {});
+        }
+    });
+}
 
+//!!!!! havent tested yet because of this is a premium feature !!!!!//
+exports.getHistoricalSoilData = function(req, res){
+	var polygon_id = '603cd48056545d00081a7e33';
+	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
+	var url = 'http://api.agromonitoring.com/agro/1.0/soil/history?start='+start_date+'&end='+end_date+'&polyid='+polygon_id+'&appid='+key;
+
+    request(url, { json: true }, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	}
+
+        	console.log(body);
+
+        	res.render('home', {});
+        }
+    });
+}
+
+
+//!!!!! havent tested yet because of this is a premium feature !!!!!//
+//**** Temperature and Precipitation ****//
+exports.getAccumulatedTemperature = function(req, res){
+	var polygon_id = '603cd48056545d00081a7e33';
+	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
+	var lat = 35, lon = 139, threshold = 284;
+	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_temperature?lat='+lat+'&lon='+lon+'&threshold='+threshold+'&start='+start_date+'&end='+end_date+'&appid='+key;
+
+    request(url, { json: true }, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	}
+
+        	console.log(body);
+
+        	res.render('home', {});
+        }
+    });
+}
+
+exports.getAccumulatedPrecipitation = function(req, res){
+	var polygon_id = '603cd48056545d00081a7e33';
+	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
+	var lat = 35, lon = 139, threshold = 284;
+	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_precipitation?lat='+lat+'&lon='+lon+'&threshold='+threshold+'&start='+start_date+'&end='+end_date+'&appid='+key;
+
+    request(url, { json: true }, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	}
+
+        	console.log(body);
+
+        	res.render('home', {});
+        }
+    });
+}
+
+//**** Ultra Violet Index ****//
+exports.getCurrentUVI = function(req, res){
+	var polygon_id = '603cd48056545d00081a7e33';
+	var url = 'http://api.agromonitoring.com/agro/1.0/uvi?polyid='+polygon_id+'&appid='+key;
+
+    request(url, { json: true }, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+			body.dt = dataformatter.unixtoDate(body.dt);
+
+        	console.log(body);
+
+        	res.render('home', {});
+        }
+    });
+}
+
+exports.getHistoricalUVI = function(req, res){
+	var polygon_id = '603cd48056545d00081a7e33';
+	var start_date = '2021-03-03', end_date = new Date("2021-06-28");
+	var url = 'http://api.agromonitoring.com/agro/1.0/uvi/history?polyid='+polygon_id+'&appid='+key+'&start='+start_date+'&end='+end_date;
+
+    request(url, { json: true }, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	}
+
+        	console.log(body);
+
+        	res.render('home', {});
+        }
+    });
+}
 
 //Polygon Queries
 exports.createPolygon = function(req, res) {
@@ -156,23 +262,26 @@ exports.createPolygon = function(req, res) {
 	request(options, function(err, response, body) {
 		if (err)
 			throw err;
-		console.log(body);
-	})
+		else {
+			console.log(body);
 
-	res.render('home', {});
+			res.render('home', {});
+		}
+	})
 }
 
 exports.getPolygonInfo = function(req, res){
-	var polygon_id = '615c2d16a81b7613486812f8';
+	var polygon_id = '603cd48056545d00081a7e33';
 	var url = 'http://api.agromonitoring.com/agro/1.0/polygons/'+polygon_id+'?appid='+key;
     request(url, { json: true }, function(err, response, body) {
         if (err)
         	throw err;
         else {
         	console.log(body);
+
+        	res.render('home', {});
         }
     });
-    res.render('home', {});
 }
 
 exports.getAllPolygons = function(req, res){
@@ -182,13 +291,14 @@ exports.getAllPolygons = function(req, res){
         	throw err;
         else {
         	console.log(body);
+
+        	res.render('home', {});
         }
     });
-    res.render('home', {});
 }
 
 exports.updatePolygonName = function(req, res){
-	var polygon_id = '615c2d16a81b7613486812f8';
+	var polygon_id = '603cd48056545d00081a7e33';
 
 	var data = {
 		geo_json: {
@@ -211,9 +321,10 @@ exports.updatePolygonName = function(req, res){
         	throw err;
         else {
         	console.log(body);
+
+        	res.render('home', {});
         }
     });
-    res.render('home', {});
 }
 
 exports.removePolygon = function(req, res){
@@ -232,11 +343,10 @@ exports.removePolygon = function(req, res){
 	        if (err)
 	        	throw err;
 	        else {
-	        	console.log('succ');
 	        	console.log(body);
+
+	        	res.render('home', {});
 	        }
 	    });
 	}
-
-    res.render('home', {});
 }
