@@ -38,8 +38,8 @@ exports.getGeoMap = function(req, res) {
 
 //**** NDVI and Satellite Imagery ****//
 exports.getHistoricalNDVI = function(req, res) {
-	var polygon_id = '603cd48056545d00081a7e33';
-	var start_date = '2020-07-01', end_date = new Date("2021-07-01");
+	var polygon_id = req.query.polyid;
+	var start_date = req.query.start, end_date = req.query.end;
 	var obj;
 
 	start_date = dataformatter.dateToUnix(start_date);
@@ -68,7 +68,7 @@ exports.getHistoricalNDVI = function(req, res) {
 			
 			var ndvi_data = analyzer.analyzeHistoricalNDVI(JSON.parse(body));
 
-			console.log(ndvi_data.stats);
+			//console.log(ndvi_data.stats);
 
 			res.render('home', {});
 		}
@@ -76,8 +76,8 @@ exports.getHistoricalNDVI = function(req, res) {
 }
 
 exports.getSatelliteImageryData = function(req, res) {
-	var polygon_id = '603cd48056545d00081a7e33';
-	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
+	var polygon_id = req.query.polyid;
+	var start_date = req.query.start, end_date = req.query.end;
 	var obj;
 
 	start_date = dataformatter.dateToUnix(start_date);
@@ -117,14 +117,13 @@ exports.getSatelliteImageryData = function(req, res) {
 
 //**** Soil Data ****//
 exports.getCurrentSoilData = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
+	var polygon_id = req.query.polyid;
 	var url = 'http://api.agromonitoring.com/agro/1.0/soil?polyid='+polygon_id+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
         if (err)
         	throw err;
         else {
-        	body = JSON.parse(body);
 			body.dt = dataformatter.unixtoDate(body.dt);
 
         	console.log(body);
@@ -136,8 +135,8 @@ exports.getCurrentSoilData = function(req, res){
 
 //!!!!! havent tested yet because of this is a premium feature !!!!!//
 exports.getHistoricalSoilData = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
-	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
+	var polygon_id = req.query.polyid;
+	var start_date = req.query.start, end_date = req.query.end;
 	var url = 'http://api.agromonitoring.com/agro/1.0/soil/history?start='+start_date+'&end='+end_date+'&polyid='+polygon_id+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -159,9 +158,9 @@ exports.getHistoricalSoilData = function(req, res){
 //!!!!! havent tested yet because of this is a premium feature !!!!!//
 //**** Temperature and Precipitation ****//
 exports.getAccumulatedTemperature = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
-	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
-	var lat = 35, lon = 139, threshold = 284;
+	var polygon_id = req.query.polyid;
+	var start_date = req.query.start, end_date = req.query.end;
+	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
 	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_temperature?lat='+lat+'&lon='+lon+'&threshold='+threshold+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -180,9 +179,9 @@ exports.getAccumulatedTemperature = function(req, res){
 }
 
 exports.getAccumulatedPrecipitation = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
-	var start_date = '2021-05-03', end_date = new Date("2021-06-28");
-	var lat = 35, lon = 139, threshold = 284;
+	var polygon_id = req.query.polyid;
+	var start_date = req.query.start, end_date = req.query.end;
+	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
 	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_precipitation?lat='+lat+'&lon='+lon+'&threshold='+threshold+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -202,7 +201,7 @@ exports.getAccumulatedPrecipitation = function(req, res){
 
 //**** Ultra Violet Index ****//
 exports.getCurrentUVI = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
+	var polygon_id = req.query.polyid;
 	var url = 'http://api.agromonitoring.com/agro/1.0/uvi?polyid='+polygon_id+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -219,8 +218,8 @@ exports.getCurrentUVI = function(req, res){
 }
 
 exports.getHistoricalUVI = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
-	var start_date = '2021-03-03', end_date = new Date("2021-06-28");
+	var polygon_id = req.query.polyid;
+	var start_date = req.query.start, end_date = req.query.end;
 	var url = 'http://api.agromonitoring.com/agro/1.0/uvi/history?polyid='+polygon_id+'&appid='+key+'&start='+start_date+'&end='+end_date;
 
     request(url, { json: true }, function(err, response, body) {
@@ -241,13 +240,13 @@ exports.getHistoricalUVI = function(req, res){
 //Polygon Queries
 exports.createPolygon = function(req, res) {
 	var data = ({
-		name: "trial2",
+		name: req.query.name,
 		geo_json: {
 			type:"Feature",
 			properties:{},
 			geometry:{
 				type:"Polygon",
-				coordinates:[[[108.6232,11.33567],[108.62224,11.3296],[108.61798,11.33297],[108.6232,11.33567]]]
+				coordinates: dataformatter.parseCoordinate(req.query.coordinates.split(','))
 			}}
 		});
 	var options = {
@@ -271,7 +270,7 @@ exports.createPolygon = function(req, res) {
 }
 
 exports.getPolygonInfo = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
+	var polygon_id = req.query.polyid;
 	var url = 'http://api.agromonitoring.com/agro/1.0/polygons/'+polygon_id+'?appid='+key;
     request(url, { json: true }, function(err, response, body) {
         if (err)
@@ -298,13 +297,13 @@ exports.getAllPolygons = function(req, res){
 }
 
 exports.updatePolygonName = function(req, res){
-	var polygon_id = '603cd48056545d00081a7e33';
+	var polygon_id = req.query.polyid;
 
 	var data = {
 		geo_json: {
 			something: "something",
 		},
-		name: "new_name"
+		name: req.query.name
 	};
 
 	var options = {
@@ -328,10 +327,7 @@ exports.updatePolygonName = function(req, res){
 }
 
 exports.removePolygon = function(req, res){
-	// var polygon_id = ['615d3f2da81b763cf86816fe', '615d3f36a81b761a316816ff', '615d3f3ca81b76152a681700', 
-	// '615d3f42a81b7600f8681701', '615d3f49a81b76f9c3681702', '615d3f4fa81b765116681703', '615d3f54a81b765dda681704', 
-	// '615d3f5ba81b768572681705', '615d3fc8a81b76560a681706'];
-	var polygon_id = ['615c4a15a81b76457968134a', '615c4acfa81b763e1268134b'];
+	var polygon_id = req.query.polyid.split(",");
 
 	for (var i = 0; i < polygon_id.length; i++) {
 		var options = {
@@ -345,7 +341,8 @@ exports.removePolygon = function(req, res){
 	        else {
 	        	console.log(body);
 
-	        	res.render('home', {});
+	        	if (i == polygon_id.length -1)
+	        		res.render('home', {});
 	        }
 	    });
 	}

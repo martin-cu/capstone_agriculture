@@ -42,6 +42,31 @@ exports.aggregateFarmData = function(farms, plots, employees) {
 
 	return objArr;
 }
+exports.parseCoordinate = function(data) {
+	var counter = 0;
+	var coordArr = [], arr = [], apiArr = [];
+	if (data.length % 2 != 0 || data.length == 0) {
+		return false;
+	}
+	else {
+		for (var i = 0; i < data.length; i++) {
+			arr.push(data[i]);
+
+
+			counter++;
+
+			if (counter == 2) {
+				coordArr.push(arr);
+
+				arr = [];
+				counter = 0;
+			}
+		}
+	}
+	apiArr.push(coordArr)
+	
+	return apiArr;
+}
 
 exports.dateToUnix = function(date) {
 	let x = new Date(date);
