@@ -1,6 +1,7 @@
 const employeeModel = require('../models/employeeModel');
 const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
+const analyzer = require('../public/js/analyzer.js');
 var request = require('request');
 
 var key = '1d1823be63c5827788f9c450fb70c595';
@@ -35,47 +36,100 @@ exports.getGeoMap = function(req, res) {
 
 //Environment Variable Queries
 exports.getHistoricalNDVI = function(req, res) {
-	var polygon_id = '615c2d16a81b7613486812f8';
-	var start_date = '', end_date = '';
-	var data = {
+	var polygon_id = '603cd48056545d00081a7e33';
+	var start_date = '2020-07-01', end_date = new Date("2021-07-01");
+	var obj;
 
+	start_date = dataformatter.toUnixTimeStamp(start_date);
+	end_date = dataformatter.toUnixTimeStamp(end_date);
+
+	var data = {
+		polygon_id: polygon_id,
+		start: start_date,
+		end: end_date
 	};
 
 	var options = {
-		url: 'http://api.agromonitoring.com/agro/1.0/ndvi/history?start='+start_date+'&end='+end_date+'&polyid='+polygon_id+'&appid='+key;
-		method: 'GET';
+		url: 'https://api.agromonitoring.com/agro/1.0/ndvi/history?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key,
+		method: 'GET',
 		headers: {
 			'Content-type':'application/json'
-		}
+		},
+		body: JSON.stringify(data)
 	};
+
 	request(options, function(err, response, body) {
 		if (err)
 			throw err;
-		console.log(body);
+		else {
+			obj = body;
+			
+			var ndvi_data = analyzer.analyzeHistoricalNDVI(JSON.parse(body));
+
+			console.log(ndvi_data.stats);
+		}
 	})
 
 	res.render('home', {});
 }
 
-exports.getHistoricalNDVI = function(req, res) {
+exports.getSatelliteImageryData = function(req, res) {
+	var polygon_id = '603cd48056545d00081a7e33';
+	var start_date = '2021-06-26', end_date = new Date("2021-06-28");
+	var obj;
+
+	start_date = dataformatter.toUnixTimeStamp(start_date);
+	end_date = dataformatter.toUnixTimeStamp(end_date);
+
 	var data = {
-
+		polygon_id: polygon_id,
+		start: start_date,
+		end: end_date
 	};
+
 	var options = {
-		url: '';
-		method: '';
+		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key,
+		method: 'GET',
 		headers: {
-
-		}
+			'Content-type':'application/json'
+		},
+		body: JSON.stringify(data)
 	};
+
 	request(options, function(err, response, body) {
 		if (err)
 			throw err;
-		console.log(body);
+		else {
+			obj = body;
+			console.log(JSON.parse(body));
+			// var ndvi_data = analyzer.analyzeHistoricalNDVI(JSON.parse(body));
+
+			// console.log(ndvi_data.stats);
+		}
 	})
 
 	res.render('home', {});
 }
+
+// exports.getHistoricalNDVI = function(req, res) {
+// 	var data = {
+
+// 	};
+// 	var options = {
+// 		url: '',
+// 		method: '',
+// 		headers: {
+
+// 		}
+// 	};
+// 	request(options, function(err, response, body) {
+// 		if (err)
+// 			throw err;
+// 		console.log(body);
+// 	})
+
+// 	res.render('home', {});
+// }
 
 
 //Polygon Queries
@@ -163,19 +217,26 @@ exports.updatePolygonName = function(req, res){
 }
 
 exports.removePolygon = function(req, res){
-	var polygon_id = '615c2d16a81b7613486812f8';
+	// var polygon_id = ['615d3f2da81b763cf86816fe', '615d3f36a81b761a316816ff', '615d3f3ca81b76152a681700', 
+	// '615d3f42a81b7600f8681701', '615d3f49a81b76f9c3681702', '615d3f4fa81b765116681703', '615d3f54a81b765dda681704', 
+	// '615d3f5ba81b768572681705', '615d3fc8a81b76560a681706'];
+	var polygon_id = ['615c4a15a81b76457968134a', '615c4acfa81b763e1268134b'];
 
-	var options = {
-		url: 'http://api.agromonitoring.com/agro/1.0/polygons/'+polygon_id+'?appid='+key,
-		method: 'DELETE'
+	for (var i = 0; i < polygon_id.length; i++) {
+		var options = {
+			url: 'http://api.agromonitoring.com/agro/1.0/polygons/'+polygon_id[i]+'?appid='+key,
+			method: 'DELETE'
+		}
+
+	    request(options, function(err, response, body) {
+	        if (err)
+	        	throw err;
+	        else {
+	        	console.log('succ');
+	        	console.log(body);
+	        }
+	    });
 	}
 
-    request(options, function(err, response, body) {
-        if (err)
-        	throw err;
-        else {
-        	console.log(body);
-        }
-    });
     res.render('home', {});
 }

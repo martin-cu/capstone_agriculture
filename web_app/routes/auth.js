@@ -18,7 +18,8 @@ router.get('/testAPI', controller.testAPI);
 router.get('/getWeather', controller.getWeather);
 
 //Geotagging test
-router.get('/geotagging', farmController.removePolygon);
+router.get('/geotagging', farmController.getSatelliteImageryData);
+router.get('/deletepolygon', farmController.removePolygon);
 
 
 //ajax
