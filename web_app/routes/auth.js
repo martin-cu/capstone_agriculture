@@ -36,6 +36,10 @@ router.get('/agroapi/polygon/readSingle', farmController.getPolygonInfo);
 router.get('/agroapi/polygon/readAll', farmController.getAllPolygons);
 router.get('/agroapi/polygon/update', farmController.updatePolygonName);
 router.get('/agroapi/polygon/delete', farmController.removePolygon);
+//Weather
+router.get('/agroapi/weather/current', farmController.getCurrentWeather);
+router.get('/agroapi/weather/history', farmController.getHistoricalWeather);
+router.get('/agroapi/weather/forecast', farmController.getForecastWeather);
 /*** Agro API End ***/
 
 //ajax
