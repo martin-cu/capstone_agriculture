@@ -4,14 +4,14 @@ mysql = mysql.connection;
 //Create and register valid materials
 exports.registerMaterial = function(type, data, next) {
 	var sql;
-
-	if (type == "seed") {
+console.log(type);
+	if (type == "Seed") {
 		sql = "insert into seed_table set ?";
 	}
-	else if (type == "pesticide") {
+	else if (type == "Pesticide") {
 		sql = "insert into pesticide_table set ?";
 	}
-	else if (type == "fertilizer") {
+	else if (type == "Fertilizer") {
 		sql = "insert into fertilizer_table set ?"
 	}
 
@@ -24,13 +24,13 @@ exports.registerMaterial = function(type, data, next) {
 exports.getMaterials = function(type, filter, next){
 	var sql;
 	var table;
-	if (type == "seed") {
+	if (type == "Seed") {
 		table = "seed_table";
 	}
-	else if (type == "pesticide") {
+	else if (type == "Pesticide") {
 		table = "pesticide_table";
 	}
-	else if (type == "fertilizer") {
+	else if (type == "Fertilizer") {
 		table = "fertilizer_table";
 	}
 
@@ -47,13 +47,13 @@ exports.getMaterials = function(type, filter, next){
 
 exports.updateMaterial = function(type, filter, data, next){
 	var sql;
-	if (type == "seed") {
+	if (type == "Seed") {
 		sql = "UPDATE seed_table set ?";
 	}
-	else if (type == "pesticide") {
+	else if (type == "Pesticide") {
 		sql = "UPDATE pesticide_table set ?";
 	}
-	else if (type == "fertilizer") {
+	else if (type == "Fertilizer") {
 		sql = "UPDATE fertilizer_table set ?"
 	}
 	sql = mysql.format(sql, data);
@@ -64,25 +64,64 @@ exports.updateMaterial = function(type, filter, data, next){
 	mysql.query(sql, next);
 }
 
-exports.materialAddUpdate = function(type, filter, data, next){
-	var sql;
-	if (type == "Seed") {
-		sql = "UPDATE seed_table set current_amount = current_amount + ? WHERE seed_id = " + filter.item_id;
-	}
-	else if (type == "Pesticide") {
-		sql = "UPDATE pesticide_table set current_amount = current_amount + ? WHERE pesticide_id = " + filter.item_id;
-	}
-	else if (type == "Fertilizer") {
-		sql = "UPDATE fertilizer_table set current_amount = current_amount + ? WHERE pesticide_id = " + filter.item_id;
-	}
+// exports.materialAddUpdate = function(type, filter, data, next){
+// 	var sql;
+// 	if (type == "Seed") {
+// 		sql = "UPDATE seed_table set current_amount = current_amount + ? WHERE seed_id = " + filter.item_id;
+// 	}
+// 	else if (type == "Pesticide") {
+// 		sql = "UPDATE pesticide_table set current_amount = current_amount + ? WHERE pesticide_id = " + filter.item_id;
+// 	}
+// 	else if (type == "Fertilizer") {
+// 		sql = "UPDATE fertilizer_table set current_amount = current_amount + ? WHERE pesticide_id = " + filter.item_id;
+// 	}
+// 	sql = mysql.format(sql, data);
+// 	// if(filter != null){
+// 	// 	sql = sql + " WHERE ?";
+// 	// 	sql = mysql.format(sql, filter);
+// 	// }
+// 	console.log(sql);
+// 	mysql.query(sql, next);
+// }
+
+
+exports.registerFarmMaterial = function(data, next) {
+	var sql = "insert into farm_materials set ?";
 	sql = mysql.format(sql, data);
-	// if(filter != null){
-	// 	sql = sql + " WHERE ?";
-	// 	sql = mysql.format(sql, filter);
-	// }
+	mysql.query(sql, next);
+}
+
+exports.updateFarmMaterials = function(data, farm_mat_id, next){
+	var sql = "UPDATE farm_materials set ? WHERE ?";
+	sql = mysql.format(sql, data);
+	sql = mysql.format(sql, farm_mat_id);
 	console.log(sql);
 	mysql.query(sql, next);
 }
+
+exports.addFarmMaterials = function(amount, farm_mat_id, next){
+	var sql = "UPDATE farm_materials set current_amount = current_amount + ? WHERE farm_mat_id = ?";
+	sql = mysql.format(sql, amount);
+	sql = mysql.format(sql, farm_mat_id);
+	mysql.query(sql, next);
+}
+
+exports.getFarmMaterials = function(filter, next){
+	var sql = "SELECT * FROM farm_materials WHERE ?";
+	sql = mysql.format(sql, filter);
+	console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.getFarmMaterialsMultiple = function(filter, next){
+	var sql = "SELECT * FROM farm_materials WHERE farm_id = ? && item_type = ? && item_id = ?";
+	sql = mysql.format(sql, filter[0]);
+	sql = mysql.format(sql, filter[1]);
+	sql = mysql.format(sql, filter[2]);
+	console.log(sql);
+	mysql.query(sql, next);
+}
+
 //Purchase history
 exports.addPurchase = function(data, next){
 	var sql;
