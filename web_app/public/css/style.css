@@ -1,0 +1,56 @@
+/** UI Color Theme **/
+.primary {
+	background-color: #DEB887;
+}
+.secondary {
+	background-color: #FAEBD7;
+}
+
+.tertiary {
+
+}
+
+/*html {
+	position: relative;
+	min-height:  100% !important;
+	height:  100px !important;
+	display:  block;
+}*/
+
+body {
+	display:  block;
+	height:  100vh;
+	padding:  0px;
+}
+
+.main_container {
+	min-height:  100% !important;
+	height: auto;
+	display:  flex;
+	z-index: 0;
+}
+
+.sidebar_container {
+	width:  14rem !important;
+	min-height:  100% !important;
+	height: auto;
+}
+
+.body_container {
+	width:  calc(100% - 14rem) !important;
+	background-color: white;
+	overflow-x: hidden;
+}
+
+.navbar {
+	height: 100%;
+}
+
+.topbar {
+	height:  4.375rem !important;
+}
+
+.copyright {
+	font-size: .8rem;
+	color: #6c757d!important;
+}

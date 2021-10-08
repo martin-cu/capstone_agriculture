@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const controller = require('../controllers/controller');
 const farmController = require('../controllers/farmController');
+const environmentController = require('../controllers/environmentController');
 
 router.get('/login', (req, res) => {
 	res.render('home', {});
@@ -17,7 +18,22 @@ router.get('/addMaterials', controller.addMaterials);
 router.get('/testAPI', controller.testAPI);
 router.get('/getWeather', controller.getWeather);
 
-/*** Agro API ***/
+/*** Page Navigation Start ***/
+router.get('/', farmController.getDashboard);
+router.get('/home', farmController.getDashboard);
+
+router.get('/farms', farmController.getFarms);
+
+router.get('/crop_calendar', farmController.getCropCalendar);
+
+router.get('/harvest_cycle', farmController.getHarvestCycle);
+
+router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);
+
+router.get('/nutrient_management', environmentController.getNurientManagement);
+/*** Page Navigation End ***/
+
+/*** Agro API Start ***/
 //NDVI
 router.get('/agroapi/ndvi/history', farmController.getHistoricalNDVI);
 router.get('/agroapi/ndvi/imagery', farmController.getSatelliteImageryData);

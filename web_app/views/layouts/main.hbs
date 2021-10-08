@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Title</title>
-  
-  <!-- Insert JQuery, CSS here !-->
+  <title>Dashboard - Brand</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- temp css !-->
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
+
+  <link rel="stylesheet" href="../../css/style.css">
+
 </head>
 <body>
-{{{body}}}
-sadas
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="../assets/js/ajax.js"></script>
-<link rel="stylesheet" href="../assets/css/test.css">
+  <div class="main_container primary">
+    
+    <div class="sidebar_container secondary">
+      {{> sidebar}}
+    </div>
 
-<script type="text/javascript">
-  var name = 'trial';
-// var obj = {type:"Feature",properties:{},geometry:{type:"Polygon",coordinates:[[[108.07251,11.87151],[106.90357,11.89734],[106.56079,11.25955],[108.07251,11.87151]]]}};
+    <div class="body_container secondary d-flex flex-column" id="content-wrapper">
+      {{> nav}}
 
- var obj = {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[108.6232,11.33567],[108.62224,11.3296],[108.61798,11.33297],[108.6232,11.33567]]]}};
+      {{{body}}}
 
-</script>
+      {{> footer}}
+    </div>
+  </div>
 
-<script type="text/javascript" src="/js/apiHandler.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="../assets/js/ajax.js"></script>
+  <link rel="stylesheet" href="../assets/css/test.css">
 
 </body>
 

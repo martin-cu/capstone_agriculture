@@ -7,6 +7,22 @@ var request = require('request');
 //var key = '1d1823be63c5827788f9c450fb70c595';
 var key = '2ae628c919fc214a28144f699e998c0f';
 
+exports.getDashboard = function(req, res) {
+	res.render('home', {});
+}
+
+exports.getFarms = function(req, res) {
+	res.render('farms', {});
+}
+
+exports.getCropCalendar = function(req, res) {
+	res.render('crop_calendar', {});
+}
+
+exports.getHarvestCycle = function(req, res) {
+	res.render('harvest_cycle', {});
+}
+
 exports.getGeoMap = function(req, res) {
 	farmModel.getFarmData(null, function(err, farm_data) {
 		if (err) {
