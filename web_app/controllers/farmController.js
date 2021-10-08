@@ -4,7 +4,8 @@ const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 var request = require('request');
 
-var key = '1d1823be63c5827788f9c450fb70c595';
+//var key = '1d1823be63c5827788f9c450fb70c595';
+var key = '2ae628c919fc214a28144f699e998c0f';
 
 exports.getGeoMap = function(req, res) {
 	farmModel.getFarmData(null, function(err, farm_data) {
