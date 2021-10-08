@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const controller = require('../controllers/controller');
+const controller = require('../controllers/materialsController');
 const farmController = require('../controllers/farmController');
+const globe = require('../controllers/sms-mt');
 
 router.get('/login', (req, res) => {
 	res.render('home', {});
@@ -13,7 +14,7 @@ router.get('/', (req, res) => {
 	res.render('home', {});
 });
 
-router.get('/addMaterials', controller.addMaterials);
+router.get('/test', controller.test);
 router.get('/testAPI', controller.testAPI);
 router.get('/getWeather', controller.getWeather);
 
@@ -43,13 +44,18 @@ router.get('/agroapi/weather/forecast', farmController.getForecastWeather);
 /*** Agro API End ***/
 
 //ajax
-router.get('/addPesticide', controller.getMaterials);
-router.get('/updatePesticide', controller.updateMaterial);
+router.get('/addNewItem', controller.addMaterials);
+router.get('/getMaterials', controller.getMaterials);
+router.get('/updateMaterial', controller.updateMaterial);
+
+router.get('/addFarmMaterial', controller.addFarmMaterial);
 
 router.get('/addPurchase', controller.addPurchase);
 router.get('/getPurchases', controller.getPurchases);
 router.get('/updatePurchase', controller.updatePurchase);
 
-
+//Globe
+router.get('/globe_api', globe.test_globe);
+router.post('/globe_api2', globe.test_globe2);
 
 module.exports = router;

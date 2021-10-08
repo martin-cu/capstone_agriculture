@@ -80,3 +80,87 @@ exports.dateToUnix = function(date) {
 exports.unixtoDate = function(timestamp) {
 	return new Date(timestamp * 1000);
 }
+
+
+
+//From Martin's Dataformatter isande2
+exports.formatDate = function(date, format) {
+	var year,month,day;
+	const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+	const fullMonthNames = ["", "January", "February", "March", "April", "May", "June",
+	  "July", "August", "September", "October", "November", "December"];
+	year = date.getFullYear();
+	month = date.getMonth()+1;
+	day = date.getDate();
+
+	if (format === 'MM/DD/YYYY') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = month+'/'+day+'/'+year;
+	}
+	else if (format === 'YYYY-MM-DD') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = year+'-'+month+'-'+day;
+	}
+	else if (format === 'mm DD, YYYY') {
+		date = monthNames[month]+' '+day+', '+year;
+	}
+	else if (format === 'MM DD, YYYY') {
+		date = fullMonthNames[month]+' '+day+', '+year;
+	}
+
+	return date;
+}
+
+function formatDate(date, format) {
+	var year,month,day;
+	const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+	year = date.getFullYear();
+	month = date.getMonth()+1;
+	day = date.getDate();
+
+	if (format === 'MM/DD/YYYY') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = month+'/'+day+'/'+year;
+	}
+	else if (format === 'YYYY-MM-DD') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = year+'-'+month+'-'+day;
+	}
+	else if (format === 'mm DD, YYYY') {
+		date = monthNames[month]+' '+day+', '+year;
+	}
+	else if (format === 'HH:m') {
+		var hour = parseInt(date.getHours());
+		var lbl;
+		if (hour < 12)
+			lbl = 'AM';
+		else {
+			lbl = 'PM';
+		}
+
+		if (hour == 0)
+			hour = 12;
+		else if (hour > 12)
+			hour -= 12;
+
+		date = hour+':'+date.getMinutes()+lbl;
+	}
+
+	return date;
+}
