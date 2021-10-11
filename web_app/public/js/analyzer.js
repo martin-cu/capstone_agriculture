@@ -2,6 +2,14 @@ function parseDecimal(num, decimal) {
 	return parseFloat((num).toFixed(decimal));
 }
 
+exports.forecastWeather = function(arr) {
+	console.log(arr);
+
+	
+	
+	return arr;
+}
+
 exports.analyzeHistoricalNDVI = function(arr) {
 	var resultObj = { stats: {}, dataArr: [] };
 	var dc = 0, cl = 0, 

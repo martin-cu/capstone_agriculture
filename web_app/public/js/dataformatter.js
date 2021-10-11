@@ -81,42 +81,51 @@ exports.unixtoDate = function(timestamp) {
 	return new Date(timestamp * 1000);
 }
 
+exports.normalizeInitialForecast = function(arr) {
+	var result_arr = [];
+	var m = { };
+	var x = 1;
+	var date;
+	var min_temp, max_temp, humidity, pressure, rainfall;
+	for (var i = 0; i < arr.length - 1; i++) {
+		date = formatDate(arr[i].dt, 'YYYY-MM-DD');
+		min_temp = arr[i].main.temp_min;
+		max_temp = arr[i].main.temp_max;
+		humidity = arr[i].main.humidity;
+		pressure = arr[i].main.pressure;
+		rainfall = typeof arr[i].rain == 'undefined'? 0 : arr[i].rain['3h'];
+		x = 1;
 
+		do {
+			i++;
+			if (arr[i-1].main.temp_min > arr[i].main.temp_min)
+				min_temp = arr[i].main.temp_min;
+			if (arr[i-1].main.temp_max < arr[i].main.temp_max)
+				max_temp = arr[i].main.temp_max;
 
-//From Martin's Dataformatter isande2
-exports.formatDate = function(date, format) {
-	var year,month,day;
-	const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-	];
-	const fullMonthNames = ["", "January", "February", "March", "April", "May", "June",
-	  "July", "August", "September", "October", "November", "December"];
-	year = date.getFullYear();
-	month = date.getMonth()+1;
-	day = date.getDate();
+			humidity += arr[i].main.humidity;
+			pressure += arr[i].main.pressure;
+			rainfall += typeof arr[i].rain == 'undefined'? 0 : arr[i].rain['3h'];
 
-	if (format === 'MM/DD/YYYY') {
-		if (month < 10)
-			month = '0'+month;
-		if (day < 10)
-			day = '0'+day;
-		date = month+'/'+day+'/'+year;
-	}
-	else if (format === 'YYYY-MM-DD') {
-		if (month < 10)
-			month = '0'+month;
-		if (day < 10)
-			day = '0'+day;
-		date = year+'-'+month+'-'+day;
-	}
-	else if (format === 'mm DD, YYYY') {
-		date = monthNames[month]+' '+day+', '+year;
-	}
-	else if (format === 'MM DD, YYYY') {
-		date = fullMonthNames[month]+' '+day+', '+year;
-	}
+			x++;
+		}
+		while (i < arr.length-1 && formatDate(arr[i].dt, 'YYYY-MM-DD') == formatDate(arr[i+1].dt, 'YYYY-MM-DD'));
 
-	return date;
+		humidity /= x;
+		pressure /= x;
+
+		m['dt'] = date;
+		m['min_temp'] = min_temp;
+		m['max_temp'] = max_temp;
+		m['mean_humidity'] = humidity;
+		m['mean_pressure'] = pressure;
+		m['total_rainfall'] = rainfall;
+
+		result_arr.push(m);
+		m = {};
+	}
+	
+	return result_arr;
 }
 
 function formatDate(date, format) {

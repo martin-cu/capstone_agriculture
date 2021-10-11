@@ -7,13 +7,6 @@ const globe = require('../controllers/sms-mt');
 router.get('/login', (req, res) => {
 	res.render('home', {});
 });
-router.get('/home', (req, res) => {
-	res.render('home', {});
-});
-
-router.get('/', (req, res) => {
-	res.render('home', {});
-});
 
 router.get('/test', controller.test);
 router.get('/testAPI', controller.testAPI);
