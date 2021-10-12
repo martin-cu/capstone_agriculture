@@ -320,7 +320,9 @@ exports.getForecastWeather = function(req, res){
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	analyzer.forecastWeather(dataformatter.normalizeInitialForecast(body));
+
+        	//analyzer.forecastWeather(dataformatter.normalizeInitialForecast(body));
+        	analyzer.trainWeatherData(dataformatter.prepareWeatherData(body, 0.7));
 
         	res.render('home', {});
         }
