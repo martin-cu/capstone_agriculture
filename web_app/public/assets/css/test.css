@@ -1,3 +1,16 @@
 .weh{
     color: red;
 }
+
+.dropdown-item:focus {
+    background-color: #EDD172;
+    color: white;
+}
+
+.btn-link {
+    color: white;
+}
+
+.btn-link:hover {
+    color: #584C33;
+}
