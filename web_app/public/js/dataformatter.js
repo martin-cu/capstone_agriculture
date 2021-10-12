@@ -100,7 +100,7 @@ function partitionData(data, size) {
 }
 
 function normalizeData(array) {
-	var i;
+	var i, obj = { min: 0, max: 0, arr: [] };
 	var max = Number.MIN_VALUE;
 	var min = Number.MAX_VALUE;
 	for (i = 0; i < array.length; i++)
@@ -109,10 +109,7 @@ function normalizeData(array) {
 	   {
 	       max = array[i];
 	   }
-	}
 
-	for (i = 0; i < array.length; i++)
-	{
 	   if(array[i]<min)
 	   {
 	       min = array[i];
@@ -125,16 +122,63 @@ function normalizeData(array) {
 	   array[i] = norm;
 	}
 
+	obj.min = min;
+	obj.max = max;
+	obj.arr = array;
+
 	max = Number.MIN_VALUE;
 	min = Number.MAX_VALUE;
 	for (i = 0; i < array.length; i++) {
 	    if(array[i]>max) {
 	        max = array[i];
 	    }
-	}	
+	}
 
+	return obj;
+}
 
-	return array;
+exports.prepareData = function(arr, size) {
+	var result_arr = { data_arr: [], denormalize_val: [], denormalize_keys: [] };
+	var temp_arr = [];
+
+	var json_obj = { dt: [], min_temp: [], max_temp: [], humidity: [], pressure: [],
+	rainfall: [], main: [], desc: [], id: [] };
+
+	var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
+	var normalize_keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
+
+	var val = {};
+
+	for (var i = 0; i < arr.length; i++) {
+		json_obj['dt'].push(formatDate(arr[i].dt, 'YYYY-MM-DD : HH:m'));
+		json_obj['min_temp'].push(arr[i].main.temp_min);
+		json_obj['max_temp'].push(arr[i].main.temp_max);
+		json_obj['humidity'].push(arr[i].main.humidity);
+		json_obj['pressure'].push(arr[i].main.pressure);
+		json_obj['rainfall'].push(typeof arr[i].rain == 'undefined'? 0 : arr[i].rain['3h']);
+		json_obj['main'].push(arr[i].weather[0].main);
+		json_obj['desc'].push(arr[i].weather[0].description);
+		json_obj['id'].push(arr[i].weather[0].id);
+	}
+
+	for (var x = 0; x < normalize_keys.length; x++) {
+		json_obj[normalize_keys[x]] = normalizeData(json_obj[normalize_keys[x]]);
+
+		result_arr.denormalize_val.push({ min: json_obj[normalize_keys[x]].min , max: json_obj[normalize_keys[x]].max });
+		json_obj[normalize_keys[x]] = json_obj[normalize_keys[x]].arr;
+	}
+
+	for (var y = 0; y < json_obj.dt.length-3; y++) {
+		for (var k = 0; k < keys.length; k++) {
+			temp_arr.push(json_obj[keys[k]][y]);
+		}
+		result_arr.data_arr.push(temp_arr);
+		temp_arr = [];
+	}
+
+	result_arr.denormalize_keys = normalize_keys;
+
+	return result_arr;
 }
 
 exports.prepareWeatherData = function(arr, size) {
@@ -249,12 +293,6 @@ exports.prepareWeatherData = function(arr, size) {
 	
 // 	return result_arr;
 // }
-
-function prepareWeatherTrainingData() {
-
-
-	return 1;
-}
 
 function formatDate(date, format) {
 	var year,month,day;

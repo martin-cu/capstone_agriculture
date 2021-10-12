@@ -322,7 +322,7 @@ exports.getForecastWeather = function(req, res){
 
 
         	//analyzer.forecastWeather(dataformatter.normalizeInitialForecast(body));
-        	analyzer.trainWeatherData(dataformatter.prepareWeatherData(body, 0.7));
+        	var forecast = analyzer.weatherForecast14D(dataformatter.prepareData(body, 0.7));
 
         	res.render('home', {});
         }
