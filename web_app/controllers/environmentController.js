@@ -1,6 +1,7 @@
 const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
+const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 var request = require('request');
 
 exports.getPestDiseaseManagement = function(req, res) {
@@ -14,3 +15,7 @@ exports.getNurientManagement = function(req, res) {
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt');
 	res.render('/nutrient_mgt', html_data);
 }
+
+
+
+
