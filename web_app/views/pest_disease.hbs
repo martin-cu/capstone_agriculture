@@ -1,0 +1,12 @@
+<h1>
+    Pests
+</h1><br>
+{{#each pests}}
+    <a onclick="href='/pest_and_disease_management/Pest/{{this.pest_id}}'">{{this.pest_name}} - {{this.pest_desc}}</a>
+{{/each}}
+<h1>
+    Diseases
+</h1><br>
+{{#each diseases}}
+    <a onclick="href='/pest_and_disease_management/Disease/{{this.disease_id}}'">{{this.disease_name}} - {{this.disease_desc}}</a>
+{{/each}}

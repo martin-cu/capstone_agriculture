@@ -23,6 +23,7 @@ router.get('/crop_calendar', farmController.getCropCalendar);
 router.get('/harvest_cycle', farmController.getHarvestCycle);
 
 router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);
+router.get('/pest_and_disease_management/:type/:name', environmentController.getPestFactors);
 
 router.get('/nutrient_management', environmentController.getNurientManagement);
 /*** Page Navigation End ***/
@@ -54,13 +55,14 @@ router.get('/agroapi/weather/history', farmController.getHistoricalWeather);
 router.get('/agroapi/weather/forecast', farmController.testForecast);
 /*** Agro API End ***/
 
+
+
+
 //ajax
 router.get('/addNewItem', controller.addMaterials);
 router.get('/getMaterials', controller.getMaterials);
 router.get('/updateMaterial', controller.updateMaterial);
-
 router.get('/addFarmMaterial', controller.addFarmMaterial);
-
 router.get('/addPurchase', controller.addPurchase);
 router.get('/getPurchases', controller.getPurchases);
 router.get('/updatePurchase', controller.updatePurchase);
