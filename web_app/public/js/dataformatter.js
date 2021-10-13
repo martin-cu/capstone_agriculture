@@ -137,6 +137,85 @@ function normalizeData(array) {
 	return obj;
 }
 
+function embedWeatherIDs(obj, array) {
+	const unique = [...new Map(array.map(item =>
+	  [item['weather'][0]['id'], item])).values()];
+	var unique_weathers = [];
+	var temp_obj = { id: null, name: null, desc: null };
+
+	for (var i = 0; i < unique.length; i++) {
+		unique_weathers.push({ id: unique[i].weather[0].id, name: unique[i].weather[0].main, 
+			desc: unique[i].weather[0].description });
+	}
+
+	obj['uniqueWeather'] = unique_weathers;
+
+	return obj;
+}
+
+exports.mapWeatherIDs = function(data) {
+	var min = 0, index = 0;
+
+	for (var i = 0; i < data.forecast.length; i++) {
+		min = Math.abs(data.forecast[i].id - data.weather_data[0].id);
+		index = 0;
+
+		for (var x = 1; x < data.weather_data.length; x++) {
+			if(Math.abs(data.forecast[i].id - data.weather_data[x].id) < min) {
+				min = Math.abs(data.forecast[i].id - data.weather_data[x].id);
+				index = x;
+			}
+		}
+		data.forecast[i]['name'] = data.weather_data[index].name;
+		data.forecast[i]['desc'] = data.weather_data[index].desc;
+	}
+
+	return data;
+}
+
+exports.arrayToObject = function(arr, keys) {
+	var obj_arr = [];
+	var obj;
+
+	// Iterate through data array 
+	for (var i = 0; i < arr.length; i++) {
+
+		// Initialize and cleanse object properties
+		obj = {};
+		for (var y = 0; y < keys.length; y++) {
+			obj[keys[y]] = null;
+		}
+
+		for (var x = 0; x < arr[i].length; x++) {
+			obj[keys[x]] = arr[i][x];
+
+		}
+		obj_arr.push(obj);
+	}
+
+	return obj_arr;
+}
+
+exports.convertForecastWeather = function(arr) {
+	for (var i = 0; i < arr.length; i++) {
+		arr[i].min_temp -= 273.15;
+		arr[i].max_temp -= 273.15;
+
+		arr[i].min_temp = Math.round(arr[i].min_temp * 100) / 100;
+		arr[i].max_temp = Math.round(arr[i].max_temp * 100) / 100;
+
+		arr[i].humidity = Math.round(arr[i].humidity);
+		arr[i].pressure = Math.round(arr[i].pressure);
+
+		if (arr[i].rainfall < 0)
+			arr[i].rainfall = 0;
+		else
+			arr[i].rainfall = Math.round(arr[i].rainfall * 100) / 100;
+	}
+
+	return arr;
+}
+
 exports.prepareData = function(arr, size) {
 	var result_arr = { data_arr: [], denormalize_val: [], denormalize_keys: [] };
 	var temp_arr = [];
@@ -177,6 +256,8 @@ exports.prepareData = function(arr, size) {
 	}
 
 	result_arr.denormalize_keys = normalize_keys;
+
+	result_arr = embedWeatherIDs(result_arr, arr);
 
 	return result_arr;
 }

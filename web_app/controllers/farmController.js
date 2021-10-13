@@ -281,7 +281,6 @@ exports.getCurrentWeather = function(req, res){
 }
 
 exports.getHistoricalWeather = function(req, res){
-	var polygon_id = req.query.polyid;
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
 	var lat = req.query.lat, lon = req.query.lon;
 	lat = '10.9574';
@@ -305,12 +304,16 @@ exports.getHistoricalWeather = function(req, res){
     });
 }
 
+// 
 exports.getForecastWeather = function(req, res){
-	var polygon_id = req.query.polyid;
+	var start_date = dataformatter.dateToUnix(req.query.start),
+	end_date = dataformatter.dateToUnix(req.query.end);
 	var lat = req.query.lat, lon = req.query.lon;
 	lat = '10.9574';
 	lon = '106.8427';
-	var url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+	start_date = dataformatter.dateToUnix('2020-10-11');
+	end_date = dataformatter.dateToUnix('2021-10-11');
+	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
         if (err)
@@ -320,11 +323,60 @@ exports.getForecastWeather = function(req, res){
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
 
+        	console.log(body);
 
-        	//analyzer.forecastWeather(dataformatter.normalizeInitialForecast(body));
-        	var forecast = analyzer.weatherForecast14D(dataformatter.prepareData(body, 0.7));
+        	//***** Call Agro API for succeeding 5 day forecast
 
-        	res.render('home', {});
+        	var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+
+		    request(forecast_url, { json: true }, function(err, forecast_response, forecast_body) {
+		        if (err)
+		        	throw err;
+		        else {
+		        	for (var i = 0; i < forecast_body.length; i++) {
+		        		forecast_body[i].dt = dataformatter.unixtoDate(forecast_body[i].dt);
+		        	}
+
+
+		        	//***** Build on Agro API and use ANN to forecast remaining 9 days
+		        	var result = analyzer.weatherForecast14D(dataformatter.prepareData(forecast_body, 0.7));
+		        	var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
+		        	
+		        	result.forecast = 
+		        	dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
+
+		        	forecast = dataformatter.mapWeatherIDs(result);
+
+		        	res.send({ msg: forecast });
+		        }
+		    });
+        }
+    });
+}
+
+exports.testForecast = function(req, res) {
+	var lat = req.query.lat, lon = req.query.lon;
+	lat = '10.9574';
+	lon = '106.8427';
+	var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+
+    request(forecast_url, { json: true }, function(err, forecast_response, forecast_body) {
+        if (err)
+        	throw err;
+        else {
+        	for (var i = 0; i < forecast_body.length; i++) {
+        		forecast_body[i].dt = dataformatter.unixtoDate(forecast_body[i].dt);
+        	}
+
+
+        	//***** Build on Agro API and use ANN to forecast remaining 9 days
+        	var result = analyzer.weatherForecast14D(dataformatter.prepareData(forecast_body, 0.7));
+        	var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
+        	result.forecast = dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
+
+        	forecast = dataformatter.mapWeatherIDs(result);
+
+        	res.send({ msg: forecast });
         }
     });
 }
@@ -338,9 +390,22 @@ exports.createPolygon = function(req, res) {
 			properties:{},
 			geometry:{
 				type:"Polygon",
-				coordinates: dataformatter.parseCoordinate(req.query.coordinates.split(','))
+				coordinates: typeof req.query.coordinates == 'undefined' || req.query.coordinates == null ? 0 : 
+				dataformatter.parseCoordinate(req.query.coordinates.split(','))
 			}}
 		});
+
+	data.geo_json.geometry.coordinates = [
+		[
+			[-121.1958,37.6683],
+			[-121.1779,37.6687],
+			[-121.1773,37.6792],
+			[-121.1958,37.6792],
+			[-121.1958,37.6683]
+		]
+	];
+
+
 	var options = {
 		url: 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key,
 		method: 'POST',
@@ -356,7 +421,7 @@ exports.createPolygon = function(req, res) {
 		else {
 			console.log(body);
 
-			res.render('home', {});
+			res.redirect('/farms');
 		}
 	})
 }
@@ -424,7 +489,9 @@ exports.removePolygon = function(req, res){
 	for (var i = 0; i < polygon_id.length; i++) {
 		var options = {
 			url: 'http://api.agromonitoring.com/agro/1.0/polygons/'+polygon_id[i]+'?appid='+key,
-			method: 'DELETE'
+			method: 'DELETE',
+			followRedirect: false,
+			followAllRedirects: false
 		}
 
 	    request(options, function(err, response, body) {
@@ -433,8 +500,7 @@ exports.removePolygon = function(req, res){
 	        else {
 	        	console.log(body);
 
-	        	if (i == polygon_id.length -1)
-	        		res.render('home', {});
+	        	res.redirect('/farms');
 	        }
 	    });
 	}

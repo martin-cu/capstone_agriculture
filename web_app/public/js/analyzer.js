@@ -11,6 +11,7 @@ function parseDecimal(num, decimal) {
 
 //!! To add weather value based on weather data id
 exports.weatherForecast14D = function(dataset) {
+	var result_obj;
 	const net = new brain.brain.recurrent.LSTMTimeStep({
 	  inputSize: 6,
 	  hiddenLayers: [3],
@@ -50,11 +51,13 @@ exports.weatherForecast14D = function(dataset) {
 
 	for (var i = 0; i < dataset.denormalize_val.length; i++) {
 		for (var x = 0; x < forecast.length; x++) {
-			forecast[x][i] = denormalizeData(lo[x][i], dataset.denormalize_val[i]);
+			forecast[x][i] = denormalizeData(forecast[x][i], dataset.denormalize_val[i]);
 		}
 	}
 
-	return forecast;
+	result_obj  = { forecast: forecast, weather_data: dataset.uniqueWeather };
+
+	return result_obj;
 }
 
 exports.analyzeHistoricalNDVI = function(arr) {
