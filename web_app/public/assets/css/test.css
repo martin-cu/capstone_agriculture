@@ -2,15 +2,21 @@
     color: red;
 }
 
-.dropdown-item:focus {
-    background-color: #EDD172;
-    color: white;
-}
-
 .btn-link {
     color: white;
 }
 
 .btn-link:hover {
     color: #584C33;
+}
+
+.dropdown-item:focus {
+    background-color: #EDD172;
+    color: white;
+}
+
+.btn-primary {
+	background-color: #EDD172;
+	color: #584C33;
+	font-weight: bold;
 }
