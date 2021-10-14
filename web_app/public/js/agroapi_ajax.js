@@ -28,6 +28,24 @@ $(document).ready(function() {
 		});
 	});
 
+	$('.farm_delete').on('click', function() {
+		var delete_name = $(this).val();
+		var polyid, name;
+		$.get('/agroapi/polygon/readAll', { }, function(list) {
+			for (var i = 0; i < list.polygon_list.length; i++) {
+				polyid = list.polygon_list[i].id;
+				name = list.polygon_list[i].name
+
+				if (delete_name === name)
+					i == list.polygon_list.length
+			}
+
+			$.get('/agroapi/polygon/delete', { polyid: polyid }, function(result) {
+				window.location.href = "/deleteFarmRecord/"+name;
+			});
+		});
+	})
+
 	$('#create_farm_form').on('submit', function(e) {
 		e.preventDefault();
 
@@ -42,6 +60,7 @@ $(document).ready(function() {
 
 				$.post('/agroapi/polygon/create', form_data, function(result) {
 					// Create db record of farm
+					console.log(result);
 		        	if (result.success) {
 		        		$.post('/createFarmRecord', form_data, function(db_record) {
 		        			if (db_record.success) {
@@ -49,13 +68,15 @@ $(document).ready(function() {
 		        			}
 		        			// Show error message
 		        			else {
-
+		        				console.log('db error:');
+		        				console.log(db_record);
 		        			}
 		        		});
 		        	}
 		        	// Something went wrong with API create error message
 		        	else {
-
+		        		console.log('api err:');
+		        		console.log(result);
 		        	}
 		        });
 			}
@@ -66,4 +87,6 @@ $(document).ready(function() {
 
 		});
 	});
+
+
 })

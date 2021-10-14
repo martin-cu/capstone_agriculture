@@ -31,7 +31,7 @@ router.get('/nutrient_management', environmentController.getNurientManagement);
 
 router.post('/readFarmDetails', farmController.singleFarmDetails);
 router.post('/createFarmRecord', farmController.createFarmRecord);
-
+router.get('/deleteFarmRecord/:id', farmController.retireFarm);
 
 /*** Agro API Start ***/
 //NDVI

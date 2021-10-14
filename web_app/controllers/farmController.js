@@ -16,9 +16,31 @@ exports.getDashboard = function(req, res) {
 }
 
 exports.getFarms = function(req, res) {
-	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
-	res.render('farms', html_data);
+	farmModel.getAllFarms(function(err, farm_list) {
+		if (err)
+			throw err;
+		else {
+			var html_data = { farm_list: farm_list };
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+			res.render('farms', html_data);
+		}
+	});
+}
+
+exports.retireFarm = function(req, res) {
+	var update = {
+		status: 'Inactive'
+	};
+	var filter = {
+		farm_name: req.params.id
+	};
+	farmModel.updateFarm(update, filter, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			res.redirect('/farms');
+		}
+	});
 }
 
 exports.getCropCalendar = function(req, res) {
@@ -436,17 +458,17 @@ exports.createPolygon = function(req, res) {
 		body: JSON.stringify(data)
 	}
 
-	// request(options, function(err, response, body) {
-	// 	if (err)
-	// 		throw err;
-	// 	else {
-	// 		console.log(body);
+	request(options, function(err, response, body) {
+		if (err)
+			throw err;
+		else {
+			console.log(body);
 
-	// 		res.send({ msg: 'success' });
-	// 	}
-	// })
+			res.send({ success: true });
+		}
+	})
 
-	res.send({ success: true });
+	//res.send({ success: true });
 }
 
 exports.getPolygonInfo = function(req, res){
@@ -471,7 +493,7 @@ exports.getAllPolygons = function(req, res){
         else {
         	console.log(body);
 
-        	res.render('home', {});
+        	res.send({ polygon_list: body });
         }
     });
 }
@@ -507,24 +529,22 @@ exports.updatePolygonName = function(req, res){
 }
 
 exports.removePolygon = function(req, res){
-	var polygon_id = req.query.polyid.split(",");
-
-	for (var i = 0; i < polygon_id.length; i++) {
-		var options = {
-			url: 'http://api.agromonitoring.com/agro/1.0/polygons/'+polygon_id[i]+'?appid='+key,
-			method: 'DELETE',
-			followRedirect: false,
-			followAllRedirects: false
-		}
-
-	    request(options, function(err, response, body) {
-	        if (err)
-	        	throw err;
-	        else {
-	        	console.log(body);
-
-	        	res.redirect('/farms');
-	        }
-	    });
+	var polygon_id = req.query.polyid;
+	
+	var options = {
+		url: 'http://api.agromonitoring.com/agro/1.0/polygons/'+polygon_id+'?appid='+key,
+		method: 'DELETE',
+		followRedirect: false,
+		followAllRedirects: false
 	}
+
+    request(options, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	console.log(body);
+
+        	res.send({ success: true });
+        }
+    });
 }

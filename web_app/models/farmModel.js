@@ -25,6 +25,18 @@ exports.getFarmData = function(data, next) {
 	mysql.query(sql, next);
 };
 
+exports.getAllFarms = function(next) {
+	var sql = 'select t1.farm_id, t1.farm_name, t1.land_type, max(t1.employee_id) as employee_id, concat(max(t1.ln), ", ", max(t1.fn)) as employee_name, max(t1.cp) as cp from (select t.farm_id, t.employee_id, max(t.farm_name) as farm_name, max(t.land_type) as land_type, null as ln, null as fn, null as cp from (select farm_id, employee_id, null as farm_name, null as land_type from farm_assignment where status = "Active" union select farm_id, null, farm_name, land_type from farm_table where status = "Active") as t group by t.farm_id union select fa.farm_id, et.employee_id, null as farm_name, null as land_type, et.last_name, et.first_name, et.phone_number from employee_table et join farm_assignment fa on et.employee_id = fa.employee_id where et.position = "Farm Manager" )as t1 group by farm_id';
+	mysql.query(sql, next);
+}
+
+exports.updateFarm = function(data, filter, next) {
+	var sql = 'update farm_table set ? where ?';
+	sql = mysql.format(sql, data);
+	sql = mysql.format(sql, filter);
+	mysql.query(sql, next);
+}
+
 exports.getPlotData = function(data, next) {
 	var sql;
 

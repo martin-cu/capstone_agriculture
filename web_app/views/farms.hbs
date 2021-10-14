@@ -36,13 +36,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td style="color: #584c33;">F-01</td>
-                                        <td style="color: #584c33;">Farm 1</td>
-                                        <td style="color: #584c33;">Lowland</td>
-                                        <td style="color: #584c33;">Mang Kanor</td>
-                                        <td style="color: #584c33;"><button type="button" class="float-right btn btn-danger" href="/agroapi/polygon/delete?&polyid={{polyid}}">Delete</td>
+
+                                	{{#each farm_list}}
+                                	<tr href="#">
+                                        <td style="color: #584c33;">{{this.farm_id}}</td>
+                                        <td style="color: #584c33;">{{this.farm_name}}</td>
+                                        <td style="color: #584c33;">{{this.land_type}}</td>
+                                        <td style="color: #584c33;">{{this.employee_name}}</td>
+                                        <td style="color: #584c33;"><button type="button" class="float-right btn btn-danger farm_delete" value="{{this.farm_name}}">Delete</td>
                                     </tr>
+                                	{{/each}}
+
                                 </tbody>
                             </table>
                         </div>
