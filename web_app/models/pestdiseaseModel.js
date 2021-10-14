@@ -2,7 +2,8 @@ var mysql = require('./connectionModel');
 mysql = mysql.connection;
 
 exports.getAllSymptoms = function(next){
-
+	var sql = 'SELECT * FROM symptoms_table;';
+	mysql.query(sql, next);
 };
 
 exports.getAllFactors = function(next){
@@ -25,7 +26,41 @@ exports.addFactor = function(type, data, next){
 	mysql.query(sql, next);
 }
 
+exports.addSymptom = function(data, next){
+	var sql = "INSERT INTO symptoms_table set ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+}
 
+exports.addPestDiseaseSymptom = function(type, id, symptom, next){
+	var sql = "INSERT INTO ";
+	var table;
+	var variable;
+	if(type == "Pest"){
+		table = "symptoms_pest";
+		variable = "pest_id";
+	}
+	else if(type == "Disease"){
+		table = "symptoms_disease";
+		variable = "disease_id";
+	}
+
+	sql = sql + table + " set symptom_id = ?, " + variable + "= ?";
+	sql = mysql.format(sql, symptom);
+	sql = mysql.format(sql, id);
+	console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.getLastInserted = function(type, next){
+	if(type == "Pest")
+		mysql.query("SELECT LAST_INSERT_ID() as last FROM pest_table;", next);
+	else
+		mysql.query("SELECT LAST_INSERT_ID() as last FROM disease_table;", next);
+}
+exports.getLast = function(next){
+	mysql.query("SELECT LAST_INSERT_ID() as last;", next);
+}
 
 
 exports.getAllPests = function(next){
@@ -58,6 +93,7 @@ exports.getPestFactors = function(pest_id, next){
 exports.addPest = function(pest, next){
 	var sql = "INSERT INTO pest_table SET ?";
 	sql = mysql.format(sql, pest);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -97,7 +133,7 @@ exports.getDiseaseFactors = function(disease_id, next){
 }
 
 exports.addDisease = function(disease, next){
-	var sql = "INSERT INTO pest_table SET ?";
+	var sql = "INSERT INTO disease_table SET ?";
 	sql = mysql.format(sql, disease);
 	mysql.query(sql, next);
 }

@@ -10,3 +10,38 @@
 {{#each diseases}}
     <a onclick="href='/pest_and_disease_management/Disease/{{this.disease_id}}'">{{this.disease_name}} - {{this.disease_desc}}</a>
 {{/each}}
+<br><br>
+<form name="pest" method="post" action="/addPest">
+    <span>Enter Pest name: </span><input for="pest" type="text" id="pest_name" name="pest_name"><br>
+    <span>Enter Pest desc: </span><input type="text" id="pest_desc" name="pest_desc"><br>
+    <h3>Symptoms</h3>
+    <div>
+        <input for="pest" type="checkbox" id="buffer1" name="symptom" value="0" hidden checked>
+        {{#each symptoms}}
+        <input for="pest" type="checkbox" id="this.symptom_id" name="symptom" value="{{this.symptom_id}}">
+            <label for="contactChoice1">{{this.symptom_name}}</label><br>
+        {{/each}}
+  </div>
+
+    <span>Symptom: </span><input for="pest" type="text" id="symptom_name" name="symptom_name"><br>
+    <span>Description: </span><input type="text" id="symptom_desc" name="symptom_desc"><br>
+
+
+    <input type="submit" value="submit">
+</form>
+
+<form name="disease" method="post" action="/addDisease">
+    <span>Enter Disease name: </span><input for="disease" type="text" id="disease_name" name="disease_name"><br>
+    <span>Enter Disease desc: </span><input type="text" id="disease_desc" name="disease_desc"><br>
+    <h3>Symptoms</h3>
+    <input for="disease" type="checkbox" id="buffer2" name="symptom" value="0" hidden checked>
+    {{#each symptoms}}
+        <input for="disease" type="checkbox" id="{{this.symptom_id}}" name="symptom" value="{{this.symptom_id}}">
+            <label for="contactChoice1">{{this.symptom_name}}</label><br>
+        {{/each}}
+
+    <span>Symptom: </span><input for="disease" type="text" id="symptom_name" name="symptom_name"><br>
+    <span>Description: </span><input for="disease" type="text" id="symptom_desc" name="symptom_desc"><br>
+    <input type="submit" value="submit">
+
+</form>

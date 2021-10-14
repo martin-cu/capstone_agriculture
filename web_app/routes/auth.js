@@ -24,6 +24,8 @@ router.get('/harvest_cycle', farmController.getHarvestCycle);
 
 router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);
 router.get('/pest_and_disease_management/:type/:name', environmentController.getPestFactors);
+router.post('/addPest', environmentController.addPest);
+router.post('/addDisease', environmentController.addDisease);
 
 router.get('/nutrient_management', environmentController.getNurientManagement);
 /*** Page Navigation End ***/

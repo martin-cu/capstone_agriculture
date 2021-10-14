@@ -100,3 +100,6 @@ exports.analyzeHistoricalNDVI = function(arr) {
 
 	return resultObj;
 }
+
+
+
