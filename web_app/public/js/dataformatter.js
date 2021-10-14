@@ -42,6 +42,18 @@ exports.aggregateFarmData = function(farms, plots, employees) {
 
 	return objArr;
 }
+
+exports.coordinateToFloat = function(arr) {
+	for (var i = 0; i < arr.length; i++) {
+		for (var x = 0; x < arr[i].length; x++) {
+			for (var y = 0; y < arr[i][x].length; y++) {
+				arr[i][x][y] = parseFloat(arr[i][x][y]);
+			}
+		}
+	}
+	return arr;
+}
+
 exports.parseCoordinate = function(data) {
 	var counter = 0;
 	var coordArr = [], arr = [], apiArr = [];

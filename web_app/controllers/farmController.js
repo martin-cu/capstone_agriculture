@@ -60,6 +60,38 @@ exports.getGeoMap = function(req, res) {
 	});
 }
 
+exports.singleFarmDetails = function(req, res) {
+	var query = { farm_name: req.body.farm_name };
+	farmModel.getFarmData(query, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			console.log(result);
+			res.send({ farm_list: result });
+		}
+	});
+}
+
+exports.createFarmRecord = function(req, res) {
+	var query = {
+		farm_name: req.body.farm_name,
+		farm_desc: req.body.farm_desc,
+		farm_area: 0,
+		land_type: req.body.land_type,
+	};
+
+	farmModel.addFarm(query, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			var status = false;
+			if (result.affectedRows)
+				status = true;
+
+			res.send({ success: status });
+		}
+	});
+}
 
 //Environment Variable Queries
 
@@ -384,27 +416,16 @@ exports.testForecast = function(req, res) {
 //Polygon Queries
 exports.createPolygon = function(req, res) {
 	var data = ({
-		name: req.query.name,
+		name: req.body.farm_name,
 		geo_json: {
 			type:"Feature",
 			properties:{},
 			geometry:{
 				type:"Polygon",
-				coordinates: typeof req.query.coordinates == 'undefined' || req.query.coordinates == null ? 0 : 
-				dataformatter.parseCoordinate(req.query.coordinates.split(','))
+				coordinates: typeof req.body.coordinates == 'undefined' || req.body.coordinates == null ? 0 : 
+				dataformatter.coordinateToFloat(req.body.coordinates)// dataformatter.parseCoordinate(req.body.coordinates.split(',')) 
 			}}
 		});
-
-	data.geo_json.geometry.coordinates = [
-		[
-			[-121.1958,37.6683],
-			[-121.1779,37.6687],
-			[-121.1773,37.6792],
-			[-121.1958,37.6792],
-			[-121.1958,37.6683]
-		]
-	];
-
 
 	var options = {
 		url: 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key,
@@ -415,15 +436,17 @@ exports.createPolygon = function(req, res) {
 		body: JSON.stringify(data)
 	}
 
-	request(options, function(err, response, body) {
-		if (err)
-			throw err;
-		else {
-			console.log(body);
+	// request(options, function(err, response, body) {
+	// 	if (err)
+	// 		throw err;
+	// 	else {
+	// 		console.log(body);
 
-			res.redirect('/farms');
-		}
-	})
+	// 		res.send({ msg: 'success' });
+	// 	}
+	// })
+
+	res.send({ success: true });
 }
 
 exports.getPolygonInfo = function(req, res){

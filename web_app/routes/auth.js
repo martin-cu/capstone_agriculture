@@ -27,6 +27,11 @@ router.get('/pest_and_disease_management', environmentController.getPestDiseaseM
 router.get('/nutrient_management', environmentController.getNurientManagement);
 /*** Page Navigation End ***/
 
+
+router.post('/readFarmDetails', farmController.singleFarmDetails);
+router.post('/createFarmRecord', farmController.createFarmRecord);
+
+
 /*** Agro API Start ***/
 //NDVI
 router.get('/agroapi/ndvi/history', farmController.getHistoricalNDVI);
@@ -41,7 +46,7 @@ router.get('/agroapi/precipitation/history', farmController.getAccumulatedPrecip
 router.get('/agroapi/uvi/current', farmController.getCurrentUVI);
 router.get('/agroapi/uvi/history', farmController.getHistoricalUVI);
 //Polygons
-router.get('/agroapi/polygon/create', farmController.createPolygon);
+router.post('/agroapi/polygon/create', farmController.createPolygon);
 router.get('/agroapi/polygon/readSingle', farmController.getPolygonInfo);
 router.get('/agroapi/polygon/readAll', farmController.getAllPolygons);
 router.get('/agroapi/polygon/update', farmController.updatePolygonName);

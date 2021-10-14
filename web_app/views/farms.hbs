@@ -20,7 +20,10 @@
                             <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
                         </form>
 
-                        <button type="button" class="btn btn-primary float-right">Add Farm</button>
+                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModalCenter">
+						  Add Farm
+						</button>
+                       
                         <div class="table-responsive" style="margin-top: 20px;">
                             <table class="table">
                                 <thead style="color: rgb(255,255,255);">
@@ -49,3 +52,111 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="">Add Farm</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" value="create_farm_form">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+      	<form method="post" id="create_farm_form">
+
+      	<div class="modal_body_content" id="body_step1">
+		  <div class="form-group">
+		    <label for="farm_name">Farm Name</label>
+		    <input type="text" class="form-control" id="farm_name" name="farm_name" placeholder="...">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="farm_desc">Description</label>
+		    <input type="text" class="form-control" id="farm_desc" name="farm_desc" placeholder="...">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="land_type">Land Type</label>
+		    <select class="form-control" id="land_type" name="land_type">
+		      <option value="Lowland">Lowland</option>
+		      <option value="Upland">Upland</option>
+		    </select>
+		  </div>
+      	</div>
+
+      	<div class="hide modal_body_content" id="body_step2">
+      		<div class="form-group">
+			    <label for="">Plot Details</label>
+			    <small id="emailHelp" class="form-text text-muted">Wag muna ibahin to di ko pa alam coordinates</small>
+				<div class="form-row">
+					<div class="form-group w-25 mr-3">
+						<label for="x1">Coordinate 1</label>
+						<div class="d-flex">
+							<input type="text" class="form-control mr-3" id="x1" placeholder="x1" name="coordinates" value="-121.1958">
+							<input type="text" class="form-control" id="y1" placeholder="y1" name="coordinates"	value="37.6683">	
+						</div>
+					</div>
+					<div class="form-group w-25">
+						<label for="inputPassword4">Coordinate 2</label>
+						<div class="d-flex">
+							<input type="text" class="form-control mr-3" id="x2" placeholder="x2" name="coordinates" value="-121.1779">
+							<input type="text" class="form-control" id="y2" placeholder="y2" name="coordinates" value="37.6687">	
+						</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group w-25 mr-3">
+						<label for="x1">Coordinate 3</label>
+						<div class="d-flex">
+							<input type="text" class="form-control mr-3" id="x3" placeholder="x3" name="coordinates" value="-121.1773">
+							<input type="text" class="form-control" id="y3" placeholder="y3" name="coordinates" value="37.6792">	
+						</div>
+					</div>
+					<div class="form-group w-25">
+						<label for="inputPassword4">Coordinate 4</label>
+						<div class="d-flex">
+							<input type="text" class="form-control mr-3" id="x4" placeholder="x4" name="coordinates" value="-121.1958">
+							<input type="text" class="form-control" id="y4" placeholder="y4" name="coordinates" value="37.6683">	
+						</div>
+					</div>
+				</div>
+			 </div>
+      	</div>
+
+      	<div class="hide modal_body_content" id="body_step3">
+      		
+      	</div>
+
+      	</form>
+
+      </div>
+
+      <div class="modal-footer">
+      	<div class="modal_footer_content" id="_step1">
+      		<button type="button" class="btn btn-secondary" data-dismiss="modal" value="create_farm_form">Cancel</button>
+	        <button type="button" class="btn btn-primary next_step" value="_step2">Next</button>
+      	</div>
+
+      	<div class="hide modal_footer_content" id="_step2">
+      		<button type="button" class="btn btn-secondary prev_step" value="_step1">Back</button>
+	        <button type="button" class="btn btn-primary next_step" value="_step3">Next</button>
+      	</div>
+
+      	<div class="hide modal_footer_content" id="_step3">
+      		<button type="button" class="btn btn-secondary prev_step" value="_step2">Back</button>
+	        <button type="submit" class="btn btn-primary" form="create_farm_form">Submit</button>
+      	</div>
+	        
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	var view = 'farm_outlook';
+</script>

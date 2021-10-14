@@ -2,7 +2,7 @@ var mysql = require('./connectionModel');
 mysql = mysql.connection;
 
 exports.addFarm = function(data, next) {
-	var sql = "insert into farm_table (farm_name, farm_desc, farm_area, land_type) values ?";
+	var sql = "insert into farm_table set ?";
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 };
@@ -13,16 +13,15 @@ exports.addFarmPlot = function(data, next) {
 	mysql.query(sql, next);
 };
 
-exports.getFarmData = function(data, next) {
-	var sql;
+exports.addAssignedFarmers = function(data, next) {
+	var sql = "insert into farm_assignment (employee_id, farm_id, status) values ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+}
 
-	if (!data) {
-		sql = "select ft.*, concat(et.first_name, ' ', et.last_name) as manager, et.employee_id as manager_id from farm_table ft join employee_table et on ft.farm_id = et.assigned_farm where et.position = 'Farm Manager'";
-	}
-	else {
-		sql = "select ft.*, concat(et.first_name, ' ', et.last_name) as manager, et.employee_id as manager_id from farm_table ft join employee_table et on ft.farm_id = et.assigned_farm where et.position = 'Farm Manager' and ?";
-		sql = mysql.format(sql, data);
-	}
+exports.getFarmData = function(data, next) {
+	var sql = 'select ft.*, et.* from farm_table ft join farm_assignment fa on ft.farm_id = fa.farm_id join employee_table et on fa.employee_id = et.employee_id where ?';
+	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 };
 
