@@ -5,8 +5,11 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
 
-var key = '1d1823be63c5827788f9c450fb70c595';
-//var key = '2ae628c919fc214a28144f699e998c0f';
+//var key = '1d1823be63c5827788f9c450fb70c595';
+var key = '2ae628c919fc214a28144f699e998c0f';
+
+var temp_lat = 13.073091;
+var temp_lon = 121.388563;
 
 exports.getDashboard = function(req, res) {
 	var html_data = {};
@@ -249,6 +252,10 @@ exports.getAccumulatedTemperature = function(req, res){
 	var polygon_id = req.query.polyid;
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
 	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
+
+	lat = temp_lat;
+	lon = temp_lon;
+
 	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_temperature?lat='+lat+'&lon='+lon+'&threshold='+threshold+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -270,6 +277,9 @@ exports.getAccumulatedPrecipitation = function(req, res){
 	var polygon_id = req.query.polyid;
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
 	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
+
+	lat = temp_lat;
+	lon = temp_lon;
 
 	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_precipitation?lat='+lat+'&lon='+lon+'&threshold='+threshold+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
@@ -330,8 +340,10 @@ exports.getHistoricalUVI = function(req, res){
 exports.getCurrentWeather = function(req, res){
 	var polygon_id = req.query.polyid;
 	var lat = req.query.lat, lon = req.query.lon;
-	lat = '10.9574';
-	lon = '106.8427';
+	
+	lat = temp_lat;
+	lon = temp_lon;
+
 	var url = 'https://api.agromonitoring.com/agro/1.0/weather?lat='+lat+'&lon='+lon+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -350,10 +362,10 @@ exports.getCurrentWeather = function(req, res){
 exports.getHistoricalWeather = function(req, res){
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
 	var lat = req.query.lat, lon = req.query.lon;
-	lat = '10.9574';
-	lon = '106.8427';
-	start_date = dataformatter.dateToUnix('2020-10-11');
-	end_date = dataformatter.dateToUnix('2021-10-11');
+	
+	lat = temp_lat;
+	lon = temp_lon;
+
 	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -364,22 +376,22 @@ exports.getHistoricalWeather = function(req, res){
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	console.log(body);
-
-        	res.render('home', {});
+        	res.send({ result: body, success: true });
         }
     });
+    //res.send({});
 }
 
 // 
-exports.getForecastWeather = function(req, res){
-	var start_date = dataformatter.dateToUnix(req.query.start),
+exports.getForecastWeather = function(req, res) {
+	var start_date = dataformatter.dateToUnix(req.query.start), 
 	end_date = dataformatter.dateToUnix(req.query.end);
+	
 	var lat = req.query.lat, lon = req.query.lon;
-	lat = '10.9574';
-	lon = '106.8427';
-	start_date = dataformatter.dateToUnix('2020-10-11');
-	end_date = dataformatter.dateToUnix('2021-10-11');
+	lat = temp_lat;
+	lon = temp_lon;
+
+
 	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -389,24 +401,33 @@ exports.getForecastWeather = function(req, res){
         	for (var i = 0; i < body.length; i++) {
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
-
-        	console.log(body);
 
         	//***** Call Agro API for succeeding 5 day forecast
 
         	var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
-
+        	console.log(forecast_url);
 		    request(forecast_url, { json: true }, function(err, forecast_response, forecast_body) {
 		        if (err)
 		        	throw err;
 		        else {
+		        	var hour_arr = [];
+		        	//console.log(forecast_body);
 		        	for (var i = 0; i < forecast_body.length; i++) {
-		        		forecast_body[i].dt = dataformatter.unixtoDate(forecast_body[i].dt);
+		        		forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
+		        		hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
 		        	}
+		        	
+		        	//***** Get unique hour timestamps from forecast and filter data
+		        	hour_arr = [...new Map(hour_arr.map(item =>
+	  					[item, item])).values()];
+		        	console.log(hour_arr);
 
+		        	body = dataformatter.smoothHourlyData(body, hour_arr);
+		        	forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
 
 		        	//***** Build on Agro API and use ANN to forecast remaining 9 days
-		        	var result = analyzer.weatherForecast14D(dataformatter.prepareData(forecast_body, 0.7));
+		        	var result = analyzer.weatherForecast14D
+		        	(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
 		        	var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
 		        	
 		        	result.forecast = 
@@ -417,33 +438,6 @@ exports.getForecastWeather = function(req, res){
 		        	res.send({ msg: forecast });
 		        }
 		    });
-        }
-    });
-}
-
-exports.testForecast = function(req, res) {
-	var lat = req.query.lat, lon = req.query.lon;
-	lat = '10.9574';
-	lon = '106.8427';
-	var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
-
-    request(forecast_url, { json: true }, function(err, forecast_response, forecast_body) {
-        if (err)
-        	throw err;
-        else {
-        	for (var i = 0; i < forecast_body.length; i++) {
-        		forecast_body[i].dt = dataformatter.unixtoDate(forecast_body[i].dt);
-        	}
-
-
-        	//***** Build on Agro API and use ANN to forecast remaining 9 days
-        	var result = analyzer.weatherForecast14D(dataformatter.prepareData(forecast_body, 0.7));
-        	var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
-        	result.forecast = dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
-
-        	forecast = dataformatter.mapWeatherIDs(result);
-
-        	res.send({ msg: forecast });
         }
     });
 }
@@ -480,17 +474,17 @@ exports.createPolygon = function(req, res) {
 		body: JSON.stringify(data)
 	}
 
-	request(options, function(err, response, body) {
-		if (err)
-			throw err;
-		else {
-			console.log(body);
+	// request(options, function(err, response, body) {
+	// 	if (err)
+	// 		throw err;
+	// 	else {
+	// 		console.log(body);
 
-			res.send({ success: true });
-		}
-	})
+	// 		res.send({ success: true });
+	// 	}
+	// })
 
-	//res.send({ success: false });
+	res.send({ success: true });
 }
 
 exports.getPolygonInfo = function(req, res){
@@ -560,13 +554,15 @@ exports.removePolygon = function(req, res){
 		followAllRedirects: false
 	}
 
-    request(options, function(err, response, body) {
-        if (err)
-        	throw err;
-        else {
-        	console.log(body);
+    // request(options, function(err, response, body) {
+    //     if (err)
+    //     	throw err;
+    //     else {
+    //     	console.log(body);
 
-        	res.send({ success: true });
-        }
-    });
+    //     	res.send({ success: true });
+    //     }
+    // });
+
+    res.send({ success: true });
 }

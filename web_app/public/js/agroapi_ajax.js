@@ -31,10 +31,24 @@ function prepareWorkerIDs(emp_arr, farm_id, status) {
 
 $(document).ready(function() {
 	$('#forecast_check').on('click', function() {
-		$.get('/agroapi/weather/forecast', {}, function(result) {
-			for (var i = 0; i < result.msg.forecast.length; i++) {
-				console.log(result.msg.forecast[i]);
+		var d1 = new Date(Date.now());
+		var d2 = new Date(Date.now());
+		d2.setDate(d2.getDate() - 1);
+
+		$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result1) {
+			for (var i = 0; i < result1.msg.forecast.length; i++) {
+				console.log(result1.msg.forecast[i]);
 			}
+		});
+	});
+
+	$('#test_historical').on('click', function() {
+		var d1 = new Date(Date.now());
+		var d2 = new Date(Date.now());
+		d2.setDate(d2.getDate() - 365);
+
+		$.get('/agroapi/weather/history', { start: d2, end: d1 }, function(result) {
+			console.log(result);
 		});
 	});
 
@@ -74,21 +88,26 @@ $(document).ready(function() {
 		        	if (result.success) {
 		        		$.post('/createFarmRecord', form_data, function(db_record) {
 		        			if (db_record.success) {
+		        				var workers = $('[name="worker_checkbox"]').serializeArray();
 
-		        				var status = 'Active';
-		        				var m = prepareWorkerIDs($('[name="worker_checkbox"]').serializeArray(), 
-		        					db_record.farm_id, status);
-		        				$.post('/assign_farmers', { query: m }, function(assign_farmer) {
-		        					console.log(assign_farmer);
-		        					if (assign_farmer.success) {
-		        						console.log('success');
-		        						window.location.href = "/farms";
-		        					}
-		        					else {
+		        				if (workers.length != 0) {
+		        					var status = 'Active';
+		        					var m = prepareWorkerIDs(workers, db_record.farm_id, status);
 
-		        					}
-		        				});
+		        					$.post('/assign_farmers', { query: m }, function(assign_farmer) {
+			        					console.log(assign_farmer);
+			        					if (assign_farmer.success) {
+			        						console.log('success');
+			        						window.location.href = "/farms";
+			        					}
+			        					else {
 
+			        					}
+			        				});
+		        				}
+		        				else {
+		        					window.location.href = "/farms";
+		        				}
 		        				
 		        			}
 		        			// Show error message

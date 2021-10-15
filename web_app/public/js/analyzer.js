@@ -10,13 +10,18 @@ function parseDecimal(num, decimal) {
 }
 
 //!!
-exports.weatherForecast14D = function(dataset) {
+exports.weatherForecast14D = function(dataset, testing, length) {
 	var result_obj;
 	const net = new brain.brain.recurrent.LSTMTimeStep({
 	  inputSize: 6,
-	  hiddenLayers: [3],
+	  hiddenLayers: [10],
 	  outputSize: 6,
 	});
+
+
+	// console.log(dataset.data_arr);
+	// console.log('----------------------');
+	console.log(testing.data_arr.length);
 
 	const trainingData = dataset.data_arr;
 
@@ -26,36 +31,23 @@ exports.weatherForecast14D = function(dataset) {
 
 	// Feed last 3 days before start of forecast date
 	// to be replaced by agro api forecast values
-	const forecast = net.forecast(
-		[
-			[
-			  0.013994910941477538,
-			  0.013994910941477538,
-			  1,
-			  0.7142857142857143,
-			  0.4922779922779923,
-			  0
-			],
-			[ 0, 0, 1, 0.5714285714285714, 0.44015444015444016, 0 ],
-			[
-			  0.05343511450381873,
-			  0.05343511450381873,
-			  0.9705882352941176,
-			  0.7142857142857143,
-			  0.21621621621621626,
-			  0
-			]
-		],
-		9
-	);
+	const forecast = net.forecast(testing.data_arr, 9 * length);
 
+	var api_forecast = testing.data_arr;
+
+	// Merge first 5 days from Agro API and 9 days from ANN forecast
+	for (var i = 0; i < forecast.length; i++) {
+		api_forecast.push(forecast[i]);
+	}
+
+	// Normalize values and process data
 	for (var i = 0; i < dataset.denormalize_val.length; i++) {
-		for (var x = 0; x < forecast.length; x++) {
-			forecast[x][i] = denormalizeData(forecast[x][i], dataset.denormalize_val[i]);
+		for (var x = 0; x < api_forecast.length; x++) {
+			api_forecast[x][i] = denormalizeData(api_forecast[x][i], dataset.denormalize_val[i]);
 		}
 	}
 
-	result_obj  = { forecast: forecast, weather_data: dataset.uniqueWeather };
+	result_obj  = { forecast: api_forecast, weather_data: dataset.uniqueWeather };
 
 	return result_obj;
 }

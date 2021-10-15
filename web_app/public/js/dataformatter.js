@@ -24,6 +24,18 @@ function objectMerger(arr1, arr2, arr1_param, arr2_param, id) {
 	return objArr;
 }
 
+exports.smoothHourlyData = function(arr, hours) {
+	var result = [];
+	for (var i = 0; i < hours.length; i++) {
+		for (var x = 0; x < arr.length; x++) {
+			if (formatDate(arr[x].dt, 'HH:m') == hours[i]) {
+				result.push(arr[x]);
+			}
+		}
+	}
+	return result;
+}
+
 
 exports.aggregateFarmData = function(farms, plots, employees) {
 	var objArr;
@@ -241,17 +253,25 @@ exports.prepareData = function(arr, size) {
 	var val = {};
 
 	for (var i = 0; i < arr.length; i++) {
-		json_obj['dt'].push(formatDate(arr[i].dt, 'YYYY-MM-DD : HH:m'));
-		json_obj['min_temp'].push(arr[i].main.temp_min);
-		json_obj['max_temp'].push(arr[i].main.temp_max);
-		json_obj['humidity'].push(arr[i].main.humidity);
-		json_obj['pressure'].push(arr[i].main.pressure);
-		json_obj['rainfall'].push(typeof arr[i].rain == 'undefined'? 0 : arr[i].rain['3h']);
-		json_obj['main'].push(arr[i].weather[0].main);
-		json_obj['desc'].push(arr[i].weather[0].description);
-		json_obj['id'].push(arr[i].weather[0].id);
-	}
+		// var index_date = formatDate(arr[i].dt, 'HH:m')
 
+		// if (index_date.includes('12:00') || index_date.includes('3:00') || 
+		// 	index_date.includes('9:00') || index_date.includes('6:00'))  {
+			
+		// }
+		json_obj['dt'].push(formatDate(arr[i].dt, 'YYYY-MM-DD : HH:m'));
+			json_obj['min_temp'].push(arr[i].main.temp_min);
+			json_obj['max_temp'].push(arr[i].main.temp_max);
+			json_obj['humidity'].push(arr[i].main.humidity);
+			json_obj['pressure'].push(arr[i].main.pressure);
+			json_obj['rainfall'].push(typeof arr[i].rain == 'undefined' || arr[i].rain == null ? 0 : 
+				typeof arr[i].rain['3h'] == 'undefined' ? arr[i].rain['1h'] : arr[i].rain['3h']);
+			json_obj['main'].push(arr[i].weather[0].main);
+			json_obj['desc'].push(arr[i].weather[0].description);
+			json_obj['id'].push(arr[i].weather[0].id);
+			
+	}
+	
 	for (var x = 0; x < normalize_keys.length; x++) {
 		json_obj[normalize_keys[x]] = normalizeData(json_obj[normalize_keys[x]]);
 
@@ -284,8 +304,6 @@ exports.prepareWeatherData = function(arr, size) {
 	// 	rainfall: [], main: [], desc: [], id: []};
 
 	for (var i = 0; i < arr.length; i++) {
-		console.log('i:: '+i+' -    '+arr[i].main.temp_min+' / '+arr[i].main.temp_max);
-		console.log(arr[i].weather[0].main);
 		// json_obj['dt'].push(formatDate(arr[i].dt, 'YYYY-MM-DD : HH:m'));
 		// json_obj['min_temp'].push(arr[i].main.temp_min);
 		// json_obj['max_temp'].push(arr[i].main.temp_max);
@@ -427,7 +445,7 @@ function formatDate(date, format) {
 		else if (hour > 12)
 			hour -= 12;
 
-		date = hour+':'+date.getMinutes()+lbl;
+		date = hour+':'+(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()+lbl;
 	}
 	else if (format === 'YYYY-MM-DD : HH:m') {
 		if (month < 10)
@@ -448,7 +466,74 @@ function formatDate(date, format) {
 		else if (hour > 12)
 			hour -= 12;
 
-		date = year+'-'+month+'-'+day+' - '+hour+':'+date.getMinutes()+lbl;
+		date = year+'-'+month+'-'+day+' - '+hour+':'+(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()+lbl;
+	}
+
+	return date;
+}
+
+exports.formatDate = function(date, format) {
+	var year,month,day;
+	const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+	year = date.getFullYear();
+	month = date.getMonth()+1;
+	day = date.getDate();
+
+	if (format === 'MM/DD/YYYY') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = month+'/'+day+'/'+year;
+	}
+	else if (format === 'YYYY-MM-DD') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = year+'-'+month+'-'+day;
+	}
+	else if (format === 'mm DD, YYYY') {
+		date = monthNames[month]+' '+day+', '+year;
+	}
+	else if (format === 'HH:m') {
+		var hour = parseInt(date.getHours());
+		var lbl;
+		if (hour < 12)
+			lbl = 'AM';
+		else {
+			lbl = 'PM';
+		}
+
+		if (hour == 0)
+			hour = 12;
+		else if (hour > 12)
+			hour -= 12;
+
+		date = hour+':'+(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()+lbl;
+	}
+	else if (format === 'YYYY-MM-DD : HH:m') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+
+		var hour = parseInt(date.getHours());
+		var lbl;
+		if (hour < 12)
+			lbl = 'AM';
+		else {
+			lbl = 'PM';
+		}
+
+		if (hour == 0)
+			hour = 12;
+		else if (hour > 12)
+			hour -= 12;
+
+		date = year+'-'+month+'-'+day+' - '+hour+':'+(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()+lbl;
 	}
 
 	return date;
