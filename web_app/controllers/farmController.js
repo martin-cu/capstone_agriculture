@@ -27,6 +27,19 @@ exports.getFarms = function(req, res) {
 	});
 }
 
+exports.assignFarmers = function(req, res) {
+	var query = req.body.query;
+	console.log(query);
+	farmModel.addAssignedFarmers(query, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			console.log(result);
+			res.send({ success: true });
+		}
+	});
+}
+
 exports.retireFarm = function(req, res) {
 	var update = {
 		status: 'Inactive'
@@ -110,7 +123,7 @@ exports.createFarmRecord = function(req, res) {
 			if (result.affectedRows)
 				status = true;
 
-			res.send({ success: status });
+			res.send({ success: status, farm_id: result.insertId });
 		}
 	});
 }
@@ -449,6 +462,15 @@ exports.createPolygon = function(req, res) {
 			}}
 		});
 
+	// Temp LA Coordinates
+	// [
+	// 	[
+	// 		[121.38162,13.07716],[121.38197,13.06959],
+			// [121.3876,13.06939],[121.38828,13.07749],
+			// [121.38162,13.07716]
+	// 	]
+	// ];
+
 	var options = {
 		url: 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key,
 		method: 'POST',
@@ -468,7 +490,7 @@ exports.createPolygon = function(req, res) {
 		}
 	})
 
-	//res.send({ success: true });
+	//res.send({ success: false });
 }
 
 exports.getPolygonInfo = function(req, res){

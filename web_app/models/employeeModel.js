@@ -13,31 +13,8 @@ exports.registerUser = function(data, next) {
 	mysql.query(sql, next);
 };
 
-exports.queryEmployee = function(type, data, next) {
-	var sql;
-
-	if (type == "queryUnregisteredUser") {
-		sql = "select et.* from employee_table et left join user_table ut on et.employee_id = ut.employee_id where ut.employee_id is null";
-	}
-	else if (type == "singleEmployeeID") {
-		sql = "select * from employee_table where employee_id = ?";
-	}
-	else if (type == "singleUser") {
-		sql = "select ut.user_id, ut.employee_id, et.last_name, et.first_name, ut.username, ut.password, et.position, et.assigned_form, et.phone_number, ut.access_level from employee_table et join user_table ut on et.employee_id = ut.employee_id where et.employee = ?";
-	}
-	else if (type == "filterByFarm") {
-		sql = "select * from employee_table where assigned_farm = ?";
-	}
-	else if (type == "allEmployees") {
-		sql = "select * from employee_table";
-	}
-	else if (type == "allUsers") {
-		var sql = "select ut.user_id, ut.employee_id, et.last_name, et.first_name, ut.username, ut.password, et.position, et.assigned_form, et.phone_number, ut.access_level from employee_table et join user_table ut on et.employee_id = ut.employee_id";
-	}
-
-	if (!data) {
-		sql = mysql.format(sql, data);
-	}
+exports.queryEmployee = function(data, next) {
+	var sql = 'select *, count(*) - 1 as num_assignments from ( select fa.employee_id, et.last_name, et.first_name, et.position, et.phone_number, fa.farm_id, ft.farm_name from farm_assignment fa join employee_table et on fa.employee_id = et.employee_id join farm_table ft on fa.farm_id = ft.farm_id union select employee_id, last_name, first_name, position, phone_number, null, null from employee_table ) as t1 where ? group by employee_id order by position, employee_id, num_assignments';
+	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 }
-

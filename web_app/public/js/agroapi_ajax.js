@@ -19,6 +19,16 @@ function preparePolygonCoordinates(data) {
 	return result_arr;
 }
 
+function prepareWorkerIDs(emp_arr, farm_id, status) {
+	var str = '';
+	for (var i = 0; i < emp_arr.length; i++) {
+		if (str != 0)
+			str += ', ';
+		str += "("+emp_arr[i].value+","+farm_id+',"'+status+'")'
+	}
+	return str;
+}
+
 $(document).ready(function() {
 	$('#forecast_check').on('click', function() {
 		$.get('/agroapi/weather/forecast', {}, function(result) {
@@ -50,7 +60,7 @@ $(document).ready(function() {
 		e.preventDefault();
 
 		var form_data = $('#create_farm_form').serializeJSON()
-
+		
 		form_data.coordinates = [];
 
 		form_data.coordinates.push(preparePolygonCoordinates($('[name="coordinates"]').serializeArray()));
@@ -64,7 +74,22 @@ $(document).ready(function() {
 		        	if (result.success) {
 		        		$.post('/createFarmRecord', form_data, function(db_record) {
 		        			if (db_record.success) {
-		        				window.location.href = "/farms";
+
+		        				var status = 'Active';
+		        				var m = prepareWorkerIDs($('[name="worker_checkbox"]').serializeArray(), 
+		        					db_record.farm_id, status);
+		        				$.post('/assign_farmers', { query: m }, function(assign_farmer) {
+		        					console.log(assign_farmer);
+		        					if (assign_farmer.success) {
+		        						console.log('success');
+		        						window.location.href = "/farms";
+		        					}
+		        					else {
+
+		        					}
+		        				});
+
+		        				
 		        			}
 		        			// Show error message
 		        			else {
@@ -82,7 +107,7 @@ $(document).ready(function() {
 			}
 			// Create error message that farm name already exists
 			else {
-
+				console.log('get farm error');
 			}
 
 		});

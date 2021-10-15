@@ -9,7 +9,7 @@ function parseDecimal(num, decimal) {
 	return parseFloat((num).toFixed(decimal));
 }
 
-//!! To add weather value based on weather data id
+//!!
 exports.weatherForecast14D = function(dataset) {
 	var result_obj;
 	const net = new brain.brain.recurrent.LSTMTimeStep({

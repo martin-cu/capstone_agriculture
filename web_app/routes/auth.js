@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const controller = require('../controllers/materialsController');
 const farmController = require('../controllers/farmController');
+const employeeController = require('../controllers/employeeController');
 const environmentController = require('../controllers/environmentController');
 const globe = require('../controllers/sms-mt');
 
@@ -73,6 +74,11 @@ router.get('/addFarmMaterial', controller.addFarmMaterial);
 router.get('/addPurchase', controller.addPurchase);
 router.get('/getPurchases', controller.getPurchases);
 router.get('/updatePurchase', controller.updatePurchase);
+
+router.get('/get_employees', employeeController.ajaxEmployees);
+router.post('/assign_farmers', farmController.assignFarmers);
+
+
 
 //Globe
 router.get('/globe_api', globe.test_globe);

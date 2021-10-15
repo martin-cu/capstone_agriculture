@@ -16,6 +16,12 @@ exports.addFarmPlot = function(data, next) {
 exports.addAssignedFarmers = function(data, next) {
 	var sql = "insert into farm_assignment (employee_id, farm_id, status) values ?";
 	sql = mysql.format(sql, data);
+	while (sql.includes("'")) {
+		sql = sql.replace("'", '');
+	}
+	while (sql.includes("\\")) {
+		sql = sql.replace("\\", '');
+	}
 	mysql.query(sql, next);
 }
 

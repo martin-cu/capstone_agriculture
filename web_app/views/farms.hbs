@@ -99,15 +99,15 @@
 					<div class="form-group w-25 mr-3">
 						<label for="x1">Coordinate 1</label>
 						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x1" placeholder="x1" name="coordinates" value="-121.1958">
-							<input type="text" class="form-control" id="y1" placeholder="y1" name="coordinates"	value="37.6683">	
+							<input type="text" class="form-control mr-3" id="x1" placeholder="x1" name="coordinates" value="121.38162">
+							<input type="text" class="form-control" id="y1" placeholder="y1" name="coordinates"	value="13.07716">	
 						</div>
 					</div>
 					<div class="form-group w-25">
 						<label for="inputPassword4">Coordinate 2</label>
 						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x2" placeholder="x2" name="coordinates" value="-121.1779">
-							<input type="text" class="form-control" id="y2" placeholder="y2" name="coordinates" value="37.6687">	
+							<input type="text" class="form-control mr-3" id="x2" placeholder="x2" name="coordinates" value="121.38197">
+							<input type="text" class="form-control" id="y2" placeholder="y2" name="coordinates" value="13.06959">	
 						</div>
 					</div>
 				</div>
@@ -116,15 +116,15 @@
 					<div class="form-group w-25 mr-3">
 						<label for="x1">Coordinate 3</label>
 						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x3" placeholder="x3" name="coordinates" value="-121.1773">
-							<input type="text" class="form-control" id="y3" placeholder="y3" name="coordinates" value="37.6792">	
+							<input type="text" class="form-control mr-3" id="x3" placeholder="x3" name="coordinates" value="121.3876">
+							<input type="text" class="form-control" id="y3" placeholder="y3" name="coordinates" value="13.06939">	
 						</div>
 					</div>
 					<div class="form-group w-25">
 						<label for="inputPassword4">Coordinate 4</label>
 						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x4" placeholder="x4" name="coordinates" value="-121.1958">
-							<input type="text" class="form-control" id="y4" placeholder="y4" name="coordinates" value="37.6683">	
+							<input type="text" class="form-control mr-3" id="x4" placeholder="x4" name="coordinates" value="121.38828">
+							<input type="text" class="form-control" id="y4" placeholder="y4" name="coordinates" value="13.07749">	
 						</div>
 					</div>
 				</div>
@@ -132,7 +132,40 @@
       	</div>
 
       	<div class="hide modal_body_content" id="body_step3">
-      		
+      		<label for="">Assign Employees</label>
+      		<div class="">
+      			<label for="">Farm Manager/s:</label>
+
+      			<div class="container" id="">
+      				<div class="row" id="farm_mngr_cont">
+      					
+      				</div>
+      			</div>
+      		</div>
+
+      		<div class="">
+      			<label for="">Farm Workers:</label>
+      			<div class="container" id="">
+      				<div class="row" id="">
+      					
+      				</div>
+      			</div>
+
+      			<div class="container" id="">
+      				<small id="" class="form-text text-muted">Unassigned workers</small>
+      				<div class="row" id="unassigned_frmr_cont">
+      					
+      				</div>
+      			</div>
+
+      			<div class="container" id="">
+      				<small id="" class="form-text text-muted">Assigned workers</small>
+      				<div class="row" id="assigned_frmr_cont">
+      					
+      				</div>
+      			</div>
+      		</div>
+
       	</div>
 
       	</form>
@@ -147,7 +180,7 @@
 
       	<div class="hide modal_footer_content" id="_step2">
       		<button type="button" class="btn btn-secondary prev_step" value="_step1">Back</button>
-	        <button type="button" class="btn btn-primary next_step" value="_step3">Next</button>
+	        <button type="button" class="btn btn-primary next_step" value="_step3" id="queueFarmers">Next</button>
       	</div>
 
       	<div class="hide modal_footer_content" id="_step3">
