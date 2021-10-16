@@ -5,6 +5,10 @@ const js = require('../public/js/session.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 var request = require('request');
 
+
+var key = '2ae628c919fc214a28144f699e998c0f';
+
+
 exports.getPestDiseaseManagement = function(req, res) {
 	var html_data = {};
 	console.log(similarity.similarity("test","this is a Test"));
@@ -29,12 +33,40 @@ exports.getPestDiseaseManagement = function(req, res) {
 								console.log("sdkljahdsf");
 							}
 							else{
-								console.log(symptoms);
-								html_data["pests"] = pests;
-								html_data["diseases"] = diseases;
-								html_data["symptoms"] = symptoms;
-								html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
-								res.render('pest_disease', html_data);
+								
+								lat = 13.333376;
+								lon = 121.211384;
+
+								var url = 'https://api.agromonitoring.com/agro/1.0/weather?lat='+lat+'&lon='+lon+'&appid='+key;
+
+								request(url, { json: true }, function(err, response, body) {
+									if (err)
+										throw err;
+									else {
+										body.dt = dataformatter.unixtoDate(body.dt);
+										var weather = {
+											min_temp : body.main.temp_min - 273.15,
+											max_temp : body.main.temp_max - 273.15,
+											humidity : body.main.humidity,
+											precipitation : body.main.precipitation
+										}
+										pestdiseaseModel.getDiseaseBasedWeather(weather, function(err, possible_pests){
+											html_data["pos_pests"] = possible_pests;
+											console.log(weather);
+											html_data["weather"] = body.weather[0];
+											html_data["main"] = body.main;
+											html_data["pests"] = pests;
+											html_data["diseases"] = diseases;
+											html_data["symptoms"] = symptoms;
+											html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+											res.render('pest_disease', html_data);
+										});
+									}
+								});
+
+
+
+								
 							}
 						}
 					});

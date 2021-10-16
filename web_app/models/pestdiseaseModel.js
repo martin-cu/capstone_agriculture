@@ -11,6 +11,7 @@ exports.getAllFactors = function(next){
 	mysql.query(sql, next);
 }
 
+
 exports.addFactor = function(type, data, next){
 	var sql = "INSERT INTO ";
 	var table;
@@ -97,7 +98,41 @@ exports.addPest = function(pest, next){
 	mysql.query(sql, next);
 }
 
+exports.getPestsBasedWeather = function(weather, next){
+	var sql = "SELECT * FROM (SELECT p.pest_id, p.pest_name, wt.max_temp, wt.min_temp, wt.weather, wt.humidity, wt.precipitation, wt.soil_moisture FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id) a WHERE ";
+	
+	var first = false;
+	if(weather.min_temp != null){
+		first = true;
+		sql = sql + "a.min_temp <= " + weather.min_temp;
+	}
+	if(weather.max_temp != null){
+		if(first)
+			sql = sql + "&& ";
+			sql = sql + "a.max_temp >= " + weather.max_temp;
+	}
+	sql = sql + " GROUP BY a.pest_name";
+	console.log(sql);
+	mysql.query(sql, next);
+}
 
+exports.getDiseaseBasedWeather = function(weather, next){
+	var sql = "SELECT * FROM (SELECT p.disease_id, p.disease_name, wt.max_temp, wt.min_temp, wt.weather, wt.humidity, wt.precipitation, wt.soil_moisture FROM disease_table p INNER JOIN weather_disease wd ON p.disease_id = wd.disease_id INNER JOIN weather_table wt ON wt.weather_id = wd.weather_id) a WHERE ";
+	
+	var first = false;
+	if(weather.min_temp != null){
+		first = true;
+		sql = sql + "a.min_temp <= " + weather.min_temp;
+	}
+	if(weather.max_temp != null){
+		if(first)
+			sql = sql + "&& ";
+			sql = sql + "a.max_temp >= " + weather.max_temp;
+	}
+	// sql = sql + " GROUP BY a.disease_name";
+	console.log(sql);
+	mysql.query(sql, next);
+}
 
 
 
