@@ -33,11 +33,11 @@ $(document).ready(function() {
 	$('#forecast_check').on('click', function() {
 		var d1 = new Date(Date.now());
 		var d2 = new Date(Date.now());
-		d2.setDate(d2.getDate() - 1);
+		d2.setDate(d2.getDate() - 5);
 
-		$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result1) {
-			for (var i = 0; i < result1.msg.forecast.length; i++) {
-				console.log(result1.msg.forecast[i]);
+		$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+			for (var i = 0; i < result.forecast.length; i++) {
+				console.log(result.forecast[i]);
 			}
 		});
 	});

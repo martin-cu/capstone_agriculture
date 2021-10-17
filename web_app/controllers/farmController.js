@@ -32,7 +32,7 @@ exports.getFarms = function(req, res) {
 
 exports.assignFarmers = function(req, res) {
 	var query = req.body.query;
-	console.log(query);
+
 	farmModel.addAssignedFarmers(query, function(err, result) {
 		if (err)
 			throw err;
@@ -411,7 +411,7 @@ exports.getForecastWeather = function(req, res) {
 		        	throw err;
 		        else {
 		        	var hour_arr = [];
-		        	//console.log(forecast_body);
+
 		        	for (var i = 0; i < forecast_body.length; i++) {
 		        		forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
 		        		hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
@@ -420,7 +420,6 @@ exports.getForecastWeather = function(req, res) {
 		        	//***** Get unique hour timestamps from forecast and filter data
 		        	hour_arr = [...new Map(hour_arr.map(item =>
 	  					[item, item])).values()];
-		        	console.log(hour_arr);
 
 		        	body = dataformatter.smoothHourlyData(body, hour_arr);
 		        	forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
@@ -433,9 +432,9 @@ exports.getForecastWeather = function(req, res) {
 		        	result.forecast = 
 		        	dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
 
-		        	forecast = dataformatter.mapWeatherIDs(result);
+		        	forecast = dataformatter.mapAndFormatForecastResult(result, hour_arr);
 
-		        	res.send({ msg: forecast });
+		        	res.send({ forecast: forecast });
 		        }
 		    });
         }

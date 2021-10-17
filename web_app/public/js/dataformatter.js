@@ -177,9 +177,111 @@ function embedWeatherIDs(obj, array) {
 	return obj;
 }
 
-exports.mapWeatherIDs = function(data) {
-	var min = 0, index = 0;
+function parseHour(hour) {
+	return parseInt(hour)+hour.slice(-2);
+}
 
+function filterHoursToday(hour_arr, curr_hour) {
+	filtered_hour = hour_arr.filter(hour => hour.slice(-2) == curr_hour.slice(-2));
+	filtered_hour = filtered_hour.filter(function(item, i) {
+		if (i > 0) {
+			if (item[i-1] < item[i]) {
+				return item;
+			}
+			else {
+
+			}
+		}
+		else
+			return item;
+	});
+
+	return filtered_hour;
+}
+
+function findStartIndex(filtered_arr, arr) {
+	console.log(filtered_arr);
+	console.log(arr);
+	var index = 0;
+	for (var i = 0; i < arr.length; i++) {
+		if (filtered_arr[filtered_arr.length-1] == arr[i]) {
+			index = i;
+		}
+	}
+	return index;
+}
+
+function sortHours(arr) {
+	var am = arr.filter(hour => hour.slice(-2) == 'AM');
+	var pm = arr.filter(hour => hour.slice(-2) == 'PM');
+
+	pm = pm.sort(function(a, b) {
+		return parseInt(a) - parseInt(b);
+	});
+	pm = pm.sort(function(a, b) {
+		return parseInt(a) - parseInt(b);
+	});
+
+	if (am[am.length-1] == '12:00AM') {
+		var temp_arr = [];
+		temp_arr.push(am.pop());
+		am = temp_arr.concat(am);
+	}
+
+	arr = am.concat(pm);
+
+	return arr;
+}
+
+exports.mapAndFormatForecastResult = function(data, hours) {
+	var min = 0, index = 0, hour_index = 0;
+
+	var date = new Date(), temp_date;
+	var curr_hour = formatDate(date, 'HH');
+
+	var filtered_hours = filterHoursToday(hours, curr_hour);
+	var start_index = findStartIndex(filtered_hours, hours) + 1;
+	var temp_start_index = 0;
+	var isDone = false;
+	var nextDay = false;
+
+	hours = sortHours(hours);
+
+	// Embed date and time
+	for (var i = 0; i < data.forecast.length; i++) {
+		temp_date = formatDate(date, 'mm DD, YYYY');
+
+		if(!isDone) {
+			while (!isDone) {
+				data.forecast[i]['date'] = temp_date;
+				data.forecast[i]['time'] = filtered_hours[hour_index];
+
+
+				i++;
+				hour_index++;
+
+				if (hour_index == filtered_hours.length) {
+					isDone = true;
+					i--;
+					date = new Date(date.setDate(date.getDate()+1) );
+				}
+			}
+			
+		}
+		else {
+			data.forecast[i]['date'] = temp_date;
+			data.forecast[i]['time'] = hours[temp_start_index];
+
+			temp_start_index++;
+
+			if (temp_start_index == hours.length) {
+				temp_start_index = 0;
+				date = new Date(date.setDate(date.getDate()+1) );
+			}
+		}
+	}
+
+	// Map weather ids
 	for (var i = 0; i < data.forecast.length; i++) {
 		min = Math.abs(data.forecast[i].id - data.weather_data[0].id);
 		index = 0;
@@ -194,13 +296,31 @@ exports.mapWeatherIDs = function(data) {
 		data.forecast[i]['desc'] = data.weather_data[index].desc;
 	}
 
-	return data;
+	// Consolidate as array of objects
+	const unique = [...new Map(data.forecast.map(item =>
+	  [item['date'], item.date])).values()];
+	var obj = {};
+	var cont_arr = [];
+	for (var i = 0; i < unique.length; i++) {
+		var filtered_forecast = data.forecast.filter(forecast => forecast.date == unique[i]);
+
+		obj['date'] = unique[i];
+		obj['data'] = [];
+		for (var y = 0; y < filtered_forecast.length; y++) {
+			delete filtered_forecast[y].date;
+			obj['data'].push(filtered_forecast[y]);
+		}
+		cont_arr.push(obj);
+		obj = {};
+	}
+
+	return cont_arr;
 }
 
 exports.arrayToObject = function(arr, keys) {
 	var obj_arr = [];
 	var obj;
-
+ 
 	// Iterate through data array 
 	for (var i = 0; i < arr.length; i++) {
 
@@ -279,7 +399,7 @@ exports.prepareData = function(arr, size) {
 		json_obj[normalize_keys[x]] = json_obj[normalize_keys[x]].arr;
 	}
 
-	for (var y = 0; y < json_obj.dt.length-3; y++) {
+	for (var y = 0; y < json_obj.dt.length; y++) {
 		for (var k = 0; k < keys.length; k++) {
 			temp_arr.push(json_obj[keys[k]][y]);
 		}
@@ -447,6 +567,22 @@ function formatDate(date, format) {
 
 		date = hour+':'+(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()+lbl;
 	}
+	else if (format == 'HH') {
+		var hour = parseInt(date.getHours());
+		var lbl;
+		if (hour < 12)
+			lbl = 'AM';
+		else {
+			lbl = 'PM';
+		}
+
+		if (hour == 0)
+			hour = 12;
+		else if (hour > 12)
+			hour -= 12;
+
+		date = hour+':'+'00'+lbl;
+	}
 	else if (format === 'YYYY-MM-DD : HH:m') {
 		if (month < 10)
 			month = '0'+month;
@@ -513,6 +649,22 @@ exports.formatDate = function(date, format) {
 			hour -= 12;
 
 		date = hour+':'+(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()+lbl;
+	}
+	else if (format == 'HH') {
+		var hour = parseInt(date.getHours());
+		var lbl;
+		if (hour < 12)
+			lbl = 'AM';
+		else {
+			lbl = 'PM';
+		}
+
+		if (hour == 0)
+			hour = 12;
+		else if (hour > 12)
+			hour -= 12;
+
+		date = hour+':'+'00'+lbl;
 	}
 	else if (format === 'YYYY-MM-DD : HH:m') {
 		if (month < 10)
