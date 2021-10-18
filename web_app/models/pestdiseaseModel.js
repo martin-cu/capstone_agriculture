@@ -109,7 +109,23 @@ exports.getPestsBasedWeather = function(weather, next){
 	if(weather.max_temp != null){
 		if(first)
 			sql = sql + "&& ";
-			sql = sql + "a.max_temp >= " + weather.max_temp;
+		else
+			first = true;
+		sql = sql + "a.max_temp >= " + weather.max_temp;
+	}
+	if(weather.precipitation != null){
+		if(first)
+			sql = sql + "&& ";
+		else
+			first = true;
+		sql = sql + " a.precipitation = " + weather.precipitation;
+	}
+	if(weather.humidity != null){
+		if(first)
+			sql = sql + "&& ";
+		else
+			first = true;
+		sql = sql + " a.precipitation = " + weather.humidity;
 	}
 	sql = sql + " GROUP BY a.pest_name";
 	console.log(sql);
@@ -127,7 +143,23 @@ exports.getDiseaseBasedWeather = function(weather, next){
 	if(weather.max_temp != null){
 		if(first)
 			sql = sql + "&& ";
-			sql = sql + "a.max_temp >= " + weather.max_temp;
+		else
+			first = true;
+		sql = sql + "a.max_temp >= " + weather.max_temp;
+	}
+	if(weather.precipitation != null){
+		if(first)
+			sql = sql + "&& ";
+		else
+			first = true;
+		sql = sql + " a.precipitation = " + weather.precipitation;
+	}
+	if(weather.humidity != null){
+		if(first)
+			sql = sql + "&& ";
+		else
+			first = true;
+		sql = sql + " a.precipitation = " + weather.humidity;
 	}
 	// sql = sql + " GROUP BY a.disease_name";
 	console.log(sql);
