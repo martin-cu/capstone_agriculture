@@ -56,5 +56,21 @@ body {
 }
 
 .hide {
-	display: none;
+	display: none !important;
+}
+
+.forecast_cont {
+	min-height:  150px;
+	border-radius: 5px;
+}
+
+.forecast_card {
+	background-color: white;
+	border-radius:  5px;
+	margin:  8px;
+}
+
+.forecast_card:hover {
+	background-color: gainsboro;
+	cursor: pointer;
 }

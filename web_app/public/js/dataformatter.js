@@ -244,7 +244,7 @@ exports.mapAndFormatForecastResult = function(data, hours) {
 	var temp_start_index = 0;
 	var isDone = false;
 	var nextDay = false;
-
+	console.log(filtered_hours);
 	hours = sortHours(hours);
 
 	// Embed date and time
@@ -301,15 +301,31 @@ exports.mapAndFormatForecastResult = function(data, hours) {
 	  [item['date'], item.date])).values()];
 	var obj = {};
 	var cont_arr = [];
+	var temp_min, temp_max;
 	for (var i = 0; i < unique.length; i++) {
 		var filtered_forecast = data.forecast.filter(forecast => forecast.date == unique[i]);
 
 		obj['date'] = unique[i];
 		obj['data'] = [];
 		for (var y = 0; y < filtered_forecast.length; y++) {
+			if (y == 0) {
+				temp_min = filtered_forecast[y].min_temp;
+				temp_max = filtered_forecast[y].max_temp;
+			}
+			else {
+				if (temp_min > filtered_forecast[y].min_temp)
+					temp_min = filtered_forecast[y].min_temp
+
+				if (temp_max < filtered_forecast[y].max_temp)
+					temp_max = filtered_forecast[y].max_temp;
+			}
+
 			delete filtered_forecast[y].date;
 			obj['data'].push(filtered_forecast[y]);
 		}
+		obj['max_temp'] = temp_max;
+		obj['min_temp'] = temp_min;
+		
 		cont_arr.push(obj);
 		obj = {};
 	}

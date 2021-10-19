@@ -42,8 +42,9 @@ exports.addMaterials = function(req,res){
 exports.getMaterials = function(req,res){ //ajax
     // materialModel.addPesticide(function(err,result){
     // });
-    var filter = null;
-    var type = "Fertilizer"
+    var filter = req.query.filter == undefined ? null : req.query.filter;
+    var type = req.query.type;
+
     materialModel.getMaterials(type, filter, function(err, result){
         if (err)
 			throw err;
@@ -51,11 +52,10 @@ exports.getMaterials = function(req,res){ //ajax
             for(var i = 0; i < result.length ; i++){
                 console.log(result[i]);
             }
+
+            res.send(result);
         }
     });
-
-    html_data = {msg : "Done."}
-    res.send(html_data);
 }
  exports.updateMaterial = function(req,res){
 

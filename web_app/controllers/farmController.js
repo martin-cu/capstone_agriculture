@@ -11,6 +11,16 @@ var key = '2ae628c919fc214a28144f699e998c0f';
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;
 
+exports.ajaxGetFarmList = function(req, res) {
+	farmModel.getFarmData({}, function(err, farms) {
+		if (err)
+			throw err;
+		else {
+			res.send(farms);
+		}
+	});
+}
+
 exports.getDashboard = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
@@ -62,7 +72,7 @@ exports.retireFarm = function(req, res) {
 exports.getCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
-	res.render('crop_calendar', html_data);
+	res.render('crop_calendar_test', html_data);
 }
 
 exports.getHarvestCycle = function(req, res) {

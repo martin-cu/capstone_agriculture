@@ -1,0 +1,263 @@
+<div class="p-3">
+	<form method="" action="">
+		<div class="form-group">
+			<label for="exampleFormControlSelect1">Farm</label>
+			<select class="form-control" id="farm_id" name="farm_id">
+			</select>
+		</div>
+
+
+		  <div class="form-group row">
+		    <label for="staticEmail" class="col-sm-2 col-form-label">Description: </label>
+		    <div class="" id="farm_desc">
+		      
+		    </div>
+		  </div>
+
+		  <div class="form-group row">
+		    <label for="staticEmail" class="col-sm-2 col-form-label">Land Type: </label>
+		    <div class="" id="land_type">
+		      
+		    </div>
+		  </div>
+
+		  <div class="form-group row">
+		    <label for="staticEmail" class="col-sm-2 col-form-label">Farm Area: </label>
+		    <div class="" id="farm_area">
+		      
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">Land Prep Date: </label>
+		    <input type="date" class="form-control" id="land_prep_date" name="land_prep_date" aria-describedby="emailHelp" placeholder="">
+		  </div>
+
+		  <div class="" id="">
+		  	<label for="exampleInputEmail1">14-Day Weather Forecast: </label>
+
+			<div class="mx-4 bg-secondary forecast_cont">
+				<div class="d-flex w-100 px-3 py-2" style="min-height: 50px;">
+					<div class="">
+						icon
+					</div>
+					<div class="px-2 d-flex">
+						<div style="font-size: 20px;" id="temp">
+							Temp
+						</div>
+						<div style="font-size: 11px;">°C</div>
+					</div>
+					<div class="">
+						<div>
+							<span>Precipitation: </span>
+							<span id="precipitation">a</span>
+						</div>
+						<div>
+							<span>Humidity: </span>
+							<span id="humidity">a</span>
+						</div>
+						<div>
+							<span>Rainfall: </span>
+							<span id="rainfall">a</span>
+						</div>
+					</div>
+					<div class="ml-auto">
+						<span>Soccoro, Oriental Mindoro</span>
+						<span id="weather_day"></span>
+						<span id="weather_desc"></span>
+					</div>
+				</div>
+
+				<div id="" class="" data-touch="false" data-interval="false" data-ride="carousel" style="height: 100px;">
+				  <div class="carousel-inner" id="carousel_inner">
+
+				  </div>
+				</div>
+			</div>
+
+			<ol class="carousel-indicators hide" id="page">
+			    <li onclick="switchWeek(0, this)" class="active"></li>
+			    <li onclick="switchWeek(1, this)"></li>
+			</ol>
+
+		  </div>
+
+		  <div class="w-100 my-4" style="height: 5px; background: black;"></div>
+
+		  <div class="form-group">
+				<label for="">Seed</label>
+				<select class="form-control" id="seed_id" name="seed_id">
+				</select>
+			</div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Seed Rate: </label>
+			<input type="text" class="form-control" id="seed_rate" name="seed_rate" aria-describedby="emailHelp" placeholder="">
+		</div>
+
+		<div class="mb-5">
+			<button type="submit" class="btn btn-primary float-right">Submit</button>
+		</div>
+
+		<div class="w-100" style="height: 5px; background: black;"></div>
+
+	</form>
+
+</div>
+
+<script type="text/javascript">
+	function changeFarmDetails(id, farm_list) {
+		var i = 0;
+		while (farm_list[i].farm_id != id) {
+			i++;
+		}
+		$('#farm_desc').html(farm_list[i].farm_desc);
+		$('#land_type').html(farm_list[i].land_type);
+		$('#farm_area').html(farm_list[i].farm_area);
+	}
+
+	function setElementAttributes(ele, obj_arr) {
+		for (var i = 0; i < obj_arr.prop.length; i++) {
+			if (obj_arr.prop[i] == 'inner_HTML')
+				ele.innerHTML = obj_arr.val[i]
+			else
+				ele.setAttribute(obj_arr.prop[i], obj_arr.val[i]);
+		}
+
+		return ele;
+	}
+
+	function processForecastData(data) {
+
+		const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+		var day = new Date(data.date);
+		day = weekday[day.getDay()];
+		var icon = '';
+		if (data.data[0].desc == 'light rain') {
+			icon = '<i class="fas fa-cloud-rain"></i>';
+		}
+		else if (data.data[0].desc == 'overcast clouds') {
+			icon = '<i class="fad fa-clouds"></i>';
+		}
+		else if (data.data[0].desc == 'heavy intensity rain') {
+			icon = '<i class="fas fa-cloud-showers-heavy"></i>';
+		}
+		else if (data.data[0].desc == 'few clouds') {
+			icon = '<i class="far fa-cloud"></i>';
+		}
+		else if (data.data[0].desc == 'clear sky') {
+			icon = '<i class="fas fa-cloud-sun"></i>';
+		}
+		else {
+			console.log(data.data[0].desc);
+		}
+
+		data['day'] = day;
+		data['icon'] = icon;
+
+		return data;
+	}
+
+	function createForecastCards(data, width, active) {
+		var cont, day_div, icon_div, temp_cont, max_temp, min_temp, item;
+
+		data = processForecastData(data);
+
+		cont = document.createElement('div');
+		cont.setAttribute('class', 'forecast_card');
+		cont.setAttribute('style', 'width: '+width/7+'px');
+
+		day_div = document.createElement('div');
+		day_div.innerHTML = data.day;
+
+		icon_div = document.createElement('div');
+		icon_div.innerHTML = data.icon;
+		
+		temp_cont = document.createElement('div');
+		temp_cont.setAttribute('class', 'd-inline-flex');
+		temp_cont.setAttribute('style', 'font-size:10px;');
+
+		max_temp = document.createElement('div');
+		max_temp.innerHTML = data.max_temp+'° /';
+
+		min_temp = document.createElement('div');
+		min_temp.setAttribute('class', 'pl-1');
+		min_temp.innerHTML = data.min_temp+'°';
+
+		temp_cont.appendChild(max_temp);
+		temp_cont.appendChild(min_temp);
+
+		cont.appendChild(day_div);
+		cont.appendChild(icon_div);
+		cont.appendChild(temp_cont);
+
+		return cont;
+	}
+
+	function appendForecastCards(arr) {
+		var slide = $('#carousel_inner');
+		var item = document.createElement('div');
+		item.setAttribute('class', 'carousel-item d-inline-flex mx-2');
+
+		for (var i = 0; i < 14; i++) {
+			if (i == 7) {
+				var item = document.createElement('div');
+				item.setAttribute('class', 'carousel-item d-inline-flex hide mx-2');
+			}
+			item.appendChild(createForecastCards(arr.forecast[i], slide.width()))
+			slide.append(item);
+
+		}
+		$('#page').toggleClass('hide');
+	}
+
+	function switchWeek(week, event) {
+		var inner = $('#carousel_inner').children();
+
+		$(inner[0]).toggleClass('hide');
+		$(inner[1]).toggleClass('hide');
+
+		$(event).toggleClass('active');
+		
+		if (!week)
+			$(event).next().toggleClass('active');
+		else
+			$(event).prev().toggleClass('active');
+	}
+
+	$(document).ready(function() {
+		var farm_select = $('#farm_id'), seed_select = $('#seed_id');
+		var farm_list, seed_list;
+
+		$.get('/get_farm_list', {  }, function(result) {
+			farm_list = result;
+			for (var i = 0; i < result.length; i++) {
+				farm_select.append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
+			}
+			changeFarmDetails(result[0].farm_id, farm_list);
+		});
+
+		$('#farm_id').on('change', function(e) {
+			changeFarmDetails($(this).val(), farm_list);
+		});
+
+		$.get('/getMaterials', { type: 'Seed' }, function(result) {
+			for (var i = 0; i < result.length; i++) {
+				seed_select.append("<option value='"+result[i].seed_id+"'>"+result[i].seed_name+"</option>");
+			}
+		});
+
+		// Load forecast
+		setTimeout(function() {
+			console.log('Getting weather forecast...');
+			var d1 = new Date(Date.now());
+			var d2 = new Date(Date.now());
+			d2.setDate(d2.getDate() - 15);
+
+			$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+				appendForecastCards(result);
+			});	
+		}, 1000);
+	});
+
+</script>

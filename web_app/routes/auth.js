@@ -13,6 +13,12 @@ router.get('/test', controller.test);
 router.get('/testAPI', controller.testAPI);
 router.get('/getWeather', controller.getWeather);
 
+/*** Database Ajax Start ***/
+
+router.get('/get_farm_list', farmController.ajaxGetFarmList);
+
+/*** Database Ajax End ***/
+
 /*** Page Navigation Start ***/
 router.get('/', farmController.getDashboard);
 router.get('/home', farmController.getDashboard);

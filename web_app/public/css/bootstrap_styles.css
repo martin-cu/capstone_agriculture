@@ -1,0 +1,19 @@
+.carousel-control-next, .carousel-control-prev {
+    width: auto;
+    background-color: black;
+    opacity:  1;
+}
+
+.carousel-item {
+    margin:  auto !important;
+    align-content: center !important;
+    text-align: center !important;
+}
+
+.carousel-indicators {
+    position: inherit;
+}
+
+.carousel-indicators li {
+    background-color: gray;
+}
