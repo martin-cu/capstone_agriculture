@@ -44,22 +44,54 @@ exports.getPestDiseaseManagement = function(req, res) {
 										throw err;
 									else {
 										body.dt = dataformatter.unixtoDate(body.dt);
+										console.log(body);
 										var weather = {
 											min_temp : body.main.temp_min - 273.15,
 											max_temp : body.main.temp_max - 273.15,
 											humidity : body.main.humidity,
 											precipitation : body.main.precipitation
 										}
-										pestdiseaseModel.getDiseaseBasedWeather(weather, function(err, possible_pests){
-											html_data["pos_pests"] = possible_pests;
-											console.log(weather);
-											html_data["weather"] = body.weather[0];
-											html_data["main"] = body.main;
-											html_data["pests"] = pests;
-											html_data["diseases"] = diseases;
-											html_data["symptoms"] = symptoms;
-											html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
-											res.render('pest_disease', html_data);
+										
+										var season = {
+											season_temp : 35,
+											season_humidity : 70
+										}
+
+										var stage = {
+											stage_name : "Reproductive"
+										}
+
+
+										pestdiseaseModel.getPestPossibilities(weather, season, null, stage,function(err, possible_pests){
+											if(err){
+												console.log(err);
+												throw err;
+											}else{
+												var statements = new Array();
+												for(i = 0; i < possible_pests.length; i++){
+													stmt = possible_pests[i].pest_name + " - May occur due to ";
+													if(possible_pests[i].weather_id != null)
+														stmt = stmt + possible_pests[i].weather + " weather, ";
+													if(possible_pests[i].season_id != null)
+														stmt = stmt + possible_pests[i].season_name + " season ";
+													if(possible_pests[i].stage_id != null)
+														stmt = stmt + possible_pests[i].t_stage_name + " stage ";
+													statements.push({ statement : stmt});
+
+												}
+												console.log("--------------------------------");
+												console.log(statements);
+												html_data["statements"] = statements;
+												html_data["pos_pests"] = possible_pests;
+												console.log(possible_pests);
+												html_data["weather"] = body.weather[0];
+												html_data["main"] = body.main;
+												html_data["pests"] = pests;
+												html_data["diseases"] = diseases;
+												html_data["symptoms"] = symptoms;
+												html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+												res.render('pest_disease', html_data);
+											}
 										});
 									}
 								});
