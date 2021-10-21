@@ -38,33 +38,33 @@
 
 			<div class="mx-4 bg-secondary forecast_cont">
 				<div class="d-flex w-100 px-3 py-2" style="min-height: 50px;">
-					<div class="">
+					<div class="" id="icon_detail" style="font-size: 40px;">
 						icon
 					</div>
 					<div class="px-2 d-flex">
-						<div style="font-size: 20px;" id="temp">
+						<div style="font-size: 24px;" id="temp_detail">
 							Temp
 						</div>
-						<div style="font-size: 11px;">°C</div>
+						<div style="font-size: 12px;">°C</div>
 					</div>
-					<div class="">
+					<div class="" style="font-size: 12px;">
 						<div>
 							<span>Precipitation: </span>
-							<span id="precipitation">a</span>
+							<span id="precipitation_detail">a</span>
 						</div>
 						<div>
 							<span>Humidity: </span>
-							<span id="humidity">a</span>
+							<span id="humidity_detail">a</span>
 						</div>
 						<div>
 							<span>Rainfall: </span>
-							<span id="rainfall">a</span>
+							<span id="rainfall_detail">a</span>
 						</div>
 					</div>
-					<div class="ml-auto">
+					<div class="ml-auto d-flex flex-column float-right">
 						<span>Soccoro, Oriental Mindoro</span>
-						<span id="weather_day"></span>
-						<span id="weather_desc"></span>
+						<span id="weather_day_detail"></span>
+						<span id="weather_desc_detail"></span>
 					</div>
 				</div>
 
@@ -128,7 +128,6 @@
 	}
 
 	function processForecastData(data) {
-
 		const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 		var day = new Date(data.date);
 		day = weekday[day.getDay()];
@@ -225,6 +224,74 @@
 			$(event).prev().toggleClass('active');
 	}
 
+	function appendForecastDetails(data) {
+		$('#icon_detail').html(data.icon);
+		$('#temp_detail').html(data.max_temp);
+		$('#precipitation_detail').html(data.data[0].pressure);
+		$('#humidity_detail').html(data.data[0].humidity);
+		$('#rainfall_detail').html(data.data[0].rainfall);
+		$('#weather_day_detail').html(data.date);
+		$('#weather_desc_detail').html('');
+	}
+
+	function generateRecommendation(arr) {
+		var risk_lvl;
+		var two_days;
+		var three_days;
+		var obj = {
+
+		}
+		var result_arr = [];
+		var avg_rainfall = 0;
+		var counter = 0;
+		console.log(arr);
+		var t_arr = [];
+		var start_date, end_date;
+		var chain = false;
+		var push = false;
+		for (var i = 0; i < arr.length; i++) {
+			var count = arr[i].data.filter(data => data.desc == 'light rain').length;
+			t_arr.push[arr[i].date+' - '+count];
+			console.log(arr[i].date+' - '+count);
+			if (count >= 3) {
+				if (!chain) {
+					start_date = arr[i].date;
+					chain = true;
+
+					obj['start'] = start_date;
+					
+					avg_rainfall = count;
+					counter = 1;
+				}
+				else {
+					avg_rainfall += count;
+					counter++;
+				}
+			}
+			else {
+				avg_rainfall = 0;
+				counter = 0;
+
+				if (chain) {
+					end_date = arr[i-1].date;
+					chain = false;
+
+					obj['end'] = end_date;
+					push = true;
+				}
+			}
+
+			if (push) {
+				result_arr.push(obj);
+				obj = {};
+				push = false;
+			}
+		}
+
+		console.log(t_arr);
+		console.log(result_arr);
+	}
+
 	$(document).ready(function() {
 		var farm_select = $('#farm_id'), seed_select = $('#seed_id');
 		var farm_list, seed_list;
@@ -256,8 +323,21 @@
 
 			$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
 				appendForecastCards(result);
+				appendForecastDetails(result.forecast[0]);
+
+
+				// Recommendation
+				generateRecommendation(result.forecast);
+
+				$('.carousel-inner').on('click', '.forecast_card', function() {
+					var card = $('.forecast_card').index(this);
+
+					appendForecastDetails(result.forecast[card]);
+				});
+
 			});	
 		}, 1000);
+
 	});
 
 </script>

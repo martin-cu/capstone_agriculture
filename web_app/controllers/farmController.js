@@ -421,7 +421,7 @@ exports.getForecastWeather = function(req, res) {
 		        	throw err;
 		        else {
 		        	var hour_arr = [];
-
+					console.log(forecast_body);
 		        	for (var i = 0; i < forecast_body.length; i++) {
 		        		forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
 		        		hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))

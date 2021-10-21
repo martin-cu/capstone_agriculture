@@ -4,7 +4,11 @@
     Humidity - {{main.humidity}}
     possible pests for today's weather:
     {{#each pos_pests}}
-    <span>{{this.disease_name}}</span>
+    <span>{{this.pest_name}}</span>
+    {{/each}}
+    <br>
+    {{#each statements}}
+    <span>{{this.statement}}</span>
     {{/each}}
 <br><h1>
     Pests

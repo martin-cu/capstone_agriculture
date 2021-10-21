@@ -14,7 +14,7 @@ exports.weatherForecast14D = function(dataset, testing, length) {
 	var result_obj;
 	const net = new brain.brain.recurrent.LSTMTimeStep({
 	  inputSize: 6,
-	  hiddenLayers: [1],
+	  hiddenLayers: [10],
 	  outputSize: 6,
 	});
 
@@ -32,7 +32,7 @@ exports.weatherForecast14D = function(dataset, testing, length) {
 	// Feed last 3 days before start of forecast date
 	// to be replaced by agro api forecast values
 	const forecast = net.forecast(testing.data_arr, 9 * length);
-
+	console.log(forecast);
 	var api_forecast = testing.data_arr;
 
 	// Merge first 5 days from Agro API and 9 days from ANN forecast
