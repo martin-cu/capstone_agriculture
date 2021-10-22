@@ -59,9 +59,13 @@ body {
 	display: none !important;
 }
 
+.forecast_body {
+	border-radius: 5px;
+	min-height:  150px;
+}
+
 .forecast_cont {
 	min-height:  150px;
-	border-radius: 5px;
 	width:  722px;
 }
 
