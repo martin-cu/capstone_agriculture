@@ -18,3 +18,19 @@ exports.queryEmployee = function(data, next) {
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 }
+
+exports.filterFarmers = function(data, next) {
+	var sql = 'select et.*, fa.farm_id, fa.status from employee_table et join farm_assignment fa on et.employee_id = fa.employee_id where ?';
+	sql = mysql.format(sql, data);
+
+	sql = sql
+   .split('').reverse().join('')
+   .replace(',', ' - ').replace(',', ' - ')
+   .split('').reverse().join('');
+
+   while (sql.includes(" - ")) {
+		sql = sql.replace(" - ", ' and ');
+	}
+
+	mysql.query(sql, next);
+}

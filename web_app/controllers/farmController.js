@@ -5,8 +5,8 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
 
-//var key = '1d1823be63c5827788f9c450fb70c595';
-var key = '2ae628c919fc214a28144f699e998c0f';
+var key = '1d1823be63c5827788f9c450fb70c595';
+//var key = '2ae628c919fc214a28144f699e998c0f';
 
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;
@@ -38,6 +38,21 @@ exports.getFarms = function(req, res) {
 			res.render('farms', html_data);
 		}
 	});
+}
+
+exports.getFarmDetails = function(req, res) {
+	var query = req.query;
+	farmModel.filteredFarmDetails(query, function(err, details) {
+		if (err)
+			throw err;
+		else {
+			res.send(details);
+		}
+	});
+}
+
+exports.getMonitorFarms = function(req, res) {
+	res.render('farm_monitoring_test', {});
 }
 
 exports.assignFarmers = function(req, res) {
@@ -180,23 +195,19 @@ exports.getHistoricalNDVI = function(req, res) {
 }
 
 exports.getSatelliteImageryData = function(req, res) {
-	var date = new Date();
-	date.setDate(date.getDate() - 30);
-	req.query.start = date;
-	req.query.end = Date.now();
-	var polygon_id = '61692225a81b764bcf68700c';
+	var polygon_id = req.query.polygon_id;
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
 	var obj;
 
 	var data = {
 		polygon_id: polygon_id,
 		start: start_date,
-
-		end: end_date
+		end: end_date,
+		clouds_max: 0.7
 	};
 
 	var options = {
-		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key,
+		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key+'&clouds_max=0.5',
 		method: 'GET',
 		headers: {
 			'Content-type':'application/json'
@@ -215,7 +226,7 @@ exports.getSatelliteImageryData = function(req, res) {
 
 			console.log(body);
 
-			res.send({});
+			res.send(body);
 		}
 	})
 }
@@ -230,10 +241,10 @@ exports.getCurrentSoilData = function(req, res){
         	throw err;
         else {
 			body.dt = dataformatter.unixtoDate(body.dt);
+			body.moisture *= 100;
+			body = dataformatter.kelvinToCelsius(body, 'Soil');
 
-        	console.log(body);
-
-        	res.render('home', {});
+        	res.send(body);
         }
     });
 }
@@ -365,10 +376,9 @@ exports.getCurrentWeather = function(req, res){
         	throw err;
         else {
         	body.dt = dataformatter.unixtoDate(body.dt);
+        	body = dataformatter.kelvinToCelsius(body, 'Weather');
 
-        	console.log(body);
-
-        	res.render('home', {});
+        	res.send(body);
         }
     });
 }
@@ -522,7 +532,7 @@ exports.getAllPolygons = function(req, res){
         else {
         	console.log(body);
 
-        	res.send({ polygon_list: body });
+        	res.send(body);
         }
     });
 }
