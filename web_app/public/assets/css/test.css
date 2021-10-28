@@ -30,6 +30,12 @@
     border-color: #EDD172;
 }
 
+#btnLogin:focus {
+    background-color: #EDD172;
+    color: #584C33;
+    border-color: #EDD172;
+  }
+
 #more {
     width: 48%;
     border-radius: 100%;
@@ -43,10 +49,9 @@
 }
 
 #footer {
-    margin-top: 20%;
+    margin-top: 11%;
     background-color: #EEEEEE !important;
  }
-
 
 
 .nav-pills .nav-link.active {

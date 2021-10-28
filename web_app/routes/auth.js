@@ -27,6 +27,14 @@ router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
 /*** Database Ajax End ***/
 
 /*** Page Navigation Start ***/
+
+//login page
+// router.get('/', function(req, res) {
+//     res.render('login', {
+//         layout: 'login-main',
+//       })
+// });
+
 router.get('/', farmController.getDashboard);
 router.get('/home', farmController.getDashboard);
 
