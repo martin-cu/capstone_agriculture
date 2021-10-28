@@ -72,6 +72,12 @@ exports.retireFarm = function(req, res) {
 exports.getCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+	res.render('crop_calendar', html_data);
+}
+
+exports.getAddCropCalendar = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
 	res.render('crop_calendar_test', html_data);
 }
 

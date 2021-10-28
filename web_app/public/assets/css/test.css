@@ -17,6 +17,48 @@
 
 .btn-primary {
 	background-color: #EDD172;
-	color: #584C33;
+    border-color: #EDD172;
+    color: #584C33;
 	font-weight: bold;
+    border-radius: 50px;
 }
+
+.btn-primary:hover {
+    background-color: #EDD172;
+    color: #584C33;
+    filter: brightness(95%);
+    border-color: #EDD172;
+}
+
+#more {
+    width: 48%;
+    border-radius: 100%;
+    border-color: #EDD172;
+}
+
+#more:hover {
+    background-color: #EDD172;
+    color: #584C33;
+    filter: brightness(95%);
+}
+
+#footer {
+    margin-top: 20%;
+    background-color: #EEEEEE !important;
+ }
+
+
+
+.nav-pills .nav-link.active {
+    color: white;
+    background: #BDBE14; 
+}
+
+.nav-pills .nav-link {
+    color: #F1E8D7;
+}
+
+  .nav-item > a:hover {
+    color: white;
+  }
+
