@@ -12,7 +12,7 @@ var temp_lat = 13.073091;
 var temp_lon = 121.388563;
 
 exports.ajaxGetFarmList = function(req, res) {
-	farmModel.getFarmData({}, function(err, farms) {
+	farmModel.getFarmData({ where: null, group: 'farm_id'}, function(err, farms) {
 		if (err)
 			throw err;
 		else {
@@ -180,7 +180,11 @@ exports.getHistoricalNDVI = function(req, res) {
 }
 
 exports.getSatelliteImageryData = function(req, res) {
-	var polygon_id = req.query.polyid;
+	var date = new Date();
+	date.setDate(date.getDate() - 30);
+	req.query.start = date;
+	req.query.end = Date.now();
+	var polygon_id = '61692225a81b764bcf68700c';
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
 	var obj;
 
@@ -206,12 +210,12 @@ exports.getSatelliteImageryData = function(req, res) {
 		else {
 			body = JSON.parse(body);
 
-			var result = body[body.length-1];
-			result.dt = dataformatter.unixtoDate(result.dt);
+			//var result = body[body.length-1];
+			//result.dt = dataformatter.unixtoDate(result.dt);
 
-			console.log(result.dt);
+			console.log(body);
 
-			res.render('home', {});
+			res.send({});
 		}
 	})
 }

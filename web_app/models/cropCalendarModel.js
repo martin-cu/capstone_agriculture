@@ -15,19 +15,27 @@ exports.readCropCycle = function(next) {
 
 //Crop Calendar
 exports.createCropCalendar = function(data, next) {
-	var sql = "insert into crop_calendar_table (farm_id, cycle_id, land_prep_date, sowing_date, harvest_date, planting_method, seed_panted, status) values ?";
+	var sql = "insert into crop_calendar_table set ? ;";
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 };
 
 
-exports.getActiveCropCalendars = function(query, next) {
+exports.getCropCalendars = function(query, next) {
 	var filter;
-	if (!query) {
-		query = '%';
-	}
 
-	var sql = "select * from crop_calendar_table where status = ? order by harvest_date desc";
-	sql = mysql.format(sql, query);
+	var sql = "select cct.*, ft.farm_name, ft.land_type, st.seed_name from crop_calendar_table cct join farm_table ft on cct.farm_id = ft.farm_id join seed_table st on cct.seed_planted = st.seed_id ";
+
+	for (var i = 0; i < query.status.length; i++) {
+		if (i == 0) {
+			sql += 'where ';
+			sql += 'cct.status = "'+query.status[i]+'"';
+		}
+		else {
+			sql += ' or cct.status = "'+query.status[i]+'"';
+		}
+
+	}
+	sql += ' order by cct.harvest_date desc, cct.calendar_id desc';
 	mysql.query(sql, next);
 }

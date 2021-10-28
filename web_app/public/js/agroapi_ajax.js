@@ -73,7 +73,7 @@ $(document).ready(function() {
 	$('#create_farm_form').on('submit', function(e) {
 		e.preventDefault();
 
-		var form_data = $('#create_farm_form').serializeJSON()
+		var form_data = $('#create_farm_form').serializeJSON();
 		
 		form_data.coordinates = [];
 
