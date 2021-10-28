@@ -12,3 +12,14 @@ exports.ajaxEmployees = function(req, res) {
 	});
 
 }
+
+exports.ajaxFilterFarmers = function(req, res) {
+	var query = req.query;
+	employeeModel.filterFarmers(query, function(err, farmers) {
+		if (err)
+			throw err;
+		else {
+			res.send(farmers);
+		}
+	})
+}

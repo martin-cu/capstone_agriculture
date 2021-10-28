@@ -356,6 +356,30 @@ exports.arrayToObject = function(arr, keys) {
 	return obj_arr;
 }
 
+exports.kelvinToCelsius = function(obj, type) {
+	var keys = [];
+
+	if (type == 'Weather') {
+		keys = ['feels_like', 'temp', 'temp_max', 'temp_min'];
+	}
+	else if (type == 'Soil') {
+		keys = ['t0', 't10'];
+	}
+
+	for (var i = 0; i < keys.length; i ++) {
+		if (type == 'Weather') {
+			obj['main'][keys[i]] -= 273.15;
+			obj['main'][keys[i]] = Math.round(obj['main'][keys[i]] * 100) / 100;
+		}
+		else if (type == 'Soil') {
+			obj[keys[i]] -= 273.15;
+			obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;
+		}
+	}
+
+	return obj;
+}
+
 exports.convertForecastWeather = function(arr) {
 	for (var i = 0; i < arr.length; i++) {
 		arr[i].min_temp -= 273.15;

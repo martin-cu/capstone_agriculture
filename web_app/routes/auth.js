@@ -20,6 +20,10 @@ router.get('/get_farm_list', farmController.ajaxGetFarmList);
 router.post('/create_crop_plan', cropCalendarController.ajaxCreateCropPlan);
 router.get('/get_crop_plans', cropCalendarController.ajaxGetCropPlans);
 
+
+router.get('/farm_monitor_test', farmController.getMonitorFarms);
+router.get('/filter_farm_details', farmController.getFarmDetails);
+router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
 /*** Database Ajax End ***/
 
 /*** Page Navigation Start ***/
