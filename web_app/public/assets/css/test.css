@@ -30,6 +30,12 @@
     border-color: #EDD172;
 }
 
+.btn-primary:focus, .btn-primary:focus:active, .btn-primary.float-right:focus, .btn-primary.float-right:focus:active {
+    background-color: #EDD172 !important;
+    color: #584C33 !important;
+    border-color: #EDD172 !important;
+}
+
 #btnLogin:focus {
     background-color: #EDD172;
     color: #584C33;
@@ -37,7 +43,7 @@
   }
 
 #more {
-    width: 48%;
+    width: 24px;
     border-radius: 100%;
     border-color: #EDD172;
 }
@@ -48,11 +54,38 @@
     filter: brightness(95%);
 }
 
+#more:focus, #more:active {
+    background-color: #EDD172 !important;
+    color: #584C33 !important;
+    border-color: #EDD172 !important;
+}
+
+#back {
+    
+    padding: 9px;
+    border-radius: 100%;
+    background-color: white;
+    border-color: white;
+    color: #939C1F;
+}
+
+#back:hover {
+    background-color: white;
+    border-color: white;
+    color: #939C1F;
+    filter: brightness(95%);
+}
+
+#back:focus, #back:focus:active, #userNav:focus, #userNav:focus:active {
+    background-color: white !important;
+    border-color: white !important;
+    color: #939C1F !important;
+}
+
 #footer {
-    margin-top: 11%;
+    margin-top: auto; 
     background-color: #EEEEEE !important;
  }
-
 
 .nav-pills .nav-link.active {
     color: white;
@@ -66,4 +99,28 @@
   .nav-item > a:hover {
     color: white;
   }
+
+  input[type="text"], input[type="date"], input[type="password"], 
+  select.browser-default.custom-select{
+    border-radius: 20px;
+  }
+
+  #addFarm {
+      width: 250px;
+  }
+
+  #cancel {
+      width: 55px;
+      border-radius: 50px;
+      background-color: #BDBDBD;
+      border-color: #BDBDBD;
+  }
+
+  #cancel:hover {
+    background-color: #BDBDBD;
+    border-color: #BDBDBD;
+    color: white;
+    filter: brightness(95%);
+}
+
 

@@ -39,6 +39,7 @@ router.get('/', farmController.getDashboard);
 router.get('/home', farmController.getDashboard);
 
 router.get('/farms', farmController.getFarms);
+router.get('/farms/add', farmController.getaddFarm);
 
 router.get('/crop_calendar', farmController.getCropCalendar);
 router.get('/crop_calendar/add', farmController.getAddCropCalendar);

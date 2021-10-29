@@ -20,7 +20,11 @@
                             <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
                         </form>
 
-                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModalCenter">
+                        {{!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModalCenter">
+						  Add Farm
+						</button> --}}
+
+						<button type="button" class="btn btn-primary float-right" onclick='window.location="/farms/add"'>
 						  Add Farm
 						</button>
                        
@@ -57,6 +61,7 @@
     </div>
 </div>
 
+{{!-- START MODAL --}}
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
@@ -193,6 +198,7 @@
     </div>
   </div>
 </div>
+{{!-- END MODAL --}}
 
 <script type="text/javascript">
 	var view = 'farm_outlook';

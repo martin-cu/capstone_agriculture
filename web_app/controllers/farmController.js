@@ -40,6 +40,13 @@ exports.getFarms = function(req, res) {
 	});
 }
 
+// ADD FARMS PAGE (TO BE UPDATED)
+exports.getaddFarm = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+	res.render('add_farm', html_data);
+}
+
 exports.getFarmDetails = function(req, res) {
 	var query = req.query;
 	farmModel.filteredFarmDetails(query, function(err, details) {
