@@ -230,8 +230,6 @@ exports.getSatelliteImageryData = function(req, res) {
 			//var result = body[body.length-1];
 			//result.dt = dataformatter.unixtoDate(result.dt);
 
-			console.log(body);
-
 			res.send(body);
 		}
 	})
@@ -269,8 +267,6 @@ exports.getHistoricalSoilData = function(req, res){
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	console.log(body);
-
         	res.render('home', {});
         }
     });
@@ -297,8 +293,6 @@ exports.getAccumulatedTemperature = function(req, res){
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	console.log(body);
-
         	res.render('home', {});
         }
     });
@@ -322,8 +316,6 @@ exports.getAccumulatedPrecipitation = function(req, res){
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	console.log(body);
-
         	res.render('home', {});
         }
     });
@@ -340,7 +332,6 @@ exports.getCurrentUVI = function(req, res){
         else {
 			body.dt = dataformatter.unixtoDate(body.dt);
 
-        	console.log(body);
 
         	res.render('home', {});
         }
@@ -359,8 +350,6 @@ exports.getHistoricalUVI = function(req, res){
         	for (var i = 0; i < body.length; i++) {
         		body[i].dt = dataformatter.unixtoDate(body[i].dt);
         	}
-
-        	console.log(body);
 
         	res.render('home', {});
         }
