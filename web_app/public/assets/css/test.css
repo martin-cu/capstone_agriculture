@@ -123,4 +123,18 @@
     filter: brightness(95%);
 }
 
+.card-body {
+    background-color: #FCFCFC;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+}
+
+#content {
+    height: 15.67px;
+    width: 180px;
+}
+
 
