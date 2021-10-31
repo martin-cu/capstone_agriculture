@@ -48,40 +48,24 @@ function loadAjaxEmployees() {
 		val: ['form-check-input', 'checkbox', 'worker_checkbox', 'margin-top: .4rem', 'create_farm_form']
 	};
 
-	$.get('/get_employees', { position: 'Farm Manager' }, function(result) {
-		if (result.success) {
+	$.get('/get_employees', { position: 'Farmer' }, function(result1) {
+		if (result1.success) {
+			var emp1 = result1.employee_list;
+			emp1 = seggregateUnassigned(emp1);
 
-			var emp = result.employee_list;
-			for (var i = 0; i < emp.length; i++) {
-				inp.val.push(emp[i].employee_id);
-				$('#farm_mngr_cont').append(createCheckbox(div, inp, 
-					{ prop: ['inner_HTML'], val: [emp[i].last_name+', '+emp[i].first_name] }));
+			for (var i = 0; i < emp1.assigned.length; i++) {
+				inp.val.push(emp1.assigned[i].employee_id);
+				$('#assigned_frmr_cont').append(createCheckbox(div, inp, 
+				{ prop: ['inner_HTML'], val: [emp1.assigned[i].last_name+', '+emp1.assigned[i].first_name] }));
 				inp.val = inp.val.slice(0, -1);
 			}
 
-			$.get('/get_employees', { position: 'Farmer' }, function(result1) {
-				if (result1.success) {
-					var emp1 = result1.employee_list;
-					emp1 = seggregateUnassigned(emp1);
-
-					for (var i = 0; i < emp1.assigned.length; i++) {
-						inp.val.push(emp1.assigned[i].employee_id);
-						$('#assigned_frmr_cont').append(createCheckbox(div, inp, 
-						{ prop: ['inner_HTML'], val: [emp1.assigned[i].last_name+', '+emp1.assigned[i].first_name] }));
-						inp.val = inp.val.slice(0, -1);
-					}
-
-					for (var i = 0; i < emp1.unassigned.length; i++) {
-						inp.val.push(emp1.unassigned[i].employee_id);
-						$('#unassigned_frmr_cont').append(createCheckbox(div, inp, 
-						{ prop: ['inner_HTML'], val: [emp1.unassigned[i].last_name+', '+emp1.unassigned[i].first_name] }));
-						inp.val = inp.val.slice(0, -1);
-					}
-				}
-				else {
-
-				}
-			});
+			for (var i = 0; i < emp1.unassigned.length; i++) {
+				inp.val.push(emp1.unassigned[i].employee_id);
+				$('#unassigned_frmr_cont').append(createCheckbox(div, inp, 
+				{ prop: ['inner_HTML'], val: [emp1.unassigned[i].last_name+', '+emp1.unassigned[i].first_name] }));
+				inp.val = inp.val.slice(0, -1);
+			}
 		}
 		else {
 
@@ -90,6 +74,22 @@ function loadAjaxEmployees() {
 }
 
 $(document).ready(function() {
+	$.get('/get_employees', { position: 'Farm Manager' }, function(result) {
+		if (result.success) {
+
+			var emp = result.employee_list;
+			for (var i = 0; i < emp.length; i++) {
+				// $('#farm_mngr_cont').append(createCheckbox(div, inp, 
+				// 	{ prop: ['inner_HTML'], val: [emp[i].last_name+', '+emp[i].first_name] }));
+				// inp.val = inp.val.slice(0, -1);
+				$('#farm_mngr_cont').append('<option value="'+emp[i].employee_id+'">'+emp[i].last_name+', '+emp[i].first_name+'</option>');
+			}
+
+		}
+		else {
+
+		}
+	});
 	$('#queueFarmers').on('click', function() {
 		loadAjaxEmployees();
 	});

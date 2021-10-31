@@ -5,8 +5,8 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
 
-var key = '1d1823be63c5827788f9c450fb70c595';
-//var key = '2ae628c919fc214a28144f699e998c0f';
+//var key = '1d1823be63c5827788f9c450fb70c595'; // Unpaid
+var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;
@@ -450,6 +450,7 @@ exports.getForecastWeather = function(req, res) {
 		        	body = dataformatter.smoothHourlyData(body, hour_arr);
 		        	forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
 
+		        	console.log(forecast_body);
 		        	//***** Build on Agro API and use ANN to forecast remaining 9 days
 		        	var result = analyzer.weatherForecast14D
 		        	(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
@@ -499,15 +500,15 @@ exports.createPolygon = function(req, res) {
 		body: JSON.stringify(data)
 	}
 
-	// request(options, function(err, response, body) {
-	// 	if (err)
-	// 		throw err;
-	// 	else {
-	// 		console.log(body);
+	request(options, function(err, response, body) {
+		if (err)
+			throw err;
+		else {
+			console.log(body);
 
-	// 		res.send({ success: true });
-	// 	}
-	// })
+			res.send({ success: true });
+		}
+	})
 
 	res.send({ success: true });
 }
@@ -579,15 +580,15 @@ exports.removePolygon = function(req, res){
 		followAllRedirects: false
 	}
 
-    // request(options, function(err, response, body) {
-    //     if (err)
-    //     	throw err;
-    //     else {
-    //     	console.log(body);
+    request(options, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	console.log(body);
 
-    //     	res.send({ success: true });
-    //     }
-    // });
+        	res.send({ success: true });
+        }
+    });
 
     res.send({ success: true });
 }

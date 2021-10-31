@@ -10,6 +10,22 @@
 
 }
 
+.btn.round {
+	border-radius:  50px !important;
+}
+
+.btn-primary {
+	background-color: #EDD172;
+	border-color: #EDD172;
+	color: #584C33;
+	font-weight: bold;
+}
+
+.btn-secondary {
+	 background-color: #BDBDBD;
+   border-color: #BDBDBD;
+}
+
 /*html {
 	position: relative;
 	min-height:  100% !important;
@@ -111,3 +127,4 @@ body {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
+

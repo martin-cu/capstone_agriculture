@@ -434,9 +434,10 @@ $(document).ready(function() {
 		console.log('Getting weather forecast...');
 		var d1 = new Date(Date.now());
 		var d2 = new Date(Date.now());
-		d2.setDate(d2.getDate() - 30);
+		d2.setDate(d2.getDate() - 15);
 
 		$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+			console.log(result);
 			appendForecastCards(result);
 			appendForecastDetails(result.forecast[0]);
 

@@ -1,9 +1,9 @@
 <div class="container-fluid">
 
-    {{!-- HEADER --}}
+    <!-- {{!-- HEADER --}}
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
         <h3 class="text-dark mb-0" style="font-family: Roboto, sans-serif;color: #584c33;font-weight: 500;">Farms</h3>
-    </div>
+    </div> -->
 
     <div class="row">
         {{!-- <div class="col-lg-12 col-xl-12 col-xxl-12"> --}}
@@ -35,13 +35,13 @@
                 {{!-- START CARD BODY --}}
                 <div class="card-body">
 
-                    <div>
-                        {{!-- START FORM --}}
-                        <form>
+                    {{!-- START FORM --}}
+                    <form method="post" id="create_farm_form">
+                    <div class="modal_body_content" id="body_step1">
             
                             <div class="form-group">
                                 <label for="farmName">Name</label>
-                                <input type="text" class="form-control" id="farmName" placeholder="Name">
+                                <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name">
                             </div>
                            
                             <div class="form-group">
@@ -50,17 +50,15 @@
                                 <div class="col">
                                 <label for="landType">Land Type</label>
                                 <select class="browser-default custom-select" id="landType" placeholder="Select Land Type">
-                                    <option value="1">Lowland</option>
-                                    <option value="2">Upland</option>
+                                    <option value="Lowland">Lowland</option>
+                                    <option value="Upland">Upland</option>
                                 </select>
 
                                 </div>
                                 
                                 <div class="col">
                                 <label for="farmManager">Farm Manager</label>
-                                <select class="browser-default custom-select" id="landType" placeholder="Select Land Type">
-                                    <option value="1">Farmer 1</option>
-                                    <option value="2">Farmer 2</option>
+                                <select class="browser-default custom-select" name="farm_mngr" id="farm_mngr_cont">
                                 </select>
                                 </div>
 
@@ -69,9 +67,14 @@
 
                              <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" rows="5" id="description" placeholder="Description"></textarea>
+                                <textarea class="form-control" rows="5" id="description" placeholder="Description" name="farm_desc"></textarea>
                             </div>
+               
+                    </div>
 
+                    <div class="hide modal_body_content" id="body_step2">
+                        <div class="form-group">
+                            <label for="">Plot Details</label>
                             <div class="form-group">
                                 <label for="address">Address</label>
                                 <input type="text" class="form-control" id="address" placeholder="Address">
@@ -93,16 +96,62 @@
                                 </div>
 
                             </div>
-
-                        </form>
-                        {{!-- END FORM --}}
-
-                        <center>
-                                <button type="submit" class="btn btn-primary" id="addFarm">Add Farm</button>
-                                <button type="submit" class="btn btn-secondary" id="cancel" onclick="goBack()">X</button>
-                         </center>
-               
+                         </div>
                     </div>
+
+                    <div class="hide modal_body_content" id="body_step3">
+                        <label for="">Assign Employees</label>
+
+                        <div class="">
+                            <label for="">Farm Workers:</label>
+                            <div class="container" id="">
+                                <div class="row" id="">
+                                    
+                                </div>
+                            </div>
+
+                            <div class="container" id="">
+                                <small id="" class="form-text text-muted">Unassigned workers</small>
+                                <div class="row" id="unassigned_frmr_cont">
+                                    
+                                </div>
+                            </div>
+
+                            <div class="container" id="">
+                                <small id="" class="form-text text-muted">Assigned workers</small>
+                                <div class="row" id="assigned_frmr_cont">
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    </form>
+                    {{!-- END FORM --}}
+
+                    <!-- <div class="float-right text-right">
+                            <button type="submit" class="btn btn-secondary" id="cancel" onclick="goBack()">X</button>
+                            <button type="submit" class="btn btn-primary" id="addFarm" for>Next</button>
+                    </div> -->
+
+                    <div class="modal-footer">
+                        <div class="modal_footer_content" id="_step1">
+                            <button type="button" class="btn round btn-secondary" value="create_farm_form" onclick="goBack();">Cancel</button>
+                            <button type="button" class="btn round btn-primary next_step" value="_step2">Next</button>
+                        </div>
+
+                        <div class="hide modal_footer_content" id="_step2">
+                            <button type="button" class="btn round btn-secondary prev_step" value="_step1">Back</button>
+                            <button type="button" class="btn round btn-primary next_step" value="_step3" id="queueFarmers">Next</button>
+                        </div>
+
+                        <div class="hide modal_footer_content" id="_step3">
+                            <button type="button" class="btn round btn-secondary prev_step" value="_step2">Back</button>
+                            <button type="submit" class="btn round btn-primary" form="create_farm_form">Submit</button>
+                        </div>
+                            
+                      </div>
 
                 </div>
                 {{!-- END CARD BODY --}}
@@ -113,128 +162,9 @@
 </div>
 
 <script>
+    var view = "farm_outlook";
 function goBack() {
   window.history.back();
 }
 
 </script>
-
-{{!--  
-
-     // Map options
-    var options = {
-        zoom:11,
-        center:{lat:13.0622, lng:121.3313}
-    }
-
-    // New map
-    var map = new google.maps.Map(document.getElementById('map'), options);
-
-    // Listen for click on map
-    google.maps.event.addListener(map, 'click', function(event) {
-        // Add marker
-        addMarker({coords:event.latLng});
-    });
-
-    // Test adding markers manually
-    /*
-    // Add marker
-    var marker = new google.maps.Marker({
-        position:{lat:13.0736, lng:121.3832},
-        map:map
-        // If you want custom icons
-        //icon:''
-    });
-
-    // Info window
-    var infoWindow = new google.maps.InfoWindow({
-          content: '<div id="content">Hello</div>'
-    });
-    
-    marker.addListener('click', function(){
-        infoWindow.open(map, marker);
-    });
-    */
-
-    /*
-    // Samples
-
-    // Array of markers
-    var markers = [
-        {
-        coords:{lat:13.0736, lng:121.3832},
-        //iconImage:'',
-        content:'<div id="content">Hello</div>'
-        },
-
-        {
-        coords:{lat:13.0736, lng:121.3532},
-        //iconImage:'',
-        content:'<div id="content">Hello</div>'
-        },
-
-        {
-        coords:{lat:13.0736, lng:121.3232},
-        //iconImage:'',
-        content:'<div id="content">Hello</div>'
-        }
-    ];
-
-    // Loop through markers
-    for(var i = 0; i < markers.length; i++){
-        // Add marker
-        addMarker(markers[i]);
-    }
-
-    addMarker({
-        coords:{lat:13.0736, lng:121.3832},
-        //iconImage:'',
-        content:'<div id="content">Hello</div>'
-    })
-    
-    addMarker({
-        coords:{lat:13.0736, lng:121.3532},
-        //iconImage:'',
-        content:'<div id="content">Hello</div>'
-    })
-    
-    addMarker({
-        coords:{lat:13.0736, lng:121.3232},
-        //iconImage:'',
-        content:'<div id="content">Hello</div>'
-    })
-
-
-    // Add markers dynamically 
-    function addMarker(props) {
-        var marker = new google.maps.Marker({
-        position:props.coords,
-        map:map,
-        //icon:props.iconImage
-        });
-
-        // Check for custom icon
-        if (props.iconImage) {
-            // Set icon image
-            marker.setIcon(props.iconImage);
-        }
-
-        // Check for info window
-        if (props.content) {
-
-        // Info window
-        var infoWindow = new google.maps.InfoWindow({
-            content: props.content
-        });
-    
-        marker.addListener('click', function(){
-            infoWindow.open(map, marker);
-        });
-        }
-    }
-
-    */
- --}}
-
-
-

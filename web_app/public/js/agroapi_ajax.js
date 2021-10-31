@@ -1,21 +1,12 @@
 function preparePolygonCoordinates(data) {
-	var temp_arr = [];
 	var result_arr = [];
-	var nested_arr = [];
-	for (var i = 0; i < data.length-1; i++) {
-		temp_arr.push(parseFloat(data[i].value));
-		temp_arr.push(parseFloat(data[i+1].value));
-		i++;
+	var temp_arr = [];
 
-		result_arr.push(temp_arr);
-		temp_arr = [];
+	data.push(data[0]);
+	for (var i = 0; i < data.length; i++) {
+		temp_arr.push([ data[i].lng, data[i].lat ]);
 	}
-
-	temp_arr.push(parseFloat(data[0].value));
-	temp_arr.push(parseFloat(data[1].value));
-
 	result_arr.push(temp_arr);
-
 	return result_arr;
 }
 
@@ -77,9 +68,10 @@ $(document).ready(function() {
 		
 		form_data.coordinates = [];
 
-		form_data.coordinates.push(preparePolygonCoordinates($('[name="coordinates"]').serializeArray()));
-
+		form_data.coordinates.push(preparePolygonCoordinates(coordinate_arr));
+		console.log(form_data);
 		$.post('/readFarmDetails', form_data, function(farm_record) {
+			console.log(farm_record);
 			if (farm_record.farm_list.length == 0) {
 
 				$.post('/agroapi/polygon/create', form_data, function(result) {
