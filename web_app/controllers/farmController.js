@@ -5,8 +5,8 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
 
-//var key = '1d1823be63c5827788f9c450fb70c595'; // Unpaid
-var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
+var key = '1d1823be63c5827788f9c450fb70c595'; // Unpaid
+//var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;
@@ -137,12 +137,12 @@ exports.getGeoMap = function(req, res) {
 }
 
 exports.singleFarmDetails = function(req, res) {
-	var query = { farm_name: req.body.farm_name };
+	var query = { where: { farm_name: req.body.farm_name } };
 	farmModel.getFarmData(query, function(err, result) {
 		if (err)
 			throw err;
 		else {
-			console.log(result);
+			//console.log(result);
 			res.send({ farm_list: result });
 		}
 	});
@@ -481,15 +481,8 @@ exports.createPolygon = function(req, res) {
 				dataformatter.coordinateToFloat(req.body.coordinates)// dataformatter.parseCoordinate(req.body.coordinates.split(',')) 
 			}}
 		});
-
-	// Temp LA Coordinates
-	// [
-	// 	[
-	// 		[121.38162,13.07716],[121.38197,13.06959],
-			// [121.3876,13.06939],[121.38828,13.07749],
-			// [121.38162,13.07716]
-	// 	]
-	// ];
+	console.log(req.body.coordinates);
+	console.log(data.geo_json.geometry.coordinates);
 
 	var options = {
 		url: 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key,
@@ -509,8 +502,6 @@ exports.createPolygon = function(req, res) {
 			res.send({ success: true });
 		}
 	})
-
-	res.send({ success: true });
 }
 
 exports.getPolygonInfo = function(req, res){
@@ -584,11 +575,9 @@ exports.removePolygon = function(req, res){
         if (err)
         	throw err;
         else {
-        	console.log(body);
 
         	res.send({ success: true });
         }
     });
 
-    res.send({ success: true });
 }
