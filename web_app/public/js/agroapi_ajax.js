@@ -127,7 +127,8 @@ $(document).ready(function() {
 			}
 			// Create error message that farm name already exists
 			else {
-				console.log('get farm error');
+				console.log('Farm name already exists');
+				processModalStep('_step3', '_step1');
 			}
 
 		});

@@ -50,7 +50,7 @@ function loadAjaxEmployees() {
 
 	//Clear list
 	$('#unassigned_frmr_cont').empty();
-	$('#assigned_frmr_cont').empty();
+	$('#unassigned_frmr_cont').empty();
 
 	$.get('/get_employees', { position: 'Farmer' }, function(result1) {
 		if (result1.success) {
