@@ -19,7 +19,10 @@
                         <div class="col">
                             <div class="card shadow mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #332C1F;color: #ffffff;padding: 4px 12px;">
-                                    <h6 class="fw-bold m-0" style="color: rgb(255,255,255);"><br>Material Request</h6>
+                                    <h6 class="fw-bold m-0" style="color: rgb(255,255,255);"><br>Material Request</h6> 
+                                        <button id="seed" class="type">Seed</button>
+                                        <button id="fertilizer" class="type">Fertilizer</button>
+                                        <button id="pesticide" class="type">Pesticide</button>
                                     <div><a class="btn btn-primary btn-lg" role="button" href="#myModal" data-bs-toggle="modal" style="background: #EDD172;color: #584C33;padding: 2px 12px;font-size: 13px;border-radius: 20px;"><strong>ADD NEW</strong><i class="fa fa-plus" style="margin-left: 5px;"></i><br></a>
                                         <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
                                             <div class="modal-dialog" role="document">
@@ -37,27 +40,18 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <ul class="list-group">
+                                    <ul class="list-group" id="materials_list">
+                                        {{#each seed}}
                                         <li class="list-group-item">
+                                            <div><span style="color: rgb(58,59,69);font-weight: bold;">{{this.name}}</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                            <div><span>{{this.mat_desc}}</span></div>
+                                        </li>
+                                        {{/each}}
+                                        {{!-- <li class="list-group-item">
                                             <div><span style="color: rgb(58,59,69);font-weight: bold;">Fertilizer</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
                                             <div><span>October 7, 2021</span></div>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <div><span style="color: rgb(58,59,69);font-weight: bold;">Fertilizer</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
-                                            <div><span>October 7, 2021</span></div>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <div><span style="color: rgb(58,59,69);font-weight: bold;">Fertilizer</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
-                                            <div><span>October 7, 2021</span></div>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <div><span style="color: rgb(58,59,69);font-weight: bold;">Fertilizer</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
-                                            <div><span>October 7, 2021</span></div>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <div><span style="color: rgb(58,59,69);font-weight: bold;">Fertilizer</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
-                                            <div><span>October 7, 2021</span></div>
-                                        </li>
+                                        </li> --}}
+                                       
                                     </ul>
                                 </div>
                             </div>

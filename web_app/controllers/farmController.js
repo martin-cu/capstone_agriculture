@@ -437,7 +437,7 @@ exports.getForecastWeather = function(req, res) {
 		        	throw err;
 		        else {
 		        	var hour_arr = [];
-					console.log(forecast_body);
+					//console.log(forecast_body);
 		        	for (var i = 0; i < forecast_body.length; i++) {
 		        		forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
 		        		hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
@@ -450,7 +450,7 @@ exports.getForecastWeather = function(req, res) {
 		        	body = dataformatter.smoothHourlyData(body, hour_arr);
 		        	forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
 
-		        	console.log(forecast_body);
+		        	//console.log(forecast_body);
 		        	//***** Build on Agro API and use ANN to forecast remaining 9 days
 		        	var result = analyzer.weatherForecast14D
 		        	(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);

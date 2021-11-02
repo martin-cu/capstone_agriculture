@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Add a raster image to a map layer</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoieTJhcXVpbm8iLCJhIjoiY2t2NmJjYXFwOThiNTJ6bW56ZHpqbm1ycSJ9.PKHPNjMJYXRfBJ41QbOSzA';
+    const map = new mapboxgl.Map({
+    container: 'map',
+    maxZoom: 5.99,
+    minZoom: 4,
+    zoom: 5,
+    center: [-75.789, 41.874],
+    style: 'mapbox://styles/mapbox/dark-v10'
+    });
+    
+    map.on('load', () => {
+    map.addSource('radar', {
+        'type': 'image',
+        'url': 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
+        'coordinates': [
+            [121.3816, 13.07716],
+            [121.3819, 13.06959],
+            [121.3876, 13.06939],
+            [121.3882, 13.07749]
+        ]
+    });
+    map.addLayer({
+        id: 'radar-layer',
+        'type': 'raster',
+        'source': 'radar',
+        'paint': {
+        'raster-fade-duration': 0
+        }
+    });
+    });
+</script>
+ 
+</body>
+</html>

@@ -1,6 +1,66 @@
 const request = require('request');
+const js = require('../public/js/session.js');
 const materialModel = require('../models/materialModel');
 const dataformatter = require('../public/js/dataformatter.js');
+
+exports.getMaterials = function(req,res){
+    var html_data = {};
+    console.log("WEH");
+    materialModel.getMaterials("Seed", null, function(err, seeds){
+        if(err){
+            throw err;
+        }
+        else{
+            if(seeds.length != 0){
+                html_data["seed"] = seeds;
+                html_data = js.init_session(html_data, 'role', 'name', 'username', 'farm');
+				res.render('materials', html_data);
+            }
+            else{
+                
+            }
+        }
+    });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//AJAX
+exports.getMaterialsAjax = function(req, res){
+    var type = req.params.type;
+    console.log(type);
+    materialModel.getMaterials(type, null, function(err, seeds){
+        if(err){
+            throw err;
+        }
+        else{
+            if(seeds.length != 0){
+                res.send(seeds);
+            }
+            else{
+                
+            }
+        } 
+    });
+}
+
+
+
+
+
+
+
+
 
 exports.test = function(req,res){
     //Check if item already exists
@@ -39,24 +99,24 @@ exports.addMaterials = function(req,res){
     });
     res.send({msg : "ITEMA DDED."});
 };
-exports.getMaterials = function(req,res){ //ajax
-    // materialModel.addPesticide(function(err,result){
-    // });
-    var filter = req.query.filter == undefined ? null : req.query.filter;
-    var type = req.query.type;
+// exports.getMaterials = function(req,res){ //ajax
+//     // materialModel.addPesticide(function(err,result){
+//     // });
+//     var filter = req.query.filter == undefined ? null : req.query.filter;
+//     var type = req.query.type;
 
-    materialModel.getMaterials(type, filter, function(err, result){
-        if (err)
-			throw err;
-        else{
-            for(var i = 0; i < result.length ; i++){
-                console.log(result[i]);
-            }
+//     materialModel.getMaterials(type, filter, function(err, result){
+//         if (err)
+// 			throw err;
+//         else{
+//             for(var i = 0; i < result.length ; i++){
+//                 console.log(result[i]);
+//             }
 
-            res.send(result);
-        }
-    });
-}
+//             res.send(result);
+//         }
+//     });
+// }
  exports.updateMaterial = function(req,res){
 
     var type = req.query.type;

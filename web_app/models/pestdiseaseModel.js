@@ -11,6 +11,15 @@ exports.getAllFactors = function(next){
 	mysql.query(sql, next);
 }
 
+exports.getAllPreventions = function(next){
+	var sql = 'SELECT * FROM prevention_table;';
+	mysql.query(sql, next);
+}
+
+exports.getAllSolutions = function(next){
+	var sql = 'SELECT * FROM solution_table;';
+	mysql.query(sql, next);
+}
 
 exports.addFactor = function(type, data, next){
 	var sql = "INSERT INTO ";
@@ -87,6 +96,19 @@ exports.getPestFactors = function(pest_id, next){
 	sql = mysql.format(sql, pest_id);
 	sql = mysql.format(sql, pest_id);
 	sql = mysql.format(sql, pest_id);
+	sql = mysql.format(sql, pest_id);
+	mysql.query(sql, next);
+}
+
+exports.getPestSolutions = function(pest_id, next){
+	var sql ='SELECT * FROM pest_table p INNER JOIN solution_pest sp ON sp.pest_id = p.pest_id INNER JOIN solution_table st ON st.solution_id = sp.solution_id WHERE ?';
+	sql = mysql.format(sql, pest_id);
+	mysql.query(sql, next);
+}
+
+
+exports.getPestPreventions = function(pest_id, next){
+	var sql = 'SELECT * FROM pest_table p INNER JOIN prevention_pest sp ON sp.pest_id = p.pest_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
 	sql = mysql.format(sql, pest_id);
 	mysql.query(sql, next);
 }
@@ -372,8 +394,21 @@ exports.getDiseaseFactors = function(disease_id, next){
 	mysql.query(sql, next);
 }
 
+exports.getDiseaseSolutions = function(disease_id, next){
+	var sql ='SELECT * FROM disease_table p INNER JOIN solution_disease sp ON sp.disease_id = p.disease_id INNER JOIN solution_table st ON st.solution_id = sp.solution_id WHERE ?';
+	sql = mysql.format(sql, disease_id);
+	mysql.query(sql, next);
+}
+
+exports.getDiseasePreventions = function(disease_id, next){
+	var sql = 'SELECT * FROM disease_table p INNER JOIN prevention_disease sp ON sp.disease_id = p.disease_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
+	sql = mysql.format(sql, disease_id);
+	mysql.query(sql, next);
+}
+
 exports.addDisease = function(disease, next){
 	var sql = "INSERT INTO disease_table SET ?";
 	sql = mysql.format(sql, disease);
 	mysql.query(sql, next);
 }
+
