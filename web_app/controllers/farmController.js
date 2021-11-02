@@ -232,8 +232,12 @@ exports.getSatelliteImageryData = function(req, res) {
 		if (err)
 			throw err;
 		else {
+
 			body = JSON.parse(body);
 
+			for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        	}
 			//var result = body[body.length-1];
 			//result.dt = dataformatter.unixtoDate(result.dt);
 
@@ -524,7 +528,7 @@ exports.getAllPolygons = function(req, res){
         if (err)
         	throw err;
         else {
-        	console.log(body);
+        	//console.log(body);
 
         	res.send(body);
         }

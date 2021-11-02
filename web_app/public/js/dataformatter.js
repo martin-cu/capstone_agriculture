@@ -358,7 +358,7 @@ exports.arrayToObject = function(arr, keys) {
 
 exports.kelvinToCelsius = function(obj, type) {
 	var keys = [];
-
+	console.log(obj);
 	if (type == 'Weather') {
 		keys = ['feels_like', 'temp', 'temp_max', 'temp_min'];
 	}
@@ -368,12 +368,24 @@ exports.kelvinToCelsius = function(obj, type) {
 
 	for (var i = 0; i < keys.length; i ++) {
 		if (type == 'Weather') {
-			obj['main'][keys[i]] -= 273.15;
-			obj['main'][keys[i]] = Math.round(obj['main'][keys[i]] * 100) / 100;
+			if (obj['main'][keys[i]] == undefined) {
+				obj['main'][keys[i]] = 'N/A';
+			}
+			else {
+				obj['main'][keys[i]] -= 273.15;
+				obj['main'][keys[i]] = Math.round(obj['main'][keys[i]] * 100) / 100;
+				obj['main'][keys[i]] = obj['main'][keys[i]].toString() + '°';
+			}
 		}
 		else if (type == 'Soil') {
-			obj[keys[i]] -= 273.15;
-			obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;
+			if (obj[keys[i]] == undefined) {
+				obj[keys[i]] = 'N/A';
+			}
+			else {
+				obj[keys[i]] -= 273.15;
+				obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;
+				obj[keys[i]] = obj[keys[i]].toString() + '°';
+			}
 		}
 	}
 
@@ -656,7 +668,6 @@ exports.formatDate = function(date, format) {
 	year = date.getFullYear();
 	month = date.getMonth()+1;
 	day = date.getDate();
-
 	if (format === 'MM/DD/YYYY') {
 		if (month < 10)
 			month = '0'+month;
@@ -727,6 +738,5 @@ exports.formatDate = function(date, format) {
 
 		date = year+'-'+month+'-'+day+' - '+hour+':'+(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()+lbl;
 	}
-
 	return date;
 }

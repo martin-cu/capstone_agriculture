@@ -34,8 +34,7 @@ exports.filteredFarmDetails = function(data, next) {
 exports.getFarmData = function(data, next) {
 	var sql = 'select ft.*, et.* from farm_table ft join farm_assignment fa on ft.farm_id = fa.farm_id join employee_table et on fa.employee_id = et.employee_id';
 	if (JSON.stringify(data) != '{ }') {
-		console.log('!');
-		if (data.hasOwnProperty('where')) {
+		if (data.hasOwnProperty('where') && data.where != null) {
 			sql += ' where ?';
 			sql = mysql.format(sql, data.where);
 		}

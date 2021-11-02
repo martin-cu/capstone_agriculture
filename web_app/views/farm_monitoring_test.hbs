@@ -1,10 +1,39 @@
 
 <div class="mx-3 d-flex" style="height: 400px">
-	<div class="w-50" id="map">
+	<div class="w-50" id="monitor_map">
 		
 	</div>
 
-	<div class="d-flex flex-column w-25 mx-3">
+	<div class="hide d-flex flex-column w-25 mx-3 bg-secondary rounded px-3 py-2" id="statistics_ndvi">
+		<label>NDVI</label>
+		<table class="table monitor_statistics">
+			<tr>
+				<th id="ndvi_date" colspan="2">date</th>
+			</tr>
+			<tr>
+				<td>Max</td>
+				<td id="statistics_max"></td>
+			</tr>
+			<tr>
+				<td>Mean</td>
+				<td id="statistics_mean"></td>
+			</tr>
+			<tr>
+				<td>Median</td>
+				<td id="statistics_median"></td>
+			</tr>
+			<tr>
+				<td>Min</td>
+				<td id="statistics_min"></td>
+			</tr>
+			<tr>
+				<td>Deviation</td>
+				<td id="statistics_deviation"></td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="d-flex flex-column w-25 mx-3" id="statistics_weather">
 		<div class="bg-secondary rounded px-3 py-2">
 			<label>Weather</label>
 			<div class="d-flex">
@@ -39,8 +68,8 @@
 			<label>Farms</label>
 			<div class="ml-auto">
 				<div class="d-flex">
-					<button class="btn btn-success">NDVI</button>
-					<button class="btn btn-info">Weather</button>
+					<button class="btn btn-success" id="toggle_ndvi">NDVI</button>
+					<button class="btn btn-info" id="toggle_weather">Weather</button>
 				</div>
 			</div>
 		</div>
@@ -97,188 +126,6 @@
 </div>
 
 <script>
-	var type = 'Weather'
-	function getFarmDetails(obj) {
-		var query = obj;
-		$.get('/filter_farm_details', query, function(details) {
-			$('#monitor_land_type').html(details[0].land_type);
-			$('#monitor_farm_area').html(details[0].farm_area);
-			$('#monitor_desc').html(details[0].farm_desc);
-
-			query['status'] = 'Active';
-			query['position'] = 'Farm Manager'
-
-			$.get('/filter_farmers', query, function(farmers) {
-				$('#monitor_farm_mngr').html(farmers[0].last_name+', '+farmers[0].first_name);
-			});
-
-			query['position'] = 'Farmer'
-
-			$.get('/filter_farmers', query, function(farmers) {
-				//console.log(farmers);
-				var tr, td, append = false;
-				for (var i = 0; i < farmers.length; i++) {
-					if (i % 3 == 0) {
-						tr = '<tr>'
-					}
-
-					td = '<td>'+farmers[i].last_name+', '+farmers[i].first_name+'</td>';
-					tr += td;
-						
-					if (i == farmers.length-1) {
-						append = true;
-					}
-
-					if (append) {
-						tr += '</tr>';
-
-						$('#monitor_farmers_table').append(tr);
-						append = false;
-					}
-				}
-
-			});
-
-		});
-	}
-
-	$.get('/get_farm_list', {}, function(farms) {
-		for (var i = 0; i < farms.length; i++) {
-			$('#monitor_farm_list').append('<li class="farm_li" data="'+farms[i].farm_id+'">'+farms[i].farm_name+'</li>')
-		}
-		var reference = farms[0].farm_name;
-		var query = '';
-		if (reference == 'farm1') {
-			query = 'Legit Farm Trial';
-		}
-		else if (reference == 'farm2') {
-			query = 'LastFarm';
-		}
-		else {
-			query = 'Sana Final Test';
-		}
-
-		getFarmDetails({ farm_id: farms[0].farm_id });
-		getGeoData(query);
-	});
-
-
-	$('#monitor_farm_list').on('click', '.farm_li', function() {
-		$('#monitor_farmers_table').empty();
-		var reference = $(this).html();
-		var query = '';
-		if (reference == 'farm1') {
-			query = 'Legit Farm Trial';
-		}
-		else if (reference == 'farm2') {
-			query = 'LastFarm';
-		}
-		else {
-			query = 'Sana Final Test';
-		}
-
-		getFarmDetails({ farm_id: $(this).attr('data') });
-		getGeoData(query);
-	})
-
-	function unixToDate(timestamp) {
-		return new Date(timestamp * 1000);
-	}
-
-	function getGeoData(farm_name) {
-		var image_url;
-		var coordinates = [];
-		var center = [];
-		$.get('/agroapi/polygon/readAll', {}, function(polygons) {
-			var polygon_id;
-			for (var i = 0; i < polygons.length; i++) {
-				if (farm_name == polygons[i].name) {
-					polygon_id = polygons[i].id;
-					coordinates = polygons[i].geo_json.geometry.coordinates[0];
-
-					center = polygons[0].center;
-				}
-			}
-
-			var n_date = new Date();
-			n_date.setDate(n_date.getDate() - 30);
-			var n = new Date();
-			var query = { polygon_id: polygon_id, start: n_date, end: n };
-
-			// Visualize plot
-			$.get('/agroapi/ndvi/imagery', query, function(imagery) {
-				image_url = imagery[imagery.length-1].image.ndvi;
-
-				let options = {
-					center: center,
-					url: image_url,
-					coordinates: coordinates
-				}
-				loadGeoMap(options);
-				// for (var i = 0; i < imagery.length; i++) {
-				// 	console.log(unixToDate(imagery[i].dt));
-				// }
-			});
-
-			// Load environment details
-			$.get('/agroapi/soil/current', { polyid: polygon_id }, function(soil) {
-				$('#monitor_surface_temp').html(soil.t0+'°');
-				$('#monitor_ground_temp').html(soil.t10+'°');
-				$('#monitor_soil_moisture').html(soil.moisture+'%');
-			});
-			$.get('/agroapi/weather/current', { polyid: polygon_id }, function(weather) {
-				console.log(weather);
-				// $('#monitor_icon').html();
-				$('#monitor_temp').html(weather.main.temp+'°');
-				$('#monitor_desc').html(weather.weather[0].description);
-			});
-
-		});
-	}
-
-
-	function loadGeoMap(options) {
-		mapboxgl.accessToken = 'pk.eyJ1IjoiaW1hcnRpbjAwMjMiLCJhIjoiY2t2NmJ1a2JsM3dldzJwcDZyeXp6bDlsYSJ9.8VlCX1xsLOIxjGiGO8X3Pg';
-	    const map = new mapboxgl.Map({
-	        container: 'map',
-	        zoom: 13.2,
-	        center: options.center,
-	        style: 'mapbox://styles/mapbox/satellite-v9'
-	    });
-
-	    map.on('load', () => {
-	        map.addSource('radar', {
-	            'type': 'image',
-	            'url': options.url,
-	            'coordinates': options.coordinates
-	        });
-	        map.addLayer({
-	            id: 'radar-layer',
-	            'type': 'raster',
-	            'source': 'radar',
-	            'paint': {
-	                'raster-fade-duration': 0
-	            }
-	        });
-	    });
-	}
-
-	$(document).ready(function() {
-		var map_obj = {
-			center: [121.3816, 13.07316],
-			url: 'http://api.agromonitoring.com/image/1.0/120616e0a80/61692225a81b764bcf68700c?appid=2ae628c919fc214a28144f699e998c0f',
-			coordinates: [
-				[121.3816, 13.07716],
-				[121.3819, 13.06959],
-				[121.3876, 13.06939],
-				[121.3882, 13.07749]
-				// [-121.1958, 37.6683],
-				// [-121.1779, 37.6687],
-				// [-121.1773, 37.6792],
-				// [-121.1958, 37.6683]
-			]
-		}
-		//loadGeoMap(map_obj);
-	});
-
+	var view = 'farm_monitoring';
+	var type = 'Weather';
 </script>
