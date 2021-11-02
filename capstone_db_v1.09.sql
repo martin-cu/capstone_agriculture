@@ -1,8 +1,10 @@
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+CREATE DATABASE  IF NOT EXISTS `capstone_agriculture_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `capstone_agriculture_db`;
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: capstone_agriculture_db
 -- ------------------------------------------------------
--- Server version	8.0.19
+-- Server version	8.0.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -51,6 +53,34 @@ LOCK TABLES `crop_calendar_table` WRITE;
 /*!40000 ALTER TABLE `crop_calendar_table` DISABLE KEYS */;
 INSERT INTO `crop_calendar_table` VALUES (1,2,'2021-10-24 00:00:00','2021-10-27 00:00:00',NULL,'Non-Irrigation',3,'In-Progress',99,NULL,'my planz'),(2,1,'2021-10-31 00:00:00','2021-11-06 00:00:00',NULL,'Irrigation',1,'In-Progress',50,NULL,'your plan1');
 /*!40000 ALTER TABLE `crop_calendar_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `crop_cycle_table`
+--
+
+DROP TABLE IF EXISTS `crop_cycle_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `crop_cycle_table` (
+  `cycle_id` int NOT NULL AUTO_INCREMENT,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `seed_planted` int NOT NULL,
+  PRIMARY KEY (`cycle_id`),
+  UNIQUE KEY `cycle_id_UNIQUE` (`cycle_id`),
+  KEY `seed_to_cycle_idx` (`seed_planted`),
+  CONSTRAINT `seed_to_cycle` FOREIGN KEY (`seed_planted`) REFERENCES `seed_table` (`seed_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `crop_cycle_table`
+--
+
+LOCK TABLES `crop_cycle_table` WRITE;
+/*!40000 ALTER TABLE `crop_cycle_table` DISABLE KEYS */;
+/*!40000 ALTER TABLE `crop_cycle_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -225,6 +255,29 @@ LOCK TABLES `effects_table` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `element_table`
+--
+
+DROP TABLE IF EXISTS `element_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `element_table` (
+  `element_id` int NOT NULL AUTO_INCREMENT,
+  `element_name` int DEFAULT NULL,
+  PRIMARY KEY (`element_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `element_table`
+--
+
+LOCK TABLES `element_table` WRITE;
+/*!40000 ALTER TABLE `element_table` DISABLE KEYS */;
+/*!40000 ALTER TABLE `element_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `employee_table`
 --
 
@@ -311,6 +364,34 @@ CREATE TABLE `farm_materials` (
 LOCK TABLES `farm_materials` WRITE;
 /*!40000 ALTER TABLE `farm_materials` DISABLE KEYS */;
 /*!40000 ALTER TABLE `farm_materials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `farm_plots`
+--
+
+DROP TABLE IF EXISTS `farm_plots`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `farm_plots` (
+  `plot_id` int NOT NULL AUTO_INCREMENT,
+  `farm_id` int NOT NULL,
+  `x_coord` int NOT NULL,
+  `y_coord` int NOT NULL,
+  PRIMARY KEY (`plot_id`),
+  UNIQUE KEY `plot_id_UNIQUE` (`plot_id`),
+  KEY `plot_to_farm_idx` (`farm_id`),
+  CONSTRAINT `plot_to_farm` FOREIGN KEY (`farm_id`) REFERENCES `farm_table` (`farm_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `farm_plots`
+--
+
+LOCK TABLES `farm_plots` WRITE;
+/*!40000 ALTER TABLE `farm_plots` DISABLE KEYS */;
+/*!40000 ALTER TABLE `farm_plots` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -482,6 +563,35 @@ LOCK TABLES `fertilizer_disease` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `fertilizer_elements`
+--
+
+DROP TABLE IF EXISTS `fertilizer_elements`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `fertilizer_elements` (
+  `fertilizer_elements` int NOT NULL AUTO_INCREMENT,
+  `fertilizer_id` int NOT NULL,
+  `element_id` int NOT NULL,
+  `amount` float DEFAULT NULL,
+  PRIMARY KEY (`fertilizer_elements`),
+  KEY `fk_fertilizer_table_has_element_table_element_table1_idx` (`element_id`),
+  KEY `fk_fertilizer_table_has_element_table_fertilizer_table1` (`fertilizer_id`),
+  CONSTRAINT `fk_fertilizer_table_has_element_table_element_table1` FOREIGN KEY (`element_id`) REFERENCES `element_table` (`element_id`),
+  CONSTRAINT `fk_fertilizer_table_has_element_table_fertilizer_table1` FOREIGN KEY (`fertilizer_id`) REFERENCES `fertilizer_table` (`fertilizer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fertilizer_elements`
+--
+
+LOCK TABLES `fertilizer_elements` WRITE;
+/*!40000 ALTER TABLE `fertilizer_elements` DISABLE KEYS */;
+/*!40000 ALTER TABLE `fertilizer_elements` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `fertilizer_pest`
 --
 
@@ -534,6 +644,35 @@ LOCK TABLES `fertilizer_table` WRITE;
 /*!40000 ALTER TABLE `fertilizer_table` DISABLE KEYS */;
 INSERT INTO `fertilizer_table` VALUES (1,'Fertilizer1','for dinorado'),(2,'Fertilizer2','for 168'),(3,'Fertiii','New fertilizer desc');
 /*!40000 ALTER TABLE `fertilizer_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `field_data_table`
+--
+
+DROP TABLE IF EXISTS `field_data_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `field_data_table` (
+  `field_data_id` int NOT NULL AUTO_INCREMENT,
+  `farm_id` int NOT NULL,
+  `cycle_id` int NOT NULL,
+  PRIMARY KEY (`field_data_id`),
+  UNIQUE KEY `field_data_id_UNIQUE` (`field_data_id`),
+  KEY `field_data_to_cycle_idx` (`cycle_id`),
+  KEY `field_data_to_farm_idx` (`farm_id`),
+  CONSTRAINT `field_data_to_cycle` FOREIGN KEY (`cycle_id`) REFERENCES `crop_cycle_table` (`cycle_id`),
+  CONSTRAINT `field_data_to_farm` FOREIGN KEY (`farm_id`) REFERENCES `farm_table` (`farm_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `field_data_table`
+--
+
+LOCK TABLES `field_data_table` WRITE;
+/*!40000 ALTER TABLE `field_data_table` DISABLE KEYS */;
+/*!40000 ALTER TABLE `field_data_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -623,6 +762,88 @@ LOCK TABLES `pesticide_table` WRITE;
 /*!40000 ALTER TABLE `pesticide_table` DISABLE KEYS */;
 INSERT INTO `pesticide_table` VALUES (1,'Pesticide11','for bugs'),(2,'Pesticide2','for worms'),(3,'PestIdIde','New pesticide desc'),(5,'PestIdIde3','New pesticide desc');
 /*!40000 ALTER TABLE `pesticide_table` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `prevention_disease`
+--
+
+DROP TABLE IF EXISTS `prevention_disease`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `prevention_disease` (
+  `prevention_disease_id` int NOT NULL AUTO_INCREMENT,
+  `prevention_id` int NOT NULL,
+  `disease_id` int NOT NULL,
+  PRIMARY KEY (`prevention_disease_id`),
+  KEY `fk_disease_table_has_prevention_table_prevention_table1_idx` (`prevention_id`),
+  KEY `fk_disease_table_has_prevention_table_disease_table1_idx` (`disease_id`),
+  CONSTRAINT `fk_disease_table_has_prevention_table_disease_table1` FOREIGN KEY (`disease_id`) REFERENCES `disease_table` (`disease_id`),
+  CONSTRAINT `fk_disease_table_has_prevention_table_prevention_table1` FOREIGN KEY (`prevention_id`) REFERENCES `prevention_table` (`prevention_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `prevention_disease`
+--
+
+LOCK TABLES `prevention_disease` WRITE;
+/*!40000 ALTER TABLE `prevention_disease` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prevention_disease` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `prevention_pest`
+--
+
+DROP TABLE IF EXISTS `prevention_pest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `prevention_pest` (
+  `prevention_pest_id` int NOT NULL AUTO_INCREMENT,
+  `pest_id` int NOT NULL,
+  `prevention_id` int NOT NULL,
+  PRIMARY KEY (`prevention_pest_id`),
+  KEY `fk_pest_table_has_prevention_table_prevention_table1_idx` (`prevention_id`),
+  KEY `fk_pest_table_has_prevention_table_pest_table1` (`pest_id`),
+  CONSTRAINT `fk_pest_table_has_prevention_table_pest_table1` FOREIGN KEY (`pest_id`) REFERENCES `pest_table` (`pest_id`),
+  CONSTRAINT `fk_pest_table_has_prevention_table_prevention_table1` FOREIGN KEY (`prevention_id`) REFERENCES `prevention_table` (`prevention_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `prevention_pest`
+--
+
+LOCK TABLES `prevention_pest` WRITE;
+/*!40000 ALTER TABLE `prevention_pest` DISABLE KEYS */;
+INSERT INTO `prevention_pest` VALUES (1,2,1),(2,1,1),(3,3,2);
+/*!40000 ALTER TABLE `prevention_pest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `prevention_table`
+--
+
+DROP TABLE IF EXISTS `prevention_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `prevention_table` (
+  `prevention_id` int NOT NULL AUTO_INCREMENT,
+  `prevention_name` varchar(45) NOT NULL,
+  `prevention_desc` tinytext NOT NULL,
+  PRIMARY KEY (`prevention_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `prevention_table`
+--
+
+LOCK TABLES `prevention_table` WRITE;
+/*!40000 ALTER TABLE `prevention_table` DISABLE KEYS */;
+INSERT INTO `prevention_table` VALUES (1,'Water Field','Flod the field with 2cm of water.'),(2,'Apply Fertilizer','Apply fertilizer with organic materials'),(3,'Plant Seeds Early','Plant the seeds as soon as possible');
+/*!40000 ALTER TABLE `prevention_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -798,8 +1019,91 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('bQ0Uqp-EW698hrpRnCd6qEhGxGA6erYb',1635495756,'{\"cookie\":{\"originalMaxAge\":108000000,\"expires\":\"2021-10-29T08:22:35.790Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{}}'),('bl_LCq4go38CYuT1U_bHAh4ALVO3Gbga',1635597355,'{\"cookie\":{\"originalMaxAge\":108000000,\"expires\":\"2021-10-29T08:22:35.689Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{}}');
+INSERT INTO `sessions` VALUES ('xCJa05HThQYw3-dlHuwmhbvGm_9D1Z_K',1635884418,'{\"cookie\":{\"originalMaxAge\":108000000,\"expires\":\"2021-11-02T20:08:03.864Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{}}');
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `solution_disease`
+--
+
+DROP TABLE IF EXISTS `solution_disease`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `solution_disease` (
+  `solution_disease` int NOT NULL AUTO_INCREMENT,
+  `disease_id` int NOT NULL,
+  `solution_id` int NOT NULL,
+  PRIMARY KEY (`solution_disease`),
+  KEY `fk_disease_table_has_solution_table_solution_table1_idx` (`solution_id`),
+  KEY `fk_disease_table_has_solution_table_disease_table1` (`disease_id`),
+  CONSTRAINT `fk_disease_table_has_solution_table_disease_table1` FOREIGN KEY (`disease_id`) REFERENCES `disease_table` (`disease_id`),
+  CONSTRAINT `fk_disease_table_has_solution_table_solution_table1` FOREIGN KEY (`solution_id`) REFERENCES `solution_table` (`solution_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `solution_disease`
+--
+
+LOCK TABLES `solution_disease` WRITE;
+/*!40000 ALTER TABLE `solution_disease` DISABLE KEYS */;
+INSERT INTO `solution_disease` VALUES (1,1,1),(2,1,2),(3,2,2);
+/*!40000 ALTER TABLE `solution_disease` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `solution_pest`
+--
+
+DROP TABLE IF EXISTS `solution_pest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `solution_pest` (
+  `solution_pest_id` int NOT NULL AUTO_INCREMENT,
+  `solution_id` int NOT NULL,
+  `pest_id` int DEFAULT NULL,
+  PRIMARY KEY (`solution_pest_id`),
+  KEY `fk_pest_table_has_solution_table_solution_table1_idx` (`solution_id`),
+  KEY `fk_pest_table_has_solution_table_pest_table1_idx` (`pest_id`),
+  CONSTRAINT `fk_pest_table_has_solution_table_pest_table1` FOREIGN KEY (`pest_id`) REFERENCES `pest_table` (`pest_id`),
+  CONSTRAINT `fk_pest_table_has_solution_table_solution_table1` FOREIGN KEY (`solution_id`) REFERENCES `solution_table` (`solution_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `solution_pest`
+--
+
+LOCK TABLES `solution_pest` WRITE;
+/*!40000 ALTER TABLE `solution_pest` DISABLE KEYS */;
+INSERT INTO `solution_pest` VALUES (1,1,2),(2,1,1),(3,2,1);
+/*!40000 ALTER TABLE `solution_pest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `solution_table`
+--
+
+DROP TABLE IF EXISTS `solution_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `solution_table` (
+  `solution_id` int NOT NULL AUTO_INCREMENT,
+  `solution_name` varchar(45) DEFAULT NULL,
+  `solution_desc` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`solution_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `solution_table`
+--
+
+LOCK TABLES `solution_table` WRITE;
+/*!40000 ALTER TABLE `solution_table` DISABLE KEYS */;
+INSERT INTO `solution_table` VALUES (1,'Remove weeds','Remove all weeds from the field'),(2,'Burn the field','Burn all of the plants and palay'),(3,'Flood the field','Flood the field with 3cm of water');
+/*!40000 ALTER TABLE `solution_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1095,4 +1399,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-29 15:52:51
+-- Dump completed on 2021-11-02 14:04:48

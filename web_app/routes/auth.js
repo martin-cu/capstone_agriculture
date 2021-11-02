@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const controller = require('../controllers/materialsController');
+const materialController = require('../controllers/materialsController');
 const farmController = require('../controllers/farmController');
 const employeeController = require('../controllers/employeeController');
 const cropCalendarController = require('../controllers/cropCalendarController');
@@ -10,9 +10,9 @@ router.get('/login', (req, res) => {
 	res.render('home', {});
 });
 
-router.get('/test', controller.test);
-router.get('/testAPI', controller.testAPI);
-router.get('/getWeather', controller.getWeather);
+router.get('/test', materialController.test);
+router.get('/testAPI', materialController.testAPI);
+router.get('/getWeather', materialController.getWeather);
 
 /*** Database Ajax Start ***/
 
@@ -40,6 +40,8 @@ router.get('/home', farmController.getDashboard);
 
 router.get('/farms', farmController.getFarms);
 router.get('/farms/add', farmController.getaddFarm);
+
+router.get('/materials', materialController.getMaterials);
 
 router.get('/crop_calendar', farmController.getCropCalendar);
 router.get('/crop_calendar/add', farmController.getAddCropCalendar);
@@ -92,13 +94,18 @@ router.get('/agroapi/weather/forecast', farmController.getForecastWeather);
 
 
 //ajax
-router.get('/addNewItem', controller.addMaterials);
-router.get('/getMaterials', controller.getMaterials);
-router.get('/updateMaterial', controller.updateMaterial);
-router.get('/addFarmMaterial', controller.addFarmMaterial);
-router.get('/addPurchase', controller.addPurchase);
-router.get('/getPurchases', controller.getPurchases);
-router.get('/updatePurchase', controller.updatePurchase);
+router.get('/addNewItem', materialController.addMaterials);
+router.get('/getMaterials', materialController.getMaterials);
+router.get('/updateMaterial', materialController.updateMaterial);
+router.get('/addFarmMaterial', materialController.addFarmMaterial);
+router.get('/addPurchase', materialController.addPurchase);
+router.get('/getPurchases', materialController.getPurchases);
+router.get('/updatePurchase', materialController.updatePurchase);
+
+router.get('/getMaterialsAjax/:type', materialController.getMaterialsAjax);
+
+
+
 
 router.get('/get_employees', employeeController.ajaxEmployees);
 router.post('/assign_farmers', farmController.assignFarmers);

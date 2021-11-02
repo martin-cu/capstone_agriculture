@@ -462,13 +462,13 @@ DROP TABLE IF EXISTS `fertilizer_disease`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `fertilizer_disease` (
   `fertilizer_disease_id` int NOT NULL,
-  `fertilizier_id` int NOT NULL,
+  `fertilizer_id` int NOT NULL,
   `disease_id` int NOT NULL,
   PRIMARY KEY (`fertilizer_disease_id`),
   KEY `fk_fertilizer_table_has_disease_table_disease_table1_idx` (`disease_id`),
-  KEY `fk_fertilizer_table_has_disease_table_fertilizer_table1_idx` (`fertilizier_id`),
+  KEY `fk_fertilizer_table_has_disease_table_fertilizer_table1_idx` (`fertilizer_id`),
   CONSTRAINT `fk_fertilizer_table_has_disease_table_disease_table1` FOREIGN KEY (`disease_id`) REFERENCES `disease_table` (`disease_id`),
-  CONSTRAINT `fk_fertilizer_table_has_disease_table_fertilizer_table1` FOREIGN KEY (`fertilizier_id`) REFERENCES `fertilizer_table` (`fertilizier_id`)
+  CONSTRAINT `fk_fertilizer_table_has_disease_table_fertilizer_table1` FOREIGN KEY (`fertilizer_id`) REFERENCES `fertilizer_table` (`fertilizer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -491,11 +491,11 @@ DROP TABLE IF EXISTS `fertilizer_pest`;
 CREATE TABLE `fertilizer_pest` (
   `fertilizer_pest_id` int NOT NULL AUTO_INCREMENT,
   `pest_id` int NOT NULL,
-  `fertilizier_id` int NOT NULL,
+  `fertilizer_id` int NOT NULL,
   PRIMARY KEY (`fertilizer_pest_id`),
-  KEY `fk_pest_table_has_fertilizer_table_fertilizer_table1_idx` (`fertilizier_id`),
+  KEY `fk_pest_table_has_fertilizer_table_fertilizer_table1_idx` (`fertilizer_id`),
   KEY `fk_pest_table_has_fertilizer_table_pest_table1_idx` (`pest_id`),
-  CONSTRAINT `fk_pest_table_has_fertilizer_table_fertilizer_table1` FOREIGN KEY (`fertilizier_id`) REFERENCES `fertilizer_table` (`fertilizier_id`),
+  CONSTRAINT `fk_pest_table_has_fertilizer_table_fertilizer_table1` FOREIGN KEY (`fertilizer_id`) REFERENCES `fertilizer_table` (`fertilizer_id`),
   CONSTRAINT `fk_pest_table_has_fertilizer_table_pest_table1` FOREIGN KEY (`pest_id`) REFERENCES `pest_table` (`pest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -517,11 +517,11 @@ DROP TABLE IF EXISTS `fertilizer_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `fertilizer_table` (
-  `fertilizier_id` int NOT NULL AUTO_INCREMENT,
+  `fertilizer_id` int NOT NULL AUTO_INCREMENT,
   `fertilizer_name` varchar(20) NOT NULL,
   `fertilizer_desc` tinytext,
-  PRIMARY KEY (`fertilizier_id`),
-  UNIQUE KEY `fertilizier_id_UNIQUE` (`fertilizier_id`),
+  PRIMARY KEY (`fertilizer_id`),
+  UNIQUE KEY `fertilizer_id_UNIQUE` (`fertilizer_id`),
   UNIQUE KEY `fertilizer_name_UNIQUE` (`fertilizer_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -556,7 +556,7 @@ CREATE TABLE `field_input_table` (
   KEY `input_to_employee_applied_idx` (`applied_by`),
   KEY `fertilizer_to_input_idx` (`fertilizer_id`),
   KEY `pesticide_to_input_idx` (`pesticide_id`),
-  CONSTRAINT `fertilizer_to_input` FOREIGN KEY (`fertilizer_id`) REFERENCES `fertilizer_table` (`fertilizier_id`),
+  CONSTRAINT `fertilizer_to_input` FOREIGN KEY (`fertilizer_id`) REFERENCES `fertilizer_table` (`fertilizer_id`),
   CONSTRAINT `input_to_employee_applied` FOREIGN KEY (`applied_by`) REFERENCES `employee_table` (`employee_id`),
   CONSTRAINT `pesticide_to_input` FOREIGN KEY (`pesticide_id`) REFERENCES `pesticide_table` (`pesticide_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

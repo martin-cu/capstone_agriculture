@@ -25,23 +25,23 @@ exports.getMaterials = function(type, filter, next){
 	var sql;
 	var table;
 	if (type == "Seed") {
-		table = "seed_table";
+		table = "SELECT seed_id as id, seed_name as name, seed_desc as mat_desc FROM seed_table";
 	}
 	else if (type == "Pesticide") {
-		table = "pesticide_table";
+		table = "SELECT pesticide_id as id, pesticide_name as name, pesticide_desc as mat_desc FROM pesticide_table";
 	}
 	else if (type == "Fertilizer") {
-		table = "fertilizer_table";
+		table = "SELECT fertilizer_id as id, fertilizer_name as name, fertilizer_desc as mat_desc FROM fertilizer_table";
 	}
 
 	if(filter == null){
-		sql = "SELECT * FROM " + table + ";";
+		sql = table + ";";
 	}
 	else{
-		sql = "SELECT * FROM " + table +" WHERE ?";
+		sql = table +" WHERE ?";
 		sql = mysql.format(sql, filter);
 	}
-
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -109,7 +109,7 @@ exports.addFarmMaterials = function(amount, farm_mat_id, next){
 exports.getFarmMaterials = function(filter, next){
 	var sql = "SELECT * FROM farm_materials WHERE ?";
 	sql = mysql.format(sql, filter);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
