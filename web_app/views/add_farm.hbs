@@ -41,7 +41,7 @@
             
                             <div class="form-group">
                                 <label for="farmName">Name</label>
-                                <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name">
+                                <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name" required>
                             </div>
                            
                             <div class="form-group">
@@ -49,8 +49,8 @@
 
                                 <div class="col">
                                 <label for="landType">Land Type</label>
-                                <select class="browser-default custom-select" id="landType" placeholder="Select Land Type">
-                                    <option value="Lowland">Lowland</option>
+                                <select class="browser-default custom-select" id="landType" name="land_type" required>
+                                    <option value="Lowland" selected>Lowland</option>
                                     <option value="Upland">Upland</option>
                                 </select>
 
@@ -58,7 +58,7 @@
                                 
                                 <div class="col">
                                 <label for="farmManager">Farm Manager</label>
-                                <select class="browser-default custom-select" name="farm_mngr" id="farm_mngr_cont">
+                                <select class="browser-default custom-select" name="farm_mngr" id="farm_mngr_cont" required>
                                 </select>
                                 </div>
 
@@ -81,9 +81,7 @@
                             </div>
 
                              <div class="form-group">
-                                <label for="geotags">Pin Geotag Coordinates</label>
-                                {{!-- <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
+                                <label for="geotags" id="geotag_lbl">Pin Geotag Coordinates</label>
                                 
                                 <div id="floating-panel">
                                     <input id="hide-markers" type="button" value="Hide Markers">
@@ -162,7 +160,7 @@
 </div>
 
 <script>
-    var view = "farm_outlook";
+    var view = "add_farm";
 function goBack() {
   window.history.back();
 }

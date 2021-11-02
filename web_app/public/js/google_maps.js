@@ -7,7 +7,17 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 13.2,
-        center: socorroMindoro
+        center: socorroMindoro,
+        mapTypeId: 'hybrid',
+        styles: [
+            {
+                featureType: "road",
+                stylers: [
+                     {visibility: "off"}
+                 ]
+            }
+        ],
+        disableDefaultUI: true
     });
 
     // This event listener will call addMarker() when the map is clicked.

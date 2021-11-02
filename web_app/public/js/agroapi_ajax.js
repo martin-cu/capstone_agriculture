@@ -1,12 +1,19 @@
 function preparePolygonCoordinates(data) {
 	var result_arr = [];
 	var temp_arr = [];
+	var arr = [];
 
 	data.push(data[0]);
+
 	for (var i = 0; i < data.length; i++) {
-		temp_arr.push([ data[i].lng, data[i].lat ]);
+		temp_arr.push(data[i].lng);
+		temp_arr.push(data[i].lat);
+
+		arr.push(temp_arr);
+		temp_arr = [];
 	}
-	result_arr.push(temp_arr);
+
+	result_arr.push(arr);
 	return result_arr;
 }
 
@@ -64,12 +71,14 @@ $(document).ready(function() {
 	$('#create_farm_form').on('submit', function(e) {
 		e.preventDefault();
 
+
 		var form_data = $('#create_farm_form').serializeJSON();
 		
 		form_data.coordinates = [];
 
-		form_data.coordinates.push(preparePolygonCoordinates(coordinate_arr));
+		form_data.coordinates = preparePolygonCoordinates(coordinate_arr);
 		console.log(form_data);
+
 		$.post('/readFarmDetails', form_data, function(farm_record) {
 			console.log(farm_record);
 			if (farm_record.farm_list.length == 0) {

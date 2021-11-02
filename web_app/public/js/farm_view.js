@@ -48,6 +48,10 @@ function loadAjaxEmployees() {
 		val: ['form-check-input', 'checkbox', 'worker_checkbox', 'margin-top: .4rem', 'create_farm_form']
 	};
 
+	//Clear list
+	$('#unassigned_frmr_cont').empty();
+	$('#assigned_frmr_cont').empty();
+
 	$.get('/get_employees', { position: 'Farmer' }, function(result1) {
 		if (result1.success) {
 			var emp1 = result1.employee_list;
