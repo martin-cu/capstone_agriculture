@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Profile - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards-1.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards.css">
+    <link rel="stylesheet" href="assets/css/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/css/theme.bootstrap_4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529;">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-text mx-3"><img src="assets/img/LA_logo.png" style="width: 150px;"></div>
+                </a>
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
+                    <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fas fa-tachometer-alt" style="font-size: 16px;margin-right: 6px;"></i><span style="font-size: 16px;">Dashboard</span></a></li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;"><a aria-expanded="true" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-warehouse" style="margin-right: 6px;"></i>Farms</a>
+                            <div class="dropdown-menu show" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Work Orders</a><a class="dropdown-item" href="Farm-Monitoring.html" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Farm Monitoring</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fa fa-th-list" style="margin-right: 6px;"></i>Material Management</a>
+                            <div class="dropdown-menu" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Inventory</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Orders</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);">
+                        <div class="nav-item dropdown" style="color: rgb(255,255,255);margin-bottom: 0px;padding: 16px;"><a aria-expanded="false" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-bug" style="margin-right: 6px;"></i>Pest and Disease</a>
+                            <div class="dropdown-menu" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Discover</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);">
+                        <div class="nav-item dropdown" style="color: rgb(255,255,255);margin-bottom: 0px;padding: 16px;"><a aria-expanded="false" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-balance-scale-left" style="margin-right: 6px;"></i>Nutrient Management</a>
+                            <div class="dropdown-menu" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Discover</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"><a class="nav-link" href="table.html" style="color: rgb(255,255,255);"><i class="fas fa-table" style="color: rgb(255,255,255);font-size: 16px;"></i><span style="color: rgb(255,255,255);font-size: 16px;">User Management</span></a></li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"><a class="nav-link" href="login.html" style="color: rgb(255,255,255);"><i class="far fa-chart-bar" style="color: rgb(255,255,255);font-size: 16px;"></i><span style="color: rgb(255,255,255);font-size: 16px;">Farm Productivity Reports</span></a></li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand shadow mb-4 topbar static-top" style="background: #F1E8D7;">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                            <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ..."><button class="btn btn-primary py-0" type="button" style="background: #EDD172;"><i class="fas fa-search"></i></button></div>
+                        </form>
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
+                                    <form class="me-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: #584C33;"><span class="badge bg-danger badge-counter">3+</span><i class="fas fa-bell fa-fw"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                        <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 12, 2019</span>
+                                                <p>A new monthly report is ready to download!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 7, 2019</span>
+                                                <p>$290.29 has been deposited into your account!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 2, 2019</span>
+                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                            </div>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="dropdown" style="margin-left: 20px;"><a class="dropdown-toggle text-decoration-none" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="background: #FFFFFF;border-radius: 20px;border-style: none;color: #584C33;padding: 12px;font-size: 13px;font-weight: bold;">administrator<i class="fa fa-user-circle-o" style="margin-left: 10px;"></i></a>
+                            <div class="dropdown-menu"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">Logout</a></div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"><a class="btn btn-primary" role="button" style="background: rgba(78,115,223,0);border-style: none;" href="Farm-Monitoring.html"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-backspace-fill" style="color: #332C1F;font-size: 25px;">
+                                <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"></path>
+                            </svg></a>&nbsp;Farm 1&nbsp;</h3>
+                    <div class="row" style="padding: 0px 12px;">
+                        <div class="col-xxl-7">
+                            <div class="table-responsive" style="border-style: none;">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Mon</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-showers-heavy justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Tue</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-meatball justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Wed</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Thu</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-poo-storm justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Fri</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Sat</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Sun</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Mon</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-showers-heavy justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 0px 12px;">
+                        <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Resources (Inventory)</strong></label>
+                            <div class="card">
+                                <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
+                                    <ul class="nav nav-tabs card-header-tabs">
+                                        <li class="nav-item"><a class="nav-link active" href="#" style="background: #F0F0F0;">Seed</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#">Fertilizer</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#">Pesticide</a></li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row table-topper align-items-center">
+                                        <div class="col-4 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                                        <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
+                                            <h6 id="counter">Showing: <strong id="rowCount">ALL</strong>&nbsp;Row(s)</h6>
+                                        </div>
+                                        <div class="col-4 text-end" style="margin: 0px;padding: 5px 10px;"><a href="#" data-bs-toggle="modal" data-bs-target="#tablehelpModal"><i class="fa fa-question-circle" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;" data-bs-toggle="tooltip" data-bs-placement="top"></i></a></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div>
+                                                <table class="table table tablesorter" id="ipi-table">
+                                                    <thead class="thead-dark">
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Material type</th>
+                                                            <th>stock level</th>
+                                                            <th>unit</th>
+                                                            <th>cost per unit</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pending Orders</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                                        <div class="card-body">
+                                            <div style="border-style: none;"><span class="align-items-xxl-start">Pesticide 1</span><span class="float-end align-items-xxl-start">10kg</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php 2,000.00</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                                        <div class="card-body">
+                                            <div style="border-style: none;"><span class="align-items-xxl-start">Pesticide 1</span><span class="float-end align-items-xxl-start">10kg</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php 2,000.00</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                                        <div class="card-body">
+                                            <div style="border-style: none;"><span class="align-items-xxl-start">Pesticide 1</span><span class="float-end align-items-xxl-start">10kg</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php 2,000.00</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 0px 12px;">
+                        <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Orders Request</strong></label>
+                            <div class="card">
+                                <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
+                                    <ul class="nav nav-tabs card-header-tabs">
+                                        <li class="nav-item"><a class="nav-link active" href="#" style="background: #F0F0F0;">Seed</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#">Fertilizer</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#">Pesticide</a></li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row table-topper align-items-center">
+                                        <div class="col-4 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                                        <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
+                                            <h6 id="counter-1">Showing: <strong id="rowCount-1">ALL</strong>&nbsp;Row(s)</h6>
+                                        </div>
+                                        <div class="col-4 text-end" style="margin: 0px;padding: 5px 10px;"><a href="#" data-bs-toggle="modal" data-bs-target="#tablehelpModal"><i class="fa fa-question-circle" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;" data-bs-toggle="tooltip" data-bs-placement="top"></i></a></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div>
+                                                <table class="table table tablesorter" id="ipi-table">
+                                                    <thead class="thead-dark">
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Material type</th>
+                                                            <th>stock level</th>
+                                                            <th>unit</th>
+                                                            <th>cost per unit</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Dinorado</td>
+                                                            <td>Fertilizer</td>
+                                                            <td>2</td>
+                                                            <td>sacks</td>
+                                                            <td>PHP 500.00</td>
+                                                            <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pending Deliveries</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                                        <div class="card-body">
+                                            <div style="border-style: none;"><span class="align-items-xxl-start">Pesticide 1</span><span class="float-end align-items-xxl-start">10kg</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php 2,000.00</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                                        <div class="card-body">
+                                            <div style="border-style: none;"><span class="align-items-xxl-start">Pesticide 1</span><span class="float-end align-items-xxl-start">10kg</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php 2,000.00</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                                        <div class="card-body">
+                                            <div style="border-style: none;"><span class="align-items-xxl-start">Pesticide 1</span><span class="float-end align-items-xxl-start">10kg</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php 2,000.00</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="card" id="TableSorterCard">
+                        <div class="modal fade" role="dialog" tabindex="-1" id="tablehelpModal" aria-labeledby="tablehelpModal" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Table Filtering Options</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:1%">Priority</th>
+                                                        <th style="width:9%">Operator</th>
+                                                        <th style="width:30%">Description</th>
+                                                        <th style="width:60%">Examples</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td><code>|</code>&nbsp;or&nbsp;&nbsp;<code>OR</code><br></td>
+                                                        <td>Logical "or" (Vertical bar). Filter the column for content that matches text from either side of the bar.<br></td>
+                                                        <td><code>&lt;20 | &gt;40</code>&nbsp;(matches a column cell with either "&lt;20" or "&gt;40")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td><code>&amp;&amp;</code>&nbsp;or <code>AND</code><br></td>
+                                                        <td>Logical "and". Filter the column for content that matches text from either side of the operator.<br></td>
+                                                        <td><code>&gt;20 &amp;&amp; &gt;40</code>&nbsp;(matches a column cell that contains both "&gt;20" and "&lt;40")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td><code>/\d/</code><br></td>
+                                                        <td>Add any regex to the query to use in the query ("mig" flags can be included&nbsp;<code>/\w/mig</code>)<br></td>
+                                                        <td><code>/b[aeiou]g/i</code>&nbsp;(finds "bag", "beg", "BIG", "Bug", etc);<code>&gt;/r$/</code>&nbsp;(matches text that ends with an "r")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>4</td>
+                                                        <td><code>&lt; &lt;= &gt;= &gt;</code><br></td>
+                                                        <td>Find alphabetical or numerical values less than or greater than or equal to the filtered query .<br></td>
+                                                        <td><code>&lt;=10</code>&nbsp;(find values greater than or equal to 10)<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>5</td>
+                                                        <td><code>!</code>&nbsp;or&nbsp;<code>!=</code><br></td>
+                                                        <td>Not operator, or not exactly match. Filter the column with content that&nbsp;<strong>do not</strong>&nbsp;match the query. Include an equal (<code>=</code>), single (<code>'</code>) or double quote (<code>"</code>) to exactly&nbsp;<em>not</em>&nbsp;match a filter.<br><br><br></td>
+                                                        <td><code>!e</code>&nbsp;(find text that doesn't contain an "e");<code>!"ELISA"</code>&nbsp;(find content that does not exactly match "ELISA")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>6</td>
+                                                        <td><code>"</code>&nbsp;or&nbsp;<code>=</code><br></td>
+                                                        <td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query<br></td>
+                                                        <td><code>abc"</code>&nbsp;or&nbsp;<code>abc=</code>&nbsp;(exactly match "abc")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>7</td>
+                                                        <td><code>-</code>&nbsp;or <code>to</code><br></td>
+                                                        <td>Find a range of values. Make sure there is a space before and after the dash (or the word "to").<br></td>
+                                                        <td><code>10 - 30</code>&nbsp;or&nbsp;<code>10 to 30</code>&nbsp;(match values between 10 and 30)<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>8</td>
+                                                        <td><code>?</code><br></td>
+                                                        <td>Wildcard for a single, non-space character.<br></td>
+                                                        <td><code>S?c</code>&nbsp;(finds "Sec" and "Soc", but not "Seec")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>8</td>
+                                                        <td><code>*</code><br></td>
+                                                        <td>Wildcard for zero or more non-space characters.<br></td>
+                                                        <td><code>B*k</code>&nbsp;(matches "Black" and "Book")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>9</td>
+                                                        <td><code>~</code><br></td>
+                                                        <td>Perform a fuzzy search (matches sequential characters) by adding a tilde to the beginning of the query<br></td>
+                                                        <td><code>~bee</code>&nbsp;(matches "Bruce Lee" and "Brenda Dexter"), or&nbsp;<code>~piano</code>&nbsp;(matches "Philip Aaron Wong")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10</td>
+                                                        <td>text<br></td>
+                                                        <td>Any text entered in the filter will&nbsp;<strong>match</strong>&nbsp;text found within the column<br></td>
+                                                        <td><code>abc</code>&nbsp;(finds "abc", "abcd", "abcde", etc);<code>SEC</code>&nbsp;(finds "SEC" and "Analytical SEC")<br></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer"><button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © LA Rice Mill 2021</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="assets/js/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/jquery.tablesorter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-filter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-storage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+
+</html>
