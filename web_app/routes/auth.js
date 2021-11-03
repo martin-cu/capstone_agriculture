@@ -95,7 +95,7 @@ router.get('/agroapi/weather/forecast', farmController.getForecastWeather);
 
 //ajax
 router.get('/addNewItem', materialController.addMaterials);
-router.get('/getMaterials', materialController.getMaterials);
+router.get('/getMaterials', materialController.getMaterials); 
 router.get('/updateMaterial', materialController.updateMaterial);
 router.get('/addFarmMaterial', materialController.addFarmMaterial);
 router.get('/addPurchase', materialController.addPurchase);

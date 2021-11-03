@@ -192,7 +192,6 @@ exports.getDiseaseBasedWeather = function(weather, next){
 	mysql.query(sql, next);
 }
 
-
 exports.getPestPossibilities = function(weather, season, fertilizer, stage, next){
 	select_qry = 'SELECT a.pest_id, a.pest_name, a.pest_desc, a.weather_id, a.max_temp, a.min_temp, a.weather, max(a.stage_name) as t_stage_name, max(a.avg_duration) as avg, max(a.stage_id) as stage_id, max(a.season_id) as season_id, max(a.season_name) as season_name, max(a.season_desc) as season_desc, max(a.fertilizer_id) as fertilizer_id, max(a.fertilizer_name) as fertilizer_name, max(fertilizer_desc) as fertilizer_desc  FROM (';
 	weather_qry = 'SELECT p.pest_id, p.pest_name, p.pest_desc,wt.weather_id, wt.max_temp, wt.min_temp, wt.weather, wt.humidity, wt.precipitation, wt.soil_moisture,  null as stage_id, null as stage_name, null as avg_duration,null as season_id, null as season_name, null as season_desc, null as season_temp, null as season_humidity, null as fertilizer_id, null as fertilizer_name, null as fertilizer_desc FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
@@ -274,9 +273,8 @@ exports.getPestPossibilities = function(weather, season, fertilizer, stage, next
 
 
 	sql = sql + end_qry;
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
-	console.log("done");
 }
 
 exports.getDiseasePossibilities = function(weather, season, fertilizer, stage, next){
@@ -360,10 +358,231 @@ exports.getDiseasePossibilities = function(weather, season, fertilizer, stage, n
 
 
 	sql = sql + end_qry;
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
-	console.log("done");
+	// console.log("done");
 }
+
+
+exports.getPestProbability = function(weather, season, fertilizer, stage, next){
+	sql = "";
+	start = "SELECT a.pest_id, a.pest_name, COUNT(a.pest_id) as count FROM (";
+	end = ") a GROUP BY a.pest_id ORDER BY COUNT(a.pest_id) DESC;";
+	weather_temp = 'SELECT p.pest_id, p.pest_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_humidity = 'SELECT p.pest_id, p.pest_name, "Weather humidity" AS factor, wt.humidity AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_precipitation = 'SELECT p.pest_id, p.pest_name, "Weather precipitation" AS factor, wt.precipitation AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_soil_moisture = 'SELECT p.pest_id, p.pest_name, "Weather soil moisture" AS factor, wt.soil_moisture AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+
+	season_temp = 'SELECT p.pest_id, p.pest_name, "Season temp" AS factor, s.season_temp AS value FROM pest_table p INNER JOIN season_pest sp ON sp.pest_id = p.pest_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+	season_humidity = 'SELECT p.pest_id, p.pest_name, "Season humidity" AS factor, s.season_humidity AS value FROM pest_table p INNER JOIN season_pest sp ON sp.pest_id = p.pest_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+
+	stages_qry = 'SELECT p.pest_id, p.pest_name, "Stage" AS factor, s.stage_name AS value FROM pest_table p INNER JOIN stages_pest sp ON p.pest_id = sp.pest_id INNER JOIN stages s ON s.stage_id = sp.stage_id WHERE ';
+
+	fertilzier_qry = 'SELECT p.pest_id, p.pest_name, "Stage" AS factor, s.stage_name AS value FROM pest_table p INNER JOIN fertilizer_pest fp ON fp.pest_id = p.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = fp.fertilizier_id WHERE ';
+
+	sql = start;
+	first = false;
+
+	//WEATHER
+	if(weather.min_temp != null && weather.max_temp != null){
+		sql = sql + weather_temp;
+
+		if(weather.min_temp != null){
+			first = true;
+			sql = sql + " min_temp <= " + weather.min_temp;
+		}
+		if(weather.max_temp != null){
+			if(first)
+				sql = sql + " && ";
+			else
+				first = true;
+			sql = sql + " max_temp >= " + weather.max_temp;
+		}
+		first = true;
+	}
+
+	console.log("\n\n\n" + sql);
+
+	if(weather.humidity != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + weather_humidity;
+		sql = sql + " humidity = " + weather.humidity;
+	}
+	if(weather.precipitation != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_precipitation;
+		sql = sql + " precipitation - 5 <= " + weather.precipitation + " && precipitation + 5 >= " + weather.precipitation;
+	}
+	if(weather.soil_moisture != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_soil_moisture;
+		sql = sql + " soil_moisture = " + weather.soil_moisture;
+	}
+
+	//SEASON
+	if(season.season_temp != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_temp;
+		sql = sql + " season_temp - 5 <= " + season.season_temp + " && season_temp + 5 >= " + season.season_temp;
+			
+	}
+
+	if(season.season_humidity != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_humidity;
+		sql = sql + " season_humidity - 5 <= " + season.season_humidity + " && season_humidity + 5 >= " + season.season_humidity;
+			
+	}
+
+
+	//STAGE
+	if(stage.stage_name != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		
+		sql = sql + stages_qry;
+		sql = sql + " s.stage_name = '" + stage.stage_name + "'";
+	}
+
+
+	sql = sql + end;
+	console.log("\n\n\n" + sql);
+	mysql.query(sql, next);
+
+}
+
+
+exports.getDiseaseProbability = function(weather, season, fertilizer, stage, next){
+	sql = "";
+	start = "SELECT a.disease_id, a.disease_name, COUNT(a.disease_id) as count FROM (";
+	end = ") a GROUP BY a.disease_id ORDER BY COUNT(a.disease_id) DESC;";
+	weather_temp = 'SELECT p.disease_id, p.disease_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_humidity = 'SELECT p.disease_id, p.disease_name, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_precipitation = 'SELECT p.disease_id, p.disease_name, "Weather precipitation" AS factor, wt.precipitation AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_soil_moisture = 'SELECT p.disease_id, p.disease_name, "Weather soil moisture" AS factor, wt.soil_moisture AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+
+	season_temp = 'SELECT p.disease_id, p.disease_name, "Season temp" AS factor, s.season_temp AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+	season_humidity = 'SELECT p.disease_id, p.disease_name, "Season humidity" AS factor, s.season_humidity AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+
+	stages_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN stages_disease sp ON p.disease_id = sp.disease_id INNER JOIN stages s ON s.stage_id = sp.stage_id WHERE ';
+
+	fertilzier_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN fertilizer_disease fp ON fp.disease_id = p.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = fp.fertilizier_id WHERE ';
+
+	sql = start;
+	first = false;
+
+	//WEATHER
+	if(weather.min_temp != null && weather.max_temp != null){
+		sql = sql + weather_temp;
+
+		if(weather.min_temp != null){
+			first = true;
+			sql = sql + " min_temp <= " + weather.min_temp;
+		}
+		if(weather.max_temp != null){
+			if(first)
+				sql = sql + " && ";
+			else
+				first = true;
+			sql = sql + " max_temp >= " + weather.max_temp;
+		}
+		first = true;
+	}
+
+	console.log("\n\n\n" + sql);
+
+	if(weather.humidity != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + weather_humidity;
+		sql = sql + " humidity = " + weather.humidity;
+	}
+	if(weather.precipitation != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_precipitation;
+		sql = sql + " precipitation - 5 <= " + weather.precipitation + " && precipitation + 5 >= " + weather.precipitation;
+	}
+	if(weather.soil_moisture != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_soil_moisture;
+		sql = sql + " soil_moisture = " + weather.soil_moisture;
+	}
+
+	//SEASON
+	if(season.season_temp != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_temp;
+		sql = sql + " season_temp - 5 <= " + season.season_temp + " && season_temp + 5 >= " + season.season_temp;
+			
+	}
+
+	if(season.season_humidity != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_humidity;
+		sql = sql + " season_humidity - 5 <= " + season.season_humidity + " && season_humidity + 5 >= " + season.season_humidity;
+			
+	}
+
+
+	//STAGE
+	if(stage.stage_name != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		
+		sql = sql + stages_qry;
+		sql = sql + " s.stage_name = '" + stage.stage_name + "'";
+	}
+
+
+	sql = sql + end;
+	console.log("\n\n\n" + sql);
+	mysql.query(sql, next);
+
+}
+
 
 
 //disease
