@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards-1.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards.css">
+    <link rel="stylesheet" href="assets/css/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/css/theme.bootstrap_4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="assets/css/Multi-step-form.css">
+    <link rel="stylesheet" href="assets/css/NZDropdown---Single.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529;">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-text mx-3"><img src="assets/img/LA_logo.png" style="width: 150px;"></div>
+                </a>
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
+                    <li class="nav-item"><a class="nav-link active" href="Dashboard.html"><i class="fas fa-tachometer-alt" style="font-size: 16px;margin-right: 6px;"></i><span style="font-size: 16px;">Dashboard</span></a></li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;"><a aria-expanded="true" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-warehouse" style="margin-right: 6px;"></i>Farms</a>
+                            <div class="dropdown-menu show" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Work Orders</a><a class="dropdown-item" href="Farm-Monitoring.html" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Farm Monitoring</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fa fa-th-list" style="margin-right: 6px;"></i>Material Management</a>
+                            <div class="dropdown-menu" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Inventory</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Orders</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);">
+                        <div class="nav-item dropdown" style="color: rgb(255,255,255);margin-bottom: 0px;padding: 16px;"><a aria-expanded="false" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-bug" style="margin-right: 6px;"></i>Pest and Disease</a>
+                            <div class="dropdown-menu" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Discover</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);">
+                        <div class="nav-item dropdown show" style="color: rgb(255,255,255);margin-bottom: 0px;padding: 16px;"><a aria-expanded="true" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-balance-scale-left" style="margin-right: 6px;"></i>Nutrient Management</a>
+                            <div class="dropdown-menu show" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="Nutrient-Management.html" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Discover</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"><a class="nav-link" href="table.html" style="color: rgb(255,255,255);"><i class="fas fa-table" style="color: rgb(255,255,255);font-size: 16px;"></i><span style="color: rgb(255,255,255);font-size: 16px;">User Management</span></a></li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"><a class="nav-link" href="login.html" style="color: rgb(255,255,255);"><i class="far fa-chart-bar" style="color: rgb(255,255,255);font-size: 16px;"></i><span style="color: rgb(255,255,255);font-size: 16px;">Farm Productivity Reports</span></a></li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand shadow mb-4 topbar static-top" style="background: #F1E8D7;">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
+                                    <form class="me-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: #584C33;"><span class="badge bg-danger badge-counter">3+</span><i class="fas fa-bell fa-fw"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                        <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 12, 2019</span>
+                                                <p>A new monthly report is ready to download!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 7, 2019</span>
+                                                <p>$290.29 has been deposited into your account!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 2, 2019</span>
+                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                            </div>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="dropdown" style="margin-left: 20px;"><a class="dropdown-toggle text-decoration-none" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="background: #FFFFFF;border-radius: 20px;border-style: none;color: #584C33;padding: 12px;font-size: 13px;font-weight: bold;">administrator<i class="fa fa-user-circle-o" style="margin-left: 10px;"></i></a>
+                            <div class="dropdown-menu"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">Logout</a></div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0" style="font-weight: bold;color: #332c1f;">Dashboard</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7 col-xl-8">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">INSERT WEATHER FORECAST</h6>
+                                </div>
+                                <div class="card-body"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-xl-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Farms</h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><span style="font-weight: bold;">Total Farms</span></li>
+                                        <li class="list-group-item"><span>High Productivity</span></li>
+                                        <li class="list-group-item"><span>Medium Productivity</span></li>
+                                        <li class="list-group-item"><span>Low Productivity&nbsp;</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xl-8 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">October 29, 2021 18:45PM Socorro, Oriental Mindoro</h6>
+                                </div>
+                                <div class="card-body"></div>
+                            </div>
+                        </div>
+                        <div class="col" style="padding: 0px 12px;">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Warning Log</h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                            <div><span>October 7, 2021</span></div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                            <div><span>October 7, 2021</span></div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                            <div><span>October 7, 2021</span></div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                            <div><span>October 7, 2021</span></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © LA Rice Mill 2021</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="assets/js/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/jquery.tablesorter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-filter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-storage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/Multi-step-form.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+
+</html>

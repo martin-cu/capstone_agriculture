@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Profile - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards-1.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards.css">
+    <link rel="stylesheet" href="assets/css/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/css/theme.bootstrap_4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="assets/css/Multi-step-form.css">
+    <link rel="stylesheet" href="assets/css/NZDropdown---Single.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529;">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-text mx-3"><img src="assets/img/LA_logo.png" style="width: 150px;"></div>
+                </a>
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
+                    <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fas fa-tachometer-alt" style="font-size: 16px;margin-right: 6px;"></i><span style="font-size: 16px;">Dashboard</span></a></li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;"><a aria-expanded="true" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-warehouse" style="margin-right: 6px;"></i>Farms</a>
+                            <div class="dropdown-menu show" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Work Orders</a><a class="dropdown-item" href="Farm-Monitoring.html" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Farm Monitoring</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fa fa-th-list" style="margin-right: 6px;"></i>Material Management</a>
+                            <div class="dropdown-menu" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Inventory</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Orders</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);">
+                        <div class="nav-item dropdown" style="color: rgb(255,255,255);margin-bottom: 0px;padding: 16px;"><a aria-expanded="false" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-bug" style="margin-right: 6px;"></i>Pest and Disease</a>
+                            <div class="dropdown-menu" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Discover</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);">
+                        <div class="nav-item dropdown show" style="color: rgb(255,255,255);margin-bottom: 0px;padding: 16px;"><a aria-expanded="true" data-bs-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgb(255,255,255);"><i class="fas fa-balance-scale-left" style="margin-right: 6px;"></i>Nutrient Management</a>
+                            <div class="dropdown-menu show" style="background: #667529;border-style: none;color: rgb(255,255,255);"><a class="dropdown-item" href="Nutrient-Management.html" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Discover</a><a class="dropdown-item" href="#" style="background: #667529;color: rgb(255,255,255);font-size: 16px;">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"><a class="nav-link" href="table.html" style="color: rgb(255,255,255);"><i class="fas fa-table" style="color: rgb(255,255,255);font-size: 16px;"></i><span style="color: rgb(255,255,255);font-size: 16px;">User Management</span></a></li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"><a class="nav-link" href="login.html" style="color: rgb(255,255,255);"><i class="far fa-chart-bar" style="color: rgb(255,255,255);font-size: 16px;"></i><span style="color: rgb(255,255,255);font-size: 16px;">Farm Productivity Reports</span></a></li>
+                    <li class="nav-item" style="color: rgb(255,255,255);"></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand shadow mb-4 topbar static-top" style="background: #F1E8D7;">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
+                                    <form class="me-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: #584C33;"><span class="badge bg-danger badge-counter">3+</span><i class="fas fa-bell fa-fw"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                        <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 12, 2019</span>
+                                                <p>A new monthly report is ready to download!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 7, 2019</span>
+                                                <p>$290.29 has been deposited into your account!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 2, 2019</span>
+                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                            </div>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="dropdown" style="margin-left: 20px;"><a class="dropdown-toggle text-decoration-none" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="background: #FFFFFF;border-radius: 20px;border-style: none;color: #584C33;padding: 12px;font-size: 13px;font-weight: bold;">administrator<i class="fa fa-user-circle-o" style="margin-left: 10px;"></i></a>
+                            <div class="dropdown-menu"><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">Logout</a></div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Farms</h3>
+                    <div class="row" style="padding: 0px 12px;">
+                        <div class="col-xxl-7">
+                            <div class="table-responsive" style="border-style: none;">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Mon</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-showers-heavy justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Tue</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-meatball justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Wed</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Thu</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-poo-storm justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Fri</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Sat</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Sun</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                            <th style="border-style: none;">
+                                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Mon</h4>
+                                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-showers-heavy justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-xxl-6">
+                            <div class="card d-xxl-flex align-items-xxl-start">
+                                <div class="card-body">
+                                    <h4 class="card-title" style="color: #332c1f;font-weight: bold;">Current Weather</h4>
+                                    <div>
+                                        <div></div>
+                                        <div class="row">
+                                            <div class="col-xxl-6"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-clouds" style="font-size: 100px;color: #332c1f;">
+                                                    <path d="M16 7.5a2.5 2.5 0 0 1-1.456 2.272 3.513 3.513 0 0 0-.65-.824 1.5 1.5 0 0 0-.789-2.896.5.5 0 0 1-.627-.421 3 3 0 0 0-5.22-1.625 5.587 5.587 0 0 0-1.276.088 4.002 4.002 0 0 1 7.392.91A2.5 2.5 0 0 1 16 7.5z"></path>
+                                                    <path d="M7 5a4.5 4.5 0 0 1 4.473 4h.027a2.5 2.5 0 0 1 0 5H3a3 3 0 0 1-.247-5.99A4.502 4.502 0 0 1 7 5zm3.5 4.5a3.5 3.5 0 0 0-6.89-.873.5.5 0 0 1-.51.375A2 2 0 1 0 3 13h8.5a1.5 1.5 0 1 0-.376-2.953.5.5 0 0 1-.624-.492V9.5z"></path>
+                                                </svg></div>
+                                            <div class="col" style="color: #332c1f;"><span class="d-xxl-flex justify-content-xxl-end" style="color: #332c1f;">26.1°</span><span class="d-xxl-flex justify-content-xxl-end align-items-xxl-center" style="color: #332c1f;">Overcast clouds</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="color: #332c1f;">
+                                        <div class="col" style="color: #332c1f;">
+                                            <h6 class="text-muted mb-2" style="color: #332c1f;">Precipitation will start within 41 minutes.</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3">
+                            <div class="card d-xxl-flex align-items-xxl-start">
+                                <div class="card-body">
+                                    <h4 class="card-title" style="color: #332c1f;font-weight: bold;">Current Weather</h4>
+                                    <div>
+                                        <div></div>
+                                        <div class="row">
+                                            <div class="col-xxl-6"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-clouds" style="font-size: 100px;color: #332c1f;">
+                                                    <path d="M16 7.5a2.5 2.5 0 0 1-1.456 2.272 3.513 3.513 0 0 0-.65-.824 1.5 1.5 0 0 0-.789-2.896.5.5 0 0 1-.627-.421 3 3 0 0 0-5.22-1.625 5.587 5.587 0 0 0-1.276.088 4.002 4.002 0 0 1 7.392.91A2.5 2.5 0 0 1 16 7.5z"></path>
+                                                    <path d="M7 5a4.5 4.5 0 0 1 4.473 4h.027a2.5 2.5 0 0 1 0 5H3a3 3 0 0 1-.247-5.99A4.502 4.502 0 0 1 7 5zm3.5 4.5a3.5 3.5 0 0 0-6.89-.873.5.5 0 0 1-.51.375A2 2 0 1 0 3 13h8.5a1.5 1.5 0 1 0-.376-2.953.5.5 0 0 1-.624-.492V9.5z"></path>
+                                                </svg></div>
+                                            <div class="col" style="color: #332c1f;"><span class="d-xxl-flex justify-content-xxl-end" style="color: #332c1f;">26.1°</span><span class="d-xxl-flex justify-content-xxl-end align-items-xxl-center" style="color: #332c1f;">Overcast clouds</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="color: #332c1f;">
+                                        <div class="col" style="color: #332c1f;">
+                                            <h6 class="text-muted mb-2" style="color: #332c1f;">Precipitation will start within 41 minutes.</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card" style="margin-top: 24PX;">
+                                <div class="card-body">
+                                    <h4 class="card-title" style="color: #332c1f;font-weight: bold;">Current Soil Data</h4>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="color: #332c1f;">Temperature at the surface</td>
+                                                    <td style="color: #332c1f;">26.1°<br></td>
+                                                </tr>
+                                                <tr style="color: #332c1f;">
+                                                    <td style="color: #332c1f;">Temperature at the depth of 10cm</td>
+                                                    <td style="color: #332c1f;">26.1°<br></td>
+                                                </tr>
+                                                <tr style="color: #332c1f;">
+                                                    <td style="color: #332c1f;">Soil Moisture</td>
+                                                    <td style="color: #332c1f;">49%<br></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3">
+                            <div class="card" style="height: 480PX;">
+                                <div class="card-body">
+                                    <h4 class="card-title" style="color: #332c1f;font-weight: bold;">All Farms</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Purok 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Sitio 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                        <li class="list-group-item"><span>Barangay 1</span><span class="float-end">1ha</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-lg-8 col-xxl-9 offset-xxl-0">
+                            <div class="card mb-3">
+                                <div class="card-body text-center shadow">
+                                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                                        <h4 class="text-dark mb-0">Farm 1</h4><a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="Pests-Diseases.html" style="background: #EDD172;color: #332c1f;font-size: 16px;border-radius: 20px;padding: 8px 12px;border-style: none;">View Details</a>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username"><strong>Description</strong></label><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: rgb(0,0,0);"><strong>This is a lowland farm.&nbsp;</strong></label></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Address</strong></label><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name" style="color: rgb(0,0,0);"><strong>Zone 4, Barangay 1, Leuteboro 1</strong></label></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="last_name"><strong>Farm Type</strong></label><label class="form-label d-xxl-flex justify-content-xxl-start" for="last_name" style="color: rgb(0,0,0);"><strong>Upland</strong></label></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Farm Area</strong></label><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name" style="color: rgb(0,0,0);"><strong>1.5 ha</strong></label></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="last_name"><strong>Farm Manager</strong></label><label class="form-label d-xxl-flex justify-content-xxl-start" for="last_name" style="color: rgb(0,0,0);font-size: 16px;"><strong>Mendoza, Ricardo</strong></label></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Crop Cycle</strong></label></div>
+                                            <div class="accordion d-flex justify-content-xxl-center" role="tablist" id="accordion-1" style="width: auto;">
+                                                <div class="accordion-item" style="width: auto;">
+                                                    <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-1" aria-expanded="false" aria-controls="accordion-1 .item-1"><img class="d-xxl-flex justify-content-xxl-center" src="assets/img/image%2027.png"></button><span class="d-xxl-flex justify-content-xxl-center" style="font-size: 16px;font-weight: bold;">Land Preparation</span></h2>
+                                                    <div class="accordion-collapse collapse item-1" role="tabpanel" data-bs-parent="#accordion-1">
+                                                        <div class="accordion-body">
+                                                            <p class="mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Column 1</th>
+                                                                            <th>Column 2</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Cell 1</td>
+                                                                            <td>Cell 2</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Cell 3</td>
+                                                                            <td>Cell 4</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-item" style="width: auto;">
+                                                    <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-2" aria-expanded="false" aria-controls="accordion-1 .item-2"><img class="d-xxl-flex justify-content-xxl-center" src="assets/img/image%2025.png"></button><span class="d-xxl-flex justify-content-xxl-center" style="font-size: 16px;font-weight: bold;">Sowing Stage</span></h2>
+                                                    <div class="accordion-collapse collapse item-2" role="tabpanel" data-bs-parent="#accordion-1">
+                                                        <div class="accordion-body">
+                                                            <p class="mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Column 1</th>
+                                                                            <th>Column 2</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Cell 1</td>
+                                                                            <td>Cell 2</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Cell 3</td>
+                                                                            <td>Cell 4</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-item" style="width: auto;">
+                                                    <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-3" aria-expanded="false" aria-controls="accordion-1 .item-3"><img class="d-xxl-flex justify-content-xxl-center" src="assets/img/image%2025.png"></button><span class="d-xxl-flex justify-content-xxl-center" style="font-size: 16px;font-weight: bold;">Fertilizing Stage</span></h2>
+                                                    <div class="accordion-collapse collapse item-3" role="tabpanel" data-bs-parent="#accordion-1">
+                                                        <div class="accordion-body">
+                                                            <p class="mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-item" style="width: auto;">
+                                                    <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-4" aria-expanded="false" aria-controls="accordion-1 .item-4" style="background: rgb(237,209,114);"><img class="d-xxl-flex justify-content-xxl-center" src="assets/img/image%2028.png"></button><span class="d-xxl-flex justify-content-xxl-center" style="font-size: 16px;font-weight: bold;">Pesticide Application</span></h2>
+                                                    <div class="accordion-collapse collapse item-4" role="tabpanel" data-bs-parent="#accordion-1">
+                                                        <div class="accordion-body">
+                                                            <p class="mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-item" style="width: auto;">
+                                                    <h2 class="accordion-header" role="tab"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-5" aria-expanded="false" aria-controls="accordion-1 .item-5"><img class="d-xxl-flex justify-content-xxl-center" src="assets/img/image%2029.png"></button><span class="d-xxl-flex justify-content-xxl-center" style="font-size: 16px;font-weight: bold;">Harvest</span></h2>
+                                                    <div class="accordion-collapse collapse item-5" role="tabpanel" data-bs-parent="#accordion-1">
+                                                        <div class="accordion-body">
+                                                            <p class="mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Farm Resources</strong></label></div>
+                                            <div class="row space-rows">
+                                                <div class="col offset-xxl-0">
+                                                    <div class="card cards-shadown cards-hover" data-aos="flip-left" data-aos-duration="950">
+                                                        <div class="card-header" style="background: rgba(255,165,0,0);"><span class="space"><a href="#"></a></span>
+                                                            <div class="cardheader-text">
+                                                                <h4 id="heading-card-1" style="font-weight: bold;color: rgb(0,0,0);font-size: 16px;">Seeds</h4>
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr></tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Seed 1</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Seed 1</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Seed 1</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;padding: 10px 12px;" href="Pests-Diseases.html">View more</a></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="card cards-shadown cards-hover" data-aos="slide-right" data-aos-duration="950">
+                                                        <div class="card-header" style="background: rgba(255,165,0,0);"><span class="space"><a href="#"></a></span>
+                                                            <div class="cardheader-text">
+                                                                <h4 id="heading-card-2" style="font-weight: bold;color: rgb(0,0,0);font-size: 16px;">Fertilizer</h4>
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr></tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Ferilizer 1</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Item 1</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Item 1</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;padding: 10px 12px;" href="Pests-Diseases.html">View more</a></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="card cards-shadown cards-hover" data-aos="flip-up" data-aos-duration="950">
+                                                        <div class="card-header cards-header-hover" style="background: rgba(255,165,0,0);"><span class="space"><a href="#"></a></span>
+                                                            <div class="cardheader-text">
+                                                                <h4 id="heading-card-3" style="font-weight: bold;color: rgb(0,0,0);font-size: 16px;">Pesticides</h4>
+                                                            </div>
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr></tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Pesticide 1</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Pesticide 2</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Pesticide 2</td>
+                                                                            <td>20kg</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;padding: 10px 12px;" href="Pests-Diseases.html">View more</a></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Pest and Diseases</strong></label></div>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: left;">Name</th>
+                                                            <th>Type</th>
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="text-align: left;">Rats</td>
+                                                            <td>Pest</td>
+                                                            <td>March 05, 2021</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;">Rice Caseworm</td>
+                                                            <td>Pest</td>
+                                                            <td>March 05, 2021</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;">Bacterial Blight</td>
+                                                            <td>Disease</td>
+                                                            <td>March 05, 2021</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Farmer Queries</strong></label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title" style="color: #332c1f;font-weight: bold;">Warning Log</h4>
+                                    <div class="row">
+                                        <div class="col">
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                                    <div><span>October 7, 2021</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                                    <div><span>October 7, 2021</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                                    <div><span>October 7, 2021</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div><span style="color: rgb(255,15,0);font-weight: bold;">Incoming Typhoon.</span><span style="color: rgb(58,59,69);font-weight: bold;">&nbsp;Harvest Now!</span><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></div>
+                                                    <div><span>October 7, 2021</span></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © LA Rice Mill 2021</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="assets/js/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/jquery.tablesorter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-filter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-storage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/Multi-step-form.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+
+</html>
