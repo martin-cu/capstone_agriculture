@@ -103,6 +103,7 @@
   input[type="text"], input[type="date"], input[type="password"], 
   select.browser-default.custom-select{
     border-radius: 20px;
+    background-color: white;
   }
 
   #addFarm {
@@ -135,6 +136,46 @@
 #content {
     height: 15.67px;
     width: 180px;
+}
+
+/* START OF MULTI-STEP FORM */
+
+/* Hide all steps by default: */
+.tab {
+    display: none;
+}
+  
+/* Make circles that indicate the steps of the form: */
+.step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+}
+  
+/* Mark the active step: */
+.step.active {
+    opacity: 1;
+}
+  
+/* Mark the steps that are finished and valid: */
+.step.finish {
+    background-color: #BDBE14;
+}
+
+/* Mark input boxes that gets an error on validation: */
+input.invalid {
+  background-color: #ffdddd;
+}
+
+/* END OF MULTI-STEP FORM */
+
+div.form-check {
+    margin-left: 50px;
 }
 
 
