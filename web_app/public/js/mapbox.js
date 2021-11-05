@@ -55,19 +55,25 @@ function getGeoData(farm_name) {
 
 	$.get('/agroapi/polygon/readAll', {}, function(polygons) {
 		var polygon_id;
+		var options = {};
 		for (var i = 0; i < polygons.length; i++) {
 			if (farm_name == polygons[i].name) {
 				polygon_id = polygons[i].id;
 				coordinates = polygons[i].geo_json.geometry.coordinates[0];
 
-				center = polygons[0].center;
+				center = polygons[i].center;
 			}
 		}
-
+		console.log(polygons)
 		var n_date = new Date();
-		n_date.setDate(n_date.getDate() - 60);
+		n_date.setDate(n_date.getDate() - 30);
 		var n = new Date();
 		var query = { polygon_id: polygon_id, start: n_date, end: n };
+
+		options = {
+			center: center,
+			coordinates: coordinates
+		}
 
 		// Visualize plot
 		$.get('/agroapi/ndvi/imagery', query, function(imagery) {
@@ -75,14 +81,10 @@ function getGeoData(farm_name) {
 			console.log(imagery.length == 0);
 
 			if (imagery.length != 0) {
+				console.log(imagery);
 				image_url = imagery[imagery.length-1].image.ndvi;
 
-				let options = {
-					center: center,
-					url: image_url,
-					coordinates: coordinates
-				}
-				loadGeoMap(options);
+				options['url'] = image_url;
 				// for (var i = 0; i < imagery.length; i++) {
 				// 	console.log(unixToDate(imagery[i].dt));
 				// }
@@ -100,6 +102,7 @@ function getGeoData(farm_name) {
 				
 			}
 
+			loadGeoMap(options);
 		});
 
 		// Load environment details
@@ -135,7 +138,11 @@ function createMap(token, options) {
         container: 'monitor_map',
         zoom: 13.2,
         center: options.center,
-        style: 'mapbox://styles/mapbox/satellite-v9'
+        style: 'mapbox://styles/mapbox/satellite-v9',
+        transition: {
+        	duration: 300,
+        	delay: 0
+        }
     });
 
     return map;
@@ -162,6 +169,7 @@ function addRasterImage(map, options) {
 }
 
 function addPolygon(map, options) {
+	console.log(options);
 	let temp_arr = [];
 	temp_arr.push(options.coordinates);
 	options.coordinates = temp_arr;
@@ -222,13 +230,13 @@ function loadGeoMap(options) {
 function tempReplaceFarm(reference) {
 	var query = '';
 	if (reference == 'farm1') {
-		query = 'Legit Farm Trial';
+		query = 'Iowa Demo Field';
 	}
 	else if (reference == 'farm2') {
-		query = 'LastFarm';
+		query = 'Iowa Demo Field';
 	}
 	else {
-		query = 'Sana Final Test';
+		query = 'LA Farm (API Paid)';
 	}
 
 	return query;
@@ -240,12 +248,15 @@ $(document).ready(function() {
 		var viewed_farm_name;
 
 		$.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
-
+			var li, style = 'border: 1px solid rgba(0,0,0,.125)';
 			viewed_farm_id = farms[0].farm_id;
 			viewed_farm_name = farms[0].farm_name;
 
 			for (var i = 0; i < farms.length; i++) {
-				$('#monitor_farm_list').append('<li class="farm_li" data="'+farms[i].farm_id+'">'+farms[i].farm_name+'</li>')
+				li = '';
+
+				li = '<li style="'+style+'" class="farm_li list-group-item" data="'+farms[i].farm_id+'"><span>'+farms[i].farm_name+'</span><span class="float-end">'+farms[i].farm_area+'ha'+'</span></li>';
+				$('#monitor_farm_list').append(li);
 			}
 			var query = tempReplaceFarm(farms[0].farm_name);
 
@@ -257,13 +268,13 @@ $(document).ready(function() {
 		$('#monitor_farm_list').on('click', '.farm_li', function() {
 
 			viewed_farm_id = $(this).attr('data');
-			viewed_farm_name = $(this).html();
+			viewed_farm_name = $($(this).children()[0]).html();
 
 			$('#monitor_farmers_table').empty();
 
 			//To be removed
 			var query = tempReplaceFarm(viewed_farm_name);
-
+			console.log(query);
 			getFarmDetails({ farm_id: viewed_farm_id });
 			getGeoData(query);
 		});

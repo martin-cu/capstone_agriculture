@@ -17,6 +17,8 @@ exports.init_session = function(obj, role, name, username, tab) {
 		obj['home_tab'] = true;
 	else if (tab === 'farms') 
 		obj['farm_tab'] = true;
+	else if (tab === 'monitor_farms')
+		obj['monitor_farms_tab'] = true;
 	else if (tab === 'crop_calendar') 
 		obj['calendar_tab'] = true;
 	else if (tab === 'harvest_cycle') 
@@ -25,8 +27,10 @@ exports.init_session = function(obj, role, name, username, tab) {
 		obj['sms_tab'] = true;
 	else if (tab === 'pest_and_disease') 
 		obj['pest_and_disease_tab'] = true;
-	else if (tab === 'nutrient_mgt') 
-		obj['nutrient_tab'] = true;
+	else if (tab === 'nutrient_mgt_discover') 
+		obj['nutrient_discover_tab'] = true;
+	else if (tab === 'nutrient_mgt_diagnose') 
+		obj['nutrient_diagnose_tab'] = true;
 	else if (tab === 'user_mgt') 
 		obj['user_tab'] = true;
 	else if (tab === 'analytics') 

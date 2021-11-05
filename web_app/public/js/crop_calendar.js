@@ -429,29 +429,29 @@ $(document).ready(function() {
 		}
 	});
 
-	// Load forecast
-	setTimeout(function() {
-		console.log('Getting weather forecast...');
-		var d1 = new Date(Date.now());
-		var d2 = new Date(Date.now());
-		d2.setDate(d2.getDate() - 15);
+	// // Load forecast
+	// setTimeout(function() {
+	// 	console.log('Getting weather forecast...');
+	// 	var d1 = new Date(Date.now());
+	// 	var d2 = new Date(Date.now());
+	// 	d2.setDate(d2.getDate() - 15);
 
-		$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
-			console.log(result);
-			appendForecastCards(result);
-			appendForecastDetails(result.forecast[0]);
+	// 	$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+	// 		console.log(result);
+	// 		appendForecastCards(result);
+	// 		appendForecastDetails(result.forecast[0]);
 
 
-			// Recommendation
-			generateRecommendation(result.forecast);
+	// 		// Recommendation
+	// 		generateRecommendation(result.forecast);
 
-			$('.carousel-inner').on('click', '.forecast_card', function() {
-				var card = $('.forecast_card').index(this);
+	// 		$('.carousel-inner').on('click', '.forecast_card', function() {
+	// 			var card = $('.forecast_card').index(this);
 
-				appendForecastDetails(result.forecast[card]);
-			});
+	// 			appendForecastDetails(result.forecast[card]);
+	// 		});
 
-		});	
-	}, 1000);
+	// 	});	
+	// }, 1000);
 
 });

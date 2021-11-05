@@ -1,47 +1,72 @@
 <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529;">
-    <div class="container-fluid d-flex flex-column p-0">
-        <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="/home">
+    <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
             <div class="sidebar-brand-text mx-3"><img src="../../images/LA_logo.png" style="width: 150px;"></div>
         </a>
-
         <ul class="navbar-nav text-light" id="accordionSidebar" style="margin-top: 20px;">
-            
             <li class="nav-item">
-                <a class="nav-link {{# if home_tab}}active{{/if}}" href="/"><i class="fas fa-tachometer-alt"></i><span> Dashboard</span></a>
+                <a class="nav-link {{# if home_tab}}active{{/if}}" href="/">
+                    <i class="fas fa-tachometer-alt" style="font-size: 16px;margin-right: 6px;"></i>
+                    <span style="font-size: 16px;">Dashboard</span>
+                </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{# if farm_tab}}active{{/if}}" href="/farms"><i class="fas fa-farm"></i><span> Farms</span></a>
+                <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
+                    <a aria-expanded="true" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none {{# if farm_tab}}active{{/if}}{{# if monitor_farms_tab}}active{{/if}}" href="" style="">
+                        <i class="fas fa-warehouse" style="margin-right: 6px;"></i>Farms
+                    </a>
+                    <div class="dropdown-menu show" style="">
+                        <a class="dropdown-item {{# if farm_tab}}active{{/if}}" href="/farms" style="">Work Orders</a>
+                        <a class="dropdown-item {{# if monitor_farms_tab}}active{{/if}}" href="/farm_monitor_test" style="">Farm Monitoring</a>
+                    </div>
+                </div>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{# if calendar_tab}}active{{/if}}" href="/crop_calendar"><i class="fas fa-calendar-alt"></i><span> Crop Calendar Creation</span></a>
+                <div class="nav-item dropdown text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
+                    <a aria-expanded="false" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none" href="#" style="">
+                        <i class="fa fa-th-list" style="margin-right: 6px;"></i>Material Management
+                    </a>
+                    <div class="dropdown-menu" style="">
+                        <a class="dropdown-item" href="#" style="">Inventory</a>
+                        <a class="dropdown-item" href="#" style="">Orders</a>
+                    </div>
+                </div>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{# if harvest_cycle_tab}}active{{/if}}" href="/harvest_cycle"><i class="far fa-user-circle"></i><span> Harvesting Cycle</span></a>
+            <li class="nav-item" style="">
+                <div class="nav-item dropdown " style="margin-bottom: 0px;padding: 16px;">
+                    <a aria-expanded="false" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none" href="#" style=""><i class="dropdown-lbl fas fa-bug" style="margin-right: 6px;"></i>Pest and Disease
+                    </a>
+                    <div class="dropdown-menu" style="">
+                        <a class="dropdown-item" href="#" style="">Discover</a>
+                        <a class="dropdown-item" href="#" style="">Diagnose</a>
+                    </div>
+                </div>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{# if sms_tab}}active{{/if}}" href="/sms_settings"><i class="fas fa-user-circle"></i><span> SMS Subscriptions</span></a>
+            <li class="nav-item" style="">
+                <div class="nav-item dropdown show" style="margin-bottom: 0px;padding: 16px;">
+                    <a aria-expanded="true" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none {{# if nutrient_discover_tab}}active{{/if}}{{# if nutrient_diagnose_tab}}active{{/if}}" href="#" style=""><i class="fas fa-balance-scale-left" style="margin-right: 6px;"></i>Nutrient Management
+                    </a>
+                    <div class="dropdown-menu show" style="">
+                        <a class="dropdown-item {{# if nutrient_discover_tab}}active{{/if}}" href="/nutrient_management" style="">Discover</a>
+                        <a class="dropdown-item {{# if nutrient_diagnose_tab}}active{{/if}}" href="/nutrient_management/farm1" style="">Diagnose</a>
+                    </div>
+                </div>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{# if pest_and_disease_tab}}active{{/if}}" href="/pest_and_disease_management"><i class="fas fa-user"></i><span> Pests and Diseases</span></a>
+            <li class="nav-item" style="">
+                <a class="nav-link dropdown-lbl" href="table.html" style=""><i class="fas fa-table" style="font-size: 16px;"></i><span style="font-size: 16px;">User Management</span>
+                </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link {{# if nutrient_tab}}active{{/if}}" href="/nutrient_management"><i class="fas fa-table"></i><span> Nutrient Management</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{# if user_tab}}active{{/if}}" href="/user_settings"><i class="far fa-user-circle"></i><span> User Management</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{# if analytics_tab}}active{{/if}}" href="/farm_monitor_test"><i class="fas fa-user-circle"></i><span> Farm Productivity Analytics</span></a>
+            <li class="nav-item" style="">
+                <a class="nav-link dropdown-lbl" href="login.html" style=""><i class="far fa-chart-bar" style="font-size: 16px;"></i><span style="font-size: 16px;">Farm Productivity Reports</span>
+                </a>
             </li>
 
         </ul>
+        <div class="text-center d-none d-md-inline"></div>
     </div>
 </nav>

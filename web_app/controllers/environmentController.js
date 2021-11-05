@@ -434,7 +434,7 @@ exports.addDisease = function(req,res){
 
 exports.getNurientManagement = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_discover');
 	res.render('nutrient_mgt', html_data);
 }
 
@@ -479,7 +479,7 @@ exports.detailedNutrientManagement = function(req, res) {
 			var obj = {};
 
 			console.log(result);
-			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt');
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_diagnose');
 			res.render('nutrient_mgt_detailed', html_data);
 		}
 	});

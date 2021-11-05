@@ -62,6 +62,30 @@ body {
 	height: 100%;
 }
 
+.active {
+	color:  #fff !important;
+}
+
+.dropdown-item:hover {
+	color:  white;
+}
+
+.dropdown-item, .dropdown-lbl, .dropdown-lbl i, .dropdown-lbl span {
+	background: #667529 !important;
+	color: rgba(255,255,255,.5);
+	font-size: 16px;
+}
+
+.dropdown-menu {
+	background: #667529;
+	border-style: none;
+	color: rgb(255,255,255);
+}
+
+.dropdown-lbl {
+
+}
+
 .topbar {
 	height:  4.375rem !important;
 }
@@ -191,3 +215,11 @@ body {
   display: none;
 }
 
+.farm_li {
+	transition: all .01s;
+}
+
+.farm_li:hover {
+	cursor:  pointer;
+	transform: scale(1.004);
+}

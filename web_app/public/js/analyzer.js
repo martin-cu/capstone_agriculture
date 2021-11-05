@@ -19,7 +19,7 @@ exports.weatherForecast14D = function(dataset, testing, length) {
 	var result_obj;
 	const net = new brain.brain.recurrent.LSTMTimeStep({
 	  inputSize: 6,
-	  hiddenLayers: [10],
+	  hiddenLayers: [3],
 	  outputSize: 6,
 	});
 

@@ -59,7 +59,9 @@ exports.getFarmDetails = function(req, res) {
 }
 
 exports.getMonitorFarms = function(req, res) {
-	res.render('farm_monitoring_test', {});
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+	res.render('farm_monitoring', html_data);
 }
 
 exports.assignFarmers = function(req, res) {
@@ -216,18 +218,17 @@ exports.getSatelliteImageryData = function(req, res) {
 		polygon_id: polygon_id,
 		start: start_date,
 		end: end_date,
-		clouds_max: 0.7
+		clouds_max: 1
 	};
-
 	var options = {
-		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key+'&clouds_max=0.5',
+		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key+'&clouds_max='+data.clouds_max,
 		method: 'GET',
 		headers: {
 			'Content-type':'application/json'
 		},
 		body: JSON.stringify(data)
 	};
-
+	console.log(options.url);
 	request(options, function(err, response, body) {
 		if (err)
 			throw err;
@@ -240,7 +241,7 @@ exports.getSatelliteImageryData = function(req, res) {
         	}
 			//var result = body[body.length-1];
 			//result.dt = dataformatter.unixtoDate(result.dt);
-
+			console.log(body);
 			res.send(body);
 		}
 	})
