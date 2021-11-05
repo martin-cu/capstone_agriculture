@@ -5,8 +5,8 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
 
-var key = '1d1823be63c5827788f9c450fb70c595'; // Unpaid
-//var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
+//var key = '1d1823be63c5827788f9c450fb70c595'; // Unpaid
+var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;

@@ -2,6 +2,8 @@ const dataformatter = require('../public/js/dataformatter.js');
 const similarity = require('../public/js/similarity.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
+const farmModel = require('../models/farmModel.js');
+const nutrientModel = require('../models/nutrientModel');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 var request = require('request');
 
@@ -285,17 +287,6 @@ exports.getPestFactors = function(req,res){
 	
 }
 
-
-
-exports.getNurientManagement = function(req, res) {
-	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt');
-	res.render('/nutrient_mgt', html_data);
-}
-
-
-
-
 exports.addPest = function(req,res){
 	var pest_data = {
 		pest_name: req.body.pest_name,
@@ -439,5 +430,59 @@ exports.addDisease = function(req,res){
 	res.render('pest_disease');
 }
 
+//********** Nutrient Management Start *************//
 
+exports.getNurientManagement = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt');
+	res.render('nutrient_mgt', html_data);
+}
 
+exports.addSoilRecord = function(req, res) {
+	var query = { 
+		farm_id: req.body.farm_id,
+		pH_lvl: req.body.ph_test, 
+		p_lvl: req.body.p_lvl,
+		k_lvl: req.body.k_lvl,
+		n_lvl: req.body.n_lvl,
+		date_taken: req.body.date_taken
+	 };
+	 var farm_query = {
+	 	where: { key: 'ft.farm_id', value: req.body.farm_id },
+	 	group: 'farm_id'
+	 };
+
+	farmModel.getFarmData(farm_query, function(err, farm) {
+		if (err)
+			throw err;
+		else {
+			nutrientModel.addSoilRecord(query, function(err, record) {
+				if (err)
+					throw err;
+				else {
+					let redirect = '/nutrient_management/'+farm[0].farm_name;
+					res.send(redirect);
+				}
+			});		
+		}
+	});
+}
+
+exports.detailedNutrientManagement = function(req, res) {
+	var query = { farm_name: req.params.farm_name };
+	console.log(query);
+	var html_data = {};
+	nutrientModel.getSoilRecord(query, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			var obj = {};
+
+			console.log(result);
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt');
+			res.render('nutrient_mgt_detailed', html_data);
+		}
+	});
+}
+
+//********** Nutrient Management End *************//

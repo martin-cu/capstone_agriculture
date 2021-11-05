@@ -1,0 +1,70 @@
+<div class="bg-secondary rounded m-3 px-3 py-2 w-75 h-100">
+	<form method="post" id="soil_data_form">
+		<label>Soil Test</label>
+		<div class="form-group">
+			<label for="exampleFormControlSelect1">Farm:</label>
+			<select class="form-control" id="farm_id" name="farm_id">
+			</select>
+		</div>
+
+		<div class="form-group">
+		    <label for="exampleInputEmail1">Date Taken: </label>
+		    <input type="date" class="form-control" id="date_taken" name="date_taken" aria-describedby="emailHelp" placeholder="">
+		  </div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">pH Level: </label>
+			<select class="form-control" id="ph_test" name="ph_test">
+				<option value="7.5">pH 7.5 - Alkaline</option>
+				<option value="7.0">pH 7.0 - Neutral</option>
+				<option value="6.5">pH 6.5 - Slight Acid</option>
+				<option value="6.0">pH 6.0 - Acid</option>
+				<option value="5.5">pH 5.5 - Acid</option>
+				<option value="5.0">pH 5.0 - Very Acid</option>
+				<option value="4.5">pH 4.5 - Very Acid</option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="inputPassword" class="col-form-label">P Test</label>
+			<select class="form-control" id="p_test" name="p_test">
+				<option value="Surplus">Surplus</option>
+				<option value="Sufficient">Sufficient</option>
+				<option value="Adequate">Adequate</option>
+				<option value="Deficient">Deficient</option>
+				<option value="Depleted">Depleted</option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="inputPassword" class="col-form-label">K Test</label>
+			<select class="form-control" id="k_test" name="k_test">
+				<option value="Surplus">Surplus</option>
+				<option value="Sufficient">Sufficient</option>
+				<option value="Adequate">Adequate</option>
+				<option value="Deficient">Deficient</option>
+				<option value="Depleted">Depleted</option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="inputPassword" class="col-form-label">N Test</label>
+			<select class="form-control" id="n_test" name="n_test">
+				<option value="Surplus">Surplus</option>
+				<option value="Sufficient">Sufficient</option>
+				<option value="Adequate">Adequate</option>
+				<option value="Deficient">Deficient</option>
+				<option value="Depleted">Depleted</option>
+			</select>
+		</div>
+
+		<button class="btn btn-primary float-right">Submit</button>
+	</form>
+
+</div>
+
+<script type="text/javascript">
+	var type = 'Soil Test';
+</script>
+
+<script src="../../js/nutrient_management.js"></script>

@@ -287,7 +287,10 @@ $(document).ready(function() {
 		});
 
 	}
-	else if (type == '') {
+	else if (view == '') {
+
+	}
+	else if (view == undefined) {
 
 	}
 

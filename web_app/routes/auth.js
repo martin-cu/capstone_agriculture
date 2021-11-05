@@ -43,17 +43,23 @@ router.get('/farms/add', farmController.getaddFarm);
 
 router.get('/materials', materialController.getMaterials);
 
+//Crop Calendar
 router.get('/crop_calendar', farmController.getCropCalendar);
 router.get('/crop_calendar/add', farmController.getAddCropCalendar);
 
 router.get('/harvest_cycle', farmController.getHarvestCycle);
 
+//Pest and Disease
 router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);
 router.get('/pest_and_disease_management/:type/:name', environmentController.getPestFactors);
 router.post('/addPest', environmentController.addPest);
 router.post('/addDisease', environmentController.addDisease);
 
+//Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);
+router.get('/nutrient_management/:farm_name', environmentController.detailedNutrientManagement);
+router.post('/nutrient_management/add_record', environmentController.addSoilRecord);
+
 /*** Page Navigation End ***/
 
 

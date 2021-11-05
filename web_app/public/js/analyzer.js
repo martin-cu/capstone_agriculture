@@ -1,6 +1,11 @@
 const brain = require('brain.js');
 const DecisionTree = require('decision-tree');
 
+
+ exports.processNutrientRecommendation = function(data) {
+ 	
+ }
+
 function denormalizeData(data, val) {
 	return val.min + data * (val.max - val.min);
 }
