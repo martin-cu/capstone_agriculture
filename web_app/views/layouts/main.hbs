@@ -32,6 +32,16 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js"></script>
   <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.0/jquery.validate.min.js"></script>
 
+  {{!-- NOTE: Moved here since the form validators don't work when below <body> for some reason --}}
+  <script type="text/javascript">
+    var view = '';
+    
+    $('*[href]').on('click',function (event) {
+      window.location = $(this).attr('href');
+    });
+
+  </script>
+
 </head>
 <body>
 
@@ -62,15 +72,6 @@
 
   <script src="../../js/mapbox.js"></script>
 
-
-  <script type="text/javascript">
-    var view = '';
-    
-    $('*[href]').on('click',function (event) {
-      window.location = $(this).attr('href');
-    });
-
-  </script>
 
 {{!-- GOOGLE MAPS API --}}
 <script async
