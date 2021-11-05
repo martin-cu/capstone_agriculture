@@ -37,11 +37,14 @@
 
                     {{!-- START FORM --}}
                     <form method="post" id="create_farm_form">
+
+                    <div class="tab">
                     <div class="modal_body_content" id="body_step1">
-            
+                            <label for="" style="font-weight: bold; padding-bottom: 10px">Step 1: Add Farm Details</label>
+
                             <div class="form-group">
                                 <label for="farmName">Name</label>
-                                <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name" required>
+                                <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name" oninput="this.className = 'form-control'" required>
                             </div>
                            
                             <div class="form-group">
@@ -67,17 +70,19 @@
 
                              <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" rows="5" id="description" placeholder="Description" name="farm_desc"></textarea>
+                                <textarea class="form-control" rows="5" id="description" placeholder="Description" name="farm_desc" required></textarea>
                             </div>
                
                     </div>
+                     </div>
 
+                     <div class="tab">
                     <div class="hide modal_body_content" id="body_step2">
                         <div class="form-group">
-                            <label for="">Plot Details</label>
+                            <label for="" style="font-weight: bold; padding-bottom: 10px">Step 2: Add Plot Details</label>
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <input type="text" class="form-control" id="address" placeholder="Address">
+                                <input type="text" class="form-control" id="address" placeholder="Address" oninput="this.className = 'form-control'">
                             </div>
 
                              <div class="form-group">
@@ -96,9 +101,11 @@
                             </div>
                          </div>
                     </div>
+                     </div>
 
+                     <div class="tab">
                     <div class="hide modal_body_content" id="body_step3">
-                        <label for="">Assign Employees</label>
+                        <label for="" style="font-weight: bold; padding-bottom: 10px">Step 3: Assign Employees</label>
 
                         <div class="">
                             <label for="">Farm Workers:</label>
@@ -121,8 +128,10 @@
                                     
                                 </div>
                             </div>
+                            
                         </div>
 
+                    </div>
                     </div>
 
                     </form>
@@ -133,19 +142,26 @@
                             <button type="submit" class="btn btn-primary" id="addFarm" for>Next</button>
                     </div> -->
 
+                    <!-- Circles which indicates the steps of the form: -->
+                    <div style="text-align:center;margin-top:40px;padding-bottom:10px">
+                        <span class="step"></span>
+                        <span class="step"></span>
+                        <span class="step"></span>
+                    </div>
+
                     <div class="modal-footer">
                         <div class="modal_footer_content" id="_step1">
                             <button type="button" class="btn round btn-secondary" value="create_farm_form" onclick="goBack();">Cancel</button>
-                            <button type="button" class="btn round btn-primary next_step" value="_step2">Next</button>
+                            <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1)">Next</button>
                         </div>
 
                         <div class="hide modal_footer_content" id="_step2">
-                            <button type="button" class="btn round btn-secondary prev_step" value="_step1">Back</button>
-                            <button type="button" class="btn round btn-primary next_step" value="_step3" id="queueFarmers">Next</button>
+                            <button type="button" class="btn round btn-secondary prev_step" value="_step1" onclick="nextPrev(-1)">Back</button>
+                            <button type="button" class="btn round btn-primary next_step" value="_step3" id="queueFarmers" onclick="nextPrev(1)">Next</button>
                         </div>
 
                         <div class="hide modal_footer_content" id="_step3">
-                            <button type="button" class="btn round btn-secondary prev_step" value="_step2">Back</button>
+                            <button type="button" class="btn round btn-secondary prev_step" value="_step2" onclick="nextPrev(-1)">Back</button>
                             <button type="submit" class="btn round btn-primary" form="create_farm_form">Submit</button>
                         </div>
                             
@@ -163,6 +179,52 @@
     var view = "add_farm";
 function goBack() {
   window.history.back();
+}
+
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+  
+  // Exit the function if any field in the current tab is invalid:
+  if (!dataValidation(currentTab+2)) return false;
+  // Hide the current tab:
+ // x[currentTab].style.display = "none";
+
+document.getElementsByClassName("step")[currentTab].className += " finish";
+
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("create_farm_form").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
 }
 
 </script>
