@@ -1,18 +1,135 @@
+function processForecastDB(data) {
+	var date, day;
+	var cont_arr = [];
+	var obj = {};
+
+	const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+	const unique = [...new Map(data.map(item =>
+	  [item['date'], item.date])).values()];
+	var temp_min, temp_max;
+
+	for (var i = 0; i < unique.length; i++) {
+		var filtered_forecast = data.filter(forecast => forecast.date == unique[i]);
+		date = new Date(unique[i]);
+		day = days[date.getDay()];
+
+		obj['date'] = formatDate(date, 'mm DD, YYYY');
+		obj['day'] = day;
+		obj['data'] = [];
+		for (var y = 0; y < filtered_forecast.length; y++) {
+			if (y == 0) {
+				temp_min = filtered_forecast[y].min_temp;
+				temp_max = filtered_forecast[y].max_temp;
+			}
+			else {
+				if (temp_min > filtered_forecast[y].min_temp)
+					temp_min = filtered_forecast[y].min_temp
+
+				if (temp_max < filtered_forecast[y].max_temp)
+					temp_max = filtered_forecast[y].max_temp;
+			}
+
+			delete filtered_forecast[y].date;
+			obj['data'].push(filtered_forecast[y]);
+			obj['icon'] = processIcons(filtered_forecast[0].desc);
+		}
+		obj['max_temp'] = temp_max;
+		obj['min_temp'] = temp_min;
+		
+		cont_arr.push(obj);
+		obj = {};
+	}
+	return cont_arr;
+}
+
+function processIcons(desc) {
+	var icon = '';
+	if (desc == 'light rain') {
+		icon = 'fas fa-cloud-rain';
+	}
+	else if (desc == 'overcast clouds') {
+		icon = '';
+	}
+	else if (desc == 'heavy intensity rain') {
+		icon = 'fas fa-cloud-showers-heavy';
+	}
+	else if (desc == 'few clouds') {
+		icon = 'fas fa-cloud-sun';
+	}
+	else if (desc == 'clear sky') {
+		icon = 'fas fa-sun';
+	}
+	else if (desc == 'scattered clouds') {
+		icon = 'fas fa-cloud-meatball';
+	}
+	else {
+		console.log('Unknown desc please add in js file!');
+		console.log(desc);
+	}
+	return icon;
+}
+
+function createForecastCards(data) {
+	var th, h2, h4, h6, div, i, small1, small2;
+
+	th = document.createElement('th');
+	th.setAttribute('style', 'border-style: none;');
+
+	h2 = document.createElement('div');
+	h2.setAttribute('class', 'justify-content-xl-center text-muted');
+	h2.setAttribute('style', 'color: #332C1F;font-size: 12px;');
+	h2.innerHTML = data.day;
+
+	h4 = document.createElement('div');
+	h4.setAttribute('class', 'justify-content-xl-center');
+	h4.setAttribute('style', 'color: #332C1F;font-size: 12px;');
+	h4.innerHTML = data.date;
+
+	h6 = document.createElement('h6');
+	h6.setAttribute('class', 'text-muted justify-content-xl-center text-align-center');
+	h6.setAttribute('style', 'text-align: center !important;');
+
+	i = document.createElement('i');
+	i.setAttribute('class', 'justify-content-xl-center '+data.icon);
+	i.setAttribute('style', 'color: #332C1F;font-size: 35px;');
+
+	h6.appendChild(i);
+
+	div = document.createElement('div');
+	div.setAttribute('class', 'd-flex');
+
+	small1 = document.createElement('small');
+	small1.setAttribute('class', 'form-text font-weight-bold');
+	small1.setAttribute('style', 'color: #332C1F;');
+	small1.innerHTML = data.max_temp+'° ';
+
+	small2 = document.createElement('small');
+	small2.setAttribute('class', 'form-text text-muted');
+	small2.setAttribute('style', 'color: #332C1F;');
+	small2.innerHTML = data.min_temp+'°';
+
+	div.appendChild(small1);
+	div.appendChild(small2);
+
+	th.appendChild(h2);
+	th.appendChild(h4);
+	th.appendChild(h6);
+	th.appendChild(div);
+
+	return th;
+}
+
 function appendForecastCards(arr) {
-	var slide = $('#carousel_inner');
-	var item = document.createElement('div');
-	item.setAttribute('class', 'carousel-item d-inline-flex mx-2');
+	var table = $('#weather_table');
+	var tr;
+	tr = document.createElement('tr');
 
 	for (var i = 0; i < 14; i++) {
-		if (i == 7) {
-			var item = document.createElement('div');
-			item.setAttribute('class', 'carousel-item d-inline-flex hide mx-2');
-		}
-		item.appendChild(createForecastCards(arr.forecast[i], slide.width()))
-		slide.append(item);
-
+		tr.appendChild(createForecastCards(arr[i]));
 	}
-	$('#page').toggleClass('hide');
+
+	table.append(tr);
 }
 
 function switchWeek(week, event) {
@@ -60,7 +177,7 @@ function generateRecommendation(arr) {
 
 	for (var i = 0; i < arr.length; i++) {
 		var count = arr[i].data.filter(data => data.desc == 'light rain').length;
-		console.log(arr[i].date+' - '+count);
+		//console.log(arr[i].date+' - '+count);
 
 		// Start bad day cycle if rainfall happens thrice in a day
 		if (count >= 3) {
@@ -150,9 +267,9 @@ function generateRecommendation(arr) {
 			good_push = false;
 		}
 	}
-	console.log('-------------------');
-	console.log(stats.good);
-	console.log(stats.bad);
+	//console.log('-------------------');
+	//console.log(stats.good);
+	//console.log(stats.bad);
 
 	for (var i = 0; i < stats.bad.length; i++) {
 		var diff = dateDiff(stats.bad[i].start, stats.bad[i].end);
@@ -194,30 +311,148 @@ function generateRecommendation(arr) {
 	appendRecommendation(stats);
 }
 
+function formatDate(date, format) {
+	var year,month,day;
+	const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+	year = date.getFullYear();
+	month = date.getMonth()+1;
+	day = date.getDate();
+
+	if (format === 'MM/DD/YYYY') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = month+'/'+day+'/'+year;
+	}
+	else if (format === 'YYYY-MM-DD') {
+		if (month < 10)
+			month = '0'+month;
+		if (day < 10)
+			day = '0'+day;
+		date = year+'-'+month+'-'+day;
+	}
+	else if (format === 'mm DD, YYYY') {
+		date = monthNames[month]+' '+day+', '+year;
+	}
+
+	return date;
+}
+
+function normalizeForDB(result, hour) {
+	var temp_obj = {};
+	var cont_arr = [];
+	var date;
+	result = result.forecast;
+
+	for (var i = 0; i < result.length; i++) {
+		for (var y = 0; y < result[i].data.length; y++) {
+			temp_obj = {};
+
+			date = new Date(result[i].date);
+			date = formatDate(date, 'YYYY-MM-DD');
+
+			temp_obj['date'] = date;
+			temp_obj['time'] = result[i].data[y].time;
+			temp_obj['weather_id'] = result[i].data[y].id;
+			temp_obj['desc'] = result[i].data[y].desc;
+			temp_obj['humidity'] = result[i].data[y].humidity;
+			temp_obj['max_temp'] = result[i].data[y].max_temp;
+			temp_obj['min_temp'] = result[i].data[y].min_temp;
+			temp_obj['name'] = result[i].data[y].name;
+			temp_obj['pressure'] = result[i].data[y].pressure;
+			temp_obj['rainfall'] = result[i].data[y].rainfall;
+			temp_obj['time_uploaded'] = hour;
+
+			cont_arr.push(temp_obj);
+		}
+	}
+	return {data:cont_arr};
+}
+
 $(document).ready(function() {
+	var d1 = new Date(Date.now());
+	var d2 = new Date(Date.now());
+	d2.setDate(d2.getDate() - 10);
+	var refresh_on = 0;
+	var loaded = false;
 
-	// Load forecast
-	setTimeout(function() {
-		console.log('Getting weather forecast...');
-		var d1 = new Date(Date.now());
-		var d2 = new Date(Date.now());
-		d2.setDate(d2.getDate() - 10);
+	setInterval(function() {
+		var hour = new Date();
+		hour = hour.getHours();
 
-		$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
-			console.log(result);
-			appendForecastCards(result);
-			appendForecastDetails(result.forecast[0]);
+		////console.log(hour+' - '+refresh_on);
+
+		/************  Weather Forecast to DB Start *************/
+		$.get('/get_weather_forecast', {}, function(forecast_result) {
+
+			if (forecast_result == 0) {
+				//console.log('Generating weather forecast...');
+				refresh_on = hour + 1;
+				console.log('1');
+				$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+					let query = normalizeForDB(result, hour);
+
+					$.post('/upload_weather_forecast', query, function(upload_result) {
+						//console.log('DB upload success');
+
+						loaded = false;
+					});
+				});	
+			}
+			else if (hour == refresh_on && hour != forecast_result[0].time_uploaded) {
+				console.log('2');
+				//console.log(new Date()+' : Deleting DB records...');
+				$.get('/clear_weather_forecast', {}, function(status) {
+
+					//console.log('Generating weather forecast...');
+					refresh_on = hour + 1;
+					$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+						let query = normalizeForDB(result, hour);
+
+						$.post('/upload_weather_forecast', query, function(upload_result) {
+							//console.log('DB upload success');
+
+							loaded = false;
+						});
+					});	
+				})
+			}
+			else {
+				//console.log('Getting weather forecast...');
+
+				refresh_on = forecast_result[0].time_uploaded + 1;
+			}
+
+			/************  DB to UI Start *************/
+			//console.log(view+' - '+loaded);
+			if (view == 'farm_monitoring' && loaded == false) {
+				//console.log('!!!!');
+
+				loaded = true;
+
+				//console.log(forecast_result);
+				
+				appendForecastCards(processForecastDB(forecast_result));
+				//appendForecastDetails(result.forecast[0]);
+
+				// // Recommendation
+				// generateRecommendation(result.forecast);
+
+				// $('.carousel-inner').on('click', '.forecast_card', function() {
+				// 	var card = $('.forecast_card').index(this);
+
+				// 	appendForecastDetails(result.forecast[card]);
+				// });
+			}
+
+			/************  DB to UI End *************/
+		});
+		/************  Weather Forecast to DB End *************/
 
 
-			// Recommendation
-			generateRecommendation(result.forecast);
+	}, 12000);
 
-			$('.carousel-inner').on('click', '.forecast_card', function() {
-				var card = $('.forecast_card').index(this);
-
-				appendForecastDetails(result.forecast[card]);
-			});
-
-		});	
-	}, 1000);
 });

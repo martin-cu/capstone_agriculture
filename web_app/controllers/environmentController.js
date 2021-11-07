@@ -2,6 +2,7 @@ const dataformatter = require('../public/js/dataformatter.js');
 const similarity = require('../public/js/similarity.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
+const weatherForecastModel = require('../models/weatherForecastModel.js');
 const farmModel = require('../models/farmModel.js');
 const nutrientModel = require('../models/nutrientModel');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
@@ -486,3 +487,36 @@ exports.detailedNutrientManagement = function(req, res) {
 }
 
 //********** Nutrient Management End *************//
+
+
+exports.uploadForecastResult = function(req, res) {
+	var query = req.body.data;
+
+	weatherForecastModel.saveForecastResults(query, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			res.send(result);
+		}
+	});
+}
+
+exports.getWeatherForecast = function(req, res) {
+	weatherForecastModel.readWeatherForecast(function(err, result) {
+		if (err)
+			throw err;
+		else {
+			res.send(result);
+		}
+	});
+}
+
+exports.clearWeatherForecastRecords = function(req, res) {
+	weatherForecastModel.clearRecords(function(err, result) {
+		if (err)
+			throw err;
+		else {
+			res.send(result);
+		}
+	});
+}

@@ -49,72 +49,77 @@ function processForecastData(data) {
 	return data;
 }
 
-function createForecastCards(data, width, active) {
-	var cont, day_div, icon_div, temp_cont, max_temp, min_temp, item;
+// function createForecastCards() {
+// 	var th, h4, h6, div, i, small1, small2;
 
-	data = processForecastData(data);
+// 	th = document.createElement('th');
+// 	th.setAttribute('style', 'border-style: none;');
 
-	cont = document.createElement('div');
-	cont.setAttribute('class', 'forecast_card');
-	cont.setAttribute('style', 'width: '+width/7+'px');
+// 	h4 = document.createElement('h4');
+// 	h4.setAttribute('class', 'justify-content-xl-center');
+// 	h4.setAttribute('style', 'color: #332C1F;font-size: 20px;');
+// 	h4.innerHTML = '';
 
-	day_div = document.createElement('div');
-	day_div.innerHTML = data.day;
+// 	h6 = document.createElement('h6');
+// 	h6.setAttribute('class', 'text-muted justify-content-xl-center mb-2');
 
-	icon_div = document.createElement('div');
-	icon_div.innerHTML = data.icon;
-	
-	temp_cont = document.createElement('div');
-	temp_cont.setAttribute('class', 'd-inline-flex');
-	temp_cont.setAttribute('style', 'font-size:10px;');
+// 	i = document.createElement('i');
+// 	i.setAttribute('class', 'fas fa-cloud-showers-heavy justify-content-xl-center');
+// 	i.setAttribute('style', 'color: #332C1F;font-size: 35px;');
 
-	max_temp = document.createElement('div');
-	max_temp.innerHTML = data.max_temp+'° /';
+// 	h6.appendChild(i);
 
-	min_temp = document.createElement('div');
-	min_temp.setAttribute('class', 'pl-1');
-	min_temp.innerHTML = data.min_temp+'°';
+// 	div = document.createElement('div');
+// 	div.setAttribute('class', 'd-flex');
 
-	temp_cont.appendChild(max_temp);
-	temp_cont.appendChild(min_temp);
+// 	small1 = document.createElement('small');
+// 	small1.setAttribute('class', 'form-text font-weight-bold');
+// 	small1.setAttribute('style', 'color: #332C1F;');
+// 	small1.innerHTML = '';
 
-	cont.appendChild(day_div);
-	cont.appendChild(icon_div);
-	cont.appendChild(temp_cont);
+// 	small2 = document.createElement('small');
+// 	small2.setAttribute('class', 'form-text font-weight-bold');
+// 	small2.setAttribute('style', 'color: #332C1F;');
+// 	small2.innerHTML = '';
 
-	return cont;
-}
+// 	div.appendChild(small1);
+// 	div.appendChild(small2);
 
-function appendForecastCards(arr) {
-	var slide = $('#carousel_inner');
-	var item = document.createElement('div');
-	item.setAttribute('class', 'carousel-item d-inline-flex mx-2');
+// 	th.appendChild(h4);
+// 	th.appendChild(h6);
+// 	th.appendChild(div);
 
-	for (var i = 0; i < 14; i++) {
-		if (i == 7) {
-			var item = document.createElement('div');
-			item.setAttribute('class', 'carousel-item d-inline-flex hide mx-2');
-		}
-		item.appendChild(createForecastCards(arr.forecast[i], slide.width()))
-		slide.append(item);
+// 	return th;
+// }
 
-	}
-	$('#page').toggleClass('hide');
-}
+// function appendForecastCards(arr) {
+// 	var table = $('#weather_table');
+// 	var tr;
 
-function switchWeek(week, event) {
-	var inner = $('#carousel_inner').children();
+// 	tr = document.createElement('tr');
 
-	$(inner[0]).toggleClass('hide');
-	$(inner[1]).toggleClass('hide');
+// 	for (var i = 0; i < 14; i++) {
+// 		tr.appendChild(createForecastCards());
+// 	}
+// 	table.append(tr);
+// }
 
-	$(event).toggleClass('active');
-	
-	if (!week)
-		$(event).next().toggleClass('active');
-	else
-		$(event).prev().toggleClass('active');
-}
+// function appendForecastCards(arr) {
+// 	var slide = $('#carousel_inner');
+// 	var item = document.createElement('div');
+// 	item.setAttribute('class', 'carousel-item d-inline-flex mx-2');
+
+// 	for (var i = 0; i < 14; i++) {
+// 		if (i == 7) {
+// 			var item = document.createElement('div');
+// 			item.setAttribute('class', 'carousel-item d-inline-flex hide mx-2');
+// 		}
+// 		item.appendChild(createForecastCards(arr.forecast[i], slide.width()))
+// 		slide.append(item);
+
+// 	}
+// 	$('#page').toggleClass('hide');
+// }
 
 function appendForecastDetails(data) {
 	$('#icon_detail').html(data.icon);

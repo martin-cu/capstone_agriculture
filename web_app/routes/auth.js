@@ -24,6 +24,10 @@ router.get('/get_crop_plans', cropCalendarController.ajaxGetCropPlans);
 router.get('/farm_monitor_test', farmController.getMonitorFarms);
 router.get('/filter_farm_details', farmController.getFarmDetails);
 router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
+
+router.post('/upload_weather_forecast', environmentController.uploadForecastResult);
+router.get('/get_weather_forecast', environmentController.getWeatherForecast);
+router.get('/clear_weather_forecast', environmentController.clearWeatherForecastRecords);
 /*** Database Ajax End ***/
 
 /*** Page Navigation Start ***/

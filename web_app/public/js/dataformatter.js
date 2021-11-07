@@ -329,7 +329,7 @@ exports.mapAndFormatForecastResult = function(data, hours) {
 		cont_arr.push(obj);
 		obj = {};
 	}
-
+	
 	return cont_arr;
 }
 

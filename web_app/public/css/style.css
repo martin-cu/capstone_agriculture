@@ -223,3 +223,21 @@ body {
 	cursor:  pointer;
 	transform: scale(1.004);
 }
+
+.weather_table {
+	display:  block;
+	overflow-x:  auto;
+	white-space: nowrap;
+}
+
+.weather_table th {
+	display:  table-cell;
+	font-weight:  bold;
+	vertical-align:  inherit;
+	border-radius:  5px;
+}
+
+.weather_table th:hover {
+	background-color: gainsboro;
+	cursor: pointer;
+}
