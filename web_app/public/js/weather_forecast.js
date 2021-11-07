@@ -389,9 +389,8 @@ $(document).ready(function() {
 		$.get('/get_weather_forecast', {}, function(forecast_result) {
 
 			if (forecast_result == 0) {
-				//console.log('Generating weather forecast...');
+				console.log('Generating weather forecast...');
 				refresh_on = hour + 1;
-				console.log('1');
 				$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
 					let query = normalizeForDB(result, hour);
 
@@ -403,17 +402,16 @@ $(document).ready(function() {
 				});	
 			}
 			else if (hour == refresh_on && hour != forecast_result[0].time_uploaded) {
-				console.log('2');
-				//console.log(new Date()+' : Deleting DB records...');
+				console.log(new Date()+' : Deleting DB records...');
 				$.get('/clear_weather_forecast', {}, function(status) {
 
-					//console.log('Generating weather forecast...');
+					console.log('Generating weather forecast...');
 					refresh_on = hour + 1;
 					$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
 						let query = normalizeForDB(result, hour);
 
 						$.post('/upload_weather_forecast', query, function(upload_result) {
-							//console.log('DB upload success');
+							console.log('DB upload success');
 
 							loaded = false;
 						});
@@ -421,7 +419,7 @@ $(document).ready(function() {
 				})
 			}
 			else {
-				//console.log('Getting weather forecast...');
+				console.log('Getting weather forecast...');
 
 				refresh_on = forecast_result[0].time_uploaded + 1;
 			}
@@ -429,12 +427,9 @@ $(document).ready(function() {
 			/************  DB to UI Start *************/
 			//console.log(view+' - '+loaded);
 			if (view == 'farm_monitoring' && loaded == false) {
-				//console.log('!!!!');
 
 				loaded = true;
-
-				//console.log(forecast_result);
-				
+				$('#weather_table').empty();
 				appendForecastCards(processForecastDB(forecast_result));
 				//appendForecastDetails(result.forecast[0]);
 
