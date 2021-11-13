@@ -10,16 +10,15 @@ router.get('/login', (req, res) => {
 	res.render('home', {});
 });
 
-router.get('/test', materialController.test);
-router.get('/testAPI', materialController.testAPI);
-router.get('/getWeather', materialController.getWeather);
+
+
+
 
 /*** Database Ajax Start ***/
 
 router.get('/get_farm_list', farmController.ajaxGetFarmList);
 router.post('/create_crop_plan', cropCalendarController.ajaxCreateCropPlan);
 router.get('/get_crop_plans', cropCalendarController.ajaxGetCropPlans);
-
 
 router.get('/farm_monitor_test', farmController.getMonitorFarms);
 router.get('/filter_farm_details', farmController.getFarmDetails);
@@ -28,6 +27,7 @@ router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
 router.post('/upload_weather_forecast', environmentController.uploadForecastResult);
 router.get('/get_weather_forecast', environmentController.getWeatherForecast);
 router.get('/clear_weather_forecast', environmentController.clearWeatherForecastRecords);
+router.get('/getResourcesPerFarm', environmentController.ajaxGetResources);
 /*** Database Ajax End ***/
 
 /*** Page Navigation Start ***/
@@ -46,6 +46,9 @@ router.get('/farms', farmController.getFarms);
 router.get('/farms/add', farmController.getaddFarm);
 
 router.get('/materials', materialController.getMaterials);
+
+//Farms Tab
+router.get("/farm_resources", environmentController.getFarmResources);
 
 //Crop Calendar
 router.get('/crop_calendar', farmController.getCropCalendar);
@@ -95,15 +98,21 @@ router.get('/agroapi/weather/current', farmController.getCurrentWeather);
 router.get('/agroapi/weather/history', farmController.getHistoricalWeather);
 router.get('/agroapi/weather/forecast', farmController.getForecastWeather);
 
-
-
-
+router.get('/get_employees', employeeController.ajaxEmployees);
+router.post('/assign_farmers', farmController.assignFarmers);
 /*** Agro API End ***/
 
 
 
 
-//ajax
+
+
+
+
+//Y2 TESTING
+router.post('/addPest', environmentController.addPest);
+router.post('/addDisease', environmentController.addDisease);
+
 router.get('/addNewItem', materialController.addMaterials);
 router.get('/getMaterials', materialController.getMaterials); 
 router.get('/updateMaterial', materialController.updateMaterial);
@@ -117,9 +126,11 @@ router.get('/getMaterialsAjax/:type', materialController.getMaterialsAjax);
 
 
 
-router.get('/get_employees', employeeController.ajaxEmployees);
-router.post('/assign_farmers', farmController.assignFarmers);
 
+
+router.get('/test', materialController.test);
+router.get('/testAPI', materialController.testAPI);
+router.get('/getWeather', materialController.getWeather);
 
 
 //Globe
