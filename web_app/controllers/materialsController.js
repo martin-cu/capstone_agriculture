@@ -5,7 +5,7 @@ const dataformatter = require('../public/js/dataformatter.js');
 
 exports.getMaterials = function(req,res){
     var html_data = {};
-    console.log("WEH2");
+    console.log("WEH");
     materialModel.getMaterials("Seed", null, function(err, seeds){
         if(err){
             throw err;

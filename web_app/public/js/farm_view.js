@@ -97,4 +97,9 @@ $(document).ready(function() {
 	$('#queueFarmers').on('click', function() {
 		loadAjaxEmployees();
 	});
+
+	$('.material').on("click", function(){
+		var txt = this.text();
+		alert(txt);
+	});
 });

@@ -1,6 +1,7 @@
 const employeeModel = require('../models/employeeModel');
 const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
+const materialModel = require('../models/materialModel.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
@@ -61,7 +62,70 @@ exports.getFarmDetails = function(req, res) {
 exports.getMonitorFarms = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
-	res.render('farm_monitoring', html_data);
+	
+
+	var farm_id = 1;
+
+
+	materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Seed"}, function(err, seeds){
+		if(err)
+			throw err;
+		else{
+			if(seeds == null){
+
+			}
+			else{
+				var ctr = seeds.length;
+				if(seeds == null)
+					ctr = 0;
+				while(ctr < 3){
+					seeds.push({});
+					ctr++;
+				}
+                html_data["seed"] = seeds;
+			}
+
+			materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Fertilizer"}, function(err, fertilizers){
+				if(err)
+					throw err;
+				else{
+					if(fertilizers == null){
+
+					}
+					else{
+						var ctr = fertilizers.length;
+						if(fertilizers == null)
+							ctr = 0;
+						while(ctr < 3){
+							fertilizers.push({});
+							ctr++;
+						}
+						html_data["fertilizer"] = fertilizers;
+					}
+					materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Pesticide"}, function(err, pesticides){
+						if(err)
+							throw err;
+						else{
+							if(pesticides == null){
+
+							}
+							else{
+								var ctr = pesticides.length;
+								if(pesticides == null)
+									ctr = 0;
+								while(ctr < 3){
+									pesticides.push({});
+									ctr++;
+								}
+								html_data["pesticide"] = pesticides;
+							}
+							res.render('farm_monitoring', html_data);
+						}
+					});
+				}
+			});
+		}
+	});
 }
 
 exports.assignFarmers = function(req, res) {

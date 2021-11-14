@@ -247,23 +247,16 @@
                                                         <tr></tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>Seed 1</td>
-                                                            <td>20kg</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Seed 1</td>
-                                                            <td>20kg</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Seed 1</td>
-                                                            <td>20kg</td>
-                                                        </tr>
+                                                        {{#each seed}}
+                                                            <tr style="min-height: 50px;">
+                                                                <td>{{this.item_name}}</td>
+                                                                <td>{{this.current_amount}}</td>
+                                                            </tr>
+                                                        {{/each}}
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="card-body"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;padding: 10px 12px;" href="Pests-Diseases.html">View more</a></div>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -278,23 +271,16 @@
                                                         <tr></tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>Ferilizer 1</td>
-                                                            <td>20kg</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Item 1</td>
-                                                            <td>20kg</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Item 1</td>
-                                                            <td>20kg</td>
-                                                        </tr>
+                                                        {{#each fertilizer}}
+                                                            <tr>
+                                                                <td>{{this.item_name}}</td>
+                                                                <td>{{this.current_amount}}</td>
+                                                            </tr>
+                                                        {{/each}}
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="card-body"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;padding: 10px 12px;" href="Pests-Diseases.html">View more</a></div>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -309,24 +295,18 @@
                                                         <tr></tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>Pesticide 1</td>
-                                                            <td>20kg</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Pesticide 2</td>
-                                                            <td>20kg</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Pesticide 2</td>
-                                                            <td>20kg</td>
-                                                        </tr>
+                                                        {{#each pesticide}}
+                                                            <tr style="min-height: 50px;">
+                                                                <td>{{this.item_name}}</td>
+                                                                <td>{{this.current_amount}}</td>
+                                                            </tr>
+                                                        {{/each}}
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="card-body"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;padding: 10px 12px;" href="Pests-Diseases.html">View more</a></div>
                                     </div>
+                                        <div class="card-body"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;padding: 10px 12px;" href="/farm_resources">View more</a></div>
                                 </div>
                             </div>
                         </div>
