@@ -42,7 +42,7 @@ exports.getFarms = function(req, res) {
 }
 
 // ADD FARMS PAGE (TO BE UPDATED)
-exports.getaddFarm = function(req, res) {
+exports.getAddFarm = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
 	res.render('add_farm', html_data);
@@ -160,13 +160,19 @@ exports.retireFarm = function(req, res) {
 exports.getCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
-	res.render('crop_calendar', html_data);
+	res.render('crop_calendar', html_data); //crop_calendar
 }
 
 exports.getAddCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
-	res.render('crop_calendar_test', html_data);
+	res.render('add_crop_calendar', html_data); //crop_calendar_test
+}
+
+exports.getAddCropCalendar2 = function(req, res) { //delete later
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+	res.render('crop_calendar_test', html_data); //crop_calendar_test
 }
 
 exports.getHarvestCycle = function(req, res) {

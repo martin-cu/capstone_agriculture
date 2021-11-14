@@ -2,7 +2,7 @@
     <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Work Order</h3>
     <div class="row" style="padding: 0px 12px;">
         <div class="col-xxl-6">
-            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Active Crop Calendars<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;">ADD CROP CALENDAR&nbsp;<i class="fa fa-plus"></i></button>
+            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Active Crop Calendars<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;" onclick='window.location="/crop_calendar/add"'>ADD CROP CALENDAR&nbsp;<i class="fa fa-plus"></i></button>
 	            
 	            <div class="" style="scroll-y: auto;" id="calendar_card_cont">
 	            	<div class="card" style="margin-bottom: 10px;margin-top: 20px;" id="">
@@ -26,7 +26,7 @@
             
         </div>
         <div class="col-xxl-6">
-            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Work Orders<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;">ADD WORK ORDER&nbsp;<i class="fa fa-plus"></i></button>
+            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Work Orders<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;" onclick='window.location="/crop_calendar_test/add"'>ADD WORK ORDER&nbsp;<i class="fa fa-plus"></i></button>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-body" style="min-height: 400px;">
                     <div class="row table-topper align-items-center">
@@ -59,7 +59,7 @@
     </div>
 </div>
 
-<div class="card" style="margin-bottom: 10px;margin-top: 20px;" id="">
+{{!-- <div class="card" style="margin-bottom: 10px;margin-top: 20px;" id=""> --}}
 <script type="text/javascript">
 	jQuery.ajaxSetup({async: false});
 

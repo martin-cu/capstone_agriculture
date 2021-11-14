@@ -45,8 +45,8 @@ router.get('/getResourcesPerFarm', environmentController.ajaxGetResources);
 router.get('/', farmController.getDashboard);
 router.get('/home', farmController.getDashboard);
 
-router.get('/farms', farmController.getFarms);
-router.get('/farms/add', farmController.getaddFarm);
+router.get('/farms', farmController.getFarms); //getFarms
+router.get('/farms/add', farmController.getAddFarm);
 
 router.get('/materials', materialController.getMaterials);
 
@@ -58,6 +58,8 @@ router.get("/farm_pestdisease", environmentController.getFarmPestDiseases);
 //Crop Calendar
 router.get('/crop_calendar', farmController.getCropCalendar);
 router.get('/crop_calendar/add', farmController.getAddCropCalendar);
+
+router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later
 
 router.get('/harvest_cycle', farmController.getHarvestCycle);
 
