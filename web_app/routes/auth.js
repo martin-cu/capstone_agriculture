@@ -52,6 +52,8 @@ router.get('/materials', materialController.getMaterials);
 
 //Farms Tab
 router.get("/farm_resources", environmentController.getFarmResources);
+router.get("/farm_pestdisease", environmentController.getFarmPestDiseases);
+
 
 //Crop Calendar
 router.get('/crop_calendar', farmController.getCropCalendar);

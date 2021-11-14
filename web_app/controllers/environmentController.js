@@ -763,3 +763,11 @@ exports.ajaxGetResources = function(req,res){
 	});
 	
 }
+
+
+exports.getFarmPestDiseases = function(req, res){
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+
+	res.render("farm_pestdisease", html_data);
+}
