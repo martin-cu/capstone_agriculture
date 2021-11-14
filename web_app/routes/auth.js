@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const materialController = require('../controllers/materialsController');
 const farmController = require('../controllers/farmController');
+const workOrderController = require('../controllers/workOrderController');
 const employeeController = require('../controllers/employeeController');
 const cropCalendarController = require('../controllers/cropCalendarController');
 const environmentController = require('../controllers/environmentController');
@@ -20,7 +21,6 @@ router.get('/get_farm_list', farmController.ajaxGetFarmList);
 router.post('/create_crop_plan', cropCalendarController.ajaxCreateCropPlan);
 router.get('/get_crop_plans', cropCalendarController.ajaxGetCropPlans);
 
-
 router.get('/farm_monitor_test', farmController.getMonitorFarms);
 router.get('/filter_farm_details', farmController.getFarmDetails);
 router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
@@ -28,6 +28,8 @@ router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
 router.post('/upload_weather_forecast', environmentController.uploadForecastResult);
 router.get('/get_weather_forecast', environmentController.getWeatherForecast);
 router.get('/clear_weather_forecast', environmentController.clearWeatherForecastRecords);
+
+router.get('/get_work_orders', workOrderController.ajaxGetWorkOrders);
 /*** Database Ajax End ***/
 
 /*** Page Navigation Start ***/

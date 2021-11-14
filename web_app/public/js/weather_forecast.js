@@ -448,6 +448,6 @@ $(document).ready(function() {
 		/************  Weather Forecast to DB End *************/
 
 
-	}, 12000);
+	}, 60000);
 
 });

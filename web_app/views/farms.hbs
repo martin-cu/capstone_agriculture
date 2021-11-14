@@ -1,58 +1,56 @@
 <div class="container-fluid">
-    <div class="d-sm-flex justify-content-between align-items-center mb-4">
-        <h3 class="text-dark mb-0" style="font-family: Roboto, sans-serif;color: #584c33;font-weight: 500;">Farms</h3>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-xl-12 col-xxl-12">
-            <div class="card shadow mb-4" style="width: 950px; margin: 0px auto;">
-                <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
-                    <div class="btn-group" role="group"><button class="btn btn-primary" type="button" style="background: #BDBE14;font-weight: bold;border-style: none;border-left-color: rgba(78,115,223,0);border-radius: 10px;padding: 4px 10px;">Farms</button><a class="btn btn-primary" role="button" style="margin-left: 10px;background: rgba(189,190,20,0);border-style: none;border-color: var(--bs-pink);padding: 4px 10px;" href="/materials">Materials</a></div>
-                    <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"><i class="fas fa-ellipsis-v d-xxl-flex justify-content-xxl-end text-gray-400"></i></button>
-                        <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
-                            <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
-                            <div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a>
+    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Work Order</h3>
+    <div class="row" style="padding: 0px 12px;">
+        <div class="col-xxl-6">
+            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Active Crop Calendars<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;">ADD CROP CALENDAR&nbsp;<i class="fa fa-plus"></i></button>
+	            
+	            <div class="" style="scroll-y: auto;" id="calendar_card_cont">
+	            	<div class="card" style="margin-bottom: 10px;margin-top: 20px;" id="">
+	                <div class="card-body">
+	                    <div class="row">
+	                        <div class="col-xxl-2">
+	                            <h6 class="d-xxl-flex justify-content-xxl-center align-items-xxl-center mb-2" style="text-align: center;color: #332c1f;font-weight: bold;font-size: 20px;">OCT</h6>
+	                            <h4 class="d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="text-align: center;color: #332c1f;font-weight: bold;margin-bottom: 0PX;font-size: 30px;">6</h4>
+	                        </div>
+	                        <div class="col-xxl-7">
+	                            <h4 style="font-size: 20PX;">Dinorado 2021</h4>
+	                            <h6 class="text-muted mb-2">Farm 1</h6>
+	                            <p style="margin-bottom: 0px;">Stage: Vegetation<br></p>
+	                            <p>Upcoming Activities: Pesticide Application on October 8, 2021<br></p>
+	                        </div>
+	                        <div class="col-xxl-3"><i class="fas fa-seedling d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="font-size: 80PX;color: rgb(102,117,40);"></i></div>
+	                    </div>
+	                </div>
+	            </div>
+	            </div>
+            
+        </div>
+        <div class="col-xxl-6">
+            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Work Orders<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;">ADD WORK ORDER&nbsp;<i class="fa fa-plus"></i></button>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-body" style="min-height: 400px;">
+                    <div class="row table-topper align-items-center">
+                        <div class="col-4 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                        <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
+                            <h6 id="counter-1">Showing: <strong id="rowCount-1">ALL</strong>&nbsp;Row(s)</h6>
                         </div>
+                        <div class="col-4 text-end" style="margin: 0px;padding: 5px 10px;"><a href="#" data-bs-toggle="modal" data-bs-target="#tablehelpModal"><i class="fa fa-question-circle" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;" data-bs-toggle="tooltip" data-bs-placement="top"></i></a></div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div><small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
-                        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
-                        </form>
-
-                        {{!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModalCenter">
-						  Add Farm
-						</button> --}}
-
-						<button type="button" class="btn btn-primary float-right" onclick='window.location="/farms/add"'>
-						  Add Farm
-						</button>
-                       
-                        <div class="table-responsive" style="margin-top: 20px;">
-                            <table class="table">
-                                <thead style="color: rgb(255,255,255);">
-                                    <tr style="background: #332c1f;">
-                                        <th>Farm ID</th>
-                                        <th>Name</th>
-                                        <th>Land Type</th>
-                                        <th>Farm Manager</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                	{{#each farm_list}}
-                                	<tr href="#">
-                                        <td style="color: #584c33;">{{this.farm_id}}</td>
-                                        <td style="color: #584c33;">{{this.farm_name}}</td>
-                                        <td style="color: #584c33;">{{this.land_type}}</td>
-                                        <td style="color: #584c33;">{{this.employee_name}}</td>
-                                        <td style="color: #584c33;"><button type="button" class="float-right btn btn-danger farm_delete" value="{{this.farm_name}}">Delete</td>
-                                    </tr>
-                                	{{/each}}
-
-                                </tbody>
-                            </table>
+                    <div class="row">
+                        <div class="col-12">
+                            <div>
+                                <table class="table table tablesorter" id="work_order_table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>ACTION</th>
+                                            <th>FARM</th>
+                                            <th>STATUS</th>
+                                            <th>DUE DATE</th>
+                                            <th>NOTES</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,145 +59,187 @@
     </div>
 </div>
 
-{{!-- START MODAL --}}
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="">Add Farm</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" value="create_farm_form">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <div class="modal-body">
-
-      	<form method="post" id="create_farm_form">
-
-      	<div class="modal_body_content" id="body_step1">
-		  <div class="form-group">
-		    <label for="farm_name">Farm Name</label>
-		    <input type="text" class="form-control" id="farm_name" name="farm_name" placeholder="...">
-		  </div>
-
-		  <div class="form-group">
-		    <label for="farm_desc">Description</label>
-		    <input type="text" class="form-control" id="farm_desc" name="farm_desc" placeholder="...">
-		  </div>
-
-		  <div class="form-group">
-		    <label for="land_type">Land Type</label>
-		    <select class="form-control" id="land_type" name="land_type">
-		      <option value="Lowland">Lowland</option>
-		      <option value="Upland">Upland</option>
-		    </select>
-		  </div>
-      	</div>
-
-      	<div class="hide modal_body_content" id="body_step2">
-      		<div class="form-group">
-			    <label for="">Plot Details</label>
-			    <small id="emailHelp" class="form-text text-muted">Wag muna ibahin to di ko pa alam coordinates</small>
-				<div class="form-row">
-					<div class="form-group w-25 mr-3">
-						<label for="x1">Coordinate 1</label>
-						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x1" placeholder="x1" name="coordinates" value="121.38162">
-							<input type="text" class="form-control" id="y1" placeholder="y1" name="coordinates"	value="13.07716">	
-						</div>
-					</div>
-					<div class="form-group w-25">
-						<label for="inputPassword4">Coordinate 2</label>
-						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x2" placeholder="x2" name="coordinates" value="121.38197">
-							<input type="text" class="form-control" id="y2" placeholder="y2" name="coordinates" value="13.06959">	
-						</div>
-					</div>
-				</div>
-
-				<div class="form-row">
-					<div class="form-group w-25 mr-3">
-						<label for="x1">Coordinate 3</label>
-						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x3" placeholder="x3" name="coordinates" value="121.3876">
-							<input type="text" class="form-control" id="y3" placeholder="y3" name="coordinates" value="13.06939">	
-						</div>
-					</div>
-					<div class="form-group w-25">
-						<label for="inputPassword4">Coordinate 4</label>
-						<div class="d-flex">
-							<input type="text" class="form-control mr-3" id="x4" placeholder="x4" name="coordinates" value="121.38828">
-							<input type="text" class="form-control" id="y4" placeholder="y4" name="coordinates" value="13.07749">	
-						</div>
-					</div>
-				</div>
-			 </div>
-      	</div>
-
-      	<div class="hide modal_body_content" id="body_step3">
-      		<label for="">Assign Employees</label>
-      		<div class="">
-      			<label for="">Farm Manager/s:</label>
-
-      			<div class="container" id="">
-      				<div class="row" id="farm_mngr_cont">
-      					
-      				</div>
-      			</div>
-      		</div>
-
-      		<div class="">
-      			<label for="">Farm Workers:</label>
-      			<div class="container" id="">
-      				<div class="row" id="">
-      					
-      				</div>
-      			</div>
-
-      			<div class="container" id="">
-      				<small id="" class="form-text text-muted">Unassigned workers</small>
-      				<div class="row" id="unassigned_frmr_cont">
-      					
-      				</div>
-      			</div>
-
-      			<div class="container" id="">
-      				<small id="" class="form-text text-muted">Assigned workers</small>
-      				<div class="row" id="assigned_frmr_cont">
-      					
-      				</div>
-      			</div>
-      		</div>
-
-      	</div>
-
-      	</form>
-
-      </div>
-
-      <div class="modal-footer">
-      	<div class="modal_footer_content" id="_step1">
-      		<button type="button" class="btn btn-secondary" data-dismiss="modal" value="create_farm_form">Cancel</button>
-	        <button type="button" class="btn btn-primary next_step" value="_step2">Next</button>
-      	</div>
-
-      	<div class="hide modal_footer_content" id="_step2">
-      		<button type="button" class="btn btn-secondary prev_step" value="_step1">Back</button>
-	        <button type="button" class="btn btn-primary next_step" value="_step3" id="queueFarmers">Next</button>
-      	</div>
-
-      	<div class="hide modal_footer_content" id="_step3">
-      		<button type="button" class="btn btn-secondary prev_step" value="_step2">Back</button>
-	        <button type="submit" class="btn btn-primary" form="create_farm_form">Submit</button>
-      	</div>
-	        
-      </div>
-
-    </div>
-  </div>
-</div>
-{{!-- END MODAL --}}
-
+<div class="card" style="margin-bottom: 10px;margin-top: 20px;" id="">
 <script type="text/javascript">
-	var view = 'farm_outlook';
+	jQuery.ajaxSetup({async: false});
+
+	function createDOM(obj) {
+		var ele;
+
+		ele = document.createElement(obj.type);
+		ele.setAttribute('class', obj.class);
+		ele.setAttribute('style', obj.style);
+		ele.innerHTML = obj.html;
+
+		return ele;
+	}
+
+	function appendWorkOrder(data) {
+		var cont = $('#work_order_table');
+		var keys = ['type', 'farm_name', 'status', 'date_due', 'wo_notes'];
+
+		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+
+		for (var i = 0; i < keys.length; i++) {
+			tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: data[keys[i]] }));
+		}
+
+		cont.append(tr);
+	}
+
+	function appendCards(data) {
+		var cont = $('#calendar_card_cont');
+		var card, card_body, row, col2, col3, col7, h6, h4, p1, p2, i;
+		card = createDOM({ type: 'div', class: 'card', style: 'margin-bottom: 10px;margin-top: 20px;', html: '' });
+		card_body = createDOM({ type: 'div', class: 'card-body', style: '', html: '' });
+		row = createDOM({ type: 'div', class: 'row', style: '', html: '' });
+		col2 = createDOM({ type: 'div', class: 'col-xxl-2', style: '', html: '' });
+		h6 = createDOM({ type: 'h6', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center mb-2', style: 'text-align: center;color: #332c1f;font-weight: bold;font-size: 20px;', html: data.start_month });
+		h4 = createDOM({ type: 'h4', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center', style: 'text-align: center;color: #332c1f;font-weight: bold;margin-bottom: 0PX;font-size: 30px;', html: data.start_day });
+
+		col2.appendChild(h6);
+		col2.appendChild(h4);
+
+		col7 = createDOM({ type: 'div', class: 'col-xxl-7', style: '', html: '' });
+		h4 = createDOM({ type: 'h4', class: '', style: 'font-size: 20PX;', html: data.crop_plan });
+		h6 = createDOM({ type: 'h6', class: 'text-muted mb-2', style: '', html: data.farm_name });
+		p1 = createDOM({ type: 'p', class: '', style: 'margin-bottom: 0px;', html: 'Stage: '+data.current_stage });
+		p2 = createDOM({ type: 'p', class: '', style: '', html: 'Upcoming Activities: '+data.upcoming_activity });
+
+		col7.appendChild(h4);
+		col7.appendChild(h6);
+		col7.appendChild(p1);
+		col7.appendChild(p2);
+
+		col3 = createDOM({ type: 'div', class: 'col-xxl-3', style: '', html: '' });
+		i = createDOM({ type: 'i', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center '+data.stage_icon, style: 'font-size: 80PX; color: RGB(102,117,40)', html: '' });
+
+		col3.appendChild(i);
+
+		row.appendChild(col2);
+		row.appendChild(col7);
+		row.appendChild(col3);
+
+		card_body.appendChild(row);
+		card.appendChild(card_body);
+		cont.append(card);
+	}
+
+	function getCurrentStage(date, last_order) {
+		var obj = { };
+		var icons = ['fas fa-seedling'];
+		if (date == null || date == '') {
+			obj['stage'] = last_order;
+			obj['icon'] = icons[0];
+		}
+		else {
+			var now = new Date();
+			var diff = now.getDate() - date.getDate();
+
+			if (diff < 90) {
+				obj['stage'] = 'Vegetation';
+				obj['icon'] = icons[0];
+			}
+			else if (diff >= 90 && diff < 180) {
+				obj['stage'] = 'Harvesting';
+				obj['icon'] = icons[0];
+			}
+		}
+
+		return obj;
+	}
+
+	function formatDate(date, format) {
+		var year,month,day;
+		const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+		];
+		year = date.getFullYear();
+		month = date.getMonth()+1;
+		day = date.getDate();
+
+		if (format === 'MM/DD/YYYY') {
+			if (month < 10)
+				month = '0'+month;
+			if (day < 10)
+				day = '0'+day;
+			date = month+'/'+day+'/'+year;
+		}
+		else if (format === 'YYYY-MM-DD') {
+			if (month < 10)
+				month = '0'+month;
+			if (day < 10)
+				day = '0'+day;
+			date = year+'-'+month+'-'+day;
+		}
+		else if (format === 'mm DD, YYYY') {
+			date = monthNames[month]+' '+day+', '+year;
+		}
+
+		return date;
+	}
+
+	function prepareCalendarData(plan, work_order) {
+		var obj = {};
+		var stage = getCurrentStage(new Date(plan.sowing_date), work_order[0].type);
+		obj['farm_name'] = plan.farm_name;
+		obj['current_stage'] = stage.stage;
+		obj['stage_icon'] = stage.icon;
+		obj['crop_plan'] = plan.crop_plan;
+
+		if (work_order.length != 0) {
+			var date = new Date(work_order[0].date_start);
+			var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+			var month = months[date.getMonth()];
+			var day = date.getDate();
+
+			obj['start_date'] = work_order[0].date_start;
+			obj['start_month'] = month;
+			obj['start_day'] = day;
+			obj['upcoming_activity'] = work_order[0].type+' by '+formatDate(new Date(work_order[0].date_due), 'mm DD, YYYY');
+		}
+
+		return obj;
+	}
+
+	$.get('/get_crop_plans', { status: ['Active', 'In-Progress']}, function(plans) {
+		let plan_list = plans;
+		let counter = 0;
+		var plan_arr = [];
+		var query = {
+			where: {
+				key: ['crop_calendar_id', 'work_order_table.status'],
+				value: null
+			}
+		};
+		for (var i = 0; i < plan_list.length; i++) {
+			query['where']['value'] = [plan_list[i].calendar_id, 'Pending'];
+			$.get('/get_work_orders', query, function(work_orders) {
+				if (work_orders.length != 0) {
+					counter++;
+					appendCards(prepareCalendarData(plan_list[i], work_orders));
+				}
+			});
+		}
+		// Show 'No Active Calendars'
+		if (counter == 0) {
+			console.log('No active calendars!');
+		}
+
+	});
+
+	$.get('/get_work_orders', { order: ['work_order_table.status ASC', 'work_order_table.date_due DESC'] }, function(work_order_list) {
+		if (work_order_list.length != 0) {
+			for (var i = 0; i < work_order_list.length; i++) {
+				work_order_list[i].date_due = formatDate(new Date(work_order_list[i].date_due), 'MM/DD/YYYY');
+				appendWorkOrder(work_order_list[i]);
+			}
+		}
+		// Show 'No work order records'
+		else {
+			console.log('No work order records!');
+		}
+	});
+
 </script>
