@@ -328,7 +328,7 @@ exports.getPestPossibilities = function(weather, season, fertilizer, stage, next
 
 
 	sql = sql + end_qry;
-	// console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -418,7 +418,7 @@ exports.getDiseasePossibilities = function(weather, season, fertilizer, stage, n
 	// console.log("done");
 }
 
-
+//Gets probability of pests occuring based on number of symptoms matched with current factors
 exports.getPestProbability = function(weather, season, fertilizer, stage, next){
 	sql = "";
 	start = "SELECT a.pest_id, a.pest_name, COUNT(a.pest_id) as count FROM (";
@@ -528,7 +528,7 @@ exports.getPestProbability = function(weather, season, fertilizer, stage, next){
 
 }
 
-
+//Gets probability of disease occuring based on number of symptoms matched with current factors
 exports.getDiseaseProbability = function(weather, season, fertilizer, stage, next){
 	sql = "";
 	start = "SELECT a.disease_id, a.disease_name, COUNT(a.disease_id) as count FROM (";
@@ -565,8 +565,6 @@ exports.getDiseaseProbability = function(weather, season, fertilizer, stage, nex
 		}
 		first = true;
 	}
-
-	console.log("\n\n\n" + sql);
 
 	if(weather.humidity != null){
 		if(first)
@@ -747,4 +745,342 @@ exports.getPestProbabilityPercentage = function(weather, season, fertilizer, sta
 	sql = sql + sql2;
 	console.log(sql);
 	mysql.query(sql, next);
+}
+
+exports.getDiseaseProbabilityPercentage = function(weather, season, fertilizer, stage, next){
+	sql = "";
+	start = "SELECT a.disease_id, a.disease_name, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) / b.factor_count * 100,2) AS probability FROM (";
+	end = ") a ";
+	weather_temp = 'SELECT p.disease_id, p.disease_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_humidity = 'SELECT p.disease_id, p.disease_name, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_precipitation = 'SELECT p.disease_id, p.disease_name, "Weather precipitation" AS factor, wt.precipitation AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_soil_moisture = 'SELECT p.disease_id, p.disease_name, "Weather soil moisture" AS factor, wt.soil_moisture AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+
+	season_temp = 'SELECT p.disease_id, p.disease_name, "Season temp" AS factor, s.season_temp AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+	season_humidity = 'SELECT p.disease_id, p.disease_name, "Season humidity" AS factor, s.season_humidity AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+
+	stages_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN stages_disease sp ON p.disease_id = sp.disease_id INNER JOIN stages s ON s.stage_id = sp.stage_id WHERE ';
+
+	fertilzier_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN fertilizer_disease fp ON fp.disease_id = p.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = fp.fertilizier_id WHERE ';
+
+	sql = start;
+	first = false;
+
+	//WEATHER
+	if(weather.min_temp != null && weather.max_temp != null){
+		sql = sql + weather_temp;
+
+		if(weather.min_temp != null){
+			first = true;
+			sql = sql + " min_temp <= " + weather.min_temp;
+		}
+		if(weather.max_temp != null){
+			if(first)
+				sql = sql + " && ";
+			else
+				first = true;
+			sql = sql + " max_temp >= " + weather.max_temp;
+		}
+		first = true;
+	}
+
+	if(weather.humidity != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + weather_humidity;
+		sql = sql + " humidity = " + weather.humidity;
+	}
+	if(weather.precipitation != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_precipitation;
+		sql = sql + " precipitation - 5 <= " + weather.precipitation + " && precipitation + 5 >= " + weather.precipitation;
+	}
+	if(weather.soil_moisture != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_soil_moisture;
+		sql = sql + " soil_moisture = " + weather.soil_moisture;
+	}
+
+	//SEASON
+	if(season.season_temp != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_temp;
+		sql = sql + " season_temp - 5 <= " + season.season_temp + " && season_temp + 5 >= " + season.season_temp;
+			
+	}
+
+	if(season.season_humidity != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_humidity;
+		sql = sql + " season_humidity - 5 <= " + season.season_humidity + " && season_humidity + 5 >= " + season.season_humidity;
+			
+	}
+
+
+	//STAGE
+	if(stage.stage_name != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		
+		sql = sql + stages_qry;
+		sql = sql + " s.stage_name = '" + stage.stage_name + "'";
+	}
+
+
+	sql = sql + end;
+
+
+	var sql2 = ' INNER JOIN (SELECT a.disease_id, a.disease_name, COUNT(a.disease_id) AS factor_count FROM (SELECT p.disease_id, p.disease_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id UNION SELECT p.disease_id, p.disease_name, s.season_name as factor, s.season_desc as description, "season" as type FROM disease_table p INNER JOIN seasons_disease sp ON p.disease_id = sp.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id UNION SELECT p.disease_id, p.disease_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM disease_table p INNER JOIN stages_disease sp ON sp.disease_id = p.disease_id INNER JOIN stages s ON s.stage_id = sp.stages_disease_id UNION SELECT p.disease_id, p.disease_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM disease_table p INNER JOIN farm_types_disease ftp ON p.disease_id = ftp.disease_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id UNION SELECT p.disease_id, p.disease_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM disease_table p INNER JOIN fertilizer_disease fp ON p.disease_id = fp.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id) a GROUP BY disease_id) b ON a.disease_id = b.disease_id GROUP BY a.disease_id ORDER BY probability DESC;';
+
+	sql = sql + sql2;
+	console.log(sql);
+	mysql.query(sql, next);
+
+}
+
+exports.getPDProbabilityPercentage = function(weather, season, fertilizer, stage, next){
+	sql = "";
+	start = "(SELECT a.disease_id as pd_id, a.disease_name as pd_name, 'Disease' as type, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) / b.factor_count * 100,2) AS probability FROM (";
+	end = ") a ";
+	weather_temp = 'SELECT p.disease_id, p.disease_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_humidity = 'SELECT p.disease_id, p.disease_name, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_precipitation = 'SELECT p.disease_id, p.disease_name, "Weather precipitation" AS factor, wt.precipitation AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_soil_moisture = 'SELECT p.disease_id, p.disease_name, "Weather soil moisture" AS factor, wt.soil_moisture AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+
+	season_temp = 'SELECT p.disease_id, p.disease_name, "Season temp" AS factor, s.season_temp AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+	season_humidity = 'SELECT p.disease_id, p.disease_name, "Season humidity" AS factor, s.season_humidity AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+
+	stages_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN stages_disease sp ON p.disease_id = sp.disease_id INNER JOIN stages s ON s.stage_id = sp.stage_id WHERE ';
+
+	fertilzier_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN fertilizer_disease fp ON fp.disease_id = p.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = fp.fertilizier_id WHERE ';
+
+	sql = start;
+	first = false;
+
+	//WEATHER
+	if(weather.min_temp != null && weather.max_temp != null){
+		sql = sql + weather_temp;
+
+		if(weather.min_temp != null){
+			first = true;
+			sql = sql + " min_temp <= " + weather.min_temp;
+		}
+		if(weather.max_temp != null){
+			if(first)
+				sql = sql + " && ";
+			else
+				first = true;
+			sql = sql + " max_temp >= " + weather.max_temp;
+		}
+		first = true;
+	}
+
+	if(weather.humidity != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + weather_humidity;
+		sql = sql + " humidity = " + weather.humidity;
+	}
+	if(weather.precipitation != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_precipitation;
+		sql = sql + " precipitation - 5 <= " + weather.precipitation + " && precipitation + 5 >= " + weather.precipitation;
+	}
+	if(weather.soil_moisture != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_soil_moisture;
+		sql = sql + " soil_moisture = " + weather.soil_moisture;
+	}
+
+	//SEASON
+	if(season.season_temp != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_temp;
+		sql = sql + " season_temp - 5 <= " + season.season_temp + " && season_temp + 5 >= " + season.season_temp;
+			
+	}
+
+	if(season.season_humidity != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_humidity;
+		sql = sql + " season_humidity - 5 <= " + season.season_humidity + " && season_humidity + 5 >= " + season.season_humidity;
+			
+	}
+
+
+	//STAGE
+	if(stage.stage_name != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		
+		sql = sql + stages_qry;
+		sql = sql + " s.stage_name = '" + stage.stage_name + "'";
+	}
+
+
+	sql = sql + end;
+
+
+	var sql2 = ' INNER JOIN (SELECT a.disease_id, a.disease_name, COUNT(a.disease_id) AS factor_count FROM (SELECT p.disease_id, p.disease_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id UNION SELECT p.disease_id, p.disease_name, s.season_name as factor, s.season_desc as description, "season" as type FROM disease_table p INNER JOIN seasons_disease sp ON p.disease_id = sp.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id UNION SELECT p.disease_id, p.disease_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM disease_table p INNER JOIN stages_disease sp ON sp.disease_id = p.disease_id INNER JOIN stages s ON s.stage_id = sp.stages_disease_id UNION SELECT p.disease_id, p.disease_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM disease_table p INNER JOIN farm_types_disease ftp ON p.disease_id = ftp.disease_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id UNION SELECT p.disease_id, p.disease_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM disease_table p INNER JOIN fertilizer_disease fp ON p.disease_id = fp.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id) a GROUP BY disease_id) b ON a.disease_id = b.disease_id GROUP BY a.disease_id ORDER BY probability DESC ';
+
+	sql = sql + sql2;
+	sql = sql + ") UNION ";
+
+
+//==============================UNION=================================//
+
+	start = "(SELECT a.pest_id as pd_id, a.pest_name as pd_name, 'Pest' as type, COUNT(a.pest_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.pest_id) / b.factor_count * 100,2) AS probability FROM (";
+	end = ") a ";
+	weather_temp = 'SELECT p.pest_id, p.pest_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_humidity = 'SELECT p.pest_id, p.pest_name, "Weather humidity" AS factor, wt.humidity AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_precipitation = 'SELECT p.pest_id, p.pest_name, "Weather precipitation" AS factor, wt.precipitation AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_soil_moisture = 'SELECT p.pest_id, p.pest_name, "Weather soil moisture" AS factor, wt.soil_moisture AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+
+	season_temp = 'SELECT p.pest_id, p.pest_name, "Season temp" AS factor, s.season_temp AS value FROM pest_table p INNER JOIN season_pest sp ON sp.pest_id = p.pest_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+	season_humidity = 'SELECT p.pest_id, p.pest_name, "Season humidity" AS factor, s.season_humidity AS value FROM pest_table p INNER JOIN season_pest sp ON sp.pest_id = p.pest_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+
+	stages_qry = 'SELECT p.pest_id, p.pest_name, "Stage" AS factor, s.stage_name AS value FROM pest_table p INNER JOIN stages_pest sp ON p.pest_id = sp.pest_id INNER JOIN stages s ON s.stage_id = sp.stage_id WHERE ';
+
+	fertilzier_qry = 'SELECT p.pest_id, p.pest_name, "Stage" AS factor, s.stage_name AS value FROM pest_table p INNER JOIN fertilizer_pest fp ON fp.pest_id = p.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = fp.fertilizier_id WHERE ';
+
+	sql = sql + start;
+	first = false;
+
+	//WEATHER
+	if(weather.min_temp != null && weather.max_temp != null){
+		sql = sql + weather_temp;
+
+		if(weather.min_temp != null){
+			first = true;
+			sql = sql + " min_temp <= " + weather.min_temp;
+		}
+		if(weather.max_temp != null){
+			if(first)
+				sql = sql + " && ";
+			else
+				first = true;
+			sql = sql + " max_temp >= " + weather.max_temp;
+		}
+		first = true;
+	}
+
+	if(weather.humidity != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + weather_humidity;
+		sql = sql + " humidity = " + weather.humidity;
+	}
+	if(weather.precipitation != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_precipitation;
+		sql = sql + " precipitation - 5 <= " + weather.precipitation + " && precipitation + 5 >= " + weather.precipitation;
+	}
+	if(weather.soil_moisture != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+
+		sql = sql + weather_soil_moisture;
+		sql = sql + " soil_moisture = " + weather.soil_moisture;
+	}
+
+	//SEASON
+	if(season.season_temp != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_temp;
+		sql = sql + " season_temp - 5 <= " + season.season_temp + " && season_temp + 5 >= " + season.season_temp;
+			
+	}
+
+	if(season.season_humidity != null){
+		
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		sql = sql + season_humidity;
+		sql = sql + " season_humidity - 5 <= " + season.season_humidity + " && season_humidity + 5 >= " + season.season_humidity;
+			
+	}
+
+
+	//STAGE
+	if(stage.stage_name != null){
+		if(first)
+			sql = sql + " UNION ";
+		else
+			first = true;
+		
+		sql = sql + stages_qry;
+		sql = sql + " s.stage_name = '" + stage.stage_name + "'";
+	}
+
+
+	sql = sql + end;
+
+
+	var sql2 = ' INNER JOIN (SELECT a.pest_id, a.pest_name, COUNT(a.pest_id) AS factor_count FROM (SELECT p.pest_id, p.pest_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id UNION SELECT p.pest_id, p.pest_name, s.season_name as factor, s.season_desc as description, "season" as type FROM pest_table p INNER JOIN season_pest sp ON p.pest_id = sp.pest_id INNER JOIN seasons s ON s.season_id = sp.season_pest UNION SELECT p.pest_id, p.pest_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM pest_table p INNER JOIN stages_pest sp ON sp.pest_id = p.pest_id INNER JOIN stages s ON s.stage_id = sp.stages_pest_id UNION SELECT p.pest_id, p.pest_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM pest_table p INNER JOIN farmtypes_pest ftp ON p.pest_id = ftp.pest_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id UNION SELECT p.pest_id, p.pest_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM pest_table p INNER JOIN fertilizer_pest fp ON p.pest_id = fp.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id) a GROUP BY pest_id) b ON a.pest_id = b.pest_id GROUP BY a.pest_id ORDER BY probability DESC';
+
+	sql = sql + sql2 + ")";
+
+	console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.getDiagnosis = function(farm_id, next){
+	
 }

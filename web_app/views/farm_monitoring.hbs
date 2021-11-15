@@ -233,7 +233,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Farm Resources</strong></label></div>
+                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Farm Resources (CONNECTED)</strong></label></div>
                             <div class="row space-rows">
                                 <div class="col offset-xxl-0">
                                     <div class="card cards-shadown cards-hover aos-init" data-aos="flip-left" data-aos-duration="950">
@@ -313,18 +313,25 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Pest and Diseases</strong></label></div>
+                            <div class="mb-3"><label class="form-label d-xxl-flex justify-content-xxl-start" for="first_name"><strong>Pest and Diseases (CONNECTED)</strong></label></div>
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th style="text-align: left;">Name</th>
                                             <th>Type</th>
-                                            <th>Date</th>
+                                            <th>Probability</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        {{#each probability}}
+                                            <tr>
+                                                <td style="text-align: left;">{{this.pd_name}}</td>
+                                                <td>{{this.type}}</td>
+                                                <td>{{this.probability}} %</td>
+                                            </tr>
+                                        {{/each}}
+                                        <!-- <tr>
                                             <td style="text-align: left;">Rats</td>
                                             <td>Pest</td>
                                             <td>March 05, 2021</td>
@@ -338,7 +345,7 @@
                                             <td style="text-align: left;">Bacterial Blight</td>
                                             <td>Disease</td>
                                             <td>March 05, 2021</td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
