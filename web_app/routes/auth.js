@@ -33,6 +33,9 @@ router.get('/get_work_orders', workOrderController.ajaxGetWorkOrders);
 router.get('/get_materials', materialController.ajaxGetMaterials);
 router.get('/getResourcesPerFarm', environmentController.ajaxGetResources);
 
+// router.get('/getPestDiseasePerFarm', environmentController.ajaxGetPossiblePD);
+
+
 /*** Database Ajax End ***/
 
 /*** Page Navigation Start ***/

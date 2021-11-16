@@ -1,4 +1,15 @@
 $(document).ready(function(){
+
+    $(".probability_value").each(function(){
+        var value = $(this).text();
+        var val = 214 - (parseInt(value) * 2);
+        var rgb = "color : rgb(214, " + val + ", 19)";
+        $(this).attr("style",rgb);
+        if(value != ""){
+            $(this).text(parseInt(value) + " %");
+        }
+    });
+
     $(".type").on("click", function(){
         $("#materials_list").empty();
         var url = "/getMaterialsAjax/" + $(this).text();
