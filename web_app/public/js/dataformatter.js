@@ -1,3 +1,51 @@
+exports.processNPKValues = function(obj, area) {
+	obj = obj[0];
+	console.log(obj);
+	var keys = ['n_lvl', 'p_lvl', 'k_lvl'];
+	var new_keys = ['n_val', 'p_val', 'k_val'];
+	var index;
+	var val;
+	var obj_result = {
+		Depleted: [14.0, 8.25, 13.5],
+		Deficient: [7.75, 4.0, 8.75],
+		Adequate: [3.75, 1.0, 4.75],
+		Surplus: [0, 0, 0]
+	};
+
+	for (var i = 0; i < keys.length; i++) {
+			switch(keys[i]) {
+			case 'n_lvl':
+			obj_key = 
+			index = 0;
+			break;
+			case 'p_lvl':
+			index = 1;
+			break;
+			case 'k_lvl':
+			index = 2;
+			break;
+		}
+
+		if (obj_result['Depleted'][index] == obj[keys[i]]) {
+			val = 'Depleted';
+		}
+		else if (obj_result['Deficient'][index] == obj[keys[i]]) {
+			val = 'Deficient';
+		}
+		else if (obj_result['Adequate'][index] == obj[keys[i]]) {
+			val = 'Adequate';
+		}
+		else if (obj_result['Surplus'][index] == obj[keys[i]]) {
+			val = 'Surplus';
+		}
+
+		obj[new_keys[i]] = val;
+		obj[keys[i]] = Math.round(obj[keys[i]]*30.5151727 * 100) / 100;
+	}
+
+	return obj;
+}
+
 function objectMerger(arr1, arr2, arr1_param, arr2_param, id) {
 	var objArr = [];
 	var obj;

@@ -24,10 +24,10 @@
 
             <li class="nav-item">
                 <div class="nav-item dropdown text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
-                    <a aria-expanded="false" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none" href="#" style="">
+                    <a aria-expanded="true" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none" href="#" style="">
                         <i class="fa fa-th-list" style="margin-right: 6px;"></i>Material Management
                     </a>
-                    <div class="dropdown-menu" style="">
+                    <div class="dropdown-menu show" style="">
                         <a class="dropdown-item" href="#" style="">Inventory</a>
                         <a class="dropdown-item" href="#" style="">Orders</a>
                     </div>
@@ -36,9 +36,9 @@
 
             <li class="nav-item" style="">
                 <div class="nav-item dropdown " style="margin-bottom: 0px;padding: 16px;">
-                    <a aria-expanded="false" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none" href="#" style=""><i class="dropdown-lbl fas fa-bug" style="margin-right: 6px;"></i>Pest and Disease
+                    <a aria-expanded="true" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none" href="#" style=""><i class="dropdown-lbl fas fa-bug" style="margin-right: 6px;"></i>Pest and Disease
                     </a>
-                    <div class="dropdown-menu" style="">
+                    <div class="dropdown-menu show" style="">
                         <a class="dropdown-item" href="#" style="">Discover</a>
                         <a class="dropdown-item" href="#" style="">Diagnose</a>
                     </div>
@@ -50,8 +50,8 @@
                     <a aria-expanded="true" data-bs-toggle="dropdown" class="dropdown-lbl text-decoration-none {{# if nutrient_discover_tab}}active{{/if}}{{# if nutrient_diagnose_tab}}active{{/if}}" href="#" style=""><i class="fas fa-balance-scale-left" style="margin-right: 6px;"></i>Nutrient Management
                     </a>
                     <div class="dropdown-menu show" style="">
-                        <a class="dropdown-item {{# if nutrient_discover_tab}}active{{/if}}" href="/nutrient_management" style="">Discover</a>
-                        <a class="dropdown-item {{# if nutrient_diagnose_tab}}active{{/if}}" href="/nutrient_management/farm1" style="">Diagnose</a>
+                        <a class="dropdown-item {{# if nutrient_discover_tab}}active{{/if}}" href="/nutrient_management" style="">Soil Analysis</a>
+                        <a class="dropdown-item {{# if nutrient_diagnose_tab}}active{{/if}}" href="/nutrient_management/LA Farm (API Paid)" style="">Nutrient Analysis</a>
                     </div>
                 </div>
             </li>

@@ -16,42 +16,42 @@
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">pH lvl</td>
-						<td id=""></td>
+						<td id="" class="text-right">{{detailed_data.pH_lvl}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">P205</td>
-						<td id=""></td>
+						<td id="" class="text-right">{{detailed_data.p_val}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">K20</td>
-						<td id=""></td>
+						<td id="" class="text-right">{{detailed_data.k_val}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">N</td>
-						<td id=""></td>
+						<td id="" class="text-right">{{detailed_data.n_val}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">Soil Moisture</td>
-						<td id=""></td>
+						<td id="" class="text-right"></td>
 					</tr>
 				</table>
 			</div>
 		</div>
 		<div class="rounded card shadow-lg mt-3">
-			<div class="w-100 bg-dark text-white rounded">Nutrient Requirements</div>
+			<div class="w-100 bg-dark text-white rounded">Nutrient Requirements (kg/ha)</div>
 			<div class="px-3">
 				<table class="table">
 					<tr>
 						<td class="soil_data_lbl">P205</td>
-						<td id=""></td>
+						<td id="" class="text-right">{{detailed_data.p_lvl}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">K20</td>
-						<td id=""></td>
+						<td id="" class="text-right">{{detailed_data.k_lvl}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">N</td>
-						<td id=""></td>
+						<td id="" class="text-right">{{detailed_data.n_lvl}}</td>
 					</tr>
 				</table>
 			</div>
@@ -95,3 +95,35 @@
 		</table>
 	</div>
 </div>
+
+<div class="rounded  mx-3 mt-3">
+	<div class="w-100 bg-dark text-white rounded">Fertilizer Planning</div>
+	<div class="rounded card shadow-lg" style="height: 350px;">
+		<div class="d-flex">
+			<div class="w-100 p-3">
+				<table class="table" id="inventory_table">
+
+				</table>
+			</div>
+			<div class="ml-auto d-flex flex-column p-3" style="width: 170px;">
+				<button class="btn btn-dark" style="font-size: 10px;">Current Resources</button>
+				<button class="btn btn-dark mt-2" style="font-size: 10px;">Optimal</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var type = 'Soil Detailed';
+	var id = {{detailed_data.farm_id}};
+	var area = {{detailed_data.farm_area}};
+</script>
+
+<script src="../../js/nutrient_management.js"></script>
+
+
+<script type="text/javascript">
+	
+var results;
+
+</script>

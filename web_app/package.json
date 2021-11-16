@@ -22,6 +22,7 @@
     "express-handlebars": "^5.3.3",
     "express-mysql-session": "^2.1.6",
     "express-session": "^1.17.2",
+    "javascript-lp-solver": "^0.4.24",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.14",
     "request": "^2.88.2"
