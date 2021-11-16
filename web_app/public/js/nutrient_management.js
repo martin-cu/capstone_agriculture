@@ -136,6 +136,7 @@ function initializeBars(e) {
 
 }
 
+// Create recommended N-P-K values from input
 function processSoilTest(obj) {
 	var keys = ['n_test','p_test', 'k_test'];
 	var db_keys = ['n_lvl', 'p_lvl', 'k_lvl'];
@@ -146,7 +147,6 @@ function processSoilTest(obj) {
 		Adequate: [3.75, 1.0, 4.75],
 		Surplus: [0, 0, 0]
 	};
-
 	var indicator;
 	var db_key;
 	var index;
@@ -167,9 +167,67 @@ function processSoilTest(obj) {
 			break;
 		}
 
-		obj[db_key] = obj_result[obj[keys[i]]][index];
+		obj[db_key] = obj_result[obj[keys[i]]][index] * area;
 	}
 	return obj;
+}
+
+function createDOM(obj) {
+	var ele;
+
+	ele = document.createElement(obj.type);
+	ele.setAttribute('class', obj.class);
+	ele.setAttribute('style', obj.style);
+	ele.innerHTML = obj.html;
+
+	return ele;
+}
+
+function appendWorkOrder(data) {
+		var cont = $('#work_order_table');
+		var keys = ['type', 'farm_name', 'status', 'date_due', 'wo_notes'];
+
+		var tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+
+		for (var i = 0; i < keys.length; i++) {
+			tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: data[keys[i]] }));
+		}
+
+		cont.append(tr);
+	}
+
+function processInventory(arr) {
+	console.log(arr);
+	var obj = {
+		headers: [''],
+		amount: ['Current Stock'],
+		requirements: ['Requirement']
+	};
+
+	for (var i = 0; i < arr.length; i++) {
+		obj.headers.push(arr[i].fertilizer_name);
+		obj.amount.push(arr[i].current_amount);
+		obj.requirements.push('0');
+	}
+
+	return obj;
+}
+
+function appendInventory(data) {
+	var cont = $('#inventory_table');
+	var obj_keys = ['headers', 'amount', 'requirements'];
+	var tr;
+	console.log(data);
+	for (var y = 0; y < obj_keys.length; y++) {
+		tr = '';
+		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+		for (var i = 0; i < data.headers.length; i++) {
+			tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: data[obj_keys[y]][i] }));
+		}
+
+		cont.append(tr);
+	}
+
 }
 
 $(document).ready(function() {
@@ -198,6 +256,13 @@ $(document).ready(function() {
 				window.location.href = record;
 			})
 		});
+	}
+	else if (type == 'Soil Detailed') {
+		console.log('Getting data for farm: '+id);
+		console.log(area);
+		$.get('/get_materials', { type: 'Fertilizer', filter: id }, function(materials) {
+			appendInventory(processInventory(materials));
+		})
 	}
 
 });

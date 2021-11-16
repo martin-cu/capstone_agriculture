@@ -20,27 +20,52 @@ console.log(type);
 	mysql.query(sql, next);
 }
 
+// Material template for specific farm
+// select ft.farm_id, ft.farm_name, fet.fertilizer_id, fet.fertilizer_name, fet.fertilizer_desc, fet.N, fet.P, fet.K, ifnull(t.current_amount, 0) as current_amount from fertilizer_table as fet cross join farm_table as ft 
+// left join (
+// select t1.fertilizer_id as fertilizer_id, t2.farm_id as farm_id, current_amount from farm_materials
+// inner join fertilizer_table t1 on t1.fertilizer_id =  farm_materials.item_id
+// inner join farm_table as t2 on t2.farm_id = farm_materials.farm_id
+// where t2.farm_id = ? and farm_materials.item_type = 'Fertilizer'
+// group by fertilizer_id, farm_id
+// ) as t on t.fertilizer_id = fet.fertilizer_id and t.farm_id = ft.farm_id
+// where ft.farm_id = ? order by farm_id, fertilizer_name
+
 //get pesticides, seeds fertilizers
 exports.getMaterials = function(type, filter, next){
 	var sql;
 	var table;
 	if (type == "Seed") {
 		table = "SELECT seed_id as id, seed_name as name, seed_desc as mat_desc FROM seed_table";
+	
+		if(filter == null){
+			sql = table + ";";
+		}
+		else{
+			sql = table +" WHERE ?";
+			sql = mysql.format(sql, filter);
+		}
 	}
 	else if (type == "Pesticide") {
 		table = "SELECT pesticide_id as id, pesticide_name as name, pesticide_desc as mat_desc FROM pesticide_table";
+	
+		if(filter == null){
+			sql = table + ";";
+		}
+		else{
+			sql = table +" WHERE ?";
+			sql = mysql.format(sql, filter);
+		}
 	}
 	else if (type == "Fertilizer") {
-		table = "SELECT fertilizer_id as id, fertilizer_name as name, fertilizer_desc as mat_desc FROM fertilizer_table";
+		table = "select ft.farm_id, ft.farm_name, fet.fertilizer_id, fet.fertilizer_name, fet.fertilizer_desc, fet.N, fet.P, fet.K, ifnull(t.current_amount, 0) as current_amount from fertilizer_table as fet cross join farm_table as ft left join ( select t1.fertilizer_id as fertilizer_id, t2.farm_id as farm_id, current_amount from farm_materials inner join fertilizer_table t1 on t1.fertilizer_id = farm_materials.item_id inner join farm_table as t2 on t2.farm_id = farm_materials.farm_id where t2.farm_id = ? and farm_materials.item_type = 'Fertilizer' group by fertilizer_id, farm_id ) as t on t.fertilizer_id = fet.fertilizer_id and t.farm_id = ft.farm_id where ft.farm_id = ? order by farm_id, fertilizer_name";
+		
+		while (table.includes("?")) {
+			table = mysql.format(table, filter);
+		}
+		sql = table;
 	}
 
-	if(filter == null){
-		sql = table + ";";
-	}
-	else{
-		sql = table +" WHERE ?";
-		sql = mysql.format(sql, filter);
-	}
 	// console.log(sql);
 	mysql.query(sql, next);
 }

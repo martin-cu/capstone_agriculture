@@ -8,6 +8,7 @@ const nutrientModel = require('../models/nutrientModel.js');
 const materialModel = require('../models/materialModel.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 var request = require('request');
+var solver = require('javascript-lp-solver');
 
 
 var key = '2ae628c919fc214a28144f699e998c0f';
@@ -623,16 +624,66 @@ exports.addSoilRecord = function(req, res) {
 
 exports.detailedNutrientManagement = function(req, res) {
 	var query = { farm_name: req.params.farm_name };
-	console.log(query);
+
 	var html_data = {};
 	nutrientModel.getSoilRecord(query, function(err, result) {
 		if (err)
 			throw err;
 		else {
 			var obj = {};
-
-			console.log(result);
+			var results;
+			var model = {
+				optimize: '',
+				opType: 'min',
+				constraints: {
+					N: { min: 114, max: 200 },
+					P: { min: 122, max: 200 },
+					K: { min: 267, max: 350 }
+				},
+				variables: {
+					APN: {
+						N: 30,
+						P: 10,
+						K: 0,
+						price: 100
+					},
+					APS: {
+						N: 16,
+						P: 20,
+						K: 0,
+						price: 55
+					},
+					APP: {
+						N: 10,
+						P: 34,
+						K: 0,
+						price: 120
+					},
+					AN: {
+						N: 33,
+						P: 0,
+						K: 0,
+						price: 145
+					},
+					MOP: {
+						N: 10,
+						P: 34,
+						K: 0,
+						price: 200
+					},
+					NK: {
+						N: 13,
+						P: 0,
+						K: 44,
+						price: 150
+					}
+				}
+			}
+			results = solver.Solve(model);	
+			console.log(results);
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_diagnose');
+			html_data['detailed_data'] = dataformatter.processNPKValues(result, result.farm_area);
+			//console.log(html_data.detailed_data);
 			res.render('nutrient_mgt_detailed', html_data);
 		}
 	});

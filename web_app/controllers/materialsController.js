@@ -24,6 +24,17 @@ exports.getMaterials = function(req,res){
 
 }
 
+exports.ajaxGetMaterials = function(req, res) {
+    materialModel.getMaterials(req.query.type, req.query.filter, function(err, materials) {
+        if (err)
+            throw err;
+        else {
+            //console.log(materials);
+            res.send(materials);
+        }
+    });
+}
+
 
 
 

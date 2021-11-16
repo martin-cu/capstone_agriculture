@@ -243,6 +243,9 @@ function tempReplaceFarm(reference) {
 }
 
 $(document).ready(function() {
+	if (typeof view == undefined)
+		var view = '';
+
 	if (view == 'farm_monitoring') {
 		var viewed_farm_id;
 		var viewed_farm_name;

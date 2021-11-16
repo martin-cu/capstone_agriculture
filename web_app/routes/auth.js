@@ -30,7 +30,9 @@ router.get('/get_weather_forecast', environmentController.getWeatherForecast);
 router.get('/clear_weather_forecast', environmentController.clearWeatherForecastRecords);
 
 router.get('/get_work_orders', workOrderController.ajaxGetWorkOrders);
+router.get('/get_materials', materialController.ajaxGetMaterials);
 router.get('/getResourcesPerFarm', environmentController.ajaxGetResources);
+
 /*** Database Ajax End ***/
 
 /*** Page Navigation Start ***/
