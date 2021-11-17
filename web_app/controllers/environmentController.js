@@ -622,6 +622,66 @@ exports.addSoilRecord = function(req, res) {
 	});
 }
 
+function recommendFertilizerPlan(obj, materials) {
+	var model;
+	var multiplier = 1.1;
+	var constraints = {
+		N: { min: obj.n_lvl, max: obj.n_lvl * multiplier },
+		P: { min: obj.p_lvl, max: obj.p_lvl * multiplier },
+		K: { min: obj.k_lvl, max: obj.k_lvl * multiplier }
+	};
+	var variables = {};
+	for (var i = 0; i < materials.length; i++) {
+		variables[materials[i].fertilizer_name] = {
+			N: materials[i].N,
+			P: materials[i].P,
+			K: materials[i].K,
+			price: materials[i].price
+		};
+	}
+
+	model = {
+		optimize: '',
+		opType: 'min',
+		constraints,
+		variables
+	};
+
+	obj['recommendation'] = solver.Solve(model);
+
+	for (var prop in obj.recommendation) {
+		if (parseFloat(obj.recommendation[prop])) {
+			obj.recommendation[prop] = Math.round(obj.recommendation[prop] * 100) / 100;
+		}
+	}
+
+	return obj;
+}
+
+exports.ajaxGetDetailedNutrientMgt = function(req, res) {
+	var query = { farm_name: req.query.farm_name };
+
+	var html_data = {};
+	nutrientModel.getSoilRecord(query, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			materialModel.getMaterials(req.query.type, req.query.filter, function(err, materials) {
+		        if (err)
+		            throw err;
+		        else {
+		        	result = dataformatter.processNPKValues(result, result.farm_area)
+		            result = recommendFertilizerPlan(result, materials);
+
+					res.send(result);
+		        }
+		    });
+		}
+	});
+}
+
+
+
 exports.detailedNutrientManagement = function(req, res) {
 	var query = { farm_name: req.params.farm_name };
 
@@ -630,60 +690,9 @@ exports.detailedNutrientManagement = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			var obj = {};
-			var results;
-			var model = {
-				optimize: '',
-				opType: 'min',
-				constraints: {
-					N: { min: 114, max: 200 },
-					P: { min: 122, max: 200 },
-					K: { min: 267, max: 350 }
-				},
-				variables: {
-					APN: {
-						N: 30,
-						P: 10,
-						K: 0,
-						price: 100
-					},
-					APS: {
-						N: 16,
-						P: 20,
-						K: 0,
-						price: 55
-					},
-					APP: {
-						N: 10,
-						P: 34,
-						K: 0,
-						price: 120
-					},
-					AN: {
-						N: 33,
-						P: 0,
-						K: 0,
-						price: 145
-					},
-					MOP: {
-						N: 10,
-						P: 34,
-						K: 0,
-						price: 200
-					},
-					NK: {
-						N: 13,
-						P: 0,
-						K: 44,
-						price: 150
-					}
-				}
-			}
-			results = solver.Solve(model);	
-			console.log(results);
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_diagnose');
 			html_data['detailed_data'] = dataformatter.processNPKValues(result, result.farm_area);
-			//console.log(html_data.detailed_data);
+
 			res.render('nutrient_mgt_detailed', html_data);
 		}
 	});

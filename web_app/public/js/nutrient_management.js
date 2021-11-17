@@ -196,18 +196,33 @@ function appendWorkOrder(data) {
 		cont.append(tr);
 	}
 
-function processInventory(arr) {
-	console.log(arr);
+function processInventory(arr, recommendation) {
 	var obj = {
 		headers: [''],
 		amount: ['Current Stock'],
-		requirements: ['Requirement']
+		requirements: ['Requirement'],
+		style: [''],
+		applied: ['Applied'],
+		deficiency: ['Deficiency']
 	};
 
 	for (var i = 0; i < arr.length; i++) {
+		if (recommendation.hasOwnProperty(arr[i].fertilizer_name)) {
+			obj.requirements.push(recommendation[arr[i].fertilizer_name]);
+			if (arr[i].current_amount >= recommendation[arr[i].fertilizer_name]) {
+				obj.style.push('text-success font-weight-bold');
+			}
+			else {
+				obj.style.push('text-danger font-weight-bold');
+			}
+		}
+		else {
+			obj.requirements.push('N/A');
+			obj.style.push('');
+		}
+
 		obj.headers.push(arr[i].fertilizer_name);
 		obj.amount.push(arr[i].current_amount);
-		obj.requirements.push('0');
 	}
 
 	return obj;
@@ -215,19 +230,36 @@ function processInventory(arr) {
 
 function appendInventory(data) {
 	var cont = $('#inventory_table');
-	var obj_keys = ['headers', 'amount', 'requirements'];
+	var obj_keys = ['headers', 'amount', 'requirements', 'applied', 'deficiency'];
 	var tr;
-	console.log(data);
+	var ele_class;
 	for (var y = 0; y < obj_keys.length; y++) {
 		tr = '';
 		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
 		for (var i = 0; i < data.headers.length; i++) {
-			tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: data[obj_keys[y]][i] }));
+			if (y != 0 && y != 3 && y != 4) {
+				ele_class = data['style'][i];
+			}
+			else {
+				ele_class = '';
+			}
+			tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[obj_keys[y]][i] }));
 		}
 
 		cont.append(tr);
 	}
 
+}
+
+function appendDetails(obj) {
+	$('#ph_lvl').html(obj.pH_lvl);
+	$('#n_lvl').html(obj.n_val);
+	$('#p_lvl').html(obj.p_val);
+	$('#k_lvl').html(obj.k_val);
+
+	$('#n_req').html(obj.n_lvl);
+	$('#p_req').html(obj.p_lvl);
+	$('#k_req').html(obj.k_lvl);
 }
 
 $(document).ready(function() {
@@ -260,9 +292,15 @@ $(document).ready(function() {
 	else if (type == 'Soil Detailed') {
 		console.log('Getting data for farm: '+id);
 		console.log(area);
-		$.get('/get_materials', { type: 'Fertilizer', filter: id }, function(materials) {
-			appendInventory(processInventory(materials));
-		})
+
+		$.get('/filter_nutrient_mgt', { farm_name: farm_name, type: 'Fertilizer', filter: id }, function(details) {
+			appendDetails(details);
+
+			$.get('/get_materials', { type: 'Fertilizer', filter: id }, function(materials) {
+				var recommendation = processInventory(materials, details.recommendation);
+				appendInventory(recommendation);
+			})
+		});
 	}
 
 });

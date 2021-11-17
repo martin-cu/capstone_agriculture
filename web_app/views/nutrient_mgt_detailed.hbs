@@ -12,27 +12,27 @@
 				<table class="table">
 					<tr>
 						<td class="soil_data_lbl">Soil Texture</td>
-						<td id=""></td>
+						<td id="soil_texture"></td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">pH lvl</td>
-						<td id="" class="text-right">{{detailed_data.pH_lvl}}</td>
+						<td id="ph_lvl" class="text-right">{{detailed_data.pH_lvl}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">P205</td>
-						<td id="" class="text-right">{{detailed_data.p_val}}</td>
+						<td id="p_lvl" class="text-right">{{detailed_data.p_val}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">K20</td>
-						<td id="" class="text-right">{{detailed_data.k_val}}</td>
+						<td id="k_lvl" class="text-right">{{detailed_data.k_val}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">N</td>
-						<td id="" class="text-right">{{detailed_data.n_val}}</td>
+						<td id="n_lvl" class="text-right">{{detailed_data.n_val}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">Soil Moisture</td>
-						<td id="" class="text-right"></td>
+						<td id="soil_moisture" class="text-right"></td>
 					</tr>
 				</table>
 			</div>
@@ -43,15 +43,15 @@
 				<table class="table">
 					<tr>
 						<td class="soil_data_lbl">P205</td>
-						<td id="" class="text-right">{{detailed_data.p_lvl}}</td>
+						<td id="p_req" class="text-right">{{detailed_data.p_lvl}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">K20</td>
-						<td id="" class="text-right">{{detailed_data.k_lvl}}</td>
+						<td id="k_req" class="text-right">{{detailed_data.k_lvl}}</td>
 					</tr>
 					<tr>
 						<td class="soil_data_lbl">N</td>
-						<td id="" class="text-right">{{detailed_data.n_lvl}}</td>
+						<td id="n_req" class="text-right">{{detailed_data.n_lvl}}</td>
 					</tr>
 				</table>
 			</div>
@@ -98,16 +98,22 @@
 
 <div class="rounded  mx-3 mt-3">
 	<div class="w-100 bg-dark text-white rounded">Fertilizer Planning</div>
-	<div class="rounded card shadow-lg" style="height: 350px;">
+	<div class="rounded card shadow-lg d-flex flex-column" style="height: 350px;">
 		<div class="d-flex">
 			<div class="w-100 p-3">
 				<table class="table" id="inventory_table">
 
 				</table>
 			</div>
-			<div class="ml-auto d-flex flex-column p-3" style="width: 170px;">
+			<!-- <div class="ml-auto d-flex flex-column p-3" style="width: 170px;">
 				<button class="btn btn-dark" style="font-size: 10px;">Current Resources</button>
 				<button class="btn btn-dark mt-2" style="font-size: 10px;">Optimal</button>
+			</div> -->
+		</div>
+		<div class="mx-3">
+			<div>Fertilizer Application Schedule:</div>
+			<div class="mt-2">
+				
 			</div>
 		</div>
 	</div>
@@ -117,6 +123,7 @@
 	var type = 'Soil Detailed';
 	var id = {{detailed_data.farm_id}};
 	var area = {{detailed_data.farm_area}};
+	var farm_name = '{{detailed_data.farm_name}}';
 </script>
 
 <script src="../../js/nutrient_management.js"></script>

@@ -58,7 +58,7 @@ exports.getMaterials = function(type, filter, next){
 		}
 	}
 	else if (type == "Fertilizer") {
-		table = "select ft.farm_id, ft.farm_name, fet.fertilizer_id, fet.fertilizer_name, fet.fertilizer_desc, fet.N, fet.P, fet.K, ifnull(t.current_amount, 0) as current_amount from fertilizer_table as fet cross join farm_table as ft left join ( select t1.fertilizer_id as fertilizer_id, t2.farm_id as farm_id, current_amount from farm_materials inner join fertilizer_table t1 on t1.fertilizer_id = farm_materials.item_id inner join farm_table as t2 on t2.farm_id = farm_materials.farm_id where t2.farm_id = ? and farm_materials.item_type = 'Fertilizer' group by fertilizer_id, farm_id ) as t on t.fertilizer_id = fet.fertilizer_id and t.farm_id = ft.farm_id where ft.farm_id = ? order by farm_id, fertilizer_name";
+		table = "select ft.farm_id, ft.farm_name, fet.fertilizer_id, fet.fertilizer_name, fet.fertilizer_desc, fet.N, fet.P, fet.K, ifnull(t.current_amount, 0) as current_amount, fet.price from fertilizer_table as fet cross join farm_table as ft left join ( select t1.fertilizer_id as fertilizer_id, t2.farm_id as farm_id, current_amount from farm_materials inner join fertilizer_table t1 on t1.fertilizer_id = farm_materials.item_id inner join farm_table as t2 on t2.farm_id = farm_materials.farm_id where t2.farm_id = ? and farm_materials.item_type = 'Fertilizer' group by fertilizer_id, farm_id ) as t on t.fertilizer_id = fet.fertilizer_id and t.farm_id = ft.farm_id where ft.farm_id = ? order by farm_id, fertilizer_name";
 		
 		while (table.includes("?")) {
 			table = mysql.format(table, filter);
@@ -66,7 +66,7 @@ exports.getMaterials = function(type, filter, next){
 		sql = table;
 	}
 
-	// console.log(sql);
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 
