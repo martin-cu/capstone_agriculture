@@ -1,3 +1,14 @@
+function update_color_meter(){
+    $(".probability_value").each(function(){
+        var value = $(this).text();
+        var val = 214 - (parseInt(value) * 2);
+        var rgb = "color : rgb(214, " + val + ", 19)";
+        $(this).attr("style",rgb);
+        if(value != ""){
+            $(this).text(parseInt(value) + " %");
+        }
+    });
+}
 $(document).ready(function(){
 
     $(".probability_value").each(function(){
@@ -42,14 +53,16 @@ $(document).ready(function(){
         $("tr.resources").remove();
 
         //update table
-        // $.get("/getResourcesPerFarm", {farm_id : 1, type : $(this).text()}, function(result){
-        //     var i = 0;
-        //     for(i = 0; i < result.items.length; i++){
-        //         $("#resources_table").append('<tr class="resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
-        //     }
-        //     for(i = 0; i < result.blanks.length; i++)
-        //         $("#resources_table").append('<tr class="resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
-
-        // });
+        $("tr.probability").remove();
+        $.get("/PDProbability", {farm_id : 1, type : $(this).text()}, function(result){
+            var i = 0;
+            for(i = 0; i < result.probability.length; i++){
+                if(result.probability[i].pd_id != null)
+                    $("#probability_table").append('<tr class="probability"><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '</td></tr>');
+                else
+                    $("#probability_table").append('<tr class="probability"><a hidden ></a><td></td><td></td><td class="probability_value"></td></tr>');
+            }
+            update_color_meter();
+        });
     });
 });

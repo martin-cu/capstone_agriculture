@@ -987,3 +987,156 @@ exports.getFarmPestDiseases = function(req, res){
 	});
 	
 }
+
+exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
+	var html_data = {};
+	var farm_id = req.query.farm_id;
+	var type = req.query.type;
+
+	var lat = 13.073091;
+	var lon = 121.388563;
+	new Date(Date.now());
+
+	var d1 = new Date(Date.now());
+	var d2 = new Date(Date.now());
+	d2.setDate(d2.getDate() - 2);
+	d1.setDate(d1.getDate() - 1);
+
+	var start_date = dataformatter.dateToUnix(d2);
+	var end_date = dataformatter.dateToUnix(d1);
+	
+	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
+
+	request(url, { json: true }, function(err, response, body) {
+		if (err)
+			throw err;
+		else {
+			for (var i = 0; i < body.length; i++) {
+				body[i].dt = dataformatter.unixtoDate(body[i].dt);
+			}
+			
+			//***** Call Agro API for succeeding 5 day forecast
+			var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+			request(forecast_url, { json: true }, function(err, response, forecast_body) {
+				if (err)
+					throw err;
+				else {
+					forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
+
+					var hour_arr = [];
+					for (var i = 0; i < forecast_body.length; i++) {
+						forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
+						hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
+					}
+					// console.log(forecast_body);
+					
+					//***** Get unique hour timestamps from forecast and filter data
+					hour_arr = [...new Map(hour_arr.map(item =>
+							[item, item])).values()];
+
+					body = dataformatter.smoothHourlyData(body, hour_arr);
+					forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
+
+					//***** Build on Agro API and use ANN to forecast remaining 9 days
+					var result = analyzer.weatherForecast14D(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
+					var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
+					
+					result.forecast = dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
+
+					forecast = dataformatter.mapAndFormatForecastResult(result, hour_arr);
+					
+					
+					var daily_ctr = 0;
+					var dmin_temp = 0, dmax_temp = 0, dhumidity = 0, dpressure = 0, drainfall = 0;
+					//Gets average weather for next 14 days
+					for(var i = 0; i < forecast.length; i++){
+						var ctr = 0;
+						var min_temp = 0, max_temp = 0, humidity = 0, pressure = 0, rainfall = 0;
+						for(var y = 0;y < forecast[i].data.length; y++){
+							min_temp = min_temp + forecast[i].data[y].min_temp;
+							max_temp = max_temp + forecast[i].data[y].max_temp;
+							humidity = humidity + forecast[i].data[y].humidity;
+							pressure = pressure + forecast[i].data[y].pressure;
+							rainfall = rainfall + forecast[i].data[y].rainfall;
+
+							ctr++;
+						}
+						min_temp = min_temp / ctr;
+						max_temp = max_temp / ctr;
+						humidity = humidity / ctr;
+						pressure = pressure / ctr;
+						rainfall = rainfall / ctr;
+
+						dmin_temp = dmin_temp + min_temp;
+						dmax_temp = dmax_temp + max_temp;
+						dhumidity = dhumidity + humidity;
+						dpressure = dpressure + pressure;
+						drainfall = drainfall + rainfall;
+
+						daily_ctr++;
+					}
+
+					var weather = {
+						min_temp : ((dmin_temp / ctr) - 32) / 1.8,
+						max_temp : ((dmax_temp / ctr) - 32) / 1.8,
+						humidity : dhumidity / ctr,
+						precipitation : drainfall / ctr
+					}
+					
+
+
+					var season = {
+						season_temp : 35,
+						season_humidity : 65
+					}
+
+					var stage = {
+						stage_name : "Reproductive"
+					}
+
+					var fertilizer = null;
+					
+					if(type == "Pest"){
+						pestdiseaseModel.getPestProbabilityPercentage(weather, season, fertilizer, stage,function(err, possible_pests){
+							if(err){
+								console.log(err);
+								throw err;
+							}else{
+								console.log(possible_pests);
+								var statements = new Array();
+	
+								var ctr = possible_pests.length;
+								while(ctr != 5){
+									possible_pests.push({});
+									ctr++;
+								};
+						
+							}
+							html_data["probability"] = possible_pests;
+							res.send(html_data);
+						});
+					}
+					else if(type == "Disease"){
+						pestdiseaseModel.getDiseaseProbabilityPercentage(weather, season, fertilizer, stage,function(err, possible_pests){
+							if(err){
+								console.log(err);
+								throw err;
+							}else{
+								console.log(possible_pests);
+								var statements = new Array();
+	
+								var ctr = possible_pests.length;
+								while(ctr != 5){
+									possible_pests.push({});
+									ctr++;
+								};
+							}
+							html_data["probability"] = possible_pests;
+							res.send(html_data);
+						});
+					}
+				}
+			});
+		}
+	});
+}

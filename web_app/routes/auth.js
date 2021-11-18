@@ -72,6 +72,7 @@ router.get('/harvest_cycle', farmController.getHarvestCycle);
 //Pest and Disease
 router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);
 router.get('/pest_and_disease_management/:type/:name', environmentController.getPestFactors);
+router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbability);
 router.post('/addPest', environmentController.addPest);
 router.post('/addDisease', environmentController.addDisease);
 

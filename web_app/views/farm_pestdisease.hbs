@@ -73,9 +73,9 @@
                                                             <th>Probability</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody id="probability_table">
                                                         {{#each probability}}
-                                                            <tr><a hidden >{{this.pd_id}}</a>
+                                                            <tr class="probability"><a hidden >{{this.pd_id}}</a>
                                                                 <td >{{this.pd_name}}</td>
                                                                 <td>{{this.pd_desc}}</td>
                                                                 <td class="probability_value">{{this.probability}}</td>

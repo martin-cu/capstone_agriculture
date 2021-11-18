@@ -751,17 +751,17 @@ exports.getDiseaseProbabilityPercentage = function(weather, season, fertilizer, 
 	sql = "";
 	start = "SELECT a.disease_id as pd_id, a.disease_name as pd_name, a.disease_desc as pd_desc, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) / b.factor_count * 100,2) AS probability FROM (";
 	end = ") a ";
-	weather_temp = 'SELECT p.disease_id, p.disease_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
-	weather_humidity = 'SELECT p.disease_id, p.disease_name, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
-	weather_precipitation = 'SELECT p.disease_id, p.disease_name, "Weather precipitation" AS factor, wt.precipitation AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
-	weather_soil_moisture = 'SELECT p.disease_id, p.disease_name, "Weather soil moisture" AS factor, wt.soil_moisture AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_temp = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_humidity = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_precipitation = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Weather precipitation" AS factor, wt.precipitation AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
+	weather_soil_moisture = 'SELECT p.disease_id, p.disease_name,p.disease_desc,  "Weather soil moisture" AS factor, wt.soil_moisture AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
 
-	season_temp = 'SELECT p.disease_id, p.disease_name, "Season temp" AS factor, s.season_temp AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
-	season_humidity = 'SELECT p.disease_id, p.disease_name, "Season humidity" AS factor, s.season_humidity AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+	season_temp = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Season temp" AS factor, s.season_temp AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
+	season_humidity = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Season humidity" AS factor, s.season_humidity AS value FROM disease_table p INNER JOIN seasons_disease sp ON sp.disease_id = p.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id WHERE ';
 
-	stages_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN stages_disease sp ON p.disease_id = sp.disease_id INNER JOIN stages s ON s.stage_id = sp.stage_id WHERE ';
+	stages_qry = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN stages_disease sp ON p.disease_id = sp.disease_id INNER JOIN stages s ON s.stage_id = sp.stage_id WHERE ';
 
-	fertilzier_qry = 'SELECT p.disease_id, p.disease_name, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN fertilizer_disease fp ON fp.disease_id = p.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = fp.fertilizier_id WHERE ';
+	fertilzier_qry = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Stage" AS factor, s.stage_name AS value FROM disease_table p INNER JOIN fertilizer_disease fp ON fp.disease_id = p.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = fp.fertilizier_id WHERE ';
 
 	sql = start;
 	first = false;
