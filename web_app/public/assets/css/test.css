@@ -178,4 +178,8 @@ div.form-check {
     margin-left: 50px;
 }
 
+.card-header.d-flex.justify-content-between.align-items-center {
+    height: auto;
+}
+
 

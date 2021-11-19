@@ -15,7 +15,7 @@
                 {{!-- START CARD HEADER --}}
                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
                     
-                    <div class="col" style="max-width: 70px">
+                    <div class="col" style="max-width: 70px; margin-bottom: 10px">
 
                         <button type="submit" class="btn btn-primary btn-md" id="back" onclick="goBack()">
                             <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
@@ -23,7 +23,7 @@
 
                     </div>
 
-                    <div class="col" style="margin-right: 650px; margin-top: 10px">
+                    <div class="col" style="margin-right: 650px; margin-bottom: 0px">
                         <h6>New Crop Calendar </h6>
             
                     </div>
@@ -48,9 +48,9 @@
                     {{!-- STEP 1 --}}
                     <div class="tab">
                     <div class="modal_body_content" id="body_step1">
-                            <label for="" style="font-weight: bold; padding-bottom: 10px">Step 1: Select Key Dates and Farm</label>
+                            <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Select Key Dates and Farm</h5>
 
-                            <div class="form-group">
+                            <div class="form-group" style="margin-left: 5px;">
                               <div class="row">
 
                                 <div class="col">
@@ -71,25 +71,25 @@
 
                             <div class="form-group" style="background-color: #EEEEEE; padding: 20px; border-radius: 10px;  outline: 1px solid #e3e6f0;">      
                         
-                                <label for="" style="font-weight: bold; padding-bottom: 10px">Farm Details</label>
-                                        <div class="row">
+                                <label for="" style="font-weight: bold">Farm Details</label>
+                                        <div class="row" style="padding-left: 5px;">
                                         
                                         <div class="col">
-                                        <label for="farm_desc">Description</label>
+                                        <label for="farm_desc" style="font-weight: bold;">Description</label>
 		                                 <div id="farm_desc">
 		      
 		                                </div>
                                         </div>
 
                                         <div class="col">
-                                        <label for="land_type">Land Type</label>
+                                        <label for="land_type" style="font-weight: bold;">Land Type</label>
 		                                <div id="land_type">
 		      
 		                                </div>
                                         </div>
 
                                         <div class="col">
-                                        <label for="farm_area">Farm Area </label>
+                                        <label for="farm_area" style="font-weight: bold;">Farm Area </label>
                                         <div id="farm_area">
 		      
 		                                </div>
@@ -99,7 +99,7 @@
 
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" style="margin-left: 5px;">
                               <div class="row">
 
                                 <div class="col">
@@ -201,9 +201,9 @@
             {{!-- STEP 2 --}}
             <div class="tab">
                 <div class="hide modal_body_content" id="body_step2">
-                    <label for="" style="font-weight: bold; padding-bottom: 10px">Step 2: Select Sowing Plan</label>
+                    <h5 for="" style="font-weight: bold;  padding-bottom: 5px; padding-top: 10px">Step 2: Select Sowing Plan</h5>
                     
-                    <div class="form-group">
+                    <div class="form-group" style="margin-left: 5px;">
                         <div class="row">
 
                             <div class="col">
@@ -220,17 +220,17 @@
                         </div>
                     </div>
 
-                    <h6 style="font-weight: bold; padding-bottom: 10px; margin-top: 40px">Planting Dates</h6>
+                    <h6 style="font-weight: bold; margin-top: 40px">Planting Dates</h6>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin-left: 5px;">
                         <div class="row">
 
-                            <div class="col">
+                            <div class="col" style="padding-top: 10px;">
                                 <label for="seed_from_date">From Date <span style="color: #CA4E0C;">*</span></label>
 		                        <input type="date" class="form-control" id="seed_from_date" name="seed_from_date">
                             </div>
 
-                            <div class="col">
+                            <div class="col" style="padding-top: 10px;">
                                 <label for="seed_to_date">To Date <span style="color: #CA4E0C;">*</span></label>
 		                        <input type="date" class="form-control" id="seed_to_date" name="seed_to_date">
                             </div>
@@ -239,17 +239,17 @@
                     </div>
 
             {{!-- WEATHER FORECAST --}}
-            <h6 style="font-weight: bold; padding-bottom: 10px; margin-top: 40px">14-Day Weather Forecast and Expected yield</h6>
+            <h6 style="font-weight: bold; margin-top: 40px">14-Day Weather Forecast and Expected yield</h6>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-left: 5px;">
                 <div class="row">
             
-                    <div class="col">
+                    <div class="col" style="padding-top: 10px;">
                     <label for="forecast_filer">Weather Forecast Filter Date</label>
                     <input type="date" class="form-control" id="forecast_filter" name="forecast_filter">
                     </div>
 
-                    <div class="col">
+                    <div class="col" style="padding-top: 10px;">
                     <label for="seed_expected_yield">Expected Yield (cavans/ha)</label>
                     <input type="text" class="form-control" id="seed_expected_yield" name="seed_expected_yield" value="0 cavans/ha" disabled>
                     </div>
@@ -314,7 +314,7 @@
             {{!-- STEP 3 --}}
             <div class="tab">
                 <div class="hide modal_body_content" id="body_step3">
-                    <label for="" style="font-weight: bold; padding-bottom: 10px">Step 3: View Fertilizer Plan</label>
+                    <h5 for="" style="font-weight: bold;  padding-bottom: 20px; padding-top: 10px">Step 3: View Fertilizer Plan</h5>
                         
                         {{!-- START CARDS --}}
                         <div class="row">
@@ -327,7 +327,7 @@
                                                     <div class="table-responsive" style="border-style: none;">
                                                         <table class="table">
                                                             <thead>
-                                                                <tr></tr>
+                                                                {{!-- <tr></tr> --}}
                                                             </thead>
                                                             <tbody>
                                                                 <tr style="border-style: none;">
@@ -445,7 +445,7 @@
                 {{!-- STEP 4 --}}
                 <div class="tab">
                     <div class="hide modal_body_content" id="body_step4">
-                    <label for="" style="font-weight: bold; padding-bottom: 10px">Step 4: View Pesticide Application Plan</label>
+                    <h5 for="" style="font-weight: bold; padding-bottom: 10px; padding-top: 10px">Step 4: View Pesticide Application Plan</h5>
                 
 
                     </div>
