@@ -70,6 +70,50 @@ exports.getMaterials = function(type, filter, next){
 	mysql.query(sql, next);
 }
 
+//Joins list of all filtered materials and combines with farm material inventory
+exports.getAllMaterials = function(type, filter, next) {
+	var sql;
+
+	if (type == "Seed") {
+		sql = "SELECT seed_id as id, seed_name as name, seed_desc as mat_desc FROM seed_table";
+	
+		while (sql.includes("?")) {
+			sql = mysql.format(sql, filter);
+		}
+	}
+	else if (type == "Pesticide") {
+		sql = "select ft.farm_id, ft.farm_name, fet.pesticide_id, fet.pesticide_name, fet.pesticide_desc, ifnull(t.current_amount, 0) as current_amount from pesticide_table as fet cross join farm_table as ft left join ( select t1.pesticide_id as pesticide_id, t2.farm_id as farm_id, current_amount from farm_materials inner join pesticide_table t1 on t1.pesticide_id = farm_materials.item_id inner join farm_table as t2 on t2.farm_id = farm_materials.farm_id where t2.farm_id = ? and farm_materials.item_type = 'Pesticide' group by pesticide_id, farm_id ) as t on t.pesticide_id = fet.pesticide_id and t.farm_id = ft.farm_id where ft.farm_id = ? order by farm_id, pesticide_name";
+		
+		while (sql.includes("?")) {
+			sql = mysql.format(sql, filter);
+		}
+	}
+	else if (type == "Fertilizer") {
+		sql = "select ft.farm_id, ft.farm_name, fet.fertilizer_id, fet.fertilizer_name, fet.fertilizer_desc, fet.N, fet.P, fet.K, ifnull(t.current_amount, 0) as current_amount, fet.price from fertilizer_table as fet cross join farm_table as ft left join ( select t1.fertilizer_id as fertilizer_id, t2.farm_id as farm_id, current_amount from farm_materials inner join fertilizer_table t1 on t1.fertilizer_id = farm_materials.item_id inner join farm_table as t2 on t2.farm_id = farm_materials.farm_id where t2.farm_id = ? and farm_materials.item_type = 'Fertilizer' group by fertilizer_id, farm_id ) as t on t.fertilizer_id = fet.fertilizer_id and t.farm_id = ft.farm_id where ft.farm_id = ? order by farm_id, fertilizer_name";
+		
+		while (sql.includes("?")) {
+			sql = mysql.format(sql, filter);
+		}
+	}
+
+
+	mysql.query(sql, next);
+}
+
+exports.readResourcesUsed = function(type, data, next) {
+	if (type == 'Seed') {
+
+	}
+	else if (type == 'Fertilizer') {
+		var sql = "select *, case when max(total_used) is null then 0 else max(total_used) end as resources_used from ( select fertilizer_id, fertilizer_name, fertilizer_desc, null as total_used,price from fertilizer_table union select wort.item_id, null, null, sum(wort.qty) as total_used, null from wo_resources_table wort where wort.work_order_id in (select wot.work_order_id from work_order_table as wot where wot.crop_calendar_id = (select cct.calendar_id from farm_table as ft join crop_calendar_table as cct using (farm_id) where ft.farm_id = ? and cct.status = 'In-Progress' or cct.status = 'Active') and wot.status = 'Completed') and wort.type = 'Fertilizer' group by wort.item_id ) as t group by t.fertilizer_id";
+		sql = mysql.format(sql, data);
+	}
+	else if (type == 'Pesticide') {
+
+	}
+	mysql.query(sql, next);
+}
+
 exports.updateMaterial = function(type, filter, data, next){
 	var sql;
 	if (type == "Seed") {

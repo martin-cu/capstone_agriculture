@@ -1,0 +1,216 @@
+<div class="rounded m-3 px-3 py-2 w-75 h-100">
+	<form id="work_order_form" method="post" action="/create_work_order">
+		<label>Create Work Order</label>
+		<div class="form-group">
+			<label for="exampleFormControlSelect1">Farm:</label>
+			<select class="form-control" id="farm_id" name="farm_id">
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Crop Calendar: </label>
+			<select class="form-control" id="crop_calendar_id" name="crop_calendar_id">
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Work Order Type: </label>
+			<select class="form-control" id="wo_type" name="wo_type">
+				<!-- <option value="Sow Seed">Sow Seed</option> -->
+				<option value="Pesticide Application">Pesticide Application</option>
+				<option value="Fertilizer Application">Fertilizer Application</option>
+				<option value="Water Fields">Water Fields</option>
+				<option value="Harvest">Harvest</option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Date Due: </label>
+			<input type="date" class="form-control" id="due_date" name="due_date" aria-describedby="emailHelp" placeholder="" required>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Date Start: </label>
+			<input type="date" class="form-control" id="start_date" name="start_date" aria-describedby="emailHelp" placeholder="" required>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Resources: </label>
+			<div class="d-flex flex-column" id="resource_cont">
+
+			</div>
+				
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Notes: </label>
+			<input type="text" class="form-control" id="notes" name="notes" aria-describedby="emailHelp" placeholder="">
+		</div>
+
+		<button class="btn btn-primary float-right">Submit</button>
+	</form>
+
+</div>
+
+<script type="text/javascript">
+
+	function changeCropCalendarVals(farm_id) {
+		$('#crop_calendar_id').empty();
+		$.get('/get_crop_plans', { status: ['Active', 'In-Progress'], where: { key: 'ft.farm_id', val: farm_id } }, function(plans) {
+			console.log(plans);
+			for (var i = 0; i < plans.length; i++) {
+				$('#crop_calendar_id').append("<option value='"+plans[i].calendar_id+"'>"+plans[i].crop_plan+"</option>");
+			}
+		});
+	}
+
+	function createDOM(obj) {
+		var ele;
+
+		ele = document.createElement(obj.type);
+		ele.setAttribute('class', obj.class);
+		ele.setAttribute('style', obj.style);
+		ele.innerHTML = obj.html;
+
+		for (prop in obj.attr) {
+			if (Object.prototype.hasOwnProperty.call(obj.attr, prop)) {
+				ele.setAttribute(prop, obj.attr[prop]);
+		    }
+		}
+
+		return ele;
+	}
+
+	function appendResourceOpts(target, type, farm_id) {
+		target = $('#resource_cont');
+
+		target.empty();
+		if (type == 'Fertilizer' || type == 'Pesticide') {
+			var div, name, id, qty_cont, qty, lbl;
+			var key, id_key;
+			var name_attr = {
+				type: 'text',
+				name: type,
+				value: '',
+				readonly: true
+			};
+			var id_attr = {
+				type: 'text',
+				name: type+'_id',
+				value: '',
+				readonly: true
+			}
+			var qty_attr = {
+				type: 'number',
+				name: type+'_qty',
+				value: '0',
+				min: '0',
+				max: ''
+			};
+
+			$.get('/getAll_materials', { type: type, filter: farm_id }, function(materials) {
+				console.log(materials);
+				if (type == 'Fertilizer') {
+					key = 'fertilizer_name';
+					id_key = 'fertilizer_id';
+				}
+				else if (type == 'Pesticide') {
+					key = 'pesticide_name';
+					id_key = 'pesticide_id';
+				}
+				else if (type == '') {
+
+				}
+
+				for (var i = 0; i < materials.length; i++) {
+					console.log(materials[i]);
+					name_attr.value = materials[i][key];
+					id_attr.value = materials[i][id_key];
+					qty_attr.max = materials[i].current_amount;
+
+					div = createDOM({ type: 'div', class: 'd-flex', style: '', html: '' });
+					id = createDOM({ type: 'input', class: 'hide', style: '', html: '', attr: id_attr });
+					name = createDOM({ type: 'input', class: 'form-control', style: '', html: '', attr: name_attr });
+
+					qty_cont = createDOM({ type: 'div', class: 'd-flex flex-column', style: '', html: '' });
+
+					qty = createDOM({ type: 'input', class: 'form-control mx-2', style: 'width: 150px;', html: '', attr: qty_attr });
+					lbl = createDOM({ type: 'label', class: 'mt-1', style: 'font-size: 12px; text-align:center;', html: 'In-stock: '+materials[i].current_amount+'' });
+
+					qty_cont.appendChild(qty);
+					qty_cont.appendChild(lbl);
+
+					div.appendChild(name);
+					div.appendChild(id);
+					div.appendChild(qty_cont);
+
+					target.append(div);
+				}
+			});
+		}
+			
+	}
+
+	function changeResourceOpts(type) {
+		var val;
+		if (type == 'Pesticide Application') {
+			val = 'Pesticide';
+		}
+		else if (type == 'Fertilizer Application') {
+			val = 'Fertilizer';
+		}
+		else if (type == 'Harvest') {
+			val = '';
+		}
+		return val;
+	}
+
+	$(document).ready(function() {
+
+		// $('#work_order_form').on('submit', function(e) {
+		// 	e.preventDefault();
+
+		// 	var form_data = $('#work_order_form').serializeJSON();
+
+		// 	console.log(form_data);
+
+		// 	// $.post('/create_work_order', form_data, function(crop_plan) {
+
+		// 	// });
+		// })
+
+		$.get('/get_farm_list', { where: "farm_id in (select farm_id from crop_calendar_table where status = 'In-Progress' or status = 'Active') " }, function(result) {
+
+			if (result.length != 0) {
+				farm_list = result;
+				for (var i = 0; i < result.length; i++) {
+					$('#farm_id').append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
+				}
+
+				changeCropCalendarVals(result[0].farm_id);
+
+				appendResourceOpts(null, 'Pesticide', result[0].farm_id);
+			}
+			else {
+				//Show no farm record error
+			}
+		});
+
+		$('#farm_id').on('change', function(e) {
+			var type = changeResourceOpts($('#wo_type').val());
+			var farm_id = $(this).val();
+
+			changeCropCalendarVals(farm_id);
+
+			appendResourceOpts(null, type, farm_id);
+		});
+
+		$('#wo_type').on('change', function(e) {
+			var type = changeResourceOpts($(this).val());
+			var farm_id = $('#farm_id').find(":selected").val();
+
+			appendResourceOpts(null, type, farm_id);
+		});
+
+	});
+</script>

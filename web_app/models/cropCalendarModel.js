@@ -36,6 +36,11 @@ exports.getCropCalendars = function(query, next) {
 		}
 
 	}
+
+	if (query.where != null || query.where != undefined) {
+		sql += ' and '+query.where.key +' = ?';
+		sql = mysql.format(sql, query.where.val);
+	}
 	sql += ' order by cct.harvest_date desc, cct.calendar_id desc';
 	mysql.query(sql, next);
 }

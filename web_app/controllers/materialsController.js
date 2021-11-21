@@ -35,6 +35,28 @@ exports.ajaxGetMaterials = function(req, res) {
     });
 }
 
+exports.ajaxGetAllMaterials = function(req, res) {
+    materialModel.getAllMaterials(req.query.type, req.query.filter, function(err, materials) {
+        if (err)
+            throw err;
+        else {
+            //console.log(materials);
+            res.send(materials);
+        }
+    });
+}
+
+exports.ajaxGetResourcesUsed = function(req, res) {
+    materialModel.readResourcesUsed(req.query.type, req.query.farm_id, function(err, result) {
+        if (err)
+            throw err;
+        else {
+
+            res.send(result);
+        }
+    })
+}
+
 
 
 

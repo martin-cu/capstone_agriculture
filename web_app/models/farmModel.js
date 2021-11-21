@@ -36,8 +36,13 @@ exports.getFarmData = function(data, next) {
 	var sql = 'select * from( select ft.*, et.* from farm_table ft join farm_assignment fa on ft.farm_id = fa.farm_id join employee_table et on fa.employee_id = et.employee_id union select *, null, null, null, null, null from farm_table ) as t1 ';
 	if (JSON.stringify(data) != '{ }') {
 		if (data.hasOwnProperty('where') && data.where != null) {
-			sql += ' where '+data.where.key+' = ?';
-			sql = mysql.format(sql, data.where.value);
+			if (data.where.hasOwnProperty('key') && data.where.key != null) {
+				sql += ' where '+data.where.key+' = ?';
+				sql = mysql.format(sql, data.where.value);
+			}
+			else {
+				sql += ' where '+data.where;
+			}
 		}
 
 		if (data.hasOwnProperty('group')) {
