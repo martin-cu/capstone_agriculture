@@ -50,19 +50,40 @@ $(document).ready(function(){
         $(".pestdisease.active").removeClass("active");
         $(this).addClass("active");
         $(this).css("background", "#F0F0F0");
-        $("tr.resources").remove();
-
+        $("tr.details").remove();
+        var type = $(this).text();
         //update table
         $("tr.probability").remove();
         $.get("/PDProbability", {farm_id : 1, type : $(this).text()}, function(result){
             var i = 0;
             for(i = 0; i < result.probability.length; i++){
                 if(result.probability[i].pd_id != null)
-                    $("#probability_table").append('<tr class="probability"><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '</td></tr>');
+                    $("#probability_table").append('<tr class="probability" href="/pest_and_disease_details?type=' + type + '&id=' + result.probability[i].pd_id + '"><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '</td></tr>');
                 else
                     $("#probability_table").append('<tr class="probability"><a hidden ></a><td></td><td></td><td class="probability_value"></td></tr>');
             }
             update_color_meter();
+        });
+    });
+
+    $(".details_tab").on('click', function(){
+        $(".details_tab.active").css("background", "");
+        $(".details_tab.active").removeClass("active");
+        $(this).addClass("active");
+        $(this).css("background", "#F0F0F0");
+
+        //update table
+        $("div.details").remove();
+        $.get("/update_pd_details/"+ $("#type").text() +"/"+ $("#id").text() +"/" + $(this).text(), {}, function(result){
+            var i = 0;
+            for(i = 0; i < result.length; i++){
+                $("#detail_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" ><h4 class="card-title">' + result[i].detail_name + '</h4><p> ' +   result[i].detail_desc +' </p></div>');
+            //     if(result.probability[i].pd_id != null)
+            //         $("#probability_table").append('<tr class="probability"><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '</td></tr>');
+            //     else
+            //         $("#probability_table").append('<tr class="probability"><a hidden ></a><td></td><td></td><td class="probability_value"></td></tr>');
+            }
+            
         });
     });
 });

@@ -1,0 +1,140 @@
+<div class="container-fluid">
+    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Pests and Diseases</h3>
+    <div class="row" style="padding: 0px 12px;">
+        <div class="col-xxl-12"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Possible Diagnosis</strong></label>
+            <div class="card" style="padding: 1.5rem;">
+                <span id="id" hidden>{{pd.pd_id}}</span>
+                <span id="type" hidden>{{type}}</span>
+                <h4 class="text-dark card-title">{{pd.pd_name}}</h4>
+                <h6 class="text-muted card-subtitle mb-2"><i>{{pd.scientific_name}}</i></h6>
+                <p>{{pd.pd_desc}}</p>
+            </div>
+        </div>
+        {{!-- <div class="col">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Occurrencess</h6>
+                </div>
+                <div class="card-body">
+                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                        <div class="card-body">
+                            <div style="border-style: none;"><span class="align-items-xxl-start">Farm 1</span><span class="float-end align-items-xxl-start"></span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">May 13, 2020</span></div>
+                        </div>
+                    </div>
+                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                        <div class="card-body">
+                            <div style="border-style: none;"><span class="align-items-xxl-start">Farm 2</span><span class="float-end align-items-xxl-start"></span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">May 13, 2020</span></div>
+                        </div>
+                    </div>
+                    <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
+                        <div class="card-body">
+                            <div style="border-style: none;"><span class="align-items-xxl-start">Farm 1</span><span class="float-end align-items-xxl-start"></span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">May 13, 2020</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+    </div>
+    <div class="row" style="padding: 0px 12px;">
+        <div class="col-xxl-12"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Possible Diagnosis</strong></label>
+            <div class="card">
+                <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item"><a id="symptoms_tab" class="nav-link details_tab active" href="#" style="background: #F0F0F0;">Symptoms</a></li>
+                        <li class="nav-item"><a id="factors_tab" class="nav-link details_tab" href="#">Factors</a></li>
+                        <li class="nav-item"><a id="solutions_tab" class="nav-link details_tab" href="#">Solutions</a></li>
+                        <li class="nav-item"><a id="preventions_tab" class="nav-link details_tab" href="#">Preventions</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="scrollmenu" id="detail_table">
+                                {{#each symptoms}}
+                                    <div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" >
+                                            <h4 class="card-title">{{this.detail_name}}</h4>
+                                            <p>{{this.detail_desc}}</p>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{!-- <div class="row space-rows">
+        <div class="col offset-xxl-0">
+            <div class="card cards-shadown cards-hover aos-init" data-aos="flip-left" data-aos-duration="950" style="height: 500px;">
+                <div class="card-header" style="background: rgba(255,165,0,0); height:auto;"><span class="space"><a href="#"></a></span>
+                    <div class="cardheader-text">
+                        <h4 id="heading-card-1" style="font-weight: bold;color: rgb(0,0,0);font-size: 16px;">Symptoms</h4>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            {{#each symptoms}}
+                                <tr>
+                                    <td>{{this.symptom_name}}</td>
+                                    <td>{{this.symptom_desc}}</td>
+                                </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card cards-shadown cards-hover aos-init" data-aos="slide-right" data-aos-duration="950">
+                <div class="card-header" style="background: rgba(255,165,0,0);"><span class="space"><a href="#"></a></span>
+                    <div class="cardheader-text">
+                        <h4 id="heading-card-2" style="font-weight: bold;color: rgb(0,0,0);font-size: 16px;">Factors</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr></tr>
+                            </thead>
+                            <tbody>
+                                {{#each fertilizer}}
+                                    <tr>
+                                        <td>{{this.item_name}}</td>
+                                        <td>{{this.current_amount}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card cards-shadown cards-hover aos-init" data-aos="flip-up" data-aos-duration="950">
+                <div class="card-header cards-header-hover" style="background: rgba(255,165,0,0);"><span class="space"><a href="#"></a></span>
+                    <div class="cardheader-text">
+                        <h4 id="heading-card-3" style="font-weight: bold;color: rgb(0,0,0);font-size: 16px;">Solutions</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr></tr>
+                            </thead>
+                            <tbody>
+                                {{#each pesticide}}
+                                    <tr style="min-height: 50px;">
+                                        <td>{{this.item_name}}</td>
+                                        <td>{{this.current_amount}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+    
+</div>
+                

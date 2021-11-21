@@ -82,7 +82,7 @@
                                                     <tbody id="resources_table">
 
                                                         {{#each seed}}
-                                                            <tr class="resources">
+                                                            <tr class="resources clickable">
                                                                 <td>{{this.item_name}}</td>
                                                                 <td>{{this.item_type}}</td>
                                                                 <td>{{this.current_amount}}</td>
@@ -116,13 +116,13 @@
                                 <div class="card-body">
                                     {{#each pending}}
                                         <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
-                                            <div class="card-body">
+                                            <div class="card-body clickable" >
                                                 <div style="border-style: none;"><span class="align-items-xxl-start">{{this.item_name}}</span><span class="float-end align-items-xxl-start">{{this.amount}} {{this.units}}</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php {{this.purchase_price}}</span></div>
                                             </div>
                                         </div>
                                     {{/each}}
                                     <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
-                                        <div class="card-body">
+                                        <div class="card-body clickable">
                                             <div style="border-style: none;"><span class="align-items-xxl-start">Pesticide 1</span><span class="float-end align-items-xxl-start">10kg</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php 2,000.00</span></div>
                                         </div>
                                     </div>
@@ -169,7 +169,7 @@
                                                     </thead>
                                                     <tbody>
                                                         {{#each orders}}
-                                                            <tr>
+                                                            <tr class="clickable">
                                                                 <td>{{this.item_name}}</td>
                                                                 <td>{{this.item_type}}</td>
                                                                 <td>sacks</td>
@@ -226,7 +226,7 @@
                                 <div class="card-body">
                                     {{#each processing}}
                                         <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
-                                            <div class="card-body">
+                                            <div class="card-body clickable">
                                                <div style="border-style: none;"><span class="align-items-xxl-start">{{this.item_name}}</span><span class="float-end align-items-xxl-start">{{this.amount}} {{this.units}}</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">Php {{this.purchase_price}}</span></div>
                                             </div>
                                         </div>

@@ -246,3 +246,27 @@ body {
 tr {
 	height: 40px;
 }
+
+.clickable:hover{
+	background-color: #c9c9c9;
+}
+
+div.scrollmenu {
+	overflow-x: auto;
+	overflow-y: hidden;
+	display: flex;
+  }
+
+  div.scrollmenu div {
+	text-decoration: none;
+	white-space: normal;
+  }
+
+  .symptom-card{
+	  max-width: 300px;
+	  min-width: 300px;
+	  min-height: 200px;
+	  max-height: 200px;
+	  text-align: justify;
+	  margin-right: 10px;
+  }

@@ -3,22 +3,22 @@ mysql = mysql.connection;
 
 exports.getAllSymptoms = function(next){
 	var sql = 'SELECT * FROM symptoms_table;';
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 };
 
 exports.getAllFactors = function(next){
 	var sql = 'SELECT wt.weather_id as factor_id, wt.weather as factor_name, wt.weather_desc as description, "weather" as type FROM weather_table wt UNION SELECT s.stage_id as factor_id, s.stage_name as factor_name, s.stage_desc as description, "stages" FROM stages s UNION SELECT ss.season_id as factor_id, ss.season_name as factor_name, ss.season_desc as description, "season" FROM seasons ss UNION SELECT f.fertilizer_id as factor_id, f.fertilizer_name as factor_name, f.fertilizer_desc as description, "fertilizer" FROM fertilizer_table f UNION SELECT ft.farm_type_id as factor_id, ft.farm_type as factor_name, ft.farm_type_desc as description, "farm type" FROM farm_types ft;';
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getAllPreventions = function(next){
 	var sql = 'SELECT * FROM prevention_table;';
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getAllSolutions = function(next){
 	var sql = 'SELECT * FROM solution_table;';
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.addFactor = function(type, data, next){
@@ -33,13 +33,13 @@ exports.addFactor = function(type, data, next){
 	}
 	sql = sql + table + " set ?";
 	sql = mysql.format(sql, data);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.addSymptom = function(data, next){
 	var sql = "INSERT INTO symptoms_table set ?";
 	sql = mysql.format(sql, data);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.addPestDiseaseSymptom = function(type, id, symptom, next){
@@ -59,7 +59,7 @@ exports.addPestDiseaseSymptom = function(type, id, symptom, next){
 	sql = mysql.format(sql, symptom);
 	sql = mysql.format(sql, id);
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getLastInserted = function(type, next){
@@ -72,26 +72,26 @@ exports.getLast = function(next){
 	mysql.query("SELECT LAST_INSERT_ID() as last;", next);
 }
 
-
+//PESTS
 exports.getAllPests = function(next){
 	var sql = "SELECT * FROM pest_table;";
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getPestDetails = function(id,next){
-	var sql = "SELECT * FROM pest_table WHERE ?;";
+	var sql = "SELECT pest_id as pd_id, pest_name as pd_name, pest_desc as pd_desc, scientific_name FROM pest_table WHERE ?;";
 	sql = mysql.format(sql, id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getPestSymptoms = function(pest_id, next){
-    var sql = "SELECT st.symptom_id, st.symptom_name, st.symptom_desc FROM pest_table p INNER JOIN symptoms_pest sp ON p.pest_id = sp.pest_id INNER JOIN symptoms_table st ON sp.symptom_id = st.symptom_id WHERE p.pest_id = ?;"
+    var sql = "SELECT st.symptom_id, st.symptom_name as detail_name, st.symptom_desc as detail_desc FROM pest_table p INNER JOIN symptoms_pest sp ON p.pest_id = sp.pest_id INNER JOIN symptoms_table st ON sp.symptom_id = st.symptom_id WHERE p.pest_id = ?;"
 	sql = mysql.format(sql, pest_id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getPestFactors = function(pest_id, next){
-	var sql = 'SELECT p.pest_id, p.pest_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, s.season_name as factor, s.season_desc as description, "season" as type FROM pest_table p INNER JOIN season_pest sp ON p.pest_id = sp.pest_id INNER JOIN seasons s ON s.season_id = sp.season_pest WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM pest_table p INNER JOIN stages_pest sp ON sp.pest_id = p.pest_id INNER JOIN stages s ON s.stage_id = sp.stages_pest_id WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM pest_table p INNER JOIN farmtypes_pest ftp ON p.pest_id = ftp.pest_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM pest_table p INNER JOIN fertilizer_pest fp ON p.pest_id = fp.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id WHERE p.pest_id = ?;';
+	var sql = 'SELECT p.pest_id, p.pest_name, wt.weather as detail_name, wt.weather_desc as detail_desc, "weather" as type FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, s.season_name as detail_name, s.season_desc as detail_desc, "season" as type FROM pest_table p INNER JOIN season_pest sp ON p.pest_id = sp.pest_id INNER JOIN seasons s ON s.season_id = sp.season_pest WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, s.stage_name as detail_name, s.stage_desc as detail_desc, "stage" as type FROM pest_table p INNER JOIN stages_pest sp ON sp.pest_id = p.pest_id INNER JOIN stages s ON s.stage_id = sp.stages_pest_id WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, ft.farm_type as detail_name, ft.farm_type_desc as detail_desc, "farm type" as type FROM pest_table p INNER JOIN farmtypes_pest ftp ON p.pest_id = ftp.pest_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id WHERE p.pest_id = ? UNION SELECT p.pest_id, p.pest_name, ft.fertilizer_name as detail_name, ft.fertilizer_desc as detail_desc, "fertilizer" as type FROM pest_table p INNER JOIN fertilizer_pest fp ON p.pest_id = fp.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id WHERE p.pest_id = ?;';
 	sql = mysql.format(sql, pest_id);
 	sql = mysql.format(sql, pest_id);
 	sql = mysql.format(sql, pest_id);
@@ -99,26 +99,26 @@ exports.getPestFactors = function(pest_id, next){
 	sql = mysql.format(sql, pest_id);
 
 	// console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getPestSolutions = function(pest_id, next){
-	var sql ='SELECT * FROM pest_table p INNER JOIN solution_pest sp ON sp.pest_id = p.pest_id INNER JOIN solution_table st ON st.solution_id = sp.solution_id WHERE ?';
+	var sql ='SELECT st.solution_name as detail_name, st.solution_desc as detail_desc FROM pest_table p INNER JOIN solution_pest sp ON sp.pest_id = p.pest_id INNER JOIN solution_table st ON st.solution_id = sp.solution_id WHERE p.pest_id = ?';
 	sql = mysql.format(sql, pest_id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getPestPreventions = function(pest_id, next){
-	var sql = 'SELECT * FROM pest_table p INNER JOIN prevention_pest sp ON sp.pest_id = p.pest_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
+	var sql = 'SELECT st.prevention_name as detail_name, st.prevention_desc as detail_desc FROM pest_table p INNER JOIN prevention_pest sp ON sp.pest_id = p.pest_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
 	sql = mysql.format(sql, pest_id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.addPest = function(pest, next){
 	var sql = "INSERT INTO pest_table SET ?";
 	sql = mysql.format(sql, pest);
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 
@@ -132,47 +132,48 @@ exports.addPest = function(pest, next){
 //disease
 exports.getAllDiseases = function(next){
 	var sql = "SELECT * FROM disease_table;";
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseaseDetails = function(id,next){
-	var sql = "SELECT * FROM disease_table WHERE ?;";
+	var sql = "SELECT *, disease_id as pd_id, disease_name as pd_name, disease_desc as pd_desc FROM disease_table WHERE ?;";
 	sql = mysql.format(sql, id);
-	mysql.query(sql, next);
+	console.log(sql);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseaseSymptoms = function(disease_id, next){
-    var sql = 'SELECT st.symptom_id, st.symptom_name, st.symptom_desc FROM disease_table d INNER JOIN symptoms_disease sd ON d.disease_id = sd.disease_id INNER JOIN symptoms_table st ON sd.symptom_id = st.symptom_id WHERE d.disease_id = ?;';
+    var sql = 'SELECT st.symptom_id, st.symptom_name as detail_name, st.symptom_desc as detail_desc FROM disease_table d INNER JOIN symptoms_disease sd ON d.disease_id = sd.disease_id INNER JOIN symptoms_table st ON sd.symptom_id = st.symptom_id WHERE d.disease_id = ?;';
 	sql = mysql.format(sql, disease_id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseaseFactors = function(disease_id, next){
-	var sql = 'SELECT d.disease_id, d.disease_name, wt.weather as factor, wt.weather_desc as pescription, "weather" as type FROM disease_table d INNER JOIN weather_disease wd ON d.disease_id = wd.disease_id INNER JOIN weather_table wt ON wt.weather_id = wd.weather_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, s.season_name as factor, s.season_desc as description, "season" as type FROM disease_table d INNER JOIN seasons_disease sd ON d.disease_id = sd.disease_id INNER JOIN seasons s ON s.season_id = sd.seasons_disease_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM disease_table d INNER JOIN stages_disease sd ON sd.disease_id = d.disease_id INNER JOIN stages s ON s.stage_id = sd.stages_disease_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM disease_table d INNER JOIN farm_types_disease ftd ON d.disease_id = ftd.disease_id INNER JOIN farm_types ft ON ft.farm_type_id = ftd.farm_type_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM disease_table d INNER JOIN fertilizer_disease fd ON d.disease_id = fd.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id WHERE d.disease_id = ?;';
+	var sql = 'SELECT d.disease_id, d.disease_name, wt.weather as detail_name, wt.weather_desc as detail_desc, "weather" as type FROM disease_table d INNER JOIN weather_disease wd ON d.disease_id = wd.disease_id INNER JOIN weather_table wt ON wt.weather_id = wd.weather_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, s.season_name as detail_name, s.season_desc as detail_desc, "season" as type FROM disease_table d INNER JOIN seasons_disease sd ON d.disease_id = sd.disease_id INNER JOIN seasons s ON s.season_id = sd.seasons_disease_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, s.stage_name as detail_name, s.stage_desc as detail_desc, "stage" as type FROM disease_table d INNER JOIN stages_disease sd ON sd.disease_id = d.disease_id INNER JOIN stages s ON s.stage_id = sd.stages_disease_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, ft.farm_type as detail_name, ft.farm_type_desc as detail_desc, "farm type" as type FROM disease_table d INNER JOIN farm_types_disease ftd ON d.disease_id = ftd.disease_id INNER JOIN farm_types ft ON ft.farm_type_id = ftd.farm_type_id WHERE d.disease_id = ? UNION SELECT d.disease_id, d.disease_name, ft.fertilizer_name as detail_name, ft.fertilizer_desc as detail_desc, "fertilizer" as type FROM disease_table d INNER JOIN fertilizer_disease fd ON d.disease_id = fd.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id WHERE d.disease_id = ?;';
 	sql = mysql.format(sql, disease_id);
 	sql = mysql.format(sql, disease_id);
 	sql = mysql.format(sql, disease_id);
 	sql = mysql.format(sql, disease_id);
 	sql = mysql.format(sql, disease_id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseaseSolutions = function(disease_id, next){
-	var sql ='SELECT * FROM disease_table p INNER JOIN solution_disease sp ON sp.disease_id = p.disease_id INNER JOIN solution_table st ON st.solution_id = sp.solution_id WHERE ?';
+	var sql ='SELECT *, st.solution_name as detail_name, st.solution_desc as detail_desc FROM disease_table p INNER JOIN solution_disease sp ON sp.disease_id = p.disease_id INNER JOIN solution_table st ON st.solution_id = sp.solution_id WHERE p.disease_id = ?';
 	sql = mysql.format(sql, disease_id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseasePreventions = function(disease_id, next){
-	var sql = 'SELECT * FROM disease_table p INNER JOIN prevention_disease sp ON sp.disease_id = p.disease_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
+	var sql = 'SELECT *, st.prevention_name as detail_name, st.prevention_desc as detail_desc FROM disease_table p INNER JOIN prevention_disease sp ON sp.disease_id = p.disease_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
 	sql = mysql.format(sql, disease_id);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.addDisease = function(disease, next){
 	var sql = "INSERT INTO disease_table SET ?";
 	sql = mysql.format(sql, disease);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 
@@ -210,7 +211,7 @@ exports.getPestsBasedWeather = function(weather, next){
 	}
 	sql = sql + " GROUP BY a.pest_name";
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseaseBasedWeather = function(weather, next){
@@ -244,7 +245,7 @@ exports.getDiseaseBasedWeather = function(weather, next){
 	}
 	// sql = sql + " GROUP BY a.disease_name";
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getPestPossibilities = function(weather, season, fertilizer, stage, next){
@@ -329,7 +330,7 @@ exports.getPestPossibilities = function(weather, season, fertilizer, stage, next
 
 	sql = sql + end_qry;
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseasePossibilities = function(weather, season, fertilizer, stage, next){
@@ -414,7 +415,7 @@ exports.getDiseasePossibilities = function(weather, season, fertilizer, stage, n
 
 	sql = sql + end_qry;
 	// console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 	// console.log("done");
 }
 
@@ -524,7 +525,7 @@ exports.getPestProbability = function(weather, season, fertilizer, stage, next){
 
 	sql = sql + end;
 	// console.log("\n\n\n" + sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 
 }
 
@@ -632,13 +633,13 @@ exports.getDiseaseProbability = function(weather, season, fertilizer, stage, nex
 
 	sql = sql + end;
 	// console.log("\n\n\n" + sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 
 }
 
 exports.getPestProbabilityPercentage = function(weather, season, fertilizer, stage, next){
 	sql = "";
-	start = "SELECT a.pest_id as pd_id, a.pest_name as pd_name, a.pest_desc as pd_desc, COUNT(a.pest_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.pest_id) / b.factor_count * 100,2) AS probability FROM (";
+	start = "SELECT 'Pest' as type, a.pest_id as pd_id, a.pest_name as pd_name, a.pest_desc as pd_desc, COUNT(a.pest_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.pest_id) / b.factor_count * 100,2) AS probability FROM (";
 	end = ") a ";
 	weather_temp = 'SELECT p.pest_id, p.pest_name, p.pest_desc, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
 	weather_humidity = 'SELECT p.pest_id, p.pest_name, p.pest_desc,"Weather humidity" AS factor, wt.humidity AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
@@ -744,12 +745,12 @@ exports.getPestProbabilityPercentage = function(weather, season, fertilizer, sta
 
 	sql = sql + sql2;
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiseaseProbabilityPercentage = function(weather, season, fertilizer, stage, next){
 	sql = "";
-	start = "SELECT a.disease_id as pd_id, a.disease_name as pd_name, a.disease_desc as pd_desc, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) / b.factor_count * 100,2) AS probability FROM (";
+	start = "SELECT 'Disease' as type, a.disease_id as pd_id, a.disease_name as pd_name, a.disease_desc as pd_desc, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) / b.factor_count * 100,2) AS probability FROM (";
 	end = ") a ";
 	weather_temp = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
 	weather_humidity = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
@@ -855,7 +856,7 @@ exports.getDiseaseProbabilityPercentage = function(weather, season, fertilizer, 
 
 	sql = sql + sql2;
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 
 }
 
@@ -1078,7 +1079,7 @@ exports.getPDProbabilityPercentage = function(weather, season, fertilizer, stage
 	sql = sql + sql2 + ")";
 
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
 }
 
 exports.getDiagnosis = function(farm_id, type, next){
@@ -1101,5 +1102,35 @@ exports.getDiagnosis = function(farm_id, type, next){
 	}
 
 	console.log(sql);
-	mysql.query(sql, next);
+	mysql.query(sql, next); return(sql);
+}
+
+exports.testFunc = function(next){
+	mysql.query("SELECT * FROM pest_table", next);
+	return("SELECT * FROM pest_table");
+}
+
+exports.getPDDetails = function(type, pd_id, detail_type, next){
+	if(type == "Pest"){
+		if(detail_type == "Factors")
+			mysql.query(this.getPestFactors(pd_id), next);
+		else if(detail_type == "Symptoms")
+			mysql.query(this.getPestSymptoms(pd_id), next);
+		else if(detail_type == "Solutions")
+			mysql.query(this.getPestSolutions(pd_id), next);
+		else if(detail_type == "Preventions")
+			mysql.query(this.getPestPreventions(pd_id), next);
+	}
+	else if(type == "Disease"){
+		if(detail_type == "Factors")
+			mysql.query(this.getDiseaseFactors(pd_id), next);
+		else if(detail_type == "Symptoms")
+			mysql.query(this.getDiseaseSymptoms(pd_id), next);
+		else if(detail_type == "Solutions")
+			mysql.query(this.getDiseaseSolutions(pd_id), next);
+		else if(detail_type == "Preventions")
+			mysql.query(this.getDiseasePreventions(pd_id), next);
+	}
+	
+	
 }
