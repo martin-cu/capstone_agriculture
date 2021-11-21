@@ -107,7 +107,12 @@
         <div class="col-xxl-3">
             <div class="card" style="height: 480PX;">
                 <div class="card-body">
-                    <h4 class="card-title" style="color: #332c1f;font-weight: bold;">All Farms</h4>
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h4 class="text-dark mb-0">All Farms</h4>
+                        <button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;" onclick='window.location="/farms/add"'>Add Farm &nbsp;<i class="fa fa-plus"></i></button>
+
+                    </div>
+                   
                     <ul class="list-group" id="monitor_farm_list">
 
                     </ul>
@@ -325,7 +330,7 @@
                                     </thead>
                                     <tbody>
                                         {{#each probability}}
-                                            <tr>
+                                            <tr class="clickable">
                                                 <td style="text-align: left;">{{this.pd_name}}</td>
                                                 <td>{{this.type}}</td>
                                                 <td class="probability_value">{{this.probability}}</td>

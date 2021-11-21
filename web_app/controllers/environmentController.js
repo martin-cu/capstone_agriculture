@@ -732,7 +732,7 @@ exports.clearWeatherForecastRecords = function(req, res) {
 	});
 }
 
-//FOR ACTUAL USE -----------------------------------------------------------
+//USED FUNCTIONS -----------------------------------------------------------
 
 exports.getFarmResources = function(req, res){
 	var html_data = {};
@@ -787,7 +787,6 @@ exports.getFarmResources = function(req, res){
 		}
 	});
 }
-
 
 exports.ajaxGetResources = function(req,res){
 	var html_data = {};
@@ -1138,5 +1137,94 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 				}
 			});
 		}
+	});
+}
+
+exports.getPestDiseaseDetails = function(req, res){
+	var html_data = {};
+	var type = req.query.type;
+	var id = req.query.id;
+
+
+	if(type == "Pest"){
+		pestdiseaseModel.getPestFactors(id, function(err, factors){
+			if(err){
+				throw err;
+			}
+			else{
+				pestdiseaseModel.getPestDetails({pest_id : id}, function(err, details){
+					if(err){
+						throw err;
+					}
+					else{
+						if(details.length == 0){
+	
+						}
+						else{
+							pestdiseaseModel.getPestSymptoms(id, function(err, symptoms){
+								if(err){
+									throw err;
+								}
+								else{
+									if(details.length == 0){
+				
+									}
+									else{
+										// console.log(details);
+										// console.log(details[0].pest_name);
+										html_data['pd'] =  details[0];
+										html_data["symptoms"] = symptoms;
+										html_data['type'] = "Pest";
+										// html_data["factors"] = factors;
+										js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+										res.render('pest_disease_details', html_data);
+									}
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+	}
+	else{
+		pestdiseaseModel.getDiseaseSymptoms(id, function(err, symptoms){
+			if(err){
+				throw err;
+			}
+			else{
+				pestdiseaseModel.getDiseaseDetails({disease_id : id}, function(err, details){
+					if(err){
+						throw err;
+					}
+					else{
+						if(details.length == 0){
+	
+						}
+						else{
+							console.log(details[0]);
+							html_data['pd'] =  details[0];
+							html_data['type'] = "Disease";
+							html_data["symptoms"] = symptoms;
+							js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+							res.render('pest_disease_details', html_data);
+						}
+					}
+				});
+			}
+		});
+	}
+}
+
+
+exports.updatePDDetails = function(req,res){
+	var html_data = {};
+	var type = req.params.type;
+	var pd_id = req.params.id;
+	var detail_type = req.params.detail_type;
+	console.log(type);
+	pestdiseaseModel.getPDDetails(type, pd_id, detail_type, function(err, result){
+		console.log(result);
+		res.send(result);
 	});
 }

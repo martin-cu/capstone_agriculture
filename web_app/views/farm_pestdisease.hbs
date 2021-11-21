@@ -75,7 +75,7 @@
                                                     </thead>
                                                     <tbody id="probability_table">
                                                         {{#each probability}}
-                                                            <tr class="probability"><a hidden >{{this.pd_id}}</a>
+                                                            <tr class="probability clickable" href='/pest_and_disease_details?type={{this.type}}&id={{this.pd_id}}'><a hidden >{{this.pd_id}}</a>
                                                                 <td >{{this.pd_name}}</td>
                                                                 <td>{{this.pd_desc}}</td>
                                                                 <td class="probability_value">{{this.probability}}</td>

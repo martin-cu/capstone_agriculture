@@ -14,7 +14,7 @@
 
                 {{!-- START CARD HEADER --}}
                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
-                      <div class="col" style="max-width: 70px">
+                      <div class="col" style="max-width: 70px; margin-bottom: 10px">
 
                         <button type="submit" class="btn btn-primary btn-md" id="back" onclick="goBack()">
                             <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
@@ -22,7 +22,7 @@
 
                     </div>
 
-                    <div class="col" style="margin-right: 700px; margin-top: 10px">
+                    <div class="col" style="margin-right: 700px; margin-bottom: 0px">
                         <h6>New Farm </h6>
             
                     </div>
@@ -46,17 +46,17 @@
 
                     <div class="tab">
                     <div class="modal_body_content" id="body_step1">
-                            <label for="" style="font-weight: bold; padding-bottom: 10px">Step 1: Add Farm Details</label>
+                            <h5 for="" style="font-weight: bold; padding-bottom: 20px; padding-top: 10px">Step 1: Add Farm Details</h5>
 
                             <div class="form-group">
                                 <label for="farmName">Name</label>
                                 <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name" oninput="this.className = 'form-control'" required>
                             </div>
                            
-                            <div class="form-group">
+                            <div class="form-group" style="margin-left: 5px;">
                               <div class="row">
 
-                                <div class="col">
+                                <div class="col" style="padding-top: 5px;">
                                 <label for="landType">Land Type</label>
                                 <select class="browser-default custom-select" id="landType" name="land_type" required>
                                     <option value="Lowland" selected>Lowland</option>
@@ -65,7 +65,7 @@
 
                                 </div>
                                 
-                                <div class="col">
+                                <div class="col" style="padding-top: 5px;">
                                 <label for="farmManager">Farm Manager</label>
                                 <select class="browser-default custom-select" name="farm_mngr" id="farm_mngr_cont" required>
                                 </select>
@@ -85,14 +85,14 @@
                      <div class="tab">
                     <div class="hide modal_body_content" id="body_step2">
                         <div class="form-group">
-                            <label for="" style="font-weight: bold; padding-bottom: 10px">Step 2: Add Plot Details</label>
+                            <h5 for="" style="font-weight: bold; padding-bottom: 20px; padding-top: 10px">Step 2: Add Plot Details</h5>
                             <div class="form-group">
                                 <label for="address">Address</label>
                                 <input type="text" class="form-control" id="address" placeholder="Address" oninput="this.className = 'form-control'">
                             </div>
 
                              <div class="form-group">
-                                <label for="geotags" id="geotag_lbl">Pin Geotag Coordinates</label>
+                                <label for="geotags" id="geotag_lbl" style="font-weight: bold;">Pin Geotag Coordinates</label>
                                 
                                 <div id="floating-panel">
                                     <input id="hide-markers" type="button" value="Hide Markers">
@@ -111,10 +111,10 @@
 
                      <div class="tab">
                     <div class="hide modal_body_content" id="body_step3">
-                        <label for="" style="font-weight: bold; padding-bottom: 10px">Step 3: Assign Employees</label>
+                        <h5 for="" style="font-weight: bold; padding-bottom: 20px; padding-top: 10px">Step 3: Assign Employees</h5>
 
                         <div class="">
-                            <label for="">Farm Workers:</label>
+                            <label for="" style="font-weight: bold;">Farm Workers:</label>
                             <div class="container" id="">
                                 <div class="row" id="">
                                     
