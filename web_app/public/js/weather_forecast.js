@@ -451,6 +451,6 @@ $(document).ready(function() {
 		/************  Weather Forecast to DB End *************/
 
 
-	}, 60000);
+	}, 600000);
 
 });

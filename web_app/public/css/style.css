@@ -270,3 +270,13 @@ div.scrollmenu {
 	  text-align: justify;
 	  margin-right: 10px;
   }
+
+.link {
+	color:  #0000FF;
+}
+
+.link:hover {
+	color:  #800000;
+	cursor:  pointer;
+	text-decoration: underline;
+}

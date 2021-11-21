@@ -91,7 +91,9 @@ router.post('/nutrient_management/add_record', environmentController.addSoilReco
 
 
 //Work Order
+router.get('/farms/work_order&id=:work_order_id', workOrderController.getDetailedWO);
 router.post('/create_work_order', workOrderController.createWorkOrder);
+router.post('/edit_work_order', workOrderController.editWorkOrder);
 
 /*** Page Navigation End ***/
 

@@ -46,6 +46,7 @@
                                             <th>FARM</th>
                                             <th>STATUS</th>
                                             <th>DUE DATE</th>
+                                            <th>WO ID</th>
                                             <th>NOTES</th>
                                         </tr>
                                     </thead>
@@ -71,17 +72,42 @@
 		ele.setAttribute('style', obj.style);
 		ele.innerHTML = obj.html;
 
+		for (prop in obj.attr) {
+			if (Object.prototype.hasOwnProperty.call(obj.attr, prop)) {
+				if (prop == 'data_href') {
+					new_prop = 'data-href';
+				}
+				else {
+					new_prop = prop;
+				}
+				ele.setAttribute(new_prop, obj.attr[prop]);
+		    }
+		}
+
 		return ele;
 	}
 
 	function appendWorkOrder(data) {
 		var cont = $('#work_order_table');
-		var keys = ['type', 'farm_name', 'status', 'date_due', 'wo_notes'];
+		var keys = ['type', 'farm_name', 'status', 'date_due', 'work_order_id', 'wo_notes'];
+		var attr = {
+			data_href: ''
+		};
+		var props;
 
 		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
 
 		for (var i = 0; i < keys.length; i++) {
-			tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: data[keys[i]] }));
+
+			if (keys[i] != 'work_order_id') {
+				props = { type: 'td', class: '', style: '', html: data[keys[i]], attr: null };
+			}
+			else {
+				attr['data_href'] = '/farms/work_order&id='+data[keys[i]];
+				props = { type: 'td', class: 'link', style: '', html: data[keys[i]], attr: attr }
+			}
+
+			tr.appendChild(createDOM(props));
 		}
 
 		cont.append(tr);
