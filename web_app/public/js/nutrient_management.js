@@ -196,7 +196,7 @@ function appendWorkOrder(data) {
 		cont.append(tr);
 	}
 
-function processInventory(arr, recommendation) {
+function processInventory(arr, recommendation, applied) {
 	var obj = {
 		headers: [''],
 		amount: ['Current Stock'],
@@ -205,24 +205,29 @@ function processInventory(arr, recommendation) {
 		applied: ['Applied'],
 		deficiency: ['Deficiency']
 	};
-
+	var deficiency;
 	for (var i = 0; i < arr.length; i++) {
 		if (recommendation.hasOwnProperty(arr[i].fertilizer_name)) {
+			deficiency = Math.round((recommendation[arr[i].fertilizer_name] - applied[i].resources_used) * 100)/100;
 			obj.requirements.push(recommendation[arr[i].fertilizer_name]);
-			if (arr[i].current_amount >= recommendation[arr[i].fertilizer_name]) {
-				obj.style.push('text-success font-weight-bold');
+			obj.deficiency.push(deficiency);
+			//if (arr[i].current_amount >= recommendation[arr[i].fertilizer_name]) {
+			if (deficiency != 'N/A') {
+				obj.style.push('text-danger font-weight-bold');
 			}
 			else {
-				obj.style.push('text-danger font-weight-bold');
+				obj.style.push('text-success font-weight-bold');
 			}
 		}
 		else {
 			obj.requirements.push('N/A');
 			obj.style.push('');
+			obj.deficiency.push('N/A');
 		}
 
 		obj.headers.push(arr[i].fertilizer_name);
 		obj.amount.push(arr[i].current_amount);
+		obj.applied.push(applied[i].resources_used);
 	}
 
 	return obj;
@@ -237,7 +242,7 @@ function appendInventory(data) {
 		tr = '';
 		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
 		for (var i = 0; i < data.headers.length; i++) {
-			if (y != 0 && y != 3 && y != 4) {
+			if (y != 0) {
 				ele_class = data['style'][i];
 			}
 			else {
@@ -297,9 +302,14 @@ $(document).ready(function() {
 			appendDetails(details);
 
 			$.get('/get_materials', { type: 'Fertilizer', filter: id }, function(materials) {
-				var recommendation = processInventory(materials, details.recommendation);
-				appendInventory(recommendation);
-			})
+
+				$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: id }, function(list) {
+					console.log(list);
+
+					var recommendation = processInventory(materials, details.recommendation, list);
+					appendInventory(recommendation);
+				});
+			});
 		});
 	}
 

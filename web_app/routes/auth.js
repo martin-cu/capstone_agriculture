@@ -12,7 +12,11 @@ router.get('/login', (req, res) => {
 });
 
 
+router.get('/create_wo_test', (req, res) => {
+	var html_data = {};
 
+	res.render('create_wo_test', html_data);
+});
 
 
 /*** Database Ajax Start ***/
@@ -31,8 +35,10 @@ router.get('/clear_weather_forecast', environmentController.clearWeatherForecast
 
 router.get('/get_work_orders', workOrderController.ajaxGetWorkOrders);
 router.get('/get_materials', materialController.ajaxGetMaterials);
+router.get('/getAll_materials', materialController.ajaxGetAllMaterials);
 router.get('/getResourcesPerFarm', environmentController.ajaxGetResources);
 router.get('/filter_nutrient_mgt', environmentController.ajaxGetDetailedNutrientMgt);
+router.get('/get_cycle_resources_used', materialController.ajaxGetResourcesUsed);
 
 // router.get('/getPestDiseasePerFarm', environmentController.ajaxGetPossiblePD);
 
@@ -82,6 +88,10 @@ router.post('/addDisease', environmentController.addDisease);
 router.get('/nutrient_management', environmentController.getNurientManagement);
 router.get('/nutrient_management/:farm_name', environmentController.detailedNutrientManagement);
 router.post('/nutrient_management/add_record', environmentController.addSoilRecord);
+
+
+//Work Order
+router.post('/create_work_order', workOrderController.createWorkOrder);
 
 /*** Page Navigation End ***/
 

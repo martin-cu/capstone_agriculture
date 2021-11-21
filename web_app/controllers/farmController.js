@@ -14,7 +14,9 @@ var temp_lat = 13.073091;
 var temp_lon = 121.388563;
 
 exports.ajaxGetFarmList = function(req, res) {
-	farmModel.getFarmData({ where: null, group: 'farm_id'}, function(err, farms) {
+	let where = req.query.where;
+	console.log(req.query.where);
+	farmModel.getFarmData({ where: where, group: 'farm_id'}, function(err, farms) {
 		if (err)
 			throw err;
 		else {
