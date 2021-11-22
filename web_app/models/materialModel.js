@@ -105,12 +105,13 @@ exports.readResourcesUsed = function(type, data, next) {
 
 	}
 	else if (type == 'Fertilizer') {
-		var sql = "select *, case when max(total_used) is null then 0 else max(total_used) end as resources_used from ( select fertilizer_id, fertilizer_name, fertilizer_desc, null as total_used,price from fertilizer_table union select wort.item_id, null, null, sum(wort.qty) as total_used, null from wo_resources_table wort where wort.work_order_id in (select wot.work_order_id from work_order_table as wot where wot.crop_calendar_id = (select cct.calendar_id from farm_table as ft join crop_calendar_table as cct using (farm_id) where ft.farm_id = ? and cct.status = 'In-Progress' or cct.status = 'Active') and wot.status = 'Completed') and wort.type = 'Fertilizer' group by wort.item_id ) as t group by t.fertilizer_id";
+		var sql = "select *, case when max(total_used) is null then 0 else max(total_used) end as resources_used from ( select N, P, K, fertilizer_id, fertilizer_name, fertilizer_desc, null as total_used,price from fertilizer_table union select null, null, null, wort.item_id, null, null, sum(wort.qty) as total_used, null from wo_resources_table wort where wort.work_order_id in (select wot.work_order_id from work_order_table as wot where wot.crop_calendar_id = (select cct.calendar_id from farm_table as ft join crop_calendar_table as cct using (farm_id) where ft.farm_id = ? and cct.status = 'In-Progress' or cct.status = 'Active') and wot.status = 'Completed') and wort.type = 'Fertilizer' group by wort.item_id ) as t group by t.fertilizer_id";
 		sql = mysql.format(sql, data);
 	}
 	else if (type == 'Pesticide') {
 
 	}
+
 	mysql.query(sql, next);
 }
 

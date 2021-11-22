@@ -243,14 +243,15 @@ function tempReplaceFarm(reference) {
 }
 
 $(document).ready(function() {
-	if (typeof view == undefined)
-		var view = '';
+	console.log('sadasd');
+	console.log(view);
 
 	if (view == 'farm_monitoring') {
 		var viewed_farm_id;
 		var viewed_farm_name;
 
 		$.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
+			console.log(farms);
 			var li, style = 'border: 1px solid rgba(0,0,0,.125)';
 			viewed_farm_id = farms[0].farm_id;
 			viewed_farm_name = farms[0].farm_name;

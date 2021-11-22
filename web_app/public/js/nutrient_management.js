@@ -267,6 +267,131 @@ function appendDetails(obj) {
 	$('#k_req').html(obj.k_lvl);
 }
 
+function getNDVI(farm_name) {
+	console.log(farm_name);
+	$.get('/agroapi/polygon/readAll', {}, function(polygons) {
+		var polygon_id;
+		var options = {};
+		for (var i = 0; i < polygons.length; i++) {
+			if (farm_name == polygons[i].name) {
+				polygon_id = polygons[i].id;
+				coordinates = polygons[i].geo_json.geometry.coordinates[0];
+
+				center = polygons[i].center;
+			}
+		}
+		console.log(polygons)
+		var n_date = new Date();
+		n_date.setDate(n_date.getDate() - 30);
+		var n = new Date();
+		var query = { polygon_id: polygon_id, start: n_date, end: n };
+
+		options = {
+			center: center,
+			coordinates: coordinates
+		}
+		console.log(query);
+		// Visualize plot
+		$.get('/agroapi/ndvi/imagery', query, function(imagery) {
+			console.log(imagery);
+			console.log(imagery.length == 0);
+
+			if (imagery.length != 0) {
+				console.log(imagery);
+				image_url = imagery[imagery.length-1].image.ndvi;
+
+				options['url'] = image_url;
+				// for (var i = 0; i < imagery.length; i++) {
+				// 	console.log(unixToDate(imagery[i].dt));
+				// }
+
+				// $.get(imagery[imagery.length-1].stats.ndvi, {}, function(stats) {
+				// 	$('#ndvi_date').html(imagery[imagery.length-1].dt);
+				// 	$('#statistics_max').html(Math.round(stats.max * 100) / 100);
+				// 	$('#statistics_mean').html(Math.round(stats.mean * 100) / 100);
+				// 	$('#statistics_median').html(Math.round(stats.median * 100) / 100);
+				// 	$('#statistics_min').html(Math.round(stats.min * 100) / 100);
+				// 	$('#statistics_deviation').html(Math.round(stats.std * 100) / 100);
+				// });
+			}
+			else {
+				
+			}
+		});
+	});
+}
+
+function createSchedule(materials, recommendation, applied, farm_id) {
+	var fertilizer = {  };
+	var fertilizer_arr = [];
+
+	for (var i = 0; i < applied.length; i++) {
+		if (recommendation.hasOwnProperty(applied[i].fertilizer_name)) {
+			fertilizer = {
+				name: applied[i].fertilizer_name,
+				N: applied[i].N,
+				P: applied[i].P,
+				K: applied[i].K,
+				recommendation: (Math.round((recommendation[applied[i].fertilizer_name] - applied[i].resources_used) * 100)/100)
+			};
+			fertilizer_arr.push(fertilizer);
+		}
+	}
+
+	var query = {
+		where: {
+			key: ['farm_id'],
+			value: [farm_id]
+		},
+		order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+	}
+
+	$.get('/get_work_orders', query, function(work_order_list) {
+		var land_prep = work_order_list.filter(ele => ele.type == 'Land Preparation')[0];
+		var sowing = work_order_list.filter(ele => ele.type == 'Sow Seed')[0];
+
+		$.get('/get_crop_plans', { status: ['In-Progress', 'Active'] }, function(crop_calendar) {
+			var target_date;
+			var N, P, K;
+			var method;
+			var active_calendar = crop_calendar.filter(ele => ele.farm_id == farm_id && ele.status == 'In-Progress' || ele.status == 'Active')[0];
+			var method = active_calendar.method;
+			console.log(method);
+			if (method == 'Transplanting') {
+				target_date = land_prep.date_due;
+			}
+			else if (method == 'Direct Seeding') {
+				target_date = new Date(sowing.date_due);
+				target_date = target_date.getDate() + 12;
+			}
+			//target_date = formatDate(target_date, 'YYYY-MM-DD');
+			//K Fertilizer Target Date
+			//P Fertilizer 100%
+			N = target_date;
+			P = target_date;
+
+
+			//N Need-Based Approach
+			getNDVI(tempReplaceFarm(farm_name));
+		});
+	});
+}
+
+function tempReplaceFarm(reference) {
+	var query = '';
+	if (reference == 'farm1') {
+		query = 'Iowa Demo Field';
+	}
+	else if (reference == 'farm2') {
+		query = 'Iowa Demo Field';
+	}
+	else {
+		query = 'LA Farm (API Paid)';
+	}
+
+	return query;
+}
+
 $(document).ready(function() {
 	if (type == 'Soil Test') {
 		// var ph_inp = document.getElementById('ph_lvl');
@@ -304,10 +429,11 @@ $(document).ready(function() {
 			$.get('/get_materials', { type: 'Fertilizer', filter: id }, function(materials) {
 
 				$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: id }, function(list) {
-					console.log(list);
 
 					var recommendation = processInventory(materials, details.recommendation, list);
 					appendInventory(recommendation);
+
+					createSchedule(materials, details.recommendation, list, id);
 				});
 			});
 		});

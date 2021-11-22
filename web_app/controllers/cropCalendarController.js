@@ -41,3 +41,14 @@ exports.ajaxGetCropPlans = function(req, res) {
 		}
 	});
 }
+
+exports.ajaxGetCropPlanDetails = function(req, res) {
+	var query = req.query;
+	cropCalendarModel.getSingleCropCalendar(query, function(err, detail) {
+		if (err)
+			throw err;
+		else {
+			res.send(detail);
+		}
+	})
+}

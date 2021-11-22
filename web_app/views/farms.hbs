@@ -207,6 +207,7 @@
 
 	function prepareCalendarData(plan, work_order) {
 		var obj = {};
+
 		var stage = getCurrentStage(new Date(plan.sowing_date), work_order[0].type);
 		obj['farm_name'] = plan.farm_name;
 		obj['current_stage'] = stage.stage;

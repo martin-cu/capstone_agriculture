@@ -379,9 +379,6 @@ $(document).ready(function() {
 	var refresh_on = 0;
 	var loaded = false;
 
-	if (typeof view == undefined)
-		var view = '';
-
 	setInterval(function() {
 		var hour = new Date();
 		hour = hour.getHours();
