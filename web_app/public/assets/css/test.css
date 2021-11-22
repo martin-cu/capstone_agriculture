@@ -182,4 +182,49 @@ div.form-check {
     height: auto;
 }
 
+/* SIDEBAR DROPDOWN */
 
+a[aria-expanded=true] .fa-caret-down {
+    display: none;
+ }
+ a[aria-expanded=false] .fa-caret-up {
+    display: none;
+ }
+
+ a.dropdown-lbl.text-decoration-none.collapsed:hover > i {
+     color: white !important;
+ }
+
+ a.dropdown-lbl.text-decoration-none.collapsed:hover  {
+    color: white !important;
+}
+
+a.dropdown-lbl.text-decoration-none:hover > i {
+    color: white !important;
+}
+
+a.dropdown-lbl.text-decoration-none:hover  {
+   color: white !important;
+}
+
+a.dropdown-lbl.text-decoration-none.active.collapsed > i {
+    color: white !important;
+    font-weight: bold;
+}
+
+a.dropdown-lbl.text-decoration-none.active.collapsed  {
+   color: white !important;
+   font-weight: bold;
+}
+
+a.dropdown-lbl.text-decoration-none.active > i {
+    color: white !important;
+    font-weight: bold;
+}
+
+a.dropdown-lbl.text-decoration-none.active  {
+   color: white !important;
+   font-weight: bold;
+}
+
+/* END OF SIDEBAR DROPDOWN */
