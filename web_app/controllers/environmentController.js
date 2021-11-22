@@ -754,9 +754,10 @@ exports.getFarmResources = function(req, res){
 				if(seeds == null)
 					ctr = 5;
 				while(ctr < 5){
-					seeds.push({});
+					seeds.push({blank : true});
 					ctr++;
 				};
+				// console.log(seeds);
 				html_data["seed"] = seeds;
 			}
 
@@ -778,9 +779,17 @@ exports.getFarmResources = function(req, res){
 						if(err)
 							throw err;
 						else{
+							var ctr2 = orders.length;
+							if(orders == null)
+								ctr2 = 5;
+							while(ctr2 < 5){
+								orders.push({blank : true});
+								ctr2++;
+							};
+							console.log(orders);
 							html_data["orders"] = orders;
-							res.render("farm_resources", html_data);
 						}
+						res.render("farm_resources", html_data);
 					});
 				});
 			});

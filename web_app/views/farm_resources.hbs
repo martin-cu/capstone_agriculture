@@ -52,9 +52,9 @@
                             <div class="card">
                                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
                                     <ul class="nav nav-tabs card-header-tabs">
-                                        <li class="nav-item"><a id="seed_resources" class="nav-link resources active" href="#" style="background: #F0F0F0;">Seed</a></li>
-                                        <li class="nav-item"><a id="fertilizer_resources" class="nav-link resources" href="#">Fertilizer</a></li>
-                                        <li class="nav-item"><a id="pesticide_resources" class="nav-link resources" href="#">Pesticide</a></li>
+                                        <li class="nav-item"><a id="seed_resources" class="nav-link resources_tab active" href="#" style="background: #F0F0F0;">Seed</a></li>
+                                        <li class="nav-item"><a id="fertilizer_resources" class="nav-link resources_tab" href="#">Fertilizer</a></li>
+                                        <li class="nav-item"><a id="pesticide_resources" class="nav-link resources_tab" href="#">Pesticide</a></li>
                                     </ul>
                                 </div>
                                 <div class="card-body">
@@ -75,20 +75,20 @@
                                                             <th>Material type</th>
                                                             <th>stock level</th>
                                                             <th>unit</th>
-                                                            <th>cost per unit</th>
+                                                            {{!-- <th>cost per unit</th> --}}
                                                             <th></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="resources_table">
 
                                                         {{#each seed}}
-                                                            <tr class="resources clickable">
+                                                            <tr class="clickable resources">
                                                                 <td>{{this.item_name}}</td>
                                                                 <td>{{this.item_type}}</td>
                                                                 <td>{{this.current_amount}}</td>
-                                                                <td>sacks</td>
-                                                                <td>PHP 500.00</td>
-                                                                <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                                <td>{{this.units}}</td>
+                                                                {{!-- <td>PHP 500.00</td> --}}
+                                                                <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
                                                             </tr>
                                                         {{/each}}
                                                         {{!-- <tr>
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="padding: 0px 12px;">
+                    <div class="row" style="padding: 0px 12px; margin-top : 2rem;">
                         <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Orders Request</strong></label>
                             <div class="card">
                                
@@ -172,10 +172,10 @@
                                                             <tr class="clickable">
                                                                 <td>{{this.item_name}}</td>
                                                                 <td>{{this.item_type}}</td>
-                                                                <td>sacks</td>
-                                                                <td>PHP {{this.purchase_price}}</td>
+                                                                <td>{{#if blank}}{{else}}PHP sacks{{/if}}</td>
+                                                                <td>{{#if blank}}{{else}}PHP {{/if}}{{this.purchase_price}}</td>
                                                                 <td>{{this.purchase_status}}</td>
-                                                                <td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td>
+                                                                <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
                                                             </tr>
                                                         {{/each}}
                                                         {{!-- <tr>

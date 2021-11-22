@@ -1,0 +1,159 @@
+<div class="container-fluid" >
+    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Inventory&nbsp;</h3>
+    <div class="row" style="padding: 0px 12px;">
+        <div class="col-xxl-7">
+            <div class="table-responsive" style="border-style: none;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Mon</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-showers-heavy justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Tue</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-meatball justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Wed</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Thu</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-poo-storm justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Fri</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Sat</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Sun</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-sun justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                            <th style="border-style: none;">
+                                <h4 class="justify-content-xl-center" style="color: #332C1F;font-size: 20px;">Mon</h4>
+                                <h6 class="text-muted justify-content-xl-center mb-2"><i class="fas fa-cloud-showers-heavy justify-content-xl-center" style="color: #332C1F;font-size: 35px;"></i></h6><small class="form-text" style="color: #332C1F;">29°</small><small class="form-text" style="color: #332C1F;margin-left: 16px;">29°</small>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="padding: 0px 12px;">
+        <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>All Farms</strong></label>
+            <div class="card">
+                <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item"><a id="per_farm" class="nav-link purchases_tab active" href="#" style="background: #F0F0F0;">Farms</a></li>
+                        <li class="nav-item"><a id="all_farms" class="nav-link purchases_tab" href="#" >All</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div id="all_farm_materials" hidden>
+                        <div class="row table-topper align-items-center">
+                            <div class="col-4 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                            <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
+                                <h6 id="counter">Showing: <strong id="rowCount">ALL</strong>&nbsp;Row(s)</h6>
+                            </div>
+                            <div class="col-4 text-end" style="margin: 0px;padding: 5px 10px;"><a href="#" data-bs-toggle="modal" data-bs-target="#tablehelpModal"><i class="fa fa-question-circle" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;" data-bs-toggle="tooltip" data-bs-placement="top"></i></a></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div>
+                                    <table class="table table tablesorter" id="ipi-table">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Farm</th>
+                                                <th>Name</th>
+                                                <th>Material type</th>
+                                                <th>Amount</th>
+                                                <th>Unit</th>
+                                                <th>Request date</th>
+                                                <th>Date purchased date</th>
+                                                <th>Status</th>
+                                                {{!-- <th>cost per unit</th> --}}
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="materials_table">
+                                                {{#each purchases}}
+                                                    <tr class="clickable">
+                                                        <td>{{this.farm_name}}</td>
+                                                        <td>{{this.item_name}}</td>
+                                                        <td>{{this.item_type}}</td>
+                                                        <td>{{this.amount}}</td>
+                                                        <td>{{this.units}}</td>
+                                                        <td>{{this.request_date}}</td>
+                                                        <td>{{this.date_purchased}}</td>
+                                                        <td>{{this.purchase_status}}</td>
+                                                        <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
+                                                    </tr>
+                                                {{/each}}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                <div id="per_farm_materials">
+                    {{#each farms}}
+                        <div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem;">
+                                <div class="col-xl-3" style="padding: 2rem;">
+                                    <div class="" >
+                                        <div class="">
+                                            <h4 class="card-title">{{this.farm_name}}</h4>
+                                            <p class="">{{this.farm_desc}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col" style="padding: 1rem;">
+                                    <div class="table-responsive" style="height: 200px;">
+                                        <table class="table" style="width : 100%">
+                                            <thead style="">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Material type</th>
+                                                    <th>Amount</th>
+                                                    <th>Unit</th>
+                                                    <th>Request date</th>
+                                                    <th>Date purchased date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="overflow: auto">
+                                                {{#each this.farm_purchases}}
+                                                    <tr>
+                                                        <td>{{this.item_name}}</td>
+                                                        <td>{{this.item_type}}</td>
+                                                        <td>{{this.amount}}</td>
+                                                        <td>{{this.units}}</td>
+                                                        <td>{{this.request_date}}</td>
+                                                        <td>{{this.date_purchased}}</td>
+                                                        <td>{{this.purchase_status}}</td>
+                                                    </tr>
+                                                {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+
+</div>

@@ -53,10 +53,17 @@ exports.getFarmData = function(data, next) {
 	mysql.query(sql, next);
 };
 
+//added farm_desc
 exports.getAllFarms = function(next) {
-	var sql = 'select t1.farm_id, t1.farm_name, t1.land_type, max(t1.employee_id) as employee_id, concat(max(t1.ln), ", ", max(t1.fn)) as employee_name, max(t1.cp) as cp from (select t.farm_id, t.employee_id, max(t.farm_name) as farm_name, max(t.land_type) as land_type, null as ln, null as fn, null as cp from (select farm_id, employee_id, null as farm_name, null as land_type from farm_assignment where status = "Active" union select farm_id, null, farm_name, land_type from farm_table where status = "Active") as t group by t.farm_id union select fa.farm_id, et.employee_id, null as farm_name, null as land_type, et.last_name, et.first_name, et.phone_number from employee_table et join farm_assignment fa on et.employee_id = fa.employee_id where et.position = "Farm Manager" )as t1 group by farm_id';
+	var sql = "SELECT t1.farm_id, t1.farm_name, t1.farm_desc, t1.land_type, MAX(t1.employee_id) AS employee_id, CONCAT(MAX(t1.ln), ', ', MAX(t1.fn)) AS employee_name, MAX(t1.cp) AS cp FROM (SELECT  t.farm_id, t.employee_id, MAX(t.farm_name) AS farm_name, MAX(t.land_type) AS land_type, NULL AS ln,  NULL AS fn,  NULL AS cp, MAX(t.farm_desc) AS farm_desc FROM (SELECT   farm_id, employee_id, NULL AS farm_name, NULL AS land_type, NULL AS farm_desc FROM farm_assignment WHERE status = 'Active' UNION SELECT  farm_id, NULL, farm_name, land_type, farm_desc FROM farm_table WHERE status = 'Active') AS t GROUP BY t.farm_id  UNION SELECT fa.farm_id,et.employee_id, NULL AS farm_name, NULL AS land_type, et.last_name, et.first_name,et.phone_number, NULL AS farm_desc FROM employee_table et JOIN farm_assignment fa ON et.employee_id = fa.employee_id WHERE et.position = 'Farm Manager') AS t1 GROUP BY farm_id;"; 
+	console.log(sql);
 	mysql.query(sql, next);
 }
+
+// exports.getAllFarms = function(next) {
+// 	var sql = 'select t1.farm_id, t1.farm_name, t1.land_type, max(t1.employee_id) as employee_id, concat(max(t1.ln), ", ", max(t1.fn)) as employee_name, max(t1.cp) as cp from (select t.farm_id, t.employee_id, max(t.farm_name) as farm_name, max(t.land_type) as land_type, null as ln, null as fn, null as cp from (select farm_id, employee_id, null as farm_name, null as land_type from farm_assignment where status = "Active" union select farm_id, null, farm_name, land_type from farm_table where status = "Active") as t group by t.farm_id union select fa.farm_id, et.employee_id, null as farm_name, null as land_type, et.last_name, et.first_name, et.phone_number from employee_table et join farm_assignment fa on et.employee_id = fa.employee_id where et.position = "Farm Manager" )as t1 group by farm_id';
+// 	mysql.query(sql, next);
+// }
 
 exports.updateFarm = function(data, filter, next) {
 	var sql = 'update farm_table set ? where ?';
