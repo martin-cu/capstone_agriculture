@@ -273,7 +273,33 @@ exports.getPurchasesPerFarm = function(type, farm_id, status, next){
 
 }
 
+exports.getAllPurchases = function(type, status, next){
+	var fertilizer = 'SELECT pt.*, ft.farm_name as farm_name, st.fertilizer_name AS item_name, st.fertilizer_desc AS description FROM purchase_table pt INNER JOIN fertilizer_table st ON pt.item_id = st.fertilizer_id && item_type = "Fertilizer" INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ';
+	var seed = "SELECT pt.*,ft.farm_name as farm_name, st.seed_name AS item_name, st.seed_desc AS description FROM purchase_table pt INNER JOIN seed_table st ON pt.item_id = st.seed_id && item_type = 'Seed' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
+	var pesticide = "SELECT pt.*, ft.farm_name as farm_name, st.pesticide_name AS item_name, st.pesticide_desc AS description FROM purchase_table pt INNER JOIN pesticide_table st ON pt.item_id = st.pesticide_id && item_type = 'Pesticide' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
+	var sql;
+	if(type == null){
+		sql = fertilizer + " UNION " + seed + " UNION " + pesticide;
+	}
+	else if (type == "Seed"){
+		sql = seed;
+	}
+	else if(type == "Fertilizer"){
+		sql = fertilizer;
+	}
+	else if(type == "Pesticide"){
+		sql = pesticide;
+	}
 
+	if(status != null){
+		sql = "SELECT * FROM (" + sql + ") a WHERE purchase_status = ?";
+		sql = mysql.format(sql, status.status);
+	}
+	
+	// console.log("\n\n\n" + sql);
+	mysql.query(sql, next);
+
+}
 
 //FARM FERTILIZERS
 exports.getAllElements = function(next){

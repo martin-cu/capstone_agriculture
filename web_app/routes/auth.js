@@ -79,6 +79,8 @@ router.get('/harvest_cycle', farmController.getHarvestCycle);
 //Material Management
 router.get('/inventory', materialController.getInventory);
 router.get('/ajaxGetInventory/:type', materialController.ajaxGetInventory);
+router.get('/orders', materialController.getOrders);
+
 
 //Pest and Disease
 router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);

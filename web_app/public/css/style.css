@@ -289,8 +289,8 @@ div.scrollmenu {
 
 .farm_inventory:hover{
 	background-color: #d6d6d6;
-	-ms-transform: scale(1.5); /* IE 9 */
-  	transform: scale(1.5); 
+	-ms-transform: scale(1.1); /* IE 9 */
+  	transform: scale(1.1); 
 }
 
 /* width */

@@ -282,6 +282,45 @@ exports.getWeather = function(req, res){
 
 
 //ACTUAL USE
+
+exports.getOrders = function(req, res){
+    var html_data = {};
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'orders_tab');
+    materialModel.getAllPurchases(null,null, function(err, purchases){
+        if(err)
+            throw err;
+        else{
+            console.log(purchases);
+            html_data["purchases"] = purchases;
+        }
+
+        farmModel.getAllFarms(function(err, farms){
+            if(err)
+                throw err;
+            else{
+                var i,x;
+                for(i = 0; i < farms.length; i++){
+                    var temp_arr = [];
+                    for(x = 0; x < purchases.length; x++){
+                        // purchases[x].date_purchase = dataformatter.formatDate(purchases[x].date_purchase, 'MM/DD/YYYY');
+                        if(purchases[x].farm_id == farms[i].farm_id){
+                            temp_arr.push(purchases[x]);
+                        }
+                    }
+                    farms[i]["farm_purchases"] = temp_arr;
+                }
+                html_data["farms"] = farms;
+                console.log(html_data.farms);   
+            }
+            res.render("orders", html_data);
+        });
+        
+    });
+}
+
+exports.ajaxGetPurchases = function(req,res){
+
+}
 exports.getInventory = function(req, res){
     var html_data = {};
     html_data = js.init_session(html_data, 'role', 'name', 'username', 'inventory_tab');
