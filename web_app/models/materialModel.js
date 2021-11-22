@@ -176,9 +176,14 @@ exports.addFarmMaterials = function(amount, farm_mat_id, next){
 	mysql.query(sql, next);
 }
 
-exports.getFarmMaterials = function(filter, next){
-	var sql = "SELECT * FROM farm_materials WHERE ?";
-	sql = mysql.format(sql, filter);
+exports.getFarmMaterials = function(farm_id, next){
+	var sql = 'SELECT fm.*, st.seed_name as item_name, st.seed_desc as item_desc FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN seed_table st ON fm.item_type = "Seed" && fm.item_id = st.seed_id UNION SELECT fm.*, pt.pesticide_name as item_name, pt.pesticide_desc as item_desc FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN pesticide_table pt ON fm.item_type = "Pesticide" && fm.item_id = pt.pesticide_id UNION SELECT fm.*, fr.fertilizer_name as item_name, fr.fertilizer_desc as item_desc FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN fertilizer_table fr ON fm.item_type = "Fertilizer" && fm.item_id = fr.fertilizer_id;';
+	var farm = " WHERE ft.farm_id = ?;";
+
+	if(farm_id != null){
+		sql = sql + farm;
+		sql = mysql.format(sql, farm_id);
+	}
 	// console.log(sql);
 	mysql.query(sql, next);
 }
@@ -186,11 +191,11 @@ exports.getFarmMaterials = function(filter, next){
 exports.getFarmMaterialsSpecific = function(farm_id, item_type, next){
 	var sql;
 	if(item_type.item_type == "Seed")
-		sql = "SELECT farm_mat_id, item_id, item_type, current_amount, seed_name as item_name FROM farm_materials m INNER JOIN seed_table st ON m.item_id = st.seed_id WHERE ? && ?";
+		sql = "SELECT farm_mat_id, item_id, item_type, current_amount, seed_name as item_name, units FROM farm_materials m INNER JOIN seed_table st ON m.item_id = st.seed_id WHERE ? && ?";
 	else if(item_type.item_type == "Fertilizer")
-		sql = "SELECT farm_mat_id, item_id, item_type, current_amount, fertilizer_name as item_name FROM farm_materials m INNER JOIN fertilizer_table st ON m.item_id = st.fertilizer_id WHERE ? && ?";
+		sql = "SELECT farm_mat_id, item_id, item_type, current_amount, fertilizer_name as item_name, units FROM farm_materials m INNER JOIN fertilizer_table st ON m.item_id = st.fertilizer_id WHERE ? && ?";
 	else if(item_type.item_type == "Pesticide")
-		sql = "SELECT farm_mat_id, item_id, item_type, current_amount, pesticide_name as item_name FROM farm_materials m INNER JOIN pesticide_table st ON m.item_id = st.pesticide_id WHERE ? && ?";
+		sql = "SELECT farm_mat_id, item_id, item_type, current_amount, pesticide_name as item_name, units FROM farm_materials m INNER JOIN pesticide_table st ON m.item_id = st.pesticide_id WHERE ? && ?";
 	sql = mysql.format(sql, farm_id);
 	sql = mysql.format(sql, item_type);
 	// console.log(sql);
@@ -264,12 +269,38 @@ exports.getPurchasesPerFarm = function(type, farm_id, status, next){
 		sql = mysql.format(sql, status.status);
 	}
 	
-	console.log("\n\n\n" + sql);
+	// console.log("\n\n\n" + sql);
 	mysql.query(sql, next);
 
 }
 
+exports.getAllPurchases = function(type, status, next){
+	var fertilizer = 'SELECT pt.*, ft.farm_name as farm_name, st.fertilizer_name AS item_name, st.fertilizer_desc AS description FROM purchase_table pt INNER JOIN fertilizer_table st ON pt.item_id = st.fertilizer_id && item_type = "Fertilizer" INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ';
+	var seed = "SELECT pt.*,ft.farm_name as farm_name, st.seed_name AS item_name, st.seed_desc AS description FROM purchase_table pt INNER JOIN seed_table st ON pt.item_id = st.seed_id && item_type = 'Seed' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
+	var pesticide = "SELECT pt.*, ft.farm_name as farm_name, st.pesticide_name AS item_name, st.pesticide_desc AS description FROM purchase_table pt INNER JOIN pesticide_table st ON pt.item_id = st.pesticide_id && item_type = 'Pesticide' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
+	var sql;
+	if(type == null){
+		sql = fertilizer + " UNION " + seed + " UNION " + pesticide;
+	}
+	else if (type == "Seed"){
+		sql = seed;
+	}
+	else if(type == "Fertilizer"){
+		sql = fertilizer;
+	}
+	else if(type == "Pesticide"){
+		sql = pesticide;
+	}
 
+	if(status != null){
+		sql = "SELECT * FROM (" + sql + ") a WHERE purchase_status = ?";
+		sql = mysql.format(sql, status.status);
+	}
+	
+	// console.log("\n\n\n" + sql);
+	mysql.query(sql, next);
+
+}
 
 //FARM FERTILIZERS
 exports.getAllElements = function(next){
@@ -282,3 +313,4 @@ exports.getFertilizerElements = function(fertilizer_id, next){
 	sql = mysql.format(sql, fertilizer_id);
 	mysql.query(sql, next);
 }
+
