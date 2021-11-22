@@ -75,7 +75,6 @@ exports.getDetailedWO = function(req, res) {
 						html_data['resources'] = resource_details;
 						html_data['resources']['title'] = type+'s:';
 						html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
-						console.log(html_data);
 						res.render('detailed_work_order', html_data);
 					}
 				});
@@ -120,12 +119,12 @@ exports.createWorkOrder = function(req, res) {
 					if (err)
 						throw err;
 					else {
-						res.render('create_wo_test');
+						res.redirect('/farms/work_order&id='+result.insertId);
 					}
 				});
 			}
 			else {
-				res.render('create_wo_test');
+				res.redirect('/farms/work_order&id='+result.insertId);
 			}
 		}
 	})
@@ -164,8 +163,7 @@ exports.editWorkOrder = function(req, res) {
 			workOrderModel.deleteResourceRecord(filter, function(err, resource_delete) {
 				if (err)
 					throw err;
-				else {
-					console.log(req.body);		
+				else {	
 					var resource_type = null;
 					if (query.type == 'Pesticide Application') {
 						resource_type = 'Pesticide';
@@ -181,7 +179,6 @@ exports.editWorkOrder = function(req, res) {
 						if (err)
 							throw err;
 						else {
-							console.log(list);
 							res.redirect('/farms/work_order&id='+filter.work_order_id);
 						}
 					})

@@ -30,11 +30,11 @@
             <div class="card" style="margin-top: 20px;">
                 <div class="card-body" style="min-height: 400px;">
                     <div class="row table-topper align-items-center">
-                        <div class="col-4 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
-                        <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
-                            <h6 id="counter-1">Showing: <strong id="rowCount-1">ALL</strong>&nbsp;Row(s)</h6>
+                        <div class="col-3 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                        <div class="col-6 text-center" style="margin: 0px;padding: 5px 10px;">
+                            <h6 id="counter-1">Showing: <strong id="filter_title">ALL</strong>&nbsp;Row(s)</h6>
                         </div>
-                        <div class="col-4 text-end" style="margin: 0px;padding: 5px 10px;"><a href="#" data-bs-toggle="modal" data-bs-target="#tablehelpModal"><i class="fa fa-question-circle" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;" data-bs-toggle="tooltip" data-bs-placement="top"></i></a></div>
+                        <div class="col-3 text-end" style="margin: 0px;padding: 5px 10px;"><a href="#" data-bs-toggle="modal" data-bs-target="#tablehelpModal"><i class="fa fa-question-circle" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;" data-bs-toggle="tooltip" data-bs-placement="top"></i></a></div>
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -115,9 +115,9 @@
 
 	function appendCards(data) {
 		var cont = $('#calendar_card_cont');
-		var card, card_body, row, col2, col3, col7, h6, h4, p1, p2, i;
+		var card, card_body, row, col2, col3, col7, h6, h4, p1, p2, i, calendar_id;
 		card = createDOM({ type: 'div', class: 'card', style: 'margin-bottom: 10px;margin-top: 20px;', html: '' });
-		card_body = createDOM({ type: 'div', class: 'card-body', style: '', html: '' });
+		card_body = createDOM({ type: 'div', class: 'card-body calendar_card', style: '', html: '' });
 		row = createDOM({ type: 'div', class: 'row', style: '', html: '' });
 		col2 = createDOM({ type: 'div', class: 'col-xxl-2', style: '', html: '' });
 		h6 = createDOM({ type: 'h6', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center mb-2', style: 'text-align: center;color: #332c1f;font-weight: bold;font-size: 20px;', html: data.start_month });
@@ -127,8 +127,8 @@
 		col2.appendChild(h4);
 
 		col7 = createDOM({ type: 'div', class: 'col-xxl-7', style: '', html: '' });
-		h4 = createDOM({ type: 'h4', class: '', style: 'font-size: 20PX;', html: data.crop_plan });
-		h6 = createDOM({ type: 'h6', class: 'text-muted mb-2', style: '', html: data.farm_name });
+		h4 = createDOM({ type: 'h4', class: 'crop_plan', style: 'font-size: 20PX;', html: data.crop_plan });
+		h6 = createDOM({ type: 'h6', class: 'text-muted mb-2 farm_name', style: '', html: data.farm_name });
 		p1 = createDOM({ type: 'p', class: '', style: 'margin-bottom: 0px;', html: 'Stage: '+data.current_stage });
 		p2 = createDOM({ type: 'p', class: '', style: '', html: 'Upcoming Activities: '+data.upcoming_activity });
 
@@ -229,43 +229,69 @@
 		return obj;
 	}
 
-	$.get('/get_crop_plans', { status: ['Active', 'In-Progress']}, function(plans) {
-		let plan_list = plans;
-		let counter = 0;
-		var plan_arr = [];
+	function getWorkOrders(where, title) {
+		$('#work_order_table').children().not(':first').remove();
+		$('#filter_title').html(title);
 		var query = {
-			where: {
-				key: ['crop_calendar_id', 'work_order_table.status'],
-				value: null
-			}
-		};
-		for (var i = 0; i < plan_list.length; i++) {
-			query['where']['value'] = [plan_list[i].calendar_id, 'Pending'];
-			$.get('/get_work_orders', query, function(work_orders) {
-				if (work_orders.length != 0) {
-					counter++;
-					appendCards(prepareCalendarData(plan_list[i], work_orders));
+			where: where,
+			order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+		}
+		$.get('/get_work_orders', query, function(work_order_list) {
+			if (work_order_list.length != 0) {
+				for (var i = 0; i < work_order_list.length; i++) {
+					work_order_list[i].date_due = formatDate(new Date(work_order_list[i].date_due), 'MM/DD/YYYY');
+					appendWorkOrder(work_order_list[i]);
 				}
-			});
-		}
-		// Show 'No Active Calendars'
-		if (counter == 0) {
-			console.log('No active calendars!');
-		}
-
-	});
-
-	$.get('/get_work_orders', { order: ['work_order_table.status ASC', 'work_order_table.date_due DESC'] }, function(work_order_list) {
-		if (work_order_list.length != 0) {
-			for (var i = 0; i < work_order_list.length; i++) {
-				work_order_list[i].date_due = formatDate(new Date(work_order_list[i].date_due), 'MM/DD/YYYY');
-				appendWorkOrder(work_order_list[i]);
 			}
-		}
-		// Show 'No work order records'
-		else {
-			console.log('No work order records!');
-		}
+			// Show 'No work order records'
+			else {
+				console.log('No work order records!');
+			}
+		});
+	}
+
+	$(document).ready(function() {
+
+		$('#calendar_card_cont').on('click', '.calendar_card', function() {
+			var target = $(this);
+			var crop_plan = $(this).find('.crop_plan').html();
+			var farm_name = $(this).find('.farm_name').html();
+			console.log(crop_plan+' - '+farm_name);
+
+			var query = {
+				key: ['crop_plan'],
+				value: [crop_plan]
+			}
+
+			getWorkOrders(query, farm_name+' - '+crop_plan);
+		});
+
+		$.get('/get_crop_plans', { status: ['Active', 'In-Progress']}, function(plans) {
+			let plan_list = plans;
+			let counter = 0;
+			var plan_arr = [];
+			var query = {
+				where: {
+					key: ['crop_calendar_id', 'work_order_table.status'],
+					value: null
+				}
+			};
+			for (var i = 0; i < plan_list.length; i++) {
+				query['where']['value'] = [plan_list[i].calendar_id, 'Pending'];
+				$.get('/get_work_orders', query, function(work_orders) {
+					if (work_orders.length != 0) {
+						counter++;
+						appendCards(prepareCalendarData(plan_list[i], work_orders));
+					}
+				});
+			}
+			// Show 'No Active Calendars'
+			if (counter == 0) {
+				console.log('No active calendars!');
+			}
+		});
+
+		getWorkOrders({}, 'All');
 	});
 
 </script>

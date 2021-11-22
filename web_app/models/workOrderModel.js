@@ -57,7 +57,7 @@ exports.getResourceDetails = function(query, type, next) {
 }
 
 exports.getWorkOrders = function(query, next) {
-	var sql = 'select work_order_table.*, case when notes is null then "N/A" else notes end as wo_notes , farm_table.farm_name, farm_table.farm_id from work_order_table join crop_calendar_table on crop_calendar_id = calendar_id join farm_table using (farm_id) ';
+	var sql = 'select crop_plan, work_order_table.*, case when notes is null then "N/A" else notes end as wo_notes , farm_table.farm_name, farm_table.farm_id from work_order_table join crop_calendar_table on crop_calendar_id = calendar_id join farm_table using (farm_id) ';
 	if (JSON.stringify(query) != '{ }') {
 		if (query.hasOwnProperty('where') && query.where != null) {
 			for (var i = 0; i < query.where.key.length; i++) {
@@ -87,6 +87,7 @@ exports.getWorkOrders = function(query, next) {
 			}
 		}
 	}
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
