@@ -28,8 +28,8 @@
                         <i class="fa fa-th-list" style="margin-right: 6px;"></i>Material Management
                     </a>
                     <div class="dropdown-menu show" style="">
-                        <a class="dropdown-item" href="#" style="">Inventory</a>
-                        <a class="dropdown-item" href="#" style="">Orders</a>
+                        <a class="dropdown-item {{# if inventory_tab}}active{{/if}}" href="/inventory" style="">Inventory</a>
+                        <a class="dropdown-item {{# if orders_tab}}active{{/if}}" href="/orders" style="">Orders</a>
                     </div>
                 </div>
             </li>

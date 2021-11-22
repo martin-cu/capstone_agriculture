@@ -1,6 +1,7 @@
 const request = require('request');
 const js = require('../public/js/session.js');
 const materialModel = require('../models/materialModel');
+const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
 
 exports.getMaterials = function(req,res){
@@ -56,15 +57,6 @@ exports.ajaxGetResourcesUsed = function(req, res) {
         }
     })
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -283,4 +275,99 @@ exports.getWeather = function(req, res){
     console.log("Test");
     console.log(req)
     res.send({msg : "Weather"});
+}
+
+
+
+
+
+//ACTUAL USE
+exports.getInventory = function(req, res){
+    var html_data = {};
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'inventory_tab');
+
+    materialModel.getFarmMaterials(null, function(err, materials){
+        if(err)
+            throw err;
+        else{
+            var ctr2 = materials.length;
+            if(materials == null)
+                ctr2 = 10;
+            while(ctr2 < 10){
+                materials.push({blank : true});
+                ctr2++;
+            };
+            html_data["materials"] = materials;
+            farmModel.getAllFarms(function(err, farms){
+                if(err)
+                    throw err;
+                else{
+                }
+                materialModel.getFarmMaterials(null, function(err, materials){
+                    if(err)
+                        throw err;
+                    else{
+                        var i,x;
+                        for(i = 0; i < farms.length; i++){
+                            var temp_arr = [];
+                            for(x = 0; x < materials.length; x++){
+                                if(materials[x].farm_id == farms[i].farm_id){
+                                    temp_arr.push(materials[x]);
+                                }
+                            }
+                            farms[i]["farm_materials"] = temp_arr;
+                        }
+                        // html_data["materials"] = materials;
+                    }
+                    html_data["farms"] = farms;
+                    console.log(html_data.farms);
+                    res.render("inventory", html_data);
+                });
+    
+            });
+        }
+    });
+
+}
+
+exports.ajaxGetInventory = function(req, res){
+    var html_data = {};
+    var type = req.params.type;
+    console.log(type);
+    if(type == "all_farms"){
+        materialModel.getFarmMaterials(null, function(err, materials){
+            if(err)
+                throw err;
+            else{
+                var ctr2 = materials.length;
+                if(materials == null)
+                    ctr2 = 10;
+                while(ctr2 < 10){
+                    materials.push({blank : true});
+                    ctr2++;
+                };
+                html_data["materials"] = materials;
+            }
+            res.send(html_data);
+        });
+    }
+    else if(type == "per_farm"){
+        farmModel.getAllFarms(function(err, farms){
+            if(err)
+                throw err;
+            else{
+                html_data["farms"] = farms;
+            }
+            materialModel.getFarmMaterials(null, function(err, materials){
+                if(err)
+                    throw err;
+                else{
+                    html_data["materials"] = materials;
+                }
+                console.log(html_data.farms);
+                res.send(html_data);
+            });
+
+        });
+    }
 }

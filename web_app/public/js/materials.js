@@ -27,9 +27,9 @@ $(document).ready(function(){
     });
 
 
-    $(".resources").on('click', function(){
-        $(".resources.active").css("background", "");
-        $(".resources.active").removeClass("active");
+    $(".resources_tab").on('click', function(){
+        $(".resources_tab.active").css("background", "");
+        $(".resources_tab.active").removeClass("active");
         $(this).addClass("active");
         $(this).css("background", "#F0F0F0");
 
@@ -39,10 +39,10 @@ $(document).ready(function(){
         $.get("/getResourcesPerFarm", {farm_id : 1, type : $(this).text()}, function(result){
             var i = 0;
             for(i = 0; i < result.items.length; i++){
-                $("#resources_table").append('<tr class="resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
+                $("#resources_table").append('<tr class="clickable resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>' + result.items[i].units +'<td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
             }
             for(i = 0; i < result.blanks.length; i++)
-                $("#resources_table").append('<tr class="resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
+                $("#resources_table").append('<tr class="clickable resources"><td></td><td></td><td></td><td></td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
 
         });
     });
@@ -58,11 +58,51 @@ $(document).ready(function(){
         $.get("/getResourcesPerFarm", {farm_id : 1, type : $(this).text()}, function(result){
             var i = 0;
             for(i = 0; i < result.items.length; i++){
-                $("#resources_table").append('<tr class="resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
+                $("#resources_table").append('<tr class="clickable resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
             }
             for(i = 0; i < result.blanks.length; i++)
-                $("#resources_table").append('<tr class="resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
+                $("#resources_table").append('<tr class="clickable resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
 
         });
     });
+
+    $(".materials_tab").on('click', function(){
+        $(".materials_tab.active").css("background", "");
+        $(".materials_tab.active").removeClass("active");
+        $(this).addClass("active");
+        $(this).css("background", "#F0F0F0");
+
+        var cur_id = $(this).attr("id");
+        var url;
+        if(cur_id == "all_farms"){
+            $("#per_farm_materials").prop("hidden", !this.checked);
+            $("#all_farm_materials").removeAttr("hidden");
+            url = "/ajaxGetInventory/all_farms";
+        }
+        else if (cur_id == "per_farm"){
+            $("#all_farm_materials").prop("hidden", !this.checked);
+            $("#per_farm_materials").removeAttr("hidden");
+            url = "/ajaxGetInventory/per_farm";
+        }
+        // $.get(url, {}, function(result){
+            
+        //     if(cur_id == "all_farms"){
+        //     }
+        //     else if (cur_id == "per_farm"){
+        //         alert(result.farms[0].farm_name);
+        //         var i;
+        //         for(i = 0; i < result.farms.length; i++){
+        //             $("#per_farm_materials").append('<div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem; "><div class="col-xl-3" style="padding: 2rem;"><div class="" ><div class=""><h4 class="card-title">'+ result.farms[i].farm_name +'</h4><p class="">Farm Description </p></div></div></div><div class="col" style="padding: 1rem;"><div class="table-responsive" style="height: 200px;"><table class="table" style="width : 100%"><thead style=""><tr><th>Name</th><th>Material Type</th><th>Stock Level</th><th>Units</th></tr></thead><tbody style="overflow: auto"><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr></tbody></table></div></div></div></div>');
+        //         }
+        //     }
+        //     // var i = 0;
+        //     // for(i = 0; i < result.items.length; i++){
+        //     //     $("#resources_table").append('<tr class="clickable resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
+        //     // }
+        //     // for(i = 0; i < result.blanks.length; i++)
+        //     //     $("#resources_table").append('<tr class="clickable resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
+
+        // });
+    });
+
 });
