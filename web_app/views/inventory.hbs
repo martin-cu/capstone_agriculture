@@ -51,6 +51,7 @@
         <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>All Farms</strong></label>
             <div class="card">
                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
+                    <a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; " data-toggle="modal" data-target="#addMaterialModal">Add New Item</a>
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item"><a id="per_farm" class="nav-link materials_tab active" href="#" style="background: #F0F0F0;">Farms</a></li>
                         <li class="nav-item"><a id="all_farms" class="nav-link materials_tab" href="#" >All</a></li>
@@ -191,3 +192,271 @@
     <div class="row" style="padding: 0px 12px; margin-top : 2rem;">
     </div> --}}
 </div>
+
+<div class="modal fade" id="addMaterialModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+            <div class="modal-header" ><h4 class="modal-title">Modal Header</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        <div class="modal-body">
+            <div class="card-body" id="step1_add">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label><input id="first_name-2" class="form-control" type="text" placeholder="name" name="first_name" /></div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong><br /></label>
+                                <div class="dropdown"><button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="height: 38px;width: 154.188px;color: var(--bs-gray-800);background: var(--bs-gray-400);">Type </button>
+                                    <div class="dropdown-menu"><a class="dropdown-item new_type">Pest</a><a class="dropdown-item new_type">Disease</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Description</strong><br /></label><input id="first_name-1" class="form-control" type="text" placeholder="description" name="first_name" /></div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step1">Next</button></div>
+                
+            </div>
+            <div class="card-body" id="step2_add" style="display : none">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Review</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label></div><label class="form-label">Label</label>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong><br /></label></div><label class="form-label">Label</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Description</strong><br /></label>
+                                <p>Lorem ipsum ajksdhf  kaljf liuhf lah auihef iaudf auifhdljgbha dh lafjs iuhaef laiu  udhfiaeu fuh uh gajdueb jdbiu b uawhjdbiuwfdsf</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step2">Next</button></div>
+            </div>
+
+        </div>
+        <div style="text-align:center;margin-top:10px;padding-bottom:10px">
+                        <span class="step active" id="step1_status"></span>
+                        <span class="step " id="step2_status"></span>
+            </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+</div>
+{{!-- <div class="modal fade" id="addMaterialModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+            <div class="modal-header" ><h4 class="modal-title">Modal Header</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        <div class="modal-body">
+            <div class="card-body" id="step1_add">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label><input id="first_name-2" class="form-control" type="text" placeholder="name" name="first_name" /></div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong><br /></label>
+                                <div class="dropdown"><button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="height: 38px;width: 154.188px;color: var(--bs-gray-800);background: var(--bs-gray-400);">Type </button>
+                                    <div class="dropdown-menu"><a class="dropdown-item new_type">Pest</a><a class="dropdown-item new_type">Disease</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Description</strong><br /></label><input id="first_name-1" class="form-control" type="text" placeholder="description" name="first_name" /></div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step1">Next</button></div>
+                
+            </div>
+            <div class="card-body" id="step2_add" style="display : none">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Symptoms</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="max-height: 500px; overflow-y : auto; overflow-x: hidden; padding 10px; margin: 10px;">
+                            {{#each symptoms}}
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="form-check"><input id="formCheck-2" class="form-check-input symptom-checkbox" type="checkbox" value="{{this.symptom_id}}"><label class="form-check-label font-weight-bold" for="formCheck-2">{{this.symptom_name}}</label></div>
+                                        <p style="margin-left: 80px;margin-bottom: 10px;">{{this.symptom_desc}}</p>
+                                    </div>
+                                </div>
+                            {{/each}}
+                            <div class="row">
+                                <div class="col-xl-10">
+                                    <div class="form-check"><input id="formCheck-3" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-3"><input class="form-control" type="text" style="height: 25px;" /></label></div><div style="display: flex;"><textarea class="form-control" style="margin-top: 10px;width: 85%;margin-left: 77px; resize: none;" wrap="hard"></textarea><input type="button" class="btn btn-primary btn-sm " style="margin: 20px; height: 30px; border-radius: 100%;" value="+"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step2">Next</button></div>
+            </div>
+            <div class="card-body" id="step3_add" style="display : none">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Factors</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="max-height: 500px; overflow-y : auto; overflow-x: hidden; padding 10px; margin: 10px;">
+                            {{#each factors}}
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="form-check"><input id="formCheck-2" class="form-check-input symptom-checkbox" type="checkbox" value="{{this.factor_id}}"><label class="form-check-label font-weight-bold" for="formCheck-2">{{this.factor_name}}</label></div>
+                                        <p style="margin-left: 80px;margin-bottom: 10px;">{{this.description}}</p>
+                                    </div>
+                                </div>
+                            {{/each}}
+                            <div class="row">
+                                <div class="col-xl-10">
+                                    <div class="form-check"><input id="formCheck-3" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-3"><input class="form-control" type="text" style="height: 25px;" /></label></div><div style="display: flex;"><textarea class="form-control" style="margin-top: 10px;width: 85%;margin-left: 77px; resize: none;" wrap="hard"></textarea><input type="button" class="btn btn-primary btn-sm " style="margin: 20px; height: 30px; border-radius: 100%;" value="+"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step3">Next</button></div>
+            </div>
+            <div class="card-body" id="step4_add" style="display : none">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Prevention</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="max-height: 500px; overflow-y : auto; overflow-x: hidden; padding 10px; margin: 10px;">
+                            {{#each preventions}}
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="form-check"><input id="formCheck-2" class="form-check-input symptom-checkbox" type="checkbox" value="{{this.prevention_id}}"><label class="form-check-label font-weight-bold" for="formCheck-2">{{this.prevention_name}}</label></div>
+                                        <p style="margin-left: 80px;margin-bottom: 10px;">{{this.prevention_desc}}</p>
+                                    </div>
+                                </div>
+                            {{/each}}
+                            <div class="row">
+                                <div class="col-xl-10">
+                                    <div class="form-check"><input id="formCheck-3" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-3"><input class="form-control" type="text" style="height: 25px;" /></label></div><div style="display: flex;"><textarea class="form-control" style="margin-top: 10px;width: 85%;margin-left: 77px; resize: none;" wrap="hard"></textarea><input type="button" class="btn btn-primary btn-sm " style="margin: 20px; height: 30px; border-radius: 100%;" value="+"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step4">Next</button></div>
+            </div>
+            <div class="card-body" id="step5_add" style="display : none">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Solution</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="max-height: 500px; overflow-y : auto; overflow-x: hidden; padding 10px; margin: 10px;">
+                            {{#each solutions}}
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="form-check"><input id="formCheck-2" class="form-check-input symptom-checkbox" type="checkbox" value="{{this.solution_id}}"><label class="form-check-label font-weight-bold" for="formCheck-2">{{this.solution_name}}</label></div>
+                                        <p style="margin-left: 80px;margin-bottom: 10px;">{{this.solution_desc}}</p>
+                                    </div>
+                                </div>
+                            {{/each}}
+                            <div class="row">
+                                <div class="col-xl-10">
+                                    <div class="form-check"><input id="formCheck-3" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-3"><input class="form-control" type="text" style="height: 25px;" /></label></div><div style="display: flex;"><textarea class="form-control" style="margin-top: 10px;width: 85%;margin-left: 77px; resize: none;" wrap="hard"></textarea><input type="button" class="btn btn-primary btn-sm " style="margin: 20px; height: 30px; border-radius: 100%;" value="+"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step5">Next</button></div>
+            </div>
+            <div class="card-body" id="step6_add" style="display : none">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Review</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="max-height: 500px; overflow-y : auto; overflow-x: hidden; padding 10px; margin: 10px;">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check"><input id="formCheck-2" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-2">Label</label></div>
+                                    <p style="margin-left: 80px;margin-bottom: 10px;">Lorem ipsum dkjsafh kajd nvioklcnviorn ouherglkanfga. asdhf lk uherioug ijfowi fowinvfoieahrn oeuigoarhaerfgar</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check"><input id="formCheck-2" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-2">Label</label></div>
+                                    <p style="margin-left: 80px;margin-bottom: 10px;">Lorem ipsum dkjsafh kajd nvioklcnviorn ouherglkanfga. asdhf lk uherioug ijfowi fowinvfoieahrn oeuigoarhaerfgar</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check"><input id="formCheck-2" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-2">Label</label></div>
+                                    <p style="margin-left: 80px;margin-bottom: 10px;">Lorem ipsum dkjsafh kajd nvioklcnviorn ouherglkanfga. asdhf lk uherioug ijfowi fowinvfoieahrn oeuigoarhaerfgar</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check"><input id="formCheck-2" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-2">Label</label></div>
+                                    <p style="margin-left: 80px;margin-bottom: 10px;">Lorem ipsum dkjsafh kajd nvioklcnviorn ouherglkanfga. asdhf lk uherioug ijfowi fowinvfoieahrn oeuigoarhaerfgar</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check"><input id="formCheck-2" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-2">Label</label></div>
+                                    <p style="margin-left: 80px;margin-bottom: 10px;">Lorem ipsum dkjsafh kajd nvioklcnviorn ouherglkanfga. asdhf lk uherioug ijfowi fowinvfoieahrn oeuigoarhaerfgar</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check"><input id="formCheck-2" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-2">Label</label></div>
+                                    <p style="margin-left: 80px;margin-bottom: 10px;">Lorem ipsum dkjsafh kajd nvioklcnviorn ouherglkanfga. asdhf lk uherioug ijfowi fowinvfoieahrn oeuigoarhaerfgar</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-10">
+                                    <div class="form-check"><input id="formCheck-3" class="form-check-input" type="checkbox" /><label class="form-check-label" for="formCheck-3"><input class="form-control" type="text" style="height: 25px;" /></label></div><div style="display: flex;"><textarea class="form-control" style="margin-top: 10px;width: 85%;margin-left: 77px; resize: none;" wrap="hard"></textarea><input type="button" class="btn btn-primary btn-sm " style="margin: 20px; height: 30px; border-radius: 100%;" value="+"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step6">Next</button></div>
+                </form>
+            </div>
+
+        </div>
+        <div style="text-align:center;margin-top:10px;padding-bottom:10px">
+                        <span class="step active" id="step1_status"></span>
+                        <span class="step " id="step2_status"></span>
+                        <span class="step" id="step3_status"></span>
+                        <span class="step" id="step4_status"></span>
+                        <span class="step" id="step5_status"></span>
+                        <span class="step" id="step6_status"></span>
+            </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+</div> --}}

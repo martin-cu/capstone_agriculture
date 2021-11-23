@@ -58,9 +58,9 @@ $(document).ready(function(){
             var i = 0;
             for(i = 0; i < result.probability.length; i++){
                 if(result.probability[i].pd_id != null)
-                    $("#probability_table").append('<tr class="probability" href="/pest_and_disease_details?type=' + type + '&id=' + result.probability[i].pd_id + '"><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '</td></tr>');
+                    $("#probability_table").append('<tr class="probability clickable" onclick=' + "'" + 'location.href="/pest_and_disease_details?type=' + type + '&id=' + result.probability[i].pd_id + '"' + "'" + '><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '</td></tr>');
                 else
-                    $("#probability_table").append('<tr class="probability"><a hidden ></a><td></td><td></td><td class="probability_value"></td></tr>');
+                    $("#probability_table").append('<tr class="probability clickable"><a hidden ></a><td></td><td></td><td class="probability_value"></td></tr>');
             }
             update_color_meter();
         });

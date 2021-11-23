@@ -144,4 +144,50 @@ $(document).ready(function(){
         // });
     });
 
+
+    $(".add-material-btn").on("click", function(){
+        var cur_id = $(this).attr("id");
+        if(cur_id == "step1"){
+            // $("#step1_add").prop("hidden", !this.checked);
+            $("#step1_add").toggle("hide");
+            // $("#step2_add").removeAttr("hidden");
+            $("#step2_add").toggle("show");
+            $("#step1_status").addClass("finish");
+            $("#step2_status").addClass("active");
+        }
+        else if(cur_id == "step2"){
+            // $("#step1_add").prop("hidden", !this.checked);
+            $("#step2_add").toggle("hide");
+            // $("#step2_add").removeAttr("hidden");
+            $("#step3_add").toggle("show");
+            $("#step2_status").addClass("finish");
+            $("#step3_status").addClass("active");
+        }
+        else if(cur_id == "step3"){
+            // $("#step1_add").prop("hidden", !this.checked);
+            $("#step3_add").toggle("hide");
+            // $("#step2_add").removeAttr("hidden");
+            $("#step4_add").toggle("show");
+            $("#step3_status").addClass("finish");
+            $("#step4_status").addClass("active");
+        }
+        else if(cur_id == "step4"){
+            // $("#step1_add").prop("hidden", !this.checked);
+            $("#step4_add").toggle("hide");
+            // $("#step2_add").removeAttr("hidden");
+            $("#step5_add").toggle("show");
+            $("#step4_status").addClass("finish");
+            $("#step5_status").addClass("active");
+        }
+        else if(cur_id == "step5"){
+            // $("#step1_add").prop("hidden", !this.checked);
+            $("#step5_add").toggle("hide");
+            // $("#step2_add").removeAttr("hidden");
+            $("#step6_add").toggle("show");
+            $("#step5_status").addClass("finish");
+            $("#step6_status").addClass("active");
+        }
+    });
+
+    
 });

@@ -1,6 +1,7 @@
 const request = require('request');
 const js = require('../public/js/session.js');
 const materialModel = require('../models/materialModel');
+const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
 
@@ -357,10 +358,40 @@ exports.getInventory = function(req, res){
                             farms[i]["farm_materials"] = temp_arr;
                         }
                         // html_data["materials"] = materials;
+                        html_data["farms"] = farms;
                     }
-                    html_data["farms"] = farms;
-                    console.log(html_data.farms);
-                    res.render("inventory", html_data);
+                    pestdiseaseModel.getAllSymptoms(function(err, symptoms){
+                        if(err)
+                            throw err;
+                        else{
+                            html_data["symptoms"] = symptoms;
+                        }
+
+                        pestdiseaseModel.getAllFactors(function(err, factors){
+                            if(err)
+                                throw err;
+                            else{
+                                html_data["factors"] = factors;
+                            } 
+
+                            pestdiseaseModel.getAllPreventions(function(err, preventions){
+                                if(err)
+                                    throw err;
+                                else{
+                                    html_data["preventions"] = preventions;
+                                } 
+                                pestdiseaseModel.getAllSolutions(function(err, solutions){
+                                    if(err)
+                                        throw err;
+                                    else{
+                                        html_data["solutions"] = solutions;
+                                    } 
+                                    res.render("inventory", html_data);
+                                });
+                                
+                            });
+                        });
+                    });
                 });
     
             });
