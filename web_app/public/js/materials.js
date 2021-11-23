@@ -3,6 +3,12 @@ function clearList(){
 }
 
 $(document).ready(function(){
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          return false;
+        }
+    });
     $(".type").on("click", function(){
         $("#materials_list").empty();
         var url = "/getMaterialsAjax/" + $(this).text();
@@ -144,48 +150,50 @@ $(document).ready(function(){
         // });
     });
 
-
+    $("input").on("keyup", function(){
+        $(this).css("border-color", "#d1d3e2");
+    });
+    $("textarea").on("keyup", function(){
+        $("#item_name").css("border-color", "#d1d3e2");
+    });
     $(".add-material-btn").on("click", function(){
         var cur_id = $(this).attr("id");
         if(cur_id == "step1"){
-            // $("#step1_add").prop("hidden", !this.checked);
-            $("#step1_add").toggle("hide");
-            // $("#step2_add").removeAttr("hidden");
-            $("#step2_add").toggle("show");
-            $("#step1_status").addClass("finish");
-            $("#step2_status").addClass("active");
+            //check if complete
+            var complete = true;
+            if($("#item_name").val().length == 0){
+                $("#item_name").css("border-color", "red");
+                complete = false;
+            }
+            if($("#item_desc").val().length == 0){
+                $("#item_desc").css("border-color", "red");
+                complete = false;
+            }
+            if(complete){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step1_add").toggle("hide");
+                // $("#step2_add").removeAttr("hidden");
+                $("#step2_add").toggle("show");
+                $("#step1_status").addClass("finish");
+                $("#step2_status").addClass("active");
+
+                $("#review_name").text($("#item_name").val());
+                $("#review_type").text($("#item_type").val());
+                $("#review_desc").text($("#item_desc").val());
+            }
+            else{
+                alert("Please complete details.");
+            }
+            
         }
-        else if(cur_id == "step2"){
+        else if(cur_id == "back"){
             // $("#step1_add").prop("hidden", !this.checked);
             $("#step2_add").toggle("hide");
             // $("#step2_add").removeAttr("hidden");
-            $("#step3_add").toggle("show");
-            $("#step2_status").addClass("finish");
-            $("#step3_status").addClass("active");
-        }
-        else if(cur_id == "step3"){
-            // $("#step1_add").prop("hidden", !this.checked);
-            $("#step3_add").toggle("hide");
-            // $("#step2_add").removeAttr("hidden");
-            $("#step4_add").toggle("show");
-            $("#step3_status").addClass("finish");
-            $("#step4_status").addClass("active");
-        }
-        else if(cur_id == "step4"){
-            // $("#step1_add").prop("hidden", !this.checked);
-            $("#step4_add").toggle("hide");
-            // $("#step2_add").removeAttr("hidden");
-            $("#step5_add").toggle("show");
-            $("#step4_status").addClass("finish");
-            $("#step5_status").addClass("active");
-        }
-        else if(cur_id == "step5"){
-            // $("#step1_add").prop("hidden", !this.checked);
-            $("#step5_add").toggle("hide");
-            // $("#step2_add").removeAttr("hidden");
-            $("#step6_add").toggle("show");
-            $("#step5_status").addClass("finish");
-            $("#step6_status").addClass("active");
+            $("#step1_add").toggle("show");
+            $("#step1_status").removeClass("finish");
+            $("#step1_status").addClass("active");
+            $("#step2_status").removeClass("active");
         }
     });
 

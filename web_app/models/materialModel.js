@@ -155,6 +155,22 @@ exports.updateMaterial = function(type, filter, data, next){
 // }
 
 
+exports.addMaterials = function(type,name, desc, next){
+	var table = "";
+	sql = "INSERT INTO ";
+	if(type == "Seed")
+		sql = sql + "seed_table (seed_name, seed_desc) VALUES (?,?)";
+	else if(type == "Pesticide")
+		sql = sql + "pesticide_table (pesticide_name, pesticide_desc) VALUES (?,?)";
+	else if(type == "Fertilizer")
+		sql = sql + "fertilizer_table (fertilizer_name, fertilizer_desc) VALUES (?,?)";
+
+	sql = mysql.format(sql, name);
+	sql = mysql.format(sql, desc);
+	console.log(sql);
+	mysql.query(sql, next);
+}
+
 exports.registerFarmMaterial = function(data, next) {
 	var sql = "insert into farm_materials set ?";
 	sql = mysql.format(sql, data);

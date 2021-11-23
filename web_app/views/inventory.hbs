@@ -202,24 +202,30 @@
           
         </div>
         <div class="modal-body">
-            <div class="card-body" id="step1_add">
+            <div class="card-body" id="step1_add" >
+                <form id="new_mat_form" action="/addMaterial" method="post">
                     <div class="row">
                         <div class="col">
-                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label><input id="first_name-2" class="form-control" type="text" placeholder="name" name="first_name" /></div>
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label><input class="form-control" type="text" placeholder="name" id="item_name" name="item_name" form="new_mat_form"/></div>
                         </div>
                         <div class="col">
                             <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong><br /></label>
-                                <div class="dropdown"><button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="height: 38px;width: 154.188px;color: var(--bs-gray-800);background: var(--bs-gray-400);">Type </button>
-                                    <div class="dropdown-menu"><a class="dropdown-item new_type">Pest</a><a class="dropdown-item new_type">Disease</a></div>
+                                <div class="dropdown">
+                                    <select class="form-select" id="item_type" name="item_type" form="new_mat_form">
+                                        <option value="Seed" selected>Seed</option>
+                                        <option value="Pesticide">Pesticide</option>
+                                        <option value="Fertilizer">Fertilizer</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Description</strong><br /></label><input id="first_name-1" class="form-control" type="text" placeholder="description" name="first_name" /></div>
+                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Description</strong><br /></label><input class="form-control" type="text" placeholder="description" id="item_desc" name="item_desc" form="new_mat_form" /></div>
                         </div>
                     </div>
+                </form>
                     <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step1">Next</button></div>
                 
             </div>
@@ -231,20 +237,20 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label></div><label class="form-label">Label</label>
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label></div><label class="form-label" id="review_name">Label</label>
                         </div>
                         <div class="col">
-                            <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong><br /></label></div><label class="form-label">Label</label>
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong><br /></label></div><label class="form-label" id="review_type">Label</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <div class="mb-3"><label class="form-label" for="first_name"><strong>Description</strong><br /></label>
-                                <p>Lorem ipsum ajksdhf  kaljf liuhf lah auihef iaudf auifhdljgbha dh lafjs iuhaef laiu  udhfiaeu fuh uh gajdueb jdbiu b uawhjdbiuwfdsf</p>
+                                <p id="review_desc"></p>
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right" id="step2">Next</button></div>
+                    <div class="mb-3"><button class="btn btn-primary btn-sm add-material-btn" style="float : right; margin-left: 10px;" id="step2" type="submit" form="new_mat_form">Add Item</button><button class="btn btn-primary btn-sm add-material-btn" style=" float:right; width: auto; border-radius : 20px; background-color: rgb(236, 236, 236)" id="back" form="">Back</button></div>
             </div>
 
         </div>
