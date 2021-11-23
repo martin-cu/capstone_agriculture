@@ -445,7 +445,92 @@
                 {{!-- STEP 4 --}}
                 <div class="tab">
                     <div class="hide modal_body_content" id="body_step4">
-                    <h5 for="" style="font-weight: bold; padding-bottom: 10px; padding-top: 10px">Step 4: View Pesticide Application Plan</h5>
+                    <h5 for="" style="font-weight: bold; padding-bottom: 20px; padding-top: 10px">Step 4: View Pesticide Application Plan</h5>
+
+                        <h6 style="font-weight: bold; margin-bottom: 20px">Recently Detected Pests</h6>
+                        
+                        {{!-- START CARDS --}}
+
+                        {{!-- Maybe the for each handlebar could be used for each detected pest? --}}
+                        <div class="row">
+
+                          {{!-- PEST INFORMATION CARD --}}
+                                        <div class="col-lg-5 col-xxl-4">
+                                   
+                                            <div class="card shadow mb-4">
+                                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest 1<br></h6>
+                                                </div>
+                                                <div class="card-body" style="height: 239.97px;">
+
+                                                        <div class="table-responsive" style="border-style: none;">
+                                                        <table class="table">
+                                                            <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest Name<br></span><span class="d-xxl-flex justify-content-xxl-start">[Pest Name]<br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{!-- END OF PEST INFORMATION CARD --}}
+
+                                
+                                {{!-- PEST APPLICATION PLAN CARD --}}
+                                <div class="col-lg-7 col-xxl-8">
+
+                                            <div class="card shadow mb-4">
+                                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan 1 Information<br></h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="table-responsive" style="border-style: none;">
+                                                        <table class="table">
+                                                            <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{!-- END OF PEST APPLICATION PLAN CARD --}}
+
+                                        </div>
+
+                                </div>
+                                {{!-- END CARDS --}}
+ 
+                        <h6 style="font-weight: bold; margin-bottom: 20px">Recently Detected Diseases</h6>
+
+                        {{!-- If none detected --}}
+                        <p>No Detected Diseases Yet</p>
+
+                        {{!-- Else, add for each row of cards like the one above --}}
+                        
                 
 
                     </div>

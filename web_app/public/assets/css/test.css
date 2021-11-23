@@ -62,7 +62,7 @@
 
 #back {
     
-    width: 20px;
+    width: 25px;
     border-radius: 100%;
     background-color: white;
     border-color: white;
@@ -86,19 +86,6 @@
     margin-top: auto; 
     background-color: #EEEEEE !important;
  }
-
-.nav-pills .nav-link.active {
-    color: white;
-    background: #BDBE14; 
-}
-
-.nav-pills .nav-link {
-    color: #F1E8D7;
-}
-
-  .nav-item > a:hover {
-    color: white;
-  }
 
   input[type="text"], input[type="date"], input[type="password"], 
   select.browser-default.custom-select{
@@ -228,3 +215,29 @@ a.dropdown-lbl.text-decoration-none.active  {
 }
 
 /* END OF SIDEBAR DROPDOWN */
+
+/* NAV TABS */
+
+div.card-header {
+    background-color: #939C1F !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: white;
+    background: #BDBE14 !important; 
+}
+
+.nav-tabs .nav-link {
+    color: #F1E8D7;
+}
+
+.nav-item > a:hover {
+    color: white;
+}
+
+/* END OF NAV TABS */
+
+div.card-header.py-3 {
+    background-color: #212529 !important;
+    color: white !important;
+}
