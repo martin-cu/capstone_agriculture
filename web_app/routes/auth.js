@@ -91,6 +91,10 @@ router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbabi
 router.post('/addPest', environmentController.addPest);
 router.post('/addDisease', environmentController.addDisease);
 
+// Temporary Pest and Disease
+//diagnose page
+router.get('/pest_and_disease/diagnose', environmentController.getDiagnoses);
+
 //Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);
 router.get('/nutrient_management/:farm_name', environmentController.detailedNutrientManagement);

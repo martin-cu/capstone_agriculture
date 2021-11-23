@@ -39,6 +39,12 @@ exports.init_session = function(obj, role, name, username, tab) {
 		obj['inventory_tab'] = true;
 	else if (tab === 'orders_tab')
 		obj['orders_tab'] = true;
+	else if (tab === 'add_crop_calendar') 
+		obj['farm_tab'] = true;
+	else if (tab === 'add_farm') 
+		obj['monitor_farms_tab'] = true;
+	else if (tab === 'pest_and_disease_diagnoses') 
+		obj['pest_and_disease_diagnoses'] = true;
 
 	return obj;
 }

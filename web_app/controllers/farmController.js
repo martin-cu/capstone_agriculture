@@ -47,7 +47,7 @@ exports.getFarms = function(req, res) {
 // ADD FARMS PAGE (TO BE UPDATED)
 exports.getAddFarm = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_farm');
 	res.render('add_farm', html_data);
 }
 
@@ -318,7 +318,7 @@ exports.getCropCalendar = function(req, res) {
 
 exports.getAddCropCalendar = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
 	res.render('add_crop_calendar', html_data); //crop_calendar_test
 }
 
