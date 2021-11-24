@@ -1244,3 +1244,23 @@ exports.getDiagnoses = function(req, res) {
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
 	res.render('pest_and_disease_diagnoses', html_data);
 }
+
+exports.getAddDiagnosis = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_diagnosis');
+	res.render('add_diagnosis', html_data);
+}
+
+exports.getAddPest = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_pest');
+	res.render('add_pest', html_data);
+}
+
+exports.getAddDisease = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_disease');
+	res.render('add_disease', html_data);
+}
+
+

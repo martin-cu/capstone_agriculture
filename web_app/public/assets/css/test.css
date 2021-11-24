@@ -90,7 +90,7 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
   input[type="text"], input[type="date"], input[type="password"], 
   select.browser-default.custom-select{
     border-radius: 20px;
-    background-color: white;
+    
   }
 
   #addFarm {
@@ -253,3 +253,7 @@ div.card-header.py-3 {
     background-color: #212529 !important;
     color: white !important;
 }
+
+/* table td, th {
+    color:#332C1F;
+  } */

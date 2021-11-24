@@ -1,4 +1,18 @@
-<div class="container-fluid">
+<style>
+
+table td, th {
+    color:#332C1F;
+} 
+
+li > span {
+    color:#332C1F;
+}
+
+</style>
+
+<div class="container-fluid" style="color: #332C1F;">
+
+    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Work Order&nbsp;</h3>
 
     <!-- {{!-- HEADER --}}
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
@@ -17,7 +31,7 @@
                     
                     <div class="col" style="max-width: 70px; margin-bottom: 10px">
 
-                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick="goBack()">
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/farms"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
                             <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
                         </button>        
 
@@ -127,8 +141,8 @@
 
             
 
-			<div class="mx-4 bg-secondary forecast_body" style="margin-top: 20px;">
-				<div class="d-flex w-100 px-3 py-2" style="min-height: 50px;">
+			<div class="mx-4 bg-secondary forecast_body" style="margin-top: 20px">
+				<div class="d-flex w-100 px-3 py-2" style="min-height: 50px; background-color: #212529; color: white">
 					<div class="" id="icon_detail" style="font-size: 40px;">
 						icon
 					</div>
@@ -159,7 +173,7 @@
 					</div>
 				</div>
 
-				<div id="" class="" data-touch="false" data-interval="false" data-ride="carousel" style="height: 100px;">
+				<div id="" class="" data-touch="false" data-interval="false" data-ride="carousel" style="height: 100px; background-color: #212529; color: white">
 				  <div class="carousel-inner" id="carousel_inner">
 
 				  </div>
@@ -259,8 +273,9 @@
 
             <div class="forecast_cont" id="weather_forecast" style="margin: 0px auto">
             
-			<div class="mx-4 bg-secondary forecast_body" style="margin-top: 20px;">
-				<div class="d-flex w-100 px-3 py-2" style="min-height: 50px;">
+			<div class="mx-4 bg-secondary forecast_body" style="margin-top: 20px">
+
+			    <div class="d-flex w-100 px-3 py-2" style="min-height: 50px; background-color: #212529; color: white">
 					<div class="" id="icon_detail" style="font-size: 40px;">
 						icon
 					</div>
@@ -291,7 +306,7 @@
 					</div>
 				</div>
 
-				<div id="" class="" data-touch="false" data-interval="false" data-ride="carousel" style="height: 100px;">
+				<div id="" class="" data-touch="false" data-interval="false" data-ride="carousel" style="height: 100px; background-color: #212529; color: white">
 				  <div class="carousel-inner" id="carousel_inner">
 
 				  </div>
@@ -555,7 +570,7 @@
 
                     <div class="modal-footer">
                         <div class="modal_footer_content" id="_step1">
-                            <button type="button" class="btn round btn-secondary" value="create_farm_form" onclick="goBack();">Cancel</button>
+                            <button type="button" class="btn round btn-secondary" value="create_farm_form" onclick='window.location="/farms"'>Cancel</button>
                             <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1)">Next</button>
                         </div>
 

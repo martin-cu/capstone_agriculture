@@ -94,6 +94,7 @@ router.post('/addDisease', environmentController.addDisease);
 // Temporary Pest and Disease
 //diagnose page
 router.get('/pest_and_disease/diagnose', environmentController.getDiagnoses);
+router.get('/pest_and_disease/diagnose_add_diagnosis', environmentController.getAddDiagnosis);
 
 //Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);

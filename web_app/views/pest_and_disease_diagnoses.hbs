@@ -1,3 +1,14 @@
+<style>
+    thead {
+        background-color: #212529;
+        color: white;
+    }
+
+    table td {
+        color: #332c1f;
+    }
+</style>
+
 <div class="container-fluid">
 
        <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Diagnose&nbsp;</h3>
@@ -43,7 +54,7 @@
                                     <div class="input-group"><input id="filterDiagnosesTable" onkeyup="diagnosesFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
                                 </form>
 
-                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;">Add Diagnosis</button>
+                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button>
                                         
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="diagnosesTable">
@@ -62,13 +73,13 @@
 
                                     <tbody>
                                         <tr>
-                                            <td style="color: #584c33;">DG-01</td>
-                                            <td style="color: #584c33;">Type</td>
-                                            <td style="color: #584c33;">dd/mm/yyyy</td>
-                                            <td style="color: #584c33;">Farm Name</td>
-                                            <td style="color: #584c33;">Level #</td>
-                                            <td style="color: #584c33;">Status</td>
-                                            <td style="color: #584c33;"> 
+                                            <td>DG-01</td>
+                                            <td>Type</td>
+                                            <td>dd/mm/yyyy</td>
+                                            <td>Farm Name</td>
+                                            <td>Level #</td>
+                                            <td>Status</td>
+                                            <td> 
                             
                                                 <div class="dropdown no-arrow">
                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -84,13 +95,13 @@
                                         </tr>
 
                                         <tr>
-                                            <td style="color: #584c33;">DG-02</td>
-                                            <td style="color: #584c33;">Type</td>
-                                            <td style="color: #584c33;">dd/mm/yyyy</td>
-                                            <td style="color: #584c33;">Farm Name</td>
-                                            <td style="color: #584c33;">Level #</td>
-                                            <td style="color: #584c33;">Status</td>
-                                            <td style="color: #584c33;"> 
+                                            <td>DG-02</td>
+                                            <td>Type</td>
+                                            <td>dd/mm/yyyy</td>
+                                            <td>Farm Name</td>
+                                            <td>Level #</td>
+                                            <td>Status</td>
+                                            <td> 
                                                 
                                             {{!-- <button type="submit" class="btn btn-primary btn-sm" id="more"><i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i></button> --}}
                                             
@@ -127,8 +138,8 @@
 
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="pestsTable">
-                                    <thead style="color: rgb(255,255,255);">
-                                        <tr style="background: #332c1f;">
+                                    <thead>
+                                        <tr>
                                             <th>Pest ID</th>
                                             <th>Name</th>
                                             <th>Total Cases</th>
@@ -141,12 +152,12 @@
 
                                     <tbody>
                                         <tr>
-                                            <td style="color: #584c33;">P-01</td>
-                                            <td style="color: #584c33;">Pest Name</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">0</td>
-                                            <td style="color: #584c33;"> 
+                                            <td>P-01</td>
+                                            <td>Pest Name</td>
+                                            <td>10</td>
+                                            <td>10</td>
+                                            <td>0</td>
+                                            <td> 
                             
                                                 <div class="dropdown no-arrow">
                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -162,12 +173,12 @@
                                         </tr>
 
                                         <tr>
-                                            <td style="color: #584c33;">P-02</td>
-                                            <td style="color: #584c33;">Pest Name</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">0</td>
-                                            <td style="color: #584c33;"> 
+                                            <td>P-02</td>
+                                            <td>Pest Name</td>
+                                            <td>10</td>
+                                            <td>10</td>
+                                            <td>0</td>
+                                            <td> 
                             
                                                 <div class="dropdown no-arrow">
                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -202,8 +213,8 @@
 
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="diseasesTable">
-                                    <thead style="color: rgb(255,255,255);">
-                                        <tr style="background: #332c1f;">
+                                    <thead>
+                                        <tr>
                                             <th>Disease ID</th>
                                             <th>Name</th>
                                             <th>Total Cases</th>
@@ -216,12 +227,12 @@
 
                                     <tbody>
                                         <tr>
-                                            <td style="color: #584c33;">DS-01</td>
-                                            <td style="color: #584c33;">Pest Name</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">0</td>
-                                            <td style="color: #584c33;"> 
+                                            <td>DS-01</td>
+                                            <td>Pest Name</td>
+                                            <td>10</td>
+                                            <td>10</td>
+                                            <td>0</td>
+                                            <td> 
                             
                                                 <div class="dropdown no-arrow">
                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -237,12 +248,12 @@
                                         </tr>
 
                                         <tr>
-                                            <td style="color: #584c33;">DS-02</td>
-                                            <td style="color: #584c33;">Disease Name</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">10</td>
-                                            <td style="color: #584c33;">0</td>
-                                            <td style="color: #584c33;"> 
+                                            <td>DS-02</td>
+                                            <td >Disease Name</td>
+                                            <td>10</td>
+                                            <td>10</td>
+                                            <td>0</td>
+                                            <td> 
                             
                                                 <div class="dropdown no-arrow">
                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
