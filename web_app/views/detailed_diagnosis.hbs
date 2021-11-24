@@ -1,0 +1,292 @@
+<style>
+
+table td, th {
+    color:#332C1F;
+} 
+
+li > span {
+    color:#332C1F;
+}
+
+</style>
+
+<div class="container-fluid" style="color: #332C1F;">
+
+     <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Diagnose&nbsp;</h3>
+
+    <!-- {{!-- HEADER --}}
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0" style="font-family: Roboto, sans-serif;color: #584c33;font-weight: 500;">Farms</h3>
+    </div> -->
+
+    <div class="row">
+        {{!-- <div class="col-lg-12 col-xl-12 col-xxl-12"> --}}
+        <div class="col-lg-12 col-lg-12 col-xxl-12">
+
+            {{!-- CARD --}}
+            <div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto;">
+
+                {{!-- START CARD HEADER --}}
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
+                    
+                    <div class="col" style="max-width: 70px; padding-top: 2px">
+
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/pest_and_disease/diagnose"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
+                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                        </button>        
+
+                    </div>
+
+                    <div class="col" style="margin-right: 650px; padding-top: 15px">
+                        <h6>D-01: Infestation Level 1 (Ongoing) </h6>
+            
+                    </div>
+
+
+                    {{!-- <div class="btn-group" role="group"><button class="btn btn-primary" type="button" style="background: #BDBE14;font-weight: bold;border-style: none;border-left-color: rgba(78,115,223,0);border-radius: 10px;padding: 4px 10px;">Farms</button><a class="btn btn-primary" role="button" style="margin-left: 10px;background: rgba(189,190,20,0);border-style: none;border-color: var(--bs-pink);padding: 4px 10px;" href="Materials.html">Materials</a></div> --}}
+                    <div class="dropdown no-arrow" style="padding-top: 5px">
+                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                        </button>
+                        <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                            <a class="dropdown-item" href="#">&nbsp;Mark as Resolved</a>
+                            <a class="dropdown-item" href="#">&nbsp;Update</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">&nbsp;Delete</a>
+                        </div>
+                    </div>
+                </div>
+                {{!-- END CARD HEADER --}}
+
+                {{!-- START CARD BODY --}}
+                <div class="card-body">
+                    
+                    <div class="row" style="padding-top: 10px;">
+                                <div class="col-lg-7 col-xxl-8">
+                                            <div class="card shadow mb-4">
+                                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Diagnosis Information<br></h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="table-responsive" style="border-style: none;">
+                                                        <table class="table">
+                                                            <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr style="border-style: none; height: 90px">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Diagnosis ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">Diagnosis ID<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm Affected<br></span><span class="d-xxl-flex justify-content-xxl-start">Farm Name<br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none; height: 90px">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Type<br></span><span class="d-xxl-flex justify-content-xxl-start">Pest/Disease<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest/Disease Name<br></span><span class="d-xxl-flex justify-content-xxl-start">Pest/Disease Name<br></span></td>
+                                                                </tr>
+
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Date Diagnosed<br></span><span class="d-xxl-flex justify-content-xxl-start">Date Diagnosed<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Diagnosed By<br></span><span class="d-xxl-flex justify-content-xxl-start">Diagnosed By<br></span></td>
+                                                                </tr>
+                                          
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                
+                                {{!-- PESTICIDE APPLICATION PLAN CARD --}}
+                                <div class="card shadow mb-4">
+                                      <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                          <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan Information<br></h6>
+                                      </div>
+                                  <div class="card-body">
+                                      <div class="table-responsive" style="border-style: none;">
+                                        <table class="table">
+                                            <thead>
+                                              {{!-- <tr></tr> --}}
+                                            </thead>
+                                          <tbody>
+                                            <tr style="border-style: none; height: 90px">
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
+                                            </tr>
+
+                                            <tr style="border-style: none; height: 90px">
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
+                                            </tr>
+
+                                            <tr style="border-style: none;">
+                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
+                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
+                                            </tr>                                            
+
+                                          </tbody>
+
+                                          </table>
+                                      </div>
+                                      
+                                    </div>
+
+                                  </div>
+                                  {{!-- END OF PESTICIDE APPLICATION PLAN CARD --}}
+                                            
+                                        </div>
+
+                                
+                                        <div class="col-lg-5 col-xxl-4">
+
+                                        {{!-- START OF SYMPTOMS CARD --}}
+                                            <div class="card shadow mb-4">
+                                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Symptoms&nbsp;</h6>
+                                                </div>
+
+                                                <div class="card-body">
+                                                <div class="table-responsive" style="border-style: none;">
+                                                 <table class="table">
+                                                    <thead>
+                                                        {{!-- <tr></tr> --}}
+                                                        <tr>
+                                                            <th style="border-style: none;">Description:</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                     <tbody>
+                                                        <tr style="border-style: none; height: 90px">
+                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start">Infected Plants show browning and drying of leaves.<br></span> 
+                                                    
+                                                        </tr>
+                                                </tbody>
+
+                                                </table>
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                            {{!-- END OF SYMPTOMS CARD --}}
+
+                                            {{!-- START OF DAMAGE ASSESSMENT CARD --}}
+                                            <div class="card shadow mb-4">
+                                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Damage Assessment<br></h6>
+                                                </div>
+                                                <div class="card-body">
+                                                
+                                                <div class="table-responsive" style="border-style: none;">
+                                                 <table class="table">
+                                                    <thead>
+                                                        {{!-- <tr></tr> --}}
+                                                    </thead>
+
+                                                     <tbody>
+                                                        <tr>
+                                                            <th style="border-style: none; text-align: center; vertical-align: middle;">Infestation Level:<br></th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="border-style: none; text-align: center; vertical-align: middle;">Level 1</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th style="border-style: none; text-align: center; vertical-align: middle;">Number of Affected Crops:</th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="border-style: none; text-align: center; vertical-align: middle;">20</td> 
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th style="border-style: none; text-align: center; vertical-align: middle;">Number of Crops Lost:</th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="border-style: none; text-align: center; vertical-align: middle;">10</td> 
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th style="border-style: none; text-align: center; vertical-align: middle;">Number of Recovered Crops:</th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="border-style: none; text-align: center; vertical-align: middle;">10</td> 
+                                                        </tr>
+                                                
+                                                </tbody>
+
+                                                </table>
+
+                                                </div>
+                                                </div>
+
+                                            </div>
+                                            {{!-- END OF DAMAGE ASSESSMENT CARD --}}
+
+                                        </div>
+                                    </div>
+
+       
+
+                </div>
+                {{!-- END CARD BODY --}}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var view = "pest_and_disease_add_pest";
+function goBack() {
+  window.history.back();
+}
+
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+
+  // Exit the function if any field in the current tab is invalid:
+  if (!dataValidation(currentTab+2)) return false;
+  // Hide the current tab:
+ // x[currentTab].style.display = "none";
+
+document.getElementsByClassName("step")[currentTab].className += " finish";
+
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("create_farm_form").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+
+</script>
+
+{{!-- <script src="../js/crop_calendar.js"></script> --}}

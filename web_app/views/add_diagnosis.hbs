@@ -30,7 +30,7 @@ li > span {
                 {{!-- START CARD HEADER --}}
                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
                     
-                    <div class="col" style="max-width: 70px; margin-bottom: 10px">
+                    <div class="col" style="max-width: 70px; padding-top: 2px">
 
                         <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/pest_and_disease/diagnose"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
                             <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
@@ -38,7 +38,7 @@ li > span {
 
                     </div>
 
-                    <div class="col" style="margin-right: 650px; margin-bottom: 0px">
+                    <div class="col" style="margin-right: 650px; padding-top: 15px">
                         <h6>New Diagnosis </h6>
             
                     </div>
@@ -70,15 +70,16 @@ li > span {
 
                                 <div class="col">
                                 <label for="diagnosis_ID">Diagnosis ID <span style="color: #CA4E0C;">*</span></label>
-			                    <input type="text" class="form-control" id="diagnosis_ID" name="diagnosis_ID" value="DG-xx" disabled>
+			                          <input type="text" class="form-control" id="diagnosis_ID" name="diagnosis_ID" value="DG-xx" disabled>
 
                                 </div>
 
                                 <div class="col">
-                                <label for="date_diagnosed">Date Diagnosed <span style="color: #CA4E0C;">*</span></label>
-                                <input type="date" class="form-control" id="date_diagnosed" name="date_diagnosed">
-
-                                </div>
+                                    <label for="type">Farm Affected <span style="color: #CA4E0C;">*</span></label>
+                                    <select class="browser-default custom-select" id="farm_affected" name="farm_affected">
+                                        
+                                    </select>
+                                </div>     
 
                                 </div>
                             </div>
@@ -88,7 +89,7 @@ li > span {
 
                                 <div class="col">
                                 <label for="type">Type <span style="color: #CA4E0C;">*</span></label>
-		                        <select class="browser-default custom-select" id="type" name="type">
+		                            <select class="browser-default custom-select" id="type" name="type">
                                     <option value="Pest">Pest</option>
                                     <option value="Disease">Disease</option>
                                 </select>
@@ -96,8 +97,10 @@ li > span {
                                 </div>
 
                                 <div class="col">
-                                <label for="land_prep_date">Pest/Disease Name <span style="color: #CA4E0C;">*</span></label>
-		                        <input type="text" class="form-control" id="name" name="name" placeholder="Pest/Disease Name">
+                                <label for="name">Pest/Disease Name <span style="color: #CA4E0C;">*</span></label>
+		                               <select class="browser-default custom-select" id="name" name="name">
+                           
+                                  </select>
 
                                 </div>
 
@@ -109,11 +112,17 @@ li > span {
                             <div class="row">
 
                                 <div class="col">
-                                    <label for="type">Farm Affected <span style="color: #CA4E0C;">*</span></label>
-                                    <select class="browser-default custom-select" id="farm_affected" name="farm_affected">
+                                <label for="date_diagnosed">Date Diagnosed <span style="color: #CA4E0C;">*</span></label>
+                                <input type="date" class="form-control" id="date_diagnosed" name="date_diagnosed">
+
+                                </div>
+
+                              <div class="col">
+                                    <label for="type">Diagnosed By <span style="color: #CA4E0C;">*</span></label>
+                                    <select class="browser-default custom-select" id="diagnosed_by" name="diagnosed_by">
                                         
                                     </select>
-                                </div>     
+                                </div>  
 
                             </div>
                             

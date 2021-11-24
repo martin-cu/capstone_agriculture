@@ -1263,4 +1263,22 @@ exports.getAddDisease = function(req, res) {
 	res.render('add_disease', html_data);
 }
 
+exports.getDetailedDiagnosis = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_diagnosis');
+	res.render('detailed_diagnosis', html_data);
+}
+
+exports.getDetailedPest = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_pest');
+	res.render('detailed_pest', html_data);
+}
+
+exports.getDetailedDisease = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_disease');
+	res.render('detailed_disease', html_data);
+}
+
 

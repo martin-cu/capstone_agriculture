@@ -57,7 +57,7 @@ router.get('/get_cycle_resources_used', materialController.ajaxGetResourcesUsed)
 router.get('/', farmController.getDashboard);
 router.get('/home', farmController.getDashboard);
 
-router.get('/farms', farmController.getFarms); //getFarms
+router.get('/farms', farmController.getFarms); 
 router.get('/farms/add', farmController.getAddFarm);
 
 router.get('/materials', materialController.getMaterials);
@@ -92,12 +92,17 @@ router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbabi
 router.post('/addPest', environmentController.addPest);
 router.post('/addDisease', environmentController.addDisease);
 
-// Temporary Pest and Disease
-//diagnose page
+//Temporary Pest and Disease (Update later)
+
+//diagnose tab
 router.get('/pest_and_disease/diagnose', environmentController.getDiagnoses);
 router.get('/pest_and_disease/diagnose_add_diagnosis', environmentController.getAddDiagnosis);
 router.get('/pest_and_disease/diagnose_add_pest', environmentController.getAddPest);
 router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAddDisease);
+
+router.get('/pest_and_disease/diagnose_detailed_diagnosis', environmentController.getDetailedDiagnosis);
+router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedPest);
+router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedDisease);
 
 //Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);

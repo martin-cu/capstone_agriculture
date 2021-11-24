@@ -53,6 +53,12 @@ exports.init_session = function(obj, role, name, username, tab) {
 		obj['pest_and_disease_diagnoses'] = true;
 	else if (tab === 'pest_and_disease_add_disease') 
 		obj['pest_and_disease_diagnoses'] = true;
+	else if (tab === 'pest_and_disease_detailed_diagnosis') 
+		obj['pest_and_disease_diagnoses'] = true;
+	else if (tab === 'pest_and_disease_detailed_pest') 
+		obj['pest_and_disease_diagnoses'] = true;
+	else if (tab === 'pest_and_disease_detailed_disease') 
+		obj['pest_and_disease_diagnoses'] = true;
 
 	return obj;
 }
