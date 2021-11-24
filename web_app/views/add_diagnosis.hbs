@@ -1,3 +1,16 @@
+<style>
+
+table td, th {
+    color:#332C1F;
+} 
+
+li > span {
+    color:#332C1F;
+}
+
+</style>
+
+
 <div class="container-fluid" style="color: #332C1F;">
 
      <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Diagnose&nbsp;</h3>
@@ -50,7 +63,7 @@
                     {{!-- STEP 1 --}}
                     <div class="tab">
                     <div class="modal_body_content" id="body_step1">
-                            {{!-- <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Select Key Dates and Farm</h5> --}}
+                            <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Add Diagnosis Information</h5>
 
                             <div class="form-group" style="margin-left: 5px;">
                               <div class="row">
@@ -109,7 +122,7 @@
             {{!-- DAMAGE ASSESSMENT --}}
             <h6 style="font-weight: bold; margin-top: 40px">Damage Assessment</h6>
 
-             <div class="form-group" style="margin-left: 5px; padding-bottom: 40px">
+             <div class="form-group" style="margin-left: 5px;">
                 
                 <div class="row">
 
@@ -134,8 +147,104 @@
             </div>
             {{!-- END OF STEP 1 --}}
 
+             {{!-- STEP 2 --}}
+            <div class="tab">
+                <div class="hide modal_body_content" id="body_step2">
+                    <h5 for="" style="font-weight: bold;  padding-bottom: 5px; padding-top: 10px">Step 2: View Pesticide Application Plan</h5>
+
+                    {{!-- START CARDS --}}
+                    <div class="row" style="margin-top: 20px">
+
+                    {{!-- PEST/DISEASE INFORMATION CARD --}}
+                        <div class="col-lg-5 col-xxl-4">         
+                          <div class="card shadow mb-4">
+
+                            <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                              <h6 class="fw-bold m-0" style="color: #FFFFFF;">(Pest/Disease)<br></h6>
+                            </div>
+
+                            <div class="card-body" style="height: 239.97px;">
+
+                              <div class="table-responsive" style="border-style: none;">
+                                <table class="table">
+                                  <thead>
+                                    {{!-- <tr></tr> --}}
+                                  </thead>
+
+                                  <tbody>
+                                    <tr style="border-style: none;">
+                                      <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">(Pest/Disease) ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
+                                      <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">(Pest/Disease) Name<br></span><span class="d-xxl-flex justify-content-xxl-start">[(Pest/Disease) Name]<br></span></td>
+                                    </tr>
+
+                                    <tr style="border-style: none;">
+                                      <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+
+                              </div>
+                                                   
+                            </div>
+                          </div>
+                        </div>
+                    {{!-- END OF PEST/DISEASE INFORMATION CARD --}}
+
+
+                     {{!-- PEST APPLICATION PLAN CARD --}}
+                          <div class="col-lg-7 col-xxl-8">
+
+                                  <div class="card shadow mb-4">
+                                      <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                          <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan Information<br></h6>
+                                      </div>
+                                  <div class="card-body">
+                                      <div class="table-responsive" style="border-style: none;">
+                                        <table class="table">
+                                            <thead>
+                                              {{!-- <tr></tr> --}}
+                                            </thead>
+                                          <tbody>
+                                            <tr style="border-style: none;">
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
+                                            </tr>
+
+                                            <tr style="border-style: none;">
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
+                                            </tr>
+
+                                            <tr style="border-style: none;">
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
+                                              <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
+                                            </tr>
+                                          </tbody>
+
+                                          </table>
+                                      </div>
+                                      
+                                    </div>
+
+                                  </div>
+
+                          </div>
+                        {{!-- END OF PEST APPLICATION PLAN CARD --}}
+
+                    </div>
+
+                </div>
+            </div>
+            {{!-- END OF STEP 2 --}}
+
                     </form>
                     {{!-- END FORM --}}
+
+                    <!-- Circles which indicates the steps of the form: -->
+                    <div style="text-align:center;padding-top:40px;padding-bottom:10px">
+                        <span class="step"></span>
+                        <span class="step"></span>
+                    </div>
 
                     <!-- <div class="float-right text-right">
                             <button type="submit" class="btn btn-secondary" id="cancel" onclick="goBack()">X</button>
@@ -146,7 +255,12 @@
                     <div class="modal-footer">
                         <div class="modal_footer_content" id="_step1">
                             <button type="button" class="btn round btn-secondary" onclick='window.location="/pest_and_disease/diagnose"'>Cancel</button>
-                            <button type="submit" class="btn round btn-primary" form="add_diagnosis_form">Submit</button>
+                            <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1)">Next</button>
+                        </div>
+
+                        <div class="hide modal_footer_content" id="_step2">
+                            <button type="button" class="btn round btn-secondary prev_step" value="_step1" onclick="nextPrev(-1)">Back</button>
+                            <button type="button" class="btn round btn-primary" form="add_diagnosis_form">Submit</button>
                         </div>
 
                       </div>
