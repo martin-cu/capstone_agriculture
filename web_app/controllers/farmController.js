@@ -444,7 +444,7 @@ exports.getSatelliteImageryData = function(req, res) {
 		clouds_max: 1
 	};
 	var options = {
-		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key,//+'&clouds_max='+data.clouds_max,
+		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key+'&clouds_max='+60,
 		method: 'GET',
 		headers: {
 			'Content-type':'application/json'

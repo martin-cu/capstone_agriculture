@@ -93,7 +93,7 @@
 
 
   <script type="text/javascript">
-  
+    jQuery.ajaxSetup({async: false });
     $('*[href]').on('click',function (event) {
       console.log('!');
       window.location = $(this).attr('href');
