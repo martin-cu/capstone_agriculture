@@ -13,13 +13,14 @@
 
             <li class="nav-item">
                 <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
-                    <a aria-expanded="false" data-toggle="collapse" data-target="#farms" href="#" class="dropdown-lbl text-decoration-none {{# if farm_tab}}active{{/if}}{{# if monitor_farms_tab}}active{{/if}}" style="">
+                    <a aria-expanded="false" data-toggle="collapse" data-target="#farms" href="#" 
+                        class="dropdown-lbl text-decoration-none {{# if farm_tab}}active{{/if}}{{# if monitor_farms_tab}}active{{/if}}{{# if add_crop_calendar}}active{{/if}}{{# if add_farm}}active{{/if}}" style="">
                         <i class="fas fa-farm" style="font-size: 16px;margin-right: 10px;"></i>Farms &nbsp;&nbsp;<i class="fas fa-caret-up"></i></i><i class="fas fa-caret-down"></i>
                     </a>
                     
                     <div class="collapse" style="" id="farms">
-                        <a class="dropdown-item {{# if farm_tab}}active{{/if}}" href="/farms" style="">Work Orders</a>
-                        <a class="dropdown-item {{# if monitor_farms_tab}}active{{/if}}" href="/farm_monitor_test" style="">Farm Monitoring</a>
+                        <a class="dropdown-item {{# if farm_tab}}active{{/if}}{{# if add_crop_calendar}}active{{/if}}" href="/farms" style="">Work Orders</a>
+                        <a class="dropdown-item {{# if monitor_farms_tab}}active{{/if}}{{# if add_farm}}active{{/if}}" href="/farm_monitor_test" style="">Farm Monitoring</a>
                     </div>
                 </div>
             </li>
@@ -38,12 +39,12 @@
 
             <li class="nav-item" style="">
                 <div class="nav-item dropdown " style="margin-bottom: 0px;padding: 16px;">
-                    <a aria-expanded="false" data-toggle="collapse" data-target="#pestsAndDiseases" href="#" class="dropdown-lbl text-decoration-none"style=""><i class="dropdown-lbl fas fa-bug" 
-                        style="margin-right: 10px;"></i>Pests and Diseases &nbsp;&nbsp;<i class="fas fa-caret-up"></i></i><i class="fas fa-caret-down"></i>
+                    <a aria-expanded="false" data-toggle="collapse" data-target="#pestAndDisease" href="#" class="dropdown-lbl text-decoration-none {{# if pest_and_disease_diagnoses}}active{{/if}}"style=""><i class="dropdown-lbl fas fa-bug" 
+                        style="margin-right: 10px;"></i>Pest and Disease &nbsp;&nbsp;<i class="fas fa-caret-up"></i></i><i class="fas fa-caret-down"></i>
                     </a>
-                    <div class="collapse" style="" id="pestsAndDiseases">
+                    <div class="collapse" style="" id="pestAndDisease">
                         <a class="dropdown-item" href="#" style="">Discover</a>
-                        <a class="dropdown-item" href="#" style="">Diagnose</a>
+                        <a class="dropdown-item {{# if pest_and_disease_diagnoses}}active{{/if}}" href="/pest_and_disease/diagnose" style="">Diagnose</a>
                     </div>
                 </div>
             </li>

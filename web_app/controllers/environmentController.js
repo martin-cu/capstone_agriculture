@@ -1237,3 +1237,10 @@ exports.updatePDDetails = function(req,res){
 		res.send(result);
 	});
 }
+
+// Pest and Disease Diagnosis Part (Temporary)
+exports.getDiagnoses = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
+	res.render('pest_and_disease_diagnoses', html_data);
+}

@@ -42,19 +42,19 @@
     border-color: #EDD172;
   }
 
-#more {
+button#more.btn.btn-primary.btn-sm.dropdown-toggle {
     width: 24px;
     border-radius: 100%;
     border-color: #EDD172;
 }
 
-#more:hover {
+button#more.btn.btn-primary.btn-sm.dropdown-toggle:hover {
     background-color: #EDD172;
     color: #584C33;
     filter: brightness(95%);
 }
 
-#more:focus, #more:active {
+button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-primary.btn-sm.dropdown-toggle:active {
     background-color: #EDD172 !important;
     color: #584C33 !important;
     border-color: #EDD172 !important;
@@ -112,7 +112,8 @@
 }
 
 .card-body {
-    background-color: #FCFCFC;
+    /* background-color: #FCFCFC; */
+    background-color: white;
 }
 
 #map {
@@ -220,6 +221,7 @@ a.dropdown-lbl.text-decoration-none.active  {
 
 div.card-header {
     background-color: #939C1F !important;
+    height: auto !important;
 }
 
 .nav-tabs .nav-link.active {
@@ -228,6 +230,16 @@ div.card-header {
 }
 
 .nav-tabs .nav-link {
+    color: #F1E8D7;
+    background-color: transparent !important;
+}
+
+.nav-pills .nav-link.active {
+    color: white;
+    background: #BDBE14 !important; 
+}
+
+.nav-pills .nav-link {
     color: #F1E8D7;
 }
 
