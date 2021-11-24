@@ -26,13 +26,13 @@ exports.getMaterials = function(req,res){
 }
 
 exports.ajaxGetMaterials = function(req, res) {
-    materialModel.getMaterials(req.query.type, req.query.filter, function(err, materials) {
+    materialModel.getMaterials(req.query.type, null, function(err, materials) {
         if (err)
             throw err;
         else {
-            //console.log(materials);
-            res.send(materials);
+            console.log(materials);
         }
+        res.send(materials);
     });
 }
 
@@ -60,24 +60,7 @@ exports.ajaxGetResourcesUsed = function(req, res) {
 
 
 
-//AJAX
-exports.getMaterialsAjax = function(req, res){
-    var type = req.params.type;
-    console.log(type);
-    materialModel.getMaterials(type, null, function(err, seeds){
-        if(err){
-            throw err;
-        }
-        else{
-            if(seeds.length != 0){
-                res.send(seeds);
-            }
-            else{
-                
-            }
-        } 
-    });
-}
+
 
 
 
@@ -309,12 +292,33 @@ exports.getOrders = function(req, res){
                     }
                     farms[i]["farm_purchases"] = temp_arr;
                 }
-                html_data["farms"] = farms;
-                console.log(html_data.farms);   
+                html_data["farms"] = farms; 
+
+                materialModel.getMaterials("Seed", null, function(err, seeds){
+                    if(err)
+                        throw err;
+                    else{
+                        html_data["seeds"] = seeds;
+                    }
+                    res.render("orders", html_data);
+                });
             }
-            res.render("orders", html_data);
+            
         });
         
+    });
+}
+
+exports.getMaterialsAjax = function(req, res){
+    var type = req.params.type;
+    console.log(type);
+    materialModel.getMaterials(type, null, function(err, seeds){
+        if(err){
+            throw err;
+        }
+        else{
+            res.send(seeds);
+        } 
     });
 }
 

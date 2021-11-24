@@ -81,6 +81,7 @@ router.get('/inventory', materialController.getInventory);
 router.get('/ajaxGetInventory/:type', materialController.ajaxGetInventory);
 router.get('/orders', materialController.getOrders);
 router.post('/addMaterial', materialController.newMaterial)
+router.get('/ajaxGetMaterials', materialController.ajaxGetMaterials);
 
 //Pest and Disease
 router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);

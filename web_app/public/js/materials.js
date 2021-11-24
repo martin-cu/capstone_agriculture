@@ -197,5 +197,11 @@ $(document).ready(function(){
         }
     });
 
-    
+    $(".purchase_item_type").on("change", function(){
+        var id = $(this).attr("id");
+        var type = $(this).val();
+        $.get("/ajaxGetMaterials", {type : type}, function(result){
+            
+        });
+    });
 });

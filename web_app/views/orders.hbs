@@ -165,21 +165,44 @@
     <div class="modal-dialog modal-lg">
       <!-- Modal content-->
       <div class="modal-content">
-            <div class="modal-header" ><h4 class="modal-title">Modal Header</h4>
+            <div class="modal-header" ><h4 class="modal-title">New Purchase</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           
         </div>
         <div class="modal-body">
             <div class="card-body" id="step1_add" >
-                <form id="new_mat_form" action="/addMaterial" method="post">
+                <form id="new_purchase" action="/addMaterial" method="post">
                     <div class="row">
+                        <div class="col-5">
+                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Farm</strong><br /></label>
+                                <div class="dropdown">
+                                    <select class="form-select" id="item_type" name="item_type" form="new_purchase">
+                                        <option disabled selected value> -- select an option -- </option>
+                                        {{#each farms}}
+                                            <option value="{{this.farm_id}}">{{this.farm_name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div></div>
+                        </div>
+                    </div>
+                    <div class="row" style="height : 30px;">
                         <div class="col">
-                            <div class="mb-3"><label class="form-label" for="username"><strong>Name</strong><br /></label><input class="form-control" type="text" placeholder="name" id="item_name" name="item_name" form="new_mat_form"/></div>
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong></label>
+                            </div>
                         </div>
                         <div class="col">
-                            <div class="mb-3"><label class="form-label" for="username"><strong>Type</strong><br /></label>
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Item</strong></label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Amount</strong></label></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
                                 <div class="dropdown">
-                                    <select class="form-select" id="item_type" name="item_type" form="new_mat_form">
+                                    <select class="form-select purchase_item_type" id="item_type1" name="item_type1" form="new_purchase">
                                         <option value="Seed" selected>Seed</option>
                                         <option value="Pesticide">Pesticide</option>
                                         <option value="Fertilizer">Fertilizer</option>
@@ -187,10 +210,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <div class="dropdown">
+                                    <select class="form-select" id="item1" name="item1" form="new_purchase">
+                                        <option disabled selected value> -- select an option -- </option>
+                                        {{#each seeds}}
+                                            <option value="{{this.id}}">{{this.name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <div style="display: flex; flex-flow: row;"><input class="form-control text-right" type="number" placeholder="amount" id="item_amt1" name="item_amt1" form="new_purchase" style="width: 50%;" /><span style="padding: 10px;">Kg</span></div></div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Description</strong><br /></label><input class="form-control" type="text" placeholder="description" id="item_desc" name="item_desc" form="new_mat_form" /></div>
+                        <div class="col-4">
+                        </div>
+                        <div class="col-4">
+                            <center><button class="btn btn-primary btn-sm add-material-btn" id="add-btn-mat">Add</button></center>
+                        </div>
+                        <div class="col-4">
+
                         </div>
                     </div>
                 </form>
