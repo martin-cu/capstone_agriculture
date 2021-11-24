@@ -254,6 +254,6 @@ div.card-header.py-3 {
     color: white !important;
 }
 
-/* table td, th {
-    color:#332C1F;
-  } */
+h6 {
+    font-weight: bold;
+}
