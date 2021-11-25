@@ -104,7 +104,7 @@ router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAd
 
 router.get('/pest_and_disease/diagnose_detailed_diagnosis', environmentController.getDetailedDiagnosis);
 router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedPest);
-router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedDisease);
+router.get('/pest_and_disease/diagnose_detailed_disease', environmentController.getDetailedDisease);
 
 //Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);
