@@ -305,7 +305,32 @@ exports.getOrders = function(req, res){
                     else{
                         html_data["seeds"] = seeds;
                     }
-                    res.render("orders", html_data);
+
+                    materialModel.getAllPurchases(null, {status : "Processing"} , function(err, pending){
+                        if(err)
+                            throw err;
+                        else{
+                            console.log(pending);
+                            var i;
+                            for(i = 0; i < pending.length; i++){
+                                pending[i].request_date = dataformatter.formatDate(pending[i].request_date, 'mm DD, YYYY');
+                            }
+                            html_data["pending"] = pending;
+                        }
+                        materialModel.getAllPurchases(null, {status : "Processing"}, function(err, processing){
+                            if(err)
+                                throw err;
+                            else{
+                                for(i = 0; i < processing.length; i++){
+                                    processing[i].request_date = dataformatter.formatDate(processing[i].request_date, 'mm DD, YYYY');
+                                }
+                                html_data["processing"] = processing;
+                            }
+                            res.render("orders", html_data);
+                        });
+                        
+                    });
+                    
                 });
             }
             
