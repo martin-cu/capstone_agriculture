@@ -3,6 +3,7 @@ const js = require('../public/js/session.js');
 const materialModel = require('../models/materialModel');
 const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
+const { Solve } = require('javascript-lp-solver');
 
 exports.getMaterials = function(req,res){
     var html_data = {};
@@ -27,11 +28,14 @@ exports.getMaterials = function(req,res){
 
 exports.ajaxGetMaterials = function(req, res) {
     materialModel.getMaterials(req.query.type, null, function(err, materials) {
-        if (err)
+        if (err){
+            console.log(err);
             throw err;
+        }
         else {
             console.log(materials);
         }
+        console.log("Success");
         res.send(materials);
     });
 }
@@ -52,7 +56,6 @@ exports.ajaxGetResourcesUsed = function(req, res) {
         if (err)
             throw err;
         else {
-
             res.send(result);
         }
     })
@@ -186,22 +189,26 @@ exports.addMaterials = function(req,res){
 }
 
 //Purchase history
-exports.addPurchase = function(req,res){ //ajax
-    var purchase = {
-        item_type : "Pesticide",
-        item_desc : "This is a test to add purchase.",
-        item_id : 3,
-        purchase_price : 100,
-        amount : 45,
-        units : "Kg",
-        requested_by : 1,
-        request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
-    }
-    materialModel.addPurchase(purchase, function(err, result){
-    });
+exports.addPurchase = function(req,res){ 
 
-    html_data = {msg : "Added."}
-    res.send(html_data);
+    console.log(req.body);
+    res.redirect("orders");
+    // var purchase = {
+    //     item_type : "Pesticide",
+    //     item_desc : "This is a test to add purchase.",
+    //     item_id : 3,
+    //     purchase_price : 100,
+    //     amount : 45,
+    //     units : "Kg",
+    //     requested_by : 1,
+    //     request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+    // }
+    // materialModel.addPurchase(purchase, function(err, result){
+    // });
+
+
+    // html_data = {msg : "Added."}
+    // res.send(html_data);
 }
 
 exports.getPurchases = function(req, res){
@@ -273,7 +280,6 @@ exports.getOrders = function(req, res){
         if(err)
             throw err;
         else{
-            console.log(purchases);
             html_data["purchases"] = purchases;
         }
 
@@ -310,9 +316,9 @@ exports.getOrders = function(req, res){
 }
 
 exports.getMaterialsAjax = function(req, res){
-    var type = req.params.type;
+    var type = req.query.type;
     console.log(type);
-    materialModel.getMaterials(type, null, function(err, seeds){
+    materialModel.getMaterialsList(type, null, function(err, seeds){
         if(err){
             throw err;
         }
@@ -322,9 +328,6 @@ exports.getMaterialsAjax = function(req, res){
     });
 }
 
-exports.ajaxGetPurchases = function(req,res){
-
-}
 exports.getInventory = function(req, res){
     var html_data = {};
     html_data = js.init_session(html_data, 'role', 'name', 'username', 'inventory_tab');
@@ -430,4 +433,44 @@ exports.newMaterial = function(req, res){
     });
 
     res.redirect("/inventory");
+}
+
+
+exports.addPurchase = function(req,res){ 
+
+    console.log("------------------------------------------------------------------");
+    console.log(req.body);
+    console.log("------------------------------------------------------------------");
+    var farm_id = req.body.farm;
+
+    var i;
+    for(i = 0; i < req.body.item.length; i++){
+        var purchase = {
+            requested_by : 1,
+            farm_id : farm_id,
+            item_type : req.body.item[i].type,
+            item_id : req.body.item[i].item,
+            amount : req.body.item[i].amount,
+            request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+        }
+        materialModel.addPurchase(purchase, function(){});
+    }
+        console.log("Add purchase");
+    res.redirect("orders");
+    // var purchase = {
+    //     item_type : "Pesticide",
+    //     item_desc : "This is a test to add purchase.",
+    //     item_id : 3,
+    //     purchase_price : 100,
+    //     amount : 45,
+    //     units : "Kg",
+    //     requested_by : 1,
+    //     request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+    // }
+    // materialModel.addPurchase(purchase, function(err, result){
+    // });
+
+
+    // html_data = {msg : "Added."}
+    // res.send(html_data);
 }

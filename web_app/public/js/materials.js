@@ -67,7 +67,7 @@ $(document).ready(function(){
                 $("#resources_table").append('<tr class="clickable resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
             }
             for(i = 0; i < result.blanks.length; i++)
-                $("#resources_table").append('<tr class="clickable resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
+                $("#resources_table").append('<tr class="clickable resources"><td></td><td></td><td></td><td>sacks</td><td></td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
 
         });
     });
@@ -90,25 +90,6 @@ $(document).ready(function(){
             $("#per_farm_materials").removeAttr("hidden");
             url = "/ajaxGetInventory/per_farm";
         }
-        // $.get(url, {}, function(result){
-            
-        //     if(cur_id == "all_farms"){
-        //     }
-        //     else if (cur_id == "per_farm"){
-        //         alert(result.farms[0].farm_name);
-        //         var i;
-        //         for(i = 0; i < result.farms.length; i++){
-        //             $("#per_farm_materials").append('<div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem; "><div class="col-xl-3" style="padding: 2rem;"><div class="" ><div class=""><h4 class="card-title">'+ result.farms[i].farm_name +'</h4><p class="">Farm Description </p></div></div></div><div class="col" style="padding: 1rem;"><div class="table-responsive" style="height: 200px;"><table class="table" style="width : 100%"><thead style=""><tr><th>Name</th><th>Material Type</th><th>Stock Level</th><th>Units</th></tr></thead><tbody style="overflow: auto"><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr></tbody></table></div></div></div></div>');
-        //         }
-        //     }
-        //     // var i = 0;
-        //     // for(i = 0; i < result.items.length; i++){
-        //     //     $("#resources_table").append('<tr class="clickable resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
-        //     // }
-        //     // for(i = 0; i < result.blanks.length; i++)
-        //     //     $("#resources_table").append('<tr class="clickable resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
-
-        // });
     });
 
     $(".purchases_tab").on('click', function(){
@@ -129,25 +110,6 @@ $(document).ready(function(){
             $("#per_farm_materials").removeAttr("hidden");
             url = "/ajaxGetPurchasesy/per_farm";
         }
-        // $.get(url, {}, function(result){
-            
-        //     if(cur_id == "all_farms"){
-        //     }
-        //     else if (cur_id == "per_farm"){
-        //         alert(result.farms[0].farm_name);
-        //         var i;
-        //         for(i = 0; i < result.farms.length; i++){
-        //             $("#per_farm_materials").append('<div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem; "><div class="col-xl-3" style="padding: 2rem;"><div class="" ><div class=""><h4 class="card-title">'+ result.farms[i].farm_name +'</h4><p class="">Farm Description </p></div></div></div><div class="col" style="padding: 1rem;"><div class="table-responsive" style="height: 200px;"><table class="table" style="width : 100%"><thead style=""><tr><th>Name</th><th>Material Type</th><th>Stock Level</th><th>Units</th></tr></thead><tbody style="overflow: auto"><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td><td>Cell 3</td></tr><tr><td>Cell 3</td><td>Cell 4</td><td>Cell 3</td><td>Cell 3</td></tr></tbody></table></div></div></div></div>');
-        //         }
-        //     }
-        //     // var i = 0;
-        //     // for(i = 0; i < result.items.length; i++){
-        //     //     $("#resources_table").append('<tr class="clickable resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
-        //     // }
-        //     // for(i = 0; i < result.blanks.length; i++)
-        //     //     $("#resources_table").append('<tr class="clickable resources"><td></td><td></td><td></td><td>sacks</td><td>PHP 500.00</td><td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');
-
-        // });
     });
 
     $("input").on("keyup", function(){
@@ -197,11 +159,114 @@ $(document).ready(function(){
         }
     });
 
-    $(".purchase_item_type").on("change", function(){
-        var id = $(this).attr("id");
-        var type = $(this).val();
-        $.get("/ajaxGetMaterials", {type : type}, function(result){
-            
-        });
+
+    $("#add-btn-mat").on("click", function(){
+        var count = $(this).val();
+        if(count == "6"){
+            alert("Limit reached");
+        }
+        else{
+            $(this).val(parseInt(count) + 1);
+            //add new item
+            $(".last_item").after('<div class="row" id="row' + count +'"><div class="col"><div class="mb-3"><div class="dropdown"><select class="form-select purchase_item_type" id="item_type' + count + '" name="item[' + (count - 1)+ '][type]" form="new_purchase"><option value="Seed">Seed</option><option value="Pesticide">Pesticide</option><option value="Fertilizer">Fertilizer</option></select></div></div></div><div class="col"><div class="mb-3"><div class="dropdown"><select class="form-select requried" id="item' + count + '" name="item[' + (count - 1)+ '][item]" form="new_purchase"><option disabled selected value> -- select an option -- </option><option class="material_item' + count + '"value="1}">1</option></select></div></div></div><div class="col"><div class="mb-3"><div style="display: flex; flex-flow: row;"><input class="form-control text-right required" type="number" placeholder="amount" id="item_amt' + count + '" name="item[' + (count - 1)+ '][amount]" form="new_purchase" style="width: 50%;" /><span style="padding: 10px;" id="item_unit' + count +'">Kg</span></div></div></div></div>');
+            $(".last_item").removeClass("last_item");
+            $("#row" + count).addClass("last_item");
+
+            var select = "item" + count;
+            //populate item list
+            $.get("/ajaxGetMaterials", {type : "Seed"}, function(result){
+                var i;
+                for(i = 0; i < result.length; i++){
+                    $("#"+select).append('<option class="material_' + select + '"value="' + result[i].id + '">' + result[i].name + '</option>');
+                }
+            });
+        }
+        
     });
+
+
+
+    $(".new_purchase").on("click", function(){
+        var cur_id = $(this).attr("id");
+        var count = $("#add-btn-mat").val();
+        if(cur_id == "step1"){
+            //check if complete
+            if(isComplete(count)){
+                //next page
+                $("#step1_new_purchase").toggle("hide");
+                $("#step2_new_purchase").toggle("show");
+                //change status
+                $("#step1_status").addClass("finish");
+                $("#step2_status").addClass("active");
+
+                //update fields
+                $("#review_farm").text($("#farm").find(":selected").text());
+
+                for(i = 1; i < parseInt(count); i++){
+                    $("#buttons").before('<div class="row review_row"><div class="col"><div class="mb-3"><div class="dropdown"><label class="form-label" id="review_type' + i +'">' + $("#item_type" + i).val() +'</label></div></div></div><div class="col"><div class="mb-3"><div class="dropdown"><label class="form-label" id="review_item' + i +'">' + $("#item" + i).find(":selected").text() +'</label></div></div></div><div class="col"><div class="mb-3"><div style="display: flex; flex-flow: row;"><label class="form-label" id="review_amount' + i +'">' + $("#item_amt" + i).val() +'</label><span style="margin-left: 10px;">' + $("#item_unit" + i).text() +'</span></div></div></div></div>');
+                }
+            }
+            else{
+                alert("Complete missing fields");
+            }
+            
+            
+            
+        }
+        else if(cur_id == "back"){
+            // $("#step1_add").prop("hidden", !this.checked);
+            $("#step2_new_purchase").toggle("hide");
+            // $("#step2_add").removeAttr("hidden");
+            $("#step1_new_purchase").toggle("show");
+            $("#step1_status").removeClass("finish");
+            $("#step1_status").addClass("active");
+            $("#step2_status").removeClass("active");
+            $(".review_row").remove();
+        }
+    });
+
+    
 });
+
+function isComplete(count){
+    var status = true;
+    if($("#farm").val() == null){
+        status = false;
+        $("#farm").css("border-color", "red");
+    }
+    
+    for(x = 1; x < parseInt(count); x++){
+        if($("#item"+x).val() == null){
+            status = false;
+            $("#item"+x).css("border-color", "red");
+        }
+        if($("#item_amt"+x).val() <= 0){
+            status = false;
+            $("#item_amt"+x).css("border-color", "red");
+        }
+    }
+
+    return status;
+}
+
+$(document).on('keyup',".required", function(){
+    $(this).css("border-color", "#d1d3e2");
+});
+$(document).on('change',".required", function(){
+    $(this).css("border-color", "#d1d3e2");
+});
+$(document).on("change",'.purchase_item_type', function(){
+
+    var id = $(this).attr("id");
+    var type = $(this).val();
+    var select = "item" + id.charAt(id.length - 1);
+    // alert(select);
+
+    $(".material_" + select).remove();
+    $.get("/ajaxGetMaterials", {type : type}, function(result){
+        var i;
+        for(i = 0; i < result.length; i++){
+            $("#"+select).append('<option class="material_' + select + '"value="' + result[i].id + '">' + result[i].name + '</option>');
+        }
+    });
+ });
