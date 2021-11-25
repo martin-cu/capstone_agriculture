@@ -1,0 +1,286 @@
+<style>
+    thead {
+        background-color: #212529;
+        color: white;
+    }
+
+    table td {
+        color: #332c1f;
+    }
+</style>
+
+<div class="container-fluid">
+
+       <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Subscriptions&nbsp;</h3>
+    
+
+    <div class="row">
+
+        <div class="col-lg-12 col-xl-12 col-xxl-12">
+
+            <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
+
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff; height:auto">
+
+                    <ul class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
+                        <li class="nav-item"><a id="active-subscriptions-tab" class="nav-link active" data-toggle="tab" href="#activeSubscriptions"role="tab" aria-controls="activeSubscriptions" aria-selected="true" 
+                            style="background: #F0F0F0;">Active Subscriptions</a></li>
+
+                        <li class="nav-item"><a id="archived-subscriptions-tab" class="nav-link" data-toggle="tab" href="#archivedSubscriptions"role="tab" aria-controls="archivedSubscriptions" aria-selected="false" 
+                            style="background: #F0F0F0;">Archived</a></li>
+                    </ul>
+                        {{!-- <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"><i class="fas fa-ellipsis-v d-xxl-flex justify-content-xxl-end text-gray-400"></i></button>
+                            <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                                <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
+                                    <div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a>
+                            </div>
+                        </div> --}}
+
+                    </div>
+
+                    <div class="card-body">
+                            {{!-- TAB CONTENT --}}
+
+                            <div class="tab-content" id="nav-tabContent">
+
+                                {{!-- TAB 1 --}}
+                                <div class="tab-pane fade show active" id="activeSubscriptions" role="tabpanel" aria-labelledby="active-subscriptions-tab">
+                                
+                                <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
+                                <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                    <div class="input-group"><input id="filterDiagnosesTable" onkeyup="activeSubscriptionsFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
+                                </form>
+
+                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/sms/subscriptions_add"'>Add Subscription</button>
+                                        
+                                <div class="table-responsive" style="margin-top: 20px; height: 420px">
+                                <table class="table" id="activeSubscriptionsTable">
+                                    <thead style="color: rgb(255,255,255);">
+                                        <tr style="background: #212529;">
+                                            <th>Subscription ID</th>
+                                            <th>Name</th>
+                                            <th>Recipient(s)</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>S-01</td>
+                                            <td>Subscription 1</td>
+                                            <td>All</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>Active</td>
+                                            <td> 
+                            
+                                                <div class="dropdown no-arrow">
+                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                    </div>
+                                                </div>
+                                                 
+                                            </td>                                        
+                                        </tr>
+
+                                        <tr>
+                                            <td>S-02</td>
+                                            <td>Subscription 2</td>
+                                            <td>Farm 1</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>Active</td>
+                                            <td> 
+                                                
+                                            {{!-- <button type="submit" class="btn btn-primary btn-sm" id="more"><i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i></button> --}}
+                                            
+                                                <div class="dropdown no-arrow">
+                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                                
+                                </div>
+
+                                </div>
+                                {{!-- END OF TAB 1 --}}
+
+                                {{!-- TAB 2 --}}
+                                <div class="tab-pane fade" id="archivedSubscriptions" role="tabpanel" aria-labelledby="archived-subscriptions-tab">
+                                
+                                <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
+                                <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                    <div class="input-group"><input id="filterPestsTable" onkeyup="archivedSubscriptionsFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
+                                </form>
+
+                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location=""'>Add Subscription</button>
+
+                                <div class="table-responsive" style="margin-top: 20px; height: 420px">
+                                <table class="table" id="archivedSubscriptionsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Subscription ID</th>
+                                            <th>Name</th>
+                                            <th>Recipient(s)</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>S-01</td>
+                                            <td>Subscription 1</td>
+                                            <td>All</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>Ended</td>
+                                            <td> 
+                            
+                                                <div class="dropdown no-arrow">
+                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                    </div>
+                                                </div>
+                                                 
+                                            </td>                                        
+                                        </tr>
+
+                                        <tr>
+                                            <td>S-02</td>
+                                            <td>Subscription 2</td>
+                                            <td>Farm 1</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>dd-mmm-yyyy hh:mm</td>
+                                            <td>Ended</td>
+                                            <td> 
+                                            <div class="dropdown no-arrow">
+                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                    </div>
+                                                </div>
+                                                 
+                                            </td>                                        
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                                
+                                </div>
+                                    
+                                </div>
+                                {{!-- END OF TAB 2 --}}
+
+                            </div>
+                            {{!-- END OF TAB CONTENT --}}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+<script>
+
+var view = "sms_subscriptions";
+
+function goBack() {
+  window.history.back();
+}
+
+function diagnosesFilter() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("filterDiagnosesTable");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("diagnosesTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+function pestsFilter() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("filterPestsTable");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("pestsTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+function diseasesFilter() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("filterDiseasesTable");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("diseasesTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+</script>

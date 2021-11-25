@@ -111,6 +111,11 @@ router.get('/nutrient_management', environmentController.getNurientManagement);
 router.get('/nutrient_management/:farm_name', environmentController.detailedNutrientManagement);
 router.post('/nutrient_management/add_record', environmentController.addSoilRecord);
 
+//SMS Management (Update later)
+router.get('/sms/subscriptions', globe.getSubscriptions);
+router.get('/sms/subscriptions_add', globe.getAddSubscription);
+router.get('/sms/messages', globe.getMessages);
+
 
 //Work Order
 router.get('/farms/work_order&id=:work_order_id', workOrderController.getDetailedWO);

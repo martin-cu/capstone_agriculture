@@ -87,7 +87,7 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
     background-color: #EEEEEE !important;
  }
 
-  input[type="text"], input[type="date"], input[type="password"], 
+  input[type="text"], input[type="date"], input[type="password"], input[type="datetime-local"], select.form-select,
   select.browser-default.custom-select{
     border-radius: 20px;
     
@@ -256,4 +256,22 @@ div.card-header.py-3 {
 
 h6 {
     font-weight: bold;
+}
+
+a.dropdown-item.notSidebar:hover {
+    background-color: #BDBE14 !important;
+	color:  white;
+}
+
+.dropdown-item.notSidebar, .dropdown-lbl.notSidebar, .dropdown-lbl.notSidebar i, .dropdown-lbl.notSidebar span {
+	background: #7D7D7D !important;
+	color: white;
+	font-size: 16px;
+}
+
+.dropdown-menu.notSidebar {
+	background: #7D7D7D;
+    /* border: 1px solid #e3e6f0; */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	color: #332C1F;
 }
