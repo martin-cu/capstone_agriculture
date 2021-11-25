@@ -1,6 +1,5 @@
-exports.processNPKValues = function(obj, area) {
+exports.processNPKValues = function(obj, area, applied) {
 	obj = obj[0];
-	console.log(obj);
 	var keys = ['n_lvl', 'p_lvl', 'k_lvl'];
 	var new_keys = ['n_val', 'p_val', 'k_val'];
 	var index;
@@ -41,6 +40,18 @@ exports.processNPKValues = function(obj, area) {
 
 		obj[new_keys[i]] = val;
 		obj[keys[i]] = Math.round(obj[keys[i]]*30.5151727 * 100) / 100;
+	}
+
+	for (var i = 0; i < applied.length; i++) {
+		if (applied[i].resources_used != 0) {
+			obj.p_lvl -= applied[i].P * applied[i].resources_used;
+			obj.k_lvl -= applied[i].K * applied[i].resources_used;
+			obj.n_lvl -= applied[i].N * applied[i].resources_used;
+		}
+	}
+
+	for (var  i = 0; i < keys.length; i++) {
+		obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;
 	}
 
 	return obj;

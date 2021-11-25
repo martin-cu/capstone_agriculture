@@ -31,8 +31,8 @@ exports.ajaxGetMaterials = function(req, res) {
             throw err;
         else {
             console.log(materials);
+            res.send(materials);
         }
-        res.send(materials);
     });
 }
 

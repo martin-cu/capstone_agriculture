@@ -180,6 +180,18 @@ function createDOM(obj) {
 	ele.setAttribute('style', obj.style);
 	ele.innerHTML = obj.html;
 
+	for (prop in obj.attr) {
+		if (Object.prototype.hasOwnProperty.call(obj.attr, prop)) {
+			if (prop == 'data_href') {
+				new_prop = 'data-href';
+			}
+			else {
+				new_prop = prop;
+			}
+			ele.setAttribute(new_prop, obj.attr[prop]);
+	    }
+	}
+
 	return ele;
 }
 
@@ -444,7 +456,6 @@ function getNDVI(farm_name, dat, N_recommendation) {
 }
 
 function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
-	console.log(obj);
 	var result_arr = [];
 	var temp_obj;
 	var fertilizer_cont = {
@@ -492,13 +503,11 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 			}
 		}
 	}
-	// console.log(recommendation[fertilizer_cont.p_fertilizer.strongest.name]);
-	// console.log(fertilizer_cont);
 
 	//Create obj for P recommendation
 	temp_obj = {
 		fertilizer: fertilizer_cont.p_fertilizer.strongest.name,
-		amount: recommendation[fertilizer_cont.p_fertilizer.strongest.name],
+		amount: recommendation[fertilizer_cont.p_fertilizer.strongest.name]+' bags',
 		desc: obj.P[0].desc,
 		date: obj.P[0].date,
 		nutrient: 'P'
@@ -528,14 +537,33 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 		}
 		temp_obj = {
 			fertilizer: fertilizer_cont.k_fertilizer.strongest.name,
-			amount: Math.round(k_amt / single_f_amt * 100) / 100,
+			amount: Math.round(k_amt / single_f_amt * 100) / 100+' bags',
 			desc: obj.K[i].desc,
 			date: obj.K[i].date,
 			nutrient: 'K'
 		}
 		result_arr.push(temp_obj);
 	}
-	console.log(result_arr);
+
+	//Create obj for N recommendation
+	var n_fertilizer_amt;
+	obj.N = obj.N.filter(ele => ele.amount != 0);
+
+	for (var i = 0; i < obj.N.length; i++) {
+		n_fertilizer_amt = obj.N[i].amount / fertilizer_cont.n_fertilizer.strongest.val;
+		temp_obj = {
+			fertilizer: fertilizer_cont.n_fertilizer.strongest.name,
+			amount: Math.round(n_fertilizer_amt * 100) / 100+' bags',
+			desc: obj.N[i].desc+' Nitrogen Application',
+			date: obj.N[i].date,
+			nutrient: 'N'
+		}
+		result_arr.push(temp_obj);
+	}
+
+	result_arr.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0));
+	
+	return result_arr;
 }
 
 function createSchedule(materials, recommendation, applied, farm_id, N_recommendation, details) {
@@ -631,7 +659,47 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			N = getNDVI(tempReplaceFarm(farm_name), DAT, N_recommendation);
 
 			obj = { N: N, P: P, K: K};
-			mapFertilizertoSchedule(obj, materials, applied, recommendation);
+			var schedule_arr = mapFertilizertoSchedule(obj, materials, applied, recommendation);
+			var schedule_arr_keys = ['date', 'fertilizer', 'desc', 'amount'];
+			var tr, td;
+			var hidden_atr = {
+				type: 'hidden',
+				name: '',
+				value: '',
+			};
+			var checkbox_attr = {
+				type: 'checkbox',
+				name: 'checkbox',
+				value: ''
+			}
+			for (var i = 0; i < schedule_arr.length; i++) {
+				tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+				for (var y = 0; y < schedule_arr_keys.length; y++) {
+					hidden_atr.name = schedule_arr_keys[y];
+					hidden_atr.value = schedule_arr[i][schedule_arr_keys[y]];
+					tr.appendChild(createDOM({
+						type: 'input',
+						class: '',
+						style: '',
+						html: '',
+						attr: hidden_atr
+					}));
+					tr.appendChild(createDOM({ 
+						type: 'td', 
+						class: '', 
+						style: '',
+						html: schedule_arr[i][schedule_arr_keys[y]]
+					}));
+				}
+				checkbox_attr.value = i +1;
+				tr.appendChild(createDOM({
+					type: 'input', 
+					class: 'form-check-input', 
+					style: 'margin-top: 10px;',
+					attr: checkbox_attr
+				}));
+				$('#schedule_table').append(tr);
+			}
 		});
 	});
 }
@@ -663,7 +731,7 @@ function calculateDeficientN(reqs, applied) {
 }
 
 $(document).ready(function() {
-
+	var wo_arr = [];
 	if (type == 'Soil Test') {
 		// var ph_inp = document.getElementById('ph_lvl');
 
@@ -696,7 +764,7 @@ $(document).ready(function() {
 		$.get('/filter_nutrient_mgt', { farm_name: farm_name, type: 'Fertilizer', filter: id }, function(details) {
 			appendDetails(details);
 
-			$.get('/get_materials', { type: 'Fertilizer', filter: id }, function(materials) {
+			$.get('/getAll_materials', { type: 'Fertilizer', filter: id }, function(materials) {
 
 				$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: id }, function(list) {
 
@@ -707,6 +775,49 @@ $(document).ready(function() {
 				});
 			});
 		});
+
+
+
+		$('#schedule_table').on('click', '.form-check-input', function() {
+			var checkboxes = [];
+			$("input:checkbox[name='checkbox']:checked").each(function() {
+			   checkboxes.push($($(this)).val());
+			});
+			wo_arr = [];
+			if (checkboxes.length != 0) {
+				var index = [];
+				var rows = $($('#schedule_table').children()[0]).children();
+				var selected;
+				var wo_obj;
+				$('#generate_wo').removeClass('hide');
+
+				for (var i = 0; i < checkboxes.length; i++) {
+					wo_obj  = {
+						date: '',
+						fertilizer: '',
+						desc: '',
+						amount: ''
+					};
+					selected = $($(rows)[checkboxes[i]]).children().filter('input:hidden');
+
+					wo_obj.date = $(selected[0]).prop('value');
+					wo_obj.fertilizer = $(selected[1]).prop('value');
+					wo_obj.desc = $(selected[2]).prop('value');
+					wo_obj.amount = $(selected[3]).prop('value');
+					
+					wo_arr.push(wo_obj);
+				}
+
+			}
+			else {
+				$('#generate_wo').addClass('hide');
+			}
+		});
+
+		$('#generate_wo').on('click', function() {
+			console.log(wo_arr);
+		});
+
 	}
 
 });

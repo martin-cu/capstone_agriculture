@@ -624,11 +624,11 @@ exports.addSoilRecord = function(req, res) {
 
 function recommendFertilizerPlan(obj, materials) {
 	var model;
-	var multiplier = 1.1;
+	var multiplier = 1.3;
 	var constraints = {
 		N: { min: obj.n_lvl, max: obj.n_lvl * multiplier },
 		P: { min: obj.p_lvl, max: obj.p_lvl * multiplier },
-		K: { min: obj.k_lvl, max: obj.k_lvl * multiplier }
+		K: { min: obj.k_lvl, max: obj.k_lvl * multiplier },
 	};
 	var variables = {};
 	for (var i = 0; i < materials.length; i++) {
@@ -652,6 +652,7 @@ function recommendFertilizerPlan(obj, materials) {
 	for (var prop in obj.recommendation) {
 		if (parseFloat(obj.recommendation[prop])) {
 			obj.recommendation[prop] = Math.round(obj.recommendation[prop] * 100) / 100;
+			obj.recommendation[prop] = obj.recommendation[prop] < 0 ? 0 : obj.recommendation[prop];
 		}
 	}
 
@@ -670,10 +671,18 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 		        if (err)
 		            throw err;
 		        else {
-		        	result = dataformatter.processNPKValues(result, result.farm_area)
-		            result = recommendFertilizerPlan(result, materials);
+		        	var type;
+		        	var farm_id;
+		        	materialModel.readResourcesUsed(req.query.type, req.query.filter, function(err, applied) {
+		        		if (err)
+		        			throw err;
+		        		else {
+				        	result = dataformatter.processNPKValues(result, result.farm_area, applied)
+				            result = recommendFertilizerPlan(result, materials);
 
-					res.send(result);
+							res.send(result);
+		        		}
+		        	});
 		        }
 		    });
 		}
@@ -690,10 +699,16 @@ exports.detailedNutrientManagement = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_diagnose');
-			html_data['detailed_data'] = dataformatter.processNPKValues(result, result.farm_area);
+			materialModel.readResourcesUsed('Fertilizer', result[0].farm_id, function(err, applied) {
+        		if (err)
+        			throw err;
+        		else {
+        			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_diagnose');
+					html_data['detailed_data'] = dataformatter.processNPKValues(result, result.farm_area, applied);
 
-			res.render('nutrient_mgt_detailed', html_data);
+					res.render('nutrient_mgt_detailed', html_data);
+        		}
+        	});
 		}
 	});
 }

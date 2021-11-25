@@ -66,7 +66,6 @@ exports.getMaterials = function(type, filter, next){
 		sql = table;
 	}
 
-	console.log(sql);
 	mysql.query(sql, next);
 }
 

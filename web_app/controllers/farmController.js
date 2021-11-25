@@ -451,7 +451,6 @@ exports.getSatelliteImageryData = function(req, res) {
 		},
 		body: JSON.stringify(data)
 	};
-	console.log(options.url);
 	request(options, function(err, response, body) {
 		if (err)
 			throw err;
@@ -464,7 +463,7 @@ exports.getSatelliteImageryData = function(req, res) {
         	}
 			//var result = body[body.length-1];
 			//result.dt = dataformatter.unixtoDate(result.dt);
-			console.log(body);
+			//console.log(body);
 			res.send(body);
 		}
 	})

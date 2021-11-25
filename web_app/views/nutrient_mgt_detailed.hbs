@@ -98,7 +98,7 @@
 
 <div class="rounded  mx-3 mt-3">
 	<div class="w-100 bg-dark text-white rounded">Fertilizer Planning</div>
-	<div class="rounded card shadow-lg d-flex flex-column" style="height: 350px;">
+	<div class="rounded card shadow-lg d-flex flex-column" style="min-height: 350px;">
 		<div class="d-flex">
 			<div class="w-100 p-3">
 				<table class="table" id="inventory_table">
@@ -111,9 +111,19 @@
 			</div> -->
 		</div>
 		<div class="mx-3">
-			<div>Fertilizer Application Schedule:</div>
+			<div>Recommended Fertilizer Application Schedule:</div>
 			<div class="mt-2">
-				
+				<table class="table" id="schedule_table">
+					<tr>
+						<th>Application Date</th>
+						<th>Fertilizer</th>
+						<th>Description</th>
+						<th>Amount</th>
+						<th></th>
+					</tr>
+				</table>
+
+				<button class="btn btn-success float-right hide mb-3" type="button" id="generate_wo">Submit</button>
 			</div>
 		</div>
 	</div>
