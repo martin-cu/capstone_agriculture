@@ -81,7 +81,9 @@ router.get('/inventory', materialController.getInventory);
 router.get('/ajaxGetInventory/:type', materialController.ajaxGetInventory);
 router.get('/orders', materialController.getOrders);
 router.post('/addMaterial', materialController.newMaterial)
-router.get('/ajaxGetMaterials', materialController.ajaxGetMaterials);
+router.get('/ajaxGetMaterials', materialController.getMaterialsAjax);
+router.post('/addPurchase', materialController.addPurchase)
+
 
 //Pest and Disease
 router.get('/pest_and_disease_management', environmentController.getPestDiseaseManagement);
@@ -102,7 +104,7 @@ router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAd
 
 router.get('/pest_and_disease/diagnose_detailed_diagnosis', environmentController.getDetailedDiagnosis);
 router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedPest);
-router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedDisease);
+router.get('/pest_and_disease/diagnose_detailed_disease', environmentController.getDetailedDisease);
 
 //Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);
@@ -165,7 +167,7 @@ router.get('/addNewItem', materialController.addMaterials);
 router.get('/getMaterials', materialController.getMaterials); 
 router.get('/updateMaterial', materialController.updateMaterial);
 router.get('/addFarmMaterial', materialController.addFarmMaterial);
-router.get('/addPurchase', materialController.addPurchase);
+// router.get('/addPurchase', materialController.addPurchase);
 router.get('/getPurchases', materialController.getPurchases);
 router.get('/updatePurchase', materialController.updatePurchase);
 

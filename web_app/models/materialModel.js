@@ -69,6 +69,48 @@ exports.getMaterials = function(type, filter, next){
 	mysql.query(sql, next);
 }
 
+//Gets list of materials
+exports.getMaterialsList = function(type, filter, next){
+	var sql;
+	var table;
+	if (type == "Seed") {
+		table = "SELECT seed_id as id, seed_name as name, seed_desc as mat_desc FROM seed_table";
+	
+		if(filter == null){
+			sql = table + ";";
+		}
+		else{
+			sql = table +" WHERE ?";
+			sql = mysql.format(sql, filter);
+		}
+	}
+	else if (type == "Pesticide") {
+		table = "SELECT pesticide_id as id, pesticide_name as name, pesticide_desc as mat_desc FROM pesticide_table";
+	
+		if(filter == null){
+			sql = table + ";";
+		}
+		else{
+			sql = table +" WHERE ?";
+			sql = mysql.format(sql, filter);
+		}
+	}
+	else if (type == "Fertilizer") {
+		table = "SELECT fertilizer_id as id, fertilizer_name as name, fertilizer_desc as mat_desc FROM fertilizer_table";
+	
+		if(filter == null){
+			sql = table + ";";
+		}
+		else{
+			sql = table +" WHERE ?";
+			sql = mysql.format(sql, filter);
+		}
+	}
+
+	console.log(sql);
+	mysql.query(sql, next);
+}
+
 //Joins list of all filtered materials and combines with farm material inventory
 exports.getAllMaterials = function(type, filter, next) {
 	var sql;
