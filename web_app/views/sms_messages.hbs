@@ -1,6 +1,7 @@
 <style>
 .container{
-    max-width:1170px; margin:auto;
+    max-width: 2000px; 
+    margin: auto;
 }
 
 img {
@@ -24,14 +25,17 @@ img {
      margin: 20px 0 0;
 }
 
-.recent_heading {float: left; width:40%;}
+.recent_heading {
+    float: left; width:40%;
+}
+
 .srch_bar {
   display: inline-block;
   text-align: right;
   width: 60%;
 }
 
-.headind_srch{ 
+.headind_srch { 
     padding:10px 29px 10px 20px; overflow:hidden; border-bottom:1px solid #c4c4c4;
 }
 
@@ -41,7 +45,7 @@ img {
     margin: auto;
 }
 
-.srch_bar input{ 
+.srch_bar input { 
     border:1px solid #cdcdcd; border-width:0 0 1px 0; width:80%; padding:2px 0 4px 6px; background:none;
 }
 
@@ -91,11 +95,15 @@ img {
 }
 
 .inbox_chat {
-     height: 600px; 
-     overflow-y: scroll;
+    max-height: 670px;
+    overflow-y: auto;
+    margin-bottom: 5px;
+   
 }
 
-.active_chat{ background:#ebebeb;}
+.active_chat{ 
+    background:#ebebeb;
+}
 
 .incoming_msg_img {
   display: inline-block;
@@ -131,7 +139,7 @@ img {
 
 .mesgs {
   float: left;
-  padding: 30px 15px 0 25px;
+  padding: 20px;
   width: 60%;
 }
 
@@ -164,10 +172,9 @@ img {
 }
 
 .msg_send_btn {
-  background: #05728f none repeat scroll 0 0;
-  border: medium none;
-  border-radius: 50%;
-  color: #fff;
+  background: #EDD172;
+  color: #332c1f;
+  border-radius: 100%;
   cursor: pointer;
   font-size: 17px;
   height: 33px;
@@ -182,7 +189,9 @@ img {
 }
 
 .msg_history {
-  height: 516px;
+  max-height: 540px;
+  padding-right: 30px;
+  margin-bottom: 10px;
   overflow-y: auto;
 
 }
@@ -228,31 +237,50 @@ img {
                                 <div class="tab-pane fade show active" id="activeMessages" role="tabpanel" aria-labelledby="active-messages-tab">
                                     
                                     {{!-- MAIN MESSAGING DIV --}}
-                                    <div class="container" style="padding-top: 20px;">
+                                    {{!-- <div class="container" style="padding-top: 5px;"> --}}
                                         
 
-                                    <div class="messaging">
+                                    <div class="messaging" style="padding-top:10px">
 
                                         <div class="inbox_msg">
                                             
                                             {{!-- INBOX DIV --}}
-                                            <div class="inbox_people">
+                                            <div class="inbox_people" style="position: relative;">
 
                                             <div class="headind_srch">
                                                 <div class="recent_heading">
                                                 <h4>Recent</h4>
                                                 </div>
                                                 
-                                                <div class="srch_bar">
+                                                {{!-- <div class="srch_bar">
                                                 <div class="stylish-input-group">
                                                     <input type="text" class="search-bar"  placeholder="Search" >
                                                     <span class="input-group-addon">
                                                     <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
-                                                    </span> </div>
+                                                    </span> 
                                                 </div>
-                                            </div>
+                                                </div> --}}
 
-                                            <div class="inbox_chat">
+                                            </div>
+                                            
+                                            {{!-- INBOX HISTORY --}}
+                                            <div class="inbox_chat" id="inboxChat" style=" overflow: auto; width: 100%;height: 100%;">
+
+                                                 <button class="btn btn-primary btn-circle btn-lg" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; position: absolute; right: 20px; bottom: 25px; border-radius:100%" onclick='window.location=""'>
+                                                     <i class="fas fa-plus"></i>
+                                                 </button>
+
+                                                <div class="chat_list">
+                                                <div class="chat_people">
+                                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                                    <div class="chat_ib">
+                                                    <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
+                                                    <p>Test, which is a new approach to have all solutions 
+                                                        astrology under one roof.</p>
+                                                    </div>
+                                                </div>
+                                                </div>
+
                                                 <div class="chat_list active_chat">
                                                 <div class="chat_people">
                                                     <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -263,6 +291,7 @@ img {
                                                     </div>
                                                 </div>
                                                 </div>
+
                                                 <div class="chat_list">
                                                 <div class="chat_people">
                                                     <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -273,6 +302,7 @@ img {
                                                     </div>
                                                 </div>
                                                 </div>
+
                                                 <div class="chat_list">
                                                 <div class="chat_people">
                                                     <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -283,6 +313,7 @@ img {
                                                     </div>
                                                 </div>
                                                 </div>
+
                                                 <div class="chat_list">
                                                 <div class="chat_people">
                                                     <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -293,6 +324,7 @@ img {
                                                     </div>
                                                 </div>
                                                 </div>
+
                                                 <div class="chat_list">
                                                 <div class="chat_people">
                                                     <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -303,6 +335,7 @@ img {
                                                     </div>
                                                 </div>
                                                 </div>
+
                                                 <div class="chat_list">
                                                 <div class="chat_people">
                                                     <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
@@ -313,17 +346,11 @@ img {
                                                     </div>
                                                 </div>
                                                 </div>
-                                                <div class="chat_list">
-                                                <div class="chat_people">
-                                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                                                    <div class="chat_ib">
-                                                    <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
-                                                    <p>Test, which is a new approach to have all solutions 
-                                                        astrology under one roof.</p>
-                                                    </div>
-                                                </div>
-                                                </div>
+                                                
                                             </div>
+                                            {{!-- END OF INBOX HISTORY --}}
+
+                                           
                                             
                                             </div>
                                             {{!-- END OF INBOX DIV --}}
@@ -338,7 +365,8 @@ img {
                                                 </div>
                                        
 
-                                            <div class="mesgs">                                            
+                                            <div class="mesgs">    
+                                                                                        
                                             <div class="msg_history" id="msgHistory">
 
                                                 <div class="incoming_msg">
@@ -401,12 +429,27 @@ img {
 
                                             </div>
 
-                                            <div class="type_msg" style="padding-top: 10px;">
-                                                <div class="input_msg_write">
-                                                <input type="text" class="write_msg" placeholder="Type a message" />
-                                                <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                                            <div class="type_msg" style="padding-top: 20px;">
+                                               
+                                            <div class="row">
+
+                                                <div class="col-11">
+                                                     <textarea class="form-control" placeholder="Type a message"></textarea>
                                                 </div>
+
+                                                <div class="col-1">
+                                                     <button class="btn btn-primary btn-circle btn-md msg_send_btn" type="button" style="margin-right: 14px; margin-top:8px;"><span><i class="fas fa-paper-plane" style="color: #  color: #332c1f;"></i></span></button>
+                                                </div>
+
                                             </div>
+                                               
+
+                                               
+                                              
+                                            </div>
+
+                                            
+
                                             </div>
                                             {{!-- END OF MESSAGES DIV --}}
 
@@ -415,7 +458,7 @@ img {
                                         
                                         </div>
                                         
-                                </div>
+                                {{!-- </div> --}}
                                 {{!-- END OF MAIN MESSAGING DIV --}}
 
                                 </div>
@@ -447,6 +490,18 @@ element.scrollTop = element.scrollHeight;
 
 function updateScroll(){
     element.scrollTop = element.scrollHeight;
+}
+
+// Add active class to the current button (highlight it)
+var header = document.getElementById("inboxChat");
+var messages = header.getElementsByClassName("chat_list");
+
+for (var i = 0; i < messages.length; i++) {
+  messages[i].addEventListener("click", function() {
+  var current = document.getElementsByClassName("active_chat");
+  current[0].className = current[0].className.replace(" active_chat", "");
+  this.className += " active_chat";
+  });
 }
 
 
