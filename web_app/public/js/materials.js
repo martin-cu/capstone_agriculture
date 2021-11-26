@@ -4,9 +4,11 @@ function clearList(){
 
 $(document).ready(function(){
     $(window).keydown(function(event){
-        if(event.keyCode == 13) {
-          event.preventDefault();
-          return false;
+        if(event.target.tagName != 'TEXTAREA') { // Added to allow enter key on textarea inputs
+            if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+            }
         }
     });
     $(".type").on("click", function(){

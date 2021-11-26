@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,700,400italic,300italic,700italic">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards-1.css">
+    <link rel="stylesheet" href="assets/css/Animation-Cards.css">
+    <link rel="stylesheet" href="assets/css/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/css/theme.bootstrap_4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="assets/css/Multi-step-form.css">
+    <link rel="stylesheet" href="assets/css/TR-Form.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529;">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-text mx-3"><img src="assets/img/dogs/LA_logo.png" style="width: 150px;"></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link" href="Dashboard.html"><i class="fas fa-tachometer-alt"></i><span style="font-size: 16px;">Dashboard</span></a></li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-warehouse"></i>&nbsp;Farms</a>
+                            <div class="dropdown-menu" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item" href="Work-Order.html" style="background: #667528;color: rgba(255,255,255,0.8);">Work Order</a><a class="dropdown-item" href="Crop-Calendar.html" style="background: #667528;color: rgba(255,255,255,0.8);">Crop Calendar</a><a class="dropdown-item" href="Farm-Monitoring.html" style="background: #667528;color: rgba(255,255,255,0.8);">Farm Monitoring</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown show" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="true" data-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-th-list"></i>&nbsp;Material Management</a>
+                            <div class="dropdown-menu show" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item" href="Orders.html" style="background: #667528;color: rgba(255,255,255,0.8);">Orders</a><a class="dropdown-item" href="Farm-Resources.html" style="background: #667528;color: rgba(255,255,255,0.8);">Inventory</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-bug"></i>&nbsp;Pest and Disease</a>
+                            <div class="dropdown-menu" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Discover</a><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown show" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="true" data-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-balance-scale-left"></i>&nbsp;Nutrient Management</a>
+                            <div class="dropdown-menu show" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Discover</a><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Diagnose</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="nav-item dropdown" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-toggle="dropdown" class="text-decoration-none" href="#" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-mobile-alt"></i>&nbsp;SMS Management</a>
+                            <div class="dropdown-menu" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Subscriptions</a><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Messages</a></div>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="login.html"><i class="far fa-user-circle" style="font-size: 16px;"></i><span style="color: rgba(255, 255, 255, 0.8);font-size: 16px;">User Management</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="register.html"><i class="far fa-chart-bar" style="font-size: 16px;"></i><span style="font-size: 16px;">Farm Productivity Reports</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand shadow mb-4 topbar static-top" style="background: #F1E8D7;">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        <ul class="navbar-nav flex-nowrap ml-auto">
+                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right p-3 animated--grow-in" aria-labelledby="searchDropdown">
+                                    <form class="form-inline mr-auto navbar-search w-100">
+                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#"><span class="badge badge-danger badge-counter">3+</span><i class="fas fa-bell fa-fw" style="color: rgb(88,76,51);"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-list animated--grow-in">
+                                        <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="mr-3">
+                                                <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 12, 2019</span>
+                                                <p>A new monthly report is ready to download!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="mr-3">
+                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 7, 2019</span>
+                                                <p>$290.29 has been deposited into your account!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="mr-3">
+                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 2, 2019</span>
+                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                            </div>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item d-xl-flex align-items-xl-center align-content-center">
+                                <div class="nav-item dropdown" style="width: auto;"><a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#" style="border-radius: 20px;background: #ffffff;padding: 12px;width: auto;height: auto;"><span class="d-none d-lg-inline" style="font-weight: bold;color: rgb(88,76,51);font-size: 13px;">administrator<i class="fa fa-user-circle-o" style="margin-left: 10px;"></i></span></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container">
+                    <div class="card" id="TableSorterCard">
+                        <div class="modal fade" role="dialog" tabindex="-1" id="tablehelpModal" aria-labeledby="tablehelpModal" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Table Filtering Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:1%">Priority</th>
+                                                        <th style="width:9%">Operator</th>
+                                                        <th style="width:30%">Description</th>
+                                                        <th style="width:60%">Examples</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td><code>|</code>&nbsp;or&nbsp;&nbsp;<code>OR</code><br></td>
+                                                        <td>Logical "or" (Vertical bar). Filter the column for content that matches text from either side of the bar.<br></td>
+                                                        <td><code>&lt;20 | &gt;40</code>&nbsp;(matches a column cell with either "&lt;20" or "&gt;40")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2</td>
+                                                        <td><code>&amp;&amp;</code>&nbsp;or <code>AND</code><br></td>
+                                                        <td>Logical "and". Filter the column for content that matches text from either side of the operator.<br></td>
+                                                        <td><code>&gt;20 &amp;&amp; &gt;40</code>&nbsp;(matches a column cell that contains both "&gt;20" and "&lt;40")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>3</td>
+                                                        <td><code>/\d/</code><br></td>
+                                                        <td>Add any regex to the query to use in the query ("mig" flags can be included&nbsp;<code>/\w/mig</code>)<br></td>
+                                                        <td><code>/b[aeiou]g/i</code>&nbsp;(finds "bag", "beg", "BIG", "Bug", etc);<code>&gt;/r$/</code>&nbsp;(matches text that ends with an "r")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>4</td>
+                                                        <td><code>&lt; &lt;= &gt;= &gt;</code><br></td>
+                                                        <td>Find alphabetical or numerical values less than or greater than or equal to the filtered query .<br></td>
+                                                        <td><code>&lt;=10</code>&nbsp;(find values greater than or equal to 10)<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>5</td>
+                                                        <td><code>!</code>&nbsp;or&nbsp;<code>!=</code><br></td>
+                                                        <td>Not operator, or not exactly match. Filter the column with content that&nbsp;<strong>do not</strong>&nbsp;match the query. Include an equal (<code>=</code>), single (<code>'</code>) or double quote (<code>"</code>) to exactly&nbsp;<em>not</em>&nbsp;match a filter.<br><br><br></td>
+                                                        <td><code>!e</code>&nbsp;(find text that doesn't contain an "e");<code>!"ELISA"</code>&nbsp;(find content that does not exactly match "ELISA")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>6</td>
+                                                        <td><code>"</code>&nbsp;or&nbsp;<code>=</code><br></td>
+                                                        <td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query<br></td>
+                                                        <td><code>abc"</code>&nbsp;or&nbsp;<code>abc=</code>&nbsp;(exactly match "abc")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>7</td>
+                                                        <td><code>-</code>&nbsp;or <code>to</code><br></td>
+                                                        <td>Find a range of values. Make sure there is a space before and after the dash (or the word "to").<br></td>
+                                                        <td><code>10 - 30</code>&nbsp;or&nbsp;<code>10 to 30</code>&nbsp;(match values between 10 and 30)<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>8</td>
+                                                        <td><code>?</code><br></td>
+                                                        <td>Wildcard for a single, non-space character.<br></td>
+                                                        <td><code>S?c</code>&nbsp;(finds "Sec" and "Soc", but not "Seec")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>8</td>
+                                                        <td><code>*</code><br></td>
+                                                        <td>Wildcard for zero or more non-space characters.<br></td>
+                                                        <td><code>B*k</code>&nbsp;(matches "Black" and "Book")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>9</td>
+                                                        <td><code>~</code><br></td>
+                                                        <td>Perform a fuzzy search (matches sequential characters) by adding a tilde to the beginning of the query<br></td>
+                                                        <td><code>~bee</code>&nbsp;(matches "Bruce Lee" and "Brenda Dexter"), or&nbsp;<code>~piano</code>&nbsp;(matches "Philip Aaron Wong")<br></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10</td>
+                                                        <td>text<br></td>
+                                                        <td>Any text entered in the filter will&nbsp;<strong>match</strong>&nbsp;text found within the column<br></td>
+                                                        <td><code>abc</code>&nbsp;(finds "abc", "abcd", "abcde", etc);<code>SEC</code>&nbsp;(finds "SEC" and "Analytical SEC")<br></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer"><button class="btn btn-danger" type="button" data-dismiss="modal">Close</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Material Management &gt; Inventory</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7 col-xl-12">
+                            <h6 class="font-weight-bold m-0" style="color: #584c33;">Resources (Inventory)</h6>
+                            <div class="card" style="margin-top: 10px;">
+                                <div class="card-header" style="height: auto;background: #939C1F;">
+                                    <ul class="nav nav-tabs card-header-tabs">
+                                        <li class="nav-item"><a class="nav-link active" href="#">Seed</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#" style="color: rgb(255,255,255);">Fertilizer</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#" style="color: rgb(255,255,255);">Pesticide</a></li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row table-topper align-items-center">
+                                        <div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                                        <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
+                                            <h6 id="counter">Showing: <strong id="rowCount">ALL</strong>&nbsp;Row(s)</h6>
+                                        </div>
+                                        <div class="col-4 text-right" style="margin: 0px;padding: 5px 10px;"><a href="#" data-toggle="modal" data-target="#tablehelpModal"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;"></i></a></div>
+                                    </div>
+                                    <div>
+                                        <table class="table table tablesorter" id="ipi-table">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th class="text-right">Stock level</th>
+                                                    <th>unit</th>
+                                                    <th class="text-center">Cost per unit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Dinorado</td>
+                                                    <td class="text-right">2</td>
+                                                    <td>sacks</td>
+                                                    <td class="text-center">PHP 500.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dinorado</td>
+                                                    <td class="text-right">2</td>
+                                                    <td>sacks</td>
+                                                    <td class="text-center">PHP 500.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dinorado</td>
+                                                    <td class="text-right">2</td>
+                                                    <td>sacks</td>
+                                                    <td class="text-center">PHP 500.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dinorado</td>
+                                                    <td class="text-right">2</td>
+                                                    <td>sacks</td>
+                                                    <td class="text-center">PHP 500.00</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row"></div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2021</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="assets/js/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/jquery.tablesorter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-filter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.2/js/widgets/widget-storage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/Multi-step-form.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+
+</html>

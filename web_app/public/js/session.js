@@ -60,6 +60,15 @@ exports.init_session = function(obj, role, name, username, tab) {
 	else if (tab === 'pest_and_disease_detailed_disease') 
 		obj['pest_and_disease_diagnoses'] = true;
 
+	// SMS Management Tab
+	else if (tab === 'sms_subscriptions') 
+		obj['subscriptions_tab'] = true;
+	else if (tab === 'sms_add_subscription') 
+		obj['subscriptions_tab'] = true;
+	else if (tab === 'sms_messages') 
+		obj['messages_tab'] = true;
+
+
 	return obj;
 }
 

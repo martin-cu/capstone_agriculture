@@ -283,7 +283,7 @@ exports.getPurchases = function(filter, next){
 		sql = "SELECT * FROM purchase_table;";
 	}
 	else{
-		sql = "SELECT * FROM purchase_table WHERE ?";
+		sql = "SELECT * FROM purchase_table WHERE ? ";
 		sql = mysql.format(sql, filter);
 	}
 	mysql.query(sql, next);
@@ -353,7 +353,7 @@ exports.getAllPurchases = function(type, status, next){
 		sql = mysql.format(sql, status.status);
 	}
 	
-	// console.log("\n\n\n" + sql);
+	console.log("\n\n\n" + sql);
 	mysql.query(sql, next);
 
 }

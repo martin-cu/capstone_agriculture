@@ -1,0 +1,223 @@
+<style>
+
+table td, th {
+    color:#332C1F;
+} 
+
+li > span {
+    color:#332C1F;
+}
+
+</style>
+
+
+
+<div class="container-fluid" style="color: #332C1F;">
+
+     <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Subscriptions&nbsp;</h3>
+
+    <!-- {{!-- HEADER --}}
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0" style="font-family: Roboto, sans-serif;color: #584c33;font-weight: 500;">Farms</h3>
+    </div> -->
+
+    <div class="row">
+        {{!-- <div class="col-lg-12 col-xl-12 col-xxl-12"> --}}
+        <div class="col-lg-12 col-lg-12 col-xxl-12">
+
+            {{!-- CARD --}}
+            <div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto;">
+
+                {{!-- START CARD HEADER --}}
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
+                    
+                    <div class="col" style="max-width: 70px; padding-top: 2px">
+
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/sms/subscriptions"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
+                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                        </button>        
+
+                    </div>
+
+                    <div class="col" style="margin-right: 650px; padding-top: 15px">
+                        <h6>New Subscription </h6>
+            
+                    </div>
+
+
+                    {{!-- <div class="btn-group" role="group"><button class="btn btn-primary" type="button" style="background: #BDBE14;font-weight: bold;border-style: none;border-left-color: rgba(78,115,223,0);border-radius: 10px;padding: 4px 10px;">Farms</button><a class="btn btn-primary" role="button" style="margin-left: 10px;background: rgba(189,190,20,0);border-style: none;border-color: var(--bs-pink);padding: 4px 10px;" href="Materials.html">Materials</a></div> --}}
+                    {{!-- <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"><i class="fas fa-ellipsis-v d-xxl-flex justify-content-xxl-end text-gray-400"></i></button>
+                        <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                            <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
+                            <div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a>
+                        </div>
+                    </div> --}}
+                </div>
+                {{!-- END CARD HEADER --}}
+
+                {{!-- START CARD BODY --}}
+                <div class="card-body">
+
+                {{!-- START FORM --}}
+              	<form autocomplete="off" method="post" action="" id="add_subscription_form">
+                    
+                    {{!-- STEP 1 --}}
+                    <div class="tab">
+                    <div class="modal_body_content" id="body_step1">
+                            {{!-- <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Add Diagnosis Information</h5> --}}
+
+                            <div class="form-group" style="margin-left: 5px;">
+                              <div class="row">
+
+                                <div class="col">
+                                <label for="subscription_ID">Subscription ID <span style="color: #CA4E0C;">*</span></label>
+			                          <input type="text" class="form-control" id="subscription_ID" name="subscription_ID" value="S-xx" disabled>
+
+                                </div>
+
+                                <div class="col">
+                                <label for="subscription_ID">Name <span style="color: #CA4E0C;">*</span></label>
+			                          <input type="text" class="form-control" id="subscription_name" name="subscription_name" placeholder="Name">
+
+                                </div>
+
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-left: 5px;">
+                              <div class="row">
+
+                                <div class="col">
+                                    <label for="subscription_recipients">Recipient(s) <span style="color: #CA4E0C;">*</span></label>
+                                    <select class="form-select" id="subscription_recipients" name="subscription_recipients">
+                                        <option value="All">All</option>
+                                        <option value="...">...</option>
+                                    </select>
+                                </div>     
+
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-left: 5px;">
+                            
+                            <div class="row">
+
+                                <div class="col">
+                                <label for="subscriptions_send_date">Send At <span style="color: #CA4E0C;">*</span></label>
+                                <input type="datetime-local" class="form-control" id="subscriptions_send_date" name="subscriptions_send_date">
+
+                                </div>
+
+                                <div class="col">
+                                <label for="subscriptions_end_date">Until </label> <!-- End date not required (empty = user wants it permanent?) -->
+                                <input type="datetime-local" class="form-control" id="subscriptions_end_date" name="subscriptions_end_date">
+
+                                </div>
+
+                            </div>
+                            
+                            </div>
+
+            {{!-- SMS MESSAGE --}}
+            <h6 style="font-weight: bold; margin-top: 40px">Place Message Content</h6>
+
+             <div class="form-group" style="margin-left: 5px;">
+                
+                <label for="subscriptions_sms_message" style="padding-top: 10px;">SMS Message <span style="color: #CA4E0C;">*</span></label>
+                <textarea class="form-control" rows="10" id="subscriptions_sms_message" placeholder="SMS Message" name="subscriptions_sms_message"></textarea>
+            </div>
+
+       
+            {{!-- END OF SMS MESSAGE --}}
+
+
+            </div>
+            </div>
+            {{!-- END OF STEP 1 --}}
+
+              <!-- Circles which indicates the steps of the form: -->
+                    <div style="text-align:center;padding-top:40px;padding-bottom:10px">
+                        {{!-- <span class="step"></span>
+                        <span class="step"></span> --}}
+                    </div>
+
+                    </form>
+                    {{!-- END FORM --}}
+
+                    <!-- <div class="float-right text-right">
+                            <button type="submit" class="btn btn-secondary" id="cancel" onclick="goBack()">X</button>
+                            <button type="submit" class="btn btn-primary" id="addFarm" for>Next</button>
+                    </div> -->
+
+
+                    <div class="modal-footer">
+                        <div class="modal_footer_content" id="_step1">
+                            <button type="button" class="btn round btn-secondary" onclick='window.location="/sms/subscriptions"'>Cancel</button>
+                            <button type="button" class="btn round btn-primary" form="add_subscription_form">Submit</button>
+                        </div>
+
+                      </div>
+
+                </div>
+                {{!-- END CARD BODY --}}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var view = "sms_add_subscription";
+function goBack() {
+  window.history.back();
+}
+
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+
+  // Exit the function if any field in the current tab is invalid:
+  if (!dataValidation(currentTab+2)) return false;
+  // Hide the current tab:
+ // x[currentTab].style.display = "none";
+
+document.getElementsByClassName("step")[currentTab].className += " finish";
+
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("create_farm_form").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+
+</script>
+
+{{!-- <script src="../js/crop_calendar.js"></script> --}}
