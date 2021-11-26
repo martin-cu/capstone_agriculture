@@ -44,3 +44,9 @@ exports.getCropCalendars = function(query, next) {
 	sql += ' order by cct.harvest_date desc, cct.calendar_id desc';
 	mysql.query(sql, next);
 }
+
+exports.getCurrentCropCalendar = function(query, next) {
+	var sql = "select cct.calendar_id from farm_table as ft join crop_calendar_table as cct using (farm_id) where ? and cct.status = 'In-Progress' or cct.status = 'Active'";
+	sql = mysql.format(sql, query);
+	mysql.query(sql, next);
+}

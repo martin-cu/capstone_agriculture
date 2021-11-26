@@ -56,7 +56,6 @@ exports.getFarmData = function(data, next) {
 //added farm_desc
 exports.getAllFarms = function(next) {
 	var sql = "SELECT t1.farm_id, t1.farm_name, t1.farm_desc, t1.land_type, MAX(t1.employee_id) AS employee_id, CONCAT(MAX(t1.ln), ', ', MAX(t1.fn)) AS employee_name, MAX(t1.cp) AS cp FROM (SELECT  t.farm_id, t.employee_id, MAX(t.farm_name) AS farm_name, MAX(t.land_type) AS land_type, NULL AS ln,  NULL AS fn,  NULL AS cp, MAX(t.farm_desc) AS farm_desc FROM (SELECT   farm_id, employee_id, NULL AS farm_name, NULL AS land_type, NULL AS farm_desc FROM farm_assignment WHERE status = 'Active' UNION SELECT  farm_id, NULL, farm_name, land_type, farm_desc FROM farm_table WHERE status = 'Active') AS t GROUP BY t.farm_id  UNION SELECT fa.farm_id,et.employee_id, NULL AS farm_name, NULL AS land_type, et.last_name, et.first_name,et.phone_number, NULL AS farm_desc FROM employee_table et JOIN farm_assignment fa ON et.employee_id = fa.employee_id WHERE et.position = 'Farm Manager') AS t1 GROUP BY farm_id;"; 
-	console.log(sql);
 	mysql.query(sql, next);
 }
 

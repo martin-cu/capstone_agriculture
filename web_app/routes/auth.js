@@ -34,11 +34,14 @@ router.get('/get_weather_forecast', environmentController.getWeatherForecast);
 router.get('/clear_weather_forecast', environmentController.clearWeatherForecastRecords);
 
 router.get('/get_work_orders', workOrderController.ajaxGetWorkOrders);
+router.get('/get_wo_resources', workOrderController.ajaxGetWOResources);
 router.get('/get_materials', materialController.ajaxGetMaterials);
 router.get('/getAll_materials', materialController.ajaxGetAllMaterials);
 router.get('/getResourcesPerFarm', environmentController.ajaxGetResources);
 router.get('/filter_nutrient_mgt', environmentController.ajaxGetDetailedNutrientMgt);
 router.get('/get_cycle_resources_used', materialController.ajaxGetResourcesUsed);
+
+router.post('/upload_wo', workOrderController.ajaxCreateWorkOrder);
 
 // router.get('/getPestDiseasePerFarm', environmentController.ajaxGetPossiblePD);
 

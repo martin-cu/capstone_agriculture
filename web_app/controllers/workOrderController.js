@@ -35,6 +35,21 @@ function consolidateResources(type, ids, qty, wo_id) {
 	return query_arr;
 }
 
+exports.ajaxGetWOResources = function(req, res) {
+	var query = { work_order_id: req.query.work_order_id };
+	workOrderModel.getResourceDetails(query, req.query.type, function(err, resource_details) {
+		if (err)
+			throw err;
+		else {
+			// html_data['resources'] = resource_details;
+			// html_data['resources']['title'] = type+'s:';
+			// html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
+			// res.render('detailed_work_order', html_data);
+			res.send(resource_details);
+		}
+	});
+}
+
 exports.getDetailedWO = function(req, res) {
 	var query = { work_order_id: req.params.work_order_id };
 	workOrderModel.getDetailedWorkOrder(query, function(err, details) {
@@ -108,7 +123,7 @@ exports.createWorkOrder = function(req, res) {
 				resource_type = 'Pesticide';
 			}
 			else if (query.type == 'Fertilizer Application') {
-				resource_type = 'Fertilizer;'
+				resource_type = 'Fertilizer'
 			}
 
 			if (resource_type != null) {
@@ -125,6 +140,52 @@ exports.createWorkOrder = function(req, res) {
 			}
 			else {
 				res.redirect('/farms/work_order&id='+result.insertId);
+			}
+		}
+	})
+}
+
+exports.ajaxCreateWorkOrder = function(req, res) {
+	var query = {
+		type: req.body.wo_type,
+		crop_calendar_id: req.body.crop_calendar_id,
+		date_created: dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
+		date_due: dataformatter.formatDate(new Date(req.body.due_date), 'YYYY-MM-DD'),
+		date_start: dataformatter.formatDate(new Date(req.body.start_date), 'YYYY-MM-DD'),
+		status: 'Pending',
+		desc: null,
+		notes: req.body.notes
+	};
+	var resource_ids = req.body.resources.ids;
+	var resource_qty = req.body.resources.qty;
+
+	workOrderModel.createWorkOrder(query, function(err, result) {
+		if (err)
+			throw err;
+		else {
+			var resource_type = null;
+
+			if (query.type == 'Pesticide Application') {
+				resource_type = 'Pesticide';
+			}
+			else if (query.type == 'Fertilizer Application') {
+				resource_type = 'Fertilizer'
+			}
+
+			if (resource_type != null) {
+				var query_arr = consolidateResources(resource_type, resource_ids
+						, resource_qty, result.insertId);
+
+				workOrderModel.createWorkOrderResources(query_arr, function(err, resource_result) {
+					if (err)
+						throw err;
+					else {
+						res.send('/farms/work_order&id='+result.insertId);
+					}
+				});
+			}
+			else {
+				res.send('/farms/work_order&id='+result.insertId);
 			}
 		}
 	})

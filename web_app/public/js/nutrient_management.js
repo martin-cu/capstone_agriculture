@@ -566,6 +566,41 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 	return result_arr;
 }
 
+function isInRecommendation(attr, reco_obj, db_obj) {
+	reco_obj.amount = reco_obj.amount.replace(' bags', '');
+	var temp_obj;
+	var date = false, fertilizer = false, desc = false, amount = false;
+	var found = false
+	for (var i = 0; i < db_obj.length; i++) {
+		date = db_obj[i].date == reco_obj.date ? true : false;
+		temp_obj = db_obj[i].fertilizer.filter(ele => ele == reco_obj.fertilizer);
+
+
+		if (temp_obj.length != 0 && date) {
+			fertilizer = true;
+			desc = db_obj[i].desc.filter(ele => ele.indexOf(reco_obj.desc) >= 0);
+			amount = db_obj[i].amount.filter(ele => ele.toString().indexOf(reco_obj.amount) >= 0);
+
+			if (desc.length != 0) {
+				desc = true;
+			}
+			if (amount.length != 0) {
+				amount = true;
+			}
+		}
+
+		if (date && fertilizer && desc && amount) {
+			found = true;
+		}
+	}
+
+	if (found) {
+		attr['disabled'] = found;
+	}
+
+	return attr;
+}
+
 function createSchedule(materials, recommendation, applied, farm_id, N_recommendation, details) {
 	var fertilizer = {  };
 	var fertilizer_arr = [];
@@ -671,7 +706,51 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 				type: 'checkbox',
 				name: 'checkbox',
 				value: ''
+			};
+
+			var created_recommendation = work_order_list.filter(ele => ele.notes != '' && ele.notes != null && ele.notes.indexOf('Recommendation') >= 0);
+			var cr_notes;
+			var recommended_obj;
+			var recommended_arr = [];
+			var resources_arr = [];
+			var t_arr = [];
+			for (var i = 0; i < created_recommendation.length; i++) {
+				cr_notes = created_recommendation[i].notes.replace('(Recommendation)', '');
+
+				$.get('/get_wo_resources', { work_order_id: created_recommendation[i].work_order_id, type: 'Fertilizer' }, function(wo_resources) {
+					resources_arr = wo_resources;
+					resources_arr = resources_arr.filter(ele => ele.qty > 0);
+				});
+
+				recommended_obj = {
+					date: formatDate(new Date(created_recommendation[i].date_start), 'YYYY-MM-DD'),
+					fertilizer: [],
+					desc: [],
+					amount: []
+				};
+
+				if (cr_notes.search('Application and ') && resources_arr.length > 1) {
+					var split = cr_notes.split(' and ');
+
+					for (var x = 0; x < split.length; x++) {
+						recommended_obj.desc.push(split[x]);
+					}
+
+					for (var y = 0; y < resources_arr.length; y++) {
+						recommended_obj.fertilizer.push(resources_arr[y].material_name);
+						recommended_obj.amount.push(Math.round(resources_arr[y].qty * 100) / 100);
+					}
+					recommended_arr.push(recommended_obj);
+				}
+				else {
+					recommended_obj.fertilizer.push(resources_arr[0].material_name);
+					recommended_obj.desc.push(cr_notes);
+					recommended_obj.amount.push(Math.round(resources_arr[0].qty * 100) / 100);
+
+					recommended_arr.push(recommended_obj);
+				}
 			}
+
 			for (var i = 0; i < schedule_arr.length; i++) {
 				tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
 				for (var y = 0; y < schedule_arr_keys.length; y++) {
@@ -691,7 +770,10 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 						html: schedule_arr[i][schedule_arr_keys[y]]
 					}));
 				}
+				delete checkbox_attr.disabled;
 				checkbox_attr.value = i +1;
+				checkbox_attr = isInRecommendation(checkbox_attr, schedule_arr[i], recommended_arr);
+				
 				tr.appendChild(createDOM({
 					type: 'input', 
 					class: 'form-check-input', 
@@ -730,8 +812,50 @@ function calculateDeficientN(reqs, applied) {
 	return N;
 }
 
+function consolidateUniqueWO(arr, calendar_id, material_list) {
+	const unique = [...new Map(arr.map(ele =>
+	  [ele.date, ele])).values()];
+	var unique_ele;
+	var wo_obj;
+	var wo_arr = [];
+	var adjusted_date;
+
+	for (var i = 0; i < unique.length; i++) {
+		adjusted_date = new Date(unique[i].date);
+		adjusted_date = adjusted_date.setDate(adjusted_date.getDate() + 3);
+
+		unique_ele = arr.filter(ele => ele.date == unique[i].date);
+
+		wo_obj = {
+			wo_type: 'Fertilizer Application',
+			crop_calendar_id: calendar_id,
+			due_date: formatDate(new Date(adjusted_date), 'YYYY-MM-DD'),
+			start_date: unique[i].date,
+			resources: { name: [], ids: [], qty: [] },
+			notes: ''
+		}
+		for (var y = 0; y < unique_ele.length; y++) {
+			if (y != 0) {
+				wo_obj.notes += ' and ';
+			}
+			wo_obj.notes += unique_ele[y].desc
+			wo_obj.resources.name.push(unique_ele[y].fertilizer);
+			wo_obj.resources.qty.push(unique_ele[y].amount.replace(' bags', ''));
+
+			var f_id = material_list.filter(ele => ele.fertilizer_name == unique_ele[y].fertilizer)[0].fertilizer_id;
+			wo_obj.resources.ids.push(f_id);
+		}
+		wo_obj.notes += ' (Recommendation)';
+		wo_arr.push(wo_obj);
+	}
+	console.log(wo_arr);
+	return wo_arr;
+}
+
 $(document).ready(function() {
 	var wo_arr = [];
+	var calendar_id;
+	var material_list;
 	if (type == 'Soil Test') {
 		// var ph_inp = document.getElementById('ph_lvl');
 
@@ -763,11 +887,11 @@ $(document).ready(function() {
 
 		$.get('/filter_nutrient_mgt', { farm_name: farm_name, type: 'Fertilizer', filter: id }, function(details) {
 			appendDetails(details);
-
+			calendar_id = details.calendar_id;
+			console.log('Calendar id: '+calendar_id);
 			$.get('/getAll_materials', { type: 'Fertilizer', filter: id }, function(materials) {
-
+				material_list = materials;
 				$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: id }, function(list) {
-
 					var recommendation = processInventory(materials, details.recommendation, list);
 					appendInventory(recommendation);
 					
@@ -815,7 +939,16 @@ $(document).ready(function() {
 		});
 
 		$('#generate_wo').on('click', function() {
-			console.log(wo_arr);
+			var data = consolidateUniqueWO(wo_arr, calendar_id, material_list);
+
+			for (var i = 0; i < data.length; i++) {
+				$.post('/upload_wo', data[i], function(result) {
+					if (i == data.length - 1) {
+						console.log(result);
+						window.location = result;
+					}
+				});
+			}
 		});
 
 	}

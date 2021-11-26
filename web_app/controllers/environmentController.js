@@ -5,6 +5,7 @@ const js = require('../public/js/session.js');
 const weatherForecastModel = require('../models/weatherForecastModel.js');
 const farmModel = require('../models/farmModel.js');
 const nutrientModel = require('../models/nutrientModel.js');
+const cropCalendarModel = require('../models/cropCalendarModel.js');
 const materialModel = require('../models/materialModel.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 var request = require('request');
@@ -677,10 +678,16 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 		        		if (err)
 		        			throw err;
 		        		else {
-				        	result = dataformatter.processNPKValues(result, result.farm_area, applied)
-				            result = recommendFertilizerPlan(result, materials);
-
-							res.send(result);
+		        			cropCalendarModel.getCurrentCropCalendar(query, function(err, crop_calendar) {
+		        				if (err)
+		        					throw err;
+		        				else {
+		        					result = dataformatter.processNPKValues(result, result.farm_area, applied)
+						            result = recommendFertilizerPlan(result, materials);
+						            result['calendar_id'] = crop_calendar[0].calendar_id;
+									res.send(result);
+		        				}
+		        			});     	
 		        		}
 		        	});
 		        }
