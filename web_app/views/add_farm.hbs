@@ -1,4 +1,18 @@
-<div class="container-fluid">
+<style>
+
+#map {
+    height: 500px;
+    width: 100%;
+}
+
+.mgl-map {
+      height: 100%;
+      width: 100%;
+}
+
+</style>
+
+<div class="container-fluid" style="color: #332C1F;">
 
     <!-- {{!-- HEADER --}}
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
@@ -85,7 +99,6 @@
 
                      <div class="tab">
                     <div class="hide modal_body_content" id="body_step2">
-                        <div class="form-group">
                             <h5 for="" style="font-weight: bold; padding-bottom: 20px; padding-top: 10px">Step 2: Add Plot Details</h5>
                             <div class="form-group">
                                 <label for="address">Address</label>
@@ -95,18 +108,29 @@
                              <div class="form-group">
                                 <label for="geotags" id="geotag_lbl" style="font-weight: bold;">Pin Geotag Coordinates</label>
                                 
-                                <div id="floating-panel">
+                                {{!-- <div id="floating-panel">
                                     <input id="hide-markers" type="button" value="Hide Markers">
                                     <input id="show-markers" type="button" value="Show Markers">
                                     <input id="delete-markers" type="button" value="Delete Markers">
-                                </div>
-                                
-                                <div id="map"> 
-
-                                </div>
+                                </div> --}}
 
                             </div>
-                         </div>
+
+                            {{!-- MAPBOX --}}
+
+                            <div id="map">
+                            </div>
+
+                       
+                                <div class="calculation-box">
+                                    <p>Click the map to draw a polygon.</p>
+                                    <div id="calculated-area">
+
+                                    </div>
+                                </div>
+                                {{!-- END OF MAPBOX --}}
+
+                   
                     </div>
                      </div>
 
@@ -159,7 +183,7 @@
                     <div class="modal-footer">
                         <div class="modal_footer_content" id="_step1">
                             <button type="button" class="btn round btn-secondary" value="create_farm_form" onclick="goBack();">Cancel</button>
-                            <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1)">Next</button>
+                            <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1); checkContainer();">Next</button> 
                         </div>
 
                         <div class="hide modal_footer_content" id="_step2">
@@ -188,6 +212,65 @@ function goBack() {
   window.history.back();
 }
 
+// DRAW POLYGON
+mapboxgl.accessToken = 'pk.eyJ1IjoiaW1hcnRpbjAwMjMiLCJhIjoiY2t2NmJ1a2JsM3dldzJwcDZyeXp6bDlsYSJ9.8VlCX1xsLOIxjGiGO8X3Pg';
+
+const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    style: 'mapbox://styles/mapbox/satellite-v9', // style URL
+    center: [-91.874, 42.76], // starting position [lng, lat]
+    zoom: 12 // starting zoom
+    });
+
+map.on('load', function() {
+        map.resize()
+    });
+
+const draw = new MapboxDraw({
+	displayControlsDefault: false,
+	// Select which mapbox-gl-draw control buttons to add to the map.
+	controls: {
+		polygon: true,
+		trash: true
+	},
+	// Set mapbox-gl-draw to draw by default.
+	// The user does not have to click the polygon control button first.
+	defaultMode: 'draw_polygon'
+});
+
+map.addControl(draw);
+ 
+map.on('draw.create', updateArea);
+map.on('draw.delete', updateArea);
+map.on('draw.update', updateArea);
+ 
+function updateArea(e) {
+	const data = draw.getAll();
+	const answer = document.getElementById('calculated-area');
+	if (data.features.length > 0) {
+	const area = turf.area(data);
+	// Restrict the area to 2 decimal points.
+	const rounded_area = Math.round(area * 100) / 100;
+	answer.innerHTML = `<p><strong>${rounded_area}</strong></p><p>square meters</p>`;
+	} else {
+	answer.innerHTML = '';
+
+	if (e.type !== 'draw.delete')
+	alert('Click the map to draw a polygon.');
+	}
+}
+
+// This functions resizes the mapbox div (fixes the "Leaflet and Mapbox in modal not displaying properly" bug)
+function checkContainer() {
+    if ($('#map').is(':visible')) { //if the container is visible on the page
+    map.resize(); //Adds a grid to the html
+    } else {
+    setTimeout(checkContainer, 50); //wait 50 ms, then try again
+    }
+}
+
+// MULTI-STEP FROM INDICATORS
+
 var currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
 
@@ -197,12 +280,13 @@ function showTab(n) {
   x[n].style.display = "block";
 
   //... and run a function that will display the correct step indicator:
-  fixStepIndicator(n)
+  fixStepIndicator(n);
 }
 
 function nextPrev(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
+
   
   // Exit the function if any field in the current tab is invalid:
   if (!dataValidation(currentTab+2)) return false;
@@ -222,6 +306,7 @@ document.getElementsByClassName("step")[currentTab].className += " finish";
   }
   // Otherwise, display the correct tab:
   showTab(currentTab);
+
 }
 
 function fixStepIndicator(n) {
@@ -232,6 +317,8 @@ function fixStepIndicator(n) {
   }
   //... and adds the "active" class on the current step:
   x[n].className += " active";
+
 }
 
 </script>
+

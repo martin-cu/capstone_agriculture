@@ -243,6 +243,7 @@ function tempReplaceFarm(reference) {
 }
 
 $(document).ready(function() {
+	
 	console.log('sadasd');
 	console.log(view);
 
@@ -307,6 +308,6 @@ $(document).ready(function() {
 	}
 	else if (view == undefined) {
 
-	}
+	}	
 
 });
