@@ -1,4 +1,43 @@
-<nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529; width:260px !important; position: fixed; overflow-y:auto">
+<nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529;">
+    <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+            <div class="sidebar-brand-text mx-3"><img src="assets/img/dogs/LA_logo.png" style="width: 150px;"></div>
+        </a>
+        <hr class="sidebar-divider my-0">
+        <ul class="navbar-nav text-light" id="accordionSidebar">
+            <li class="nav-item"><a class="nav-link {{# if home_tab}}active{{/if}}" href="/"><i class="fas fa-tachometer-alt"></i><span style="font-size: 16px;">Dashboard</span></a></li>
+            
+            
+            <li class="nav-item">
+                <div class="nav-item dropdown" style="padding: 16px;margin-bottom: 0px;">
+                    <a aria-expanded="false" data-toggle="dropdown" class="dropdown-lbl text-decoration-none {{# if farm_tab}}active{{/if}}{{# if monitor_farms_tab}}active{{/if}}" href="#"
+                    style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-warehouse"></i>&nbsp;Farms</a>
+                    <div class="dropdown-menu" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item {{# if farm_tab}}active{{/if}}" href="/farms" style="background: #667528;color: rgba(255,255,255,0.8);">Work Order</a><a class="dropdown-item" href="Crop-Calendar.html" style="background: #667528;color: rgba(255,255,255,0.8);">Crop Calendar</a><a class="dropdown-item {{# if monitor_farms_tab}}active{{/if}}" href="/farm_monitor_test" style="background: #667528;color: rgba(255,255,255,0.8);">Farm Monitoring</a></div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <div class="nav-item dropdown show" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="true" data-toggle="dropdown" class="text-decoration-none {{# if inventory_tab}}active{{/if}}{{# if orders_tab}}active{{/if}}" href="#" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-th-list"></i>&nbsp;Material Management</a>
+                    <div class="dropdown-menu show" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item {{# if orders_tab}}active{{/if}}" href="/orders" style="background: #667528;color: rgba(255,255,255,0.8);">Orders</a><a class="dropdown-item {{# if inventory_tab}}active{{/if}}" href="/inventory" style="background: #667528;color: rgba(255,255,255,0.8);">Inventory</a></div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-item dropdown" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-toggle="dropdown" class="text-decoration-none {{# if pest_and_disease_diagnoses}}active{{/if}}" href="#" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-bug"></i>&nbsp;Pest and Disease</a>
+                    <div class="dropdown-menu" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Discover</a><a class="dropdown-item {{# if pest_and_disease_diagnoses}}active{{/if}}" href="/pest_and_disease/diagnose" style="background: #667528;color: rgba(255,255,255,0.8);">Diagnose</a></div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <div class="nav-item dropdown" style="padding: 16px;margin-bottom: 0px;"><a aria-expanded="false" data-toggle="dropdown" class="text-decoration-none {{# if subscriptions_tab}}active{{/if}}" href="/sms/subscriptions" style="color: rgba(255,255,255,0.8);font-size: 13.6;"><i class="fas fa-mobile-alt"></i>&nbsp;SMS Management</a>
+                    <div class="dropdown-menu" style="background: rgb(102,117,40);border-style: none;"><a class="dropdown-item" href="#" style="background: #667528;color: rgba(255,255,255,0.8);">Subscriptions</a><a class="dropdown-item {{# if messages_tab}}active{{/if}}" href="/sms/messages" style="background: #667528;color: rgba(255,255,255,0.8);">Messages</a></div>
+                </div>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="login.html"><i class="far fa-user-circle" style="font-size: 16px;"></i><span style="color: rgba(255, 255, 255, 0.8);font-size: 16px;">User Management</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="register.html"><i class="far fa-chart-bar" style="font-size: 16px;"></i><span style="font-size: 16px;">Farm Productivity Reports</span></a></li>
+        </ul>
+        <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+    </div>
+</nav>
+
+<nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #667529;">
     <div class="container-fluid d-flex flex-column p-0">
         <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
             <div class="sidebar-brand-text mx-3"><img src="../../images/LA_logo.png" style="width: 150px;"></div>
@@ -15,7 +54,7 @@
                 <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
                     <a aria-expanded="false" data-toggle="collapse" data-target="#farms" href="#" 
                         class="dropdown-lbl text-decoration-none {{# if farm_tab}}active{{/if}}{{# if monitor_farms_tab}}active{{/if}}" style="">
-                        <i class="fas fa-farm" style="font-size: 16px;margin-right: 10px;"></i>Farms &nbsp;&nbsp;<i class="fas fa-caret-up"></i></i><i class="fas fa-caret-down"></i>
+                        <i class="fas fa-farm" style="font-size: 16px;margin-right: 10px;"></i>Farms &nbsp;&nbsp;
                     </a>
                     
                     <div class="collapse" style="" id="farms">
