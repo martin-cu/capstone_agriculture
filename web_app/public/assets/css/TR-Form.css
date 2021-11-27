@@ -1,0 +1,172 @@
+* {
+  margin: 0;
+}
+
+* {
+  margin: 0;
+}
+
+* {
+  margin: 0;
+}
+
+* {
+  margin: 0;
+}
+
+div.push-50 {
+  height: 50px;
+}
+
+* {
+  margin: 0;
+}
+
+* {
+  margin: 0;
+}
+
+* {
+  margin: 0;
+}
+
+.register-form input {
+  margin-bottom: 10px;
+}
+
+.checboxtext {
+  color: white;
+}
+
+.set_2_button {
+  font: inherit;
+  color: #FFF;
+  width: 100%;
+  float: left;
+  padding: 0px 25px;
+  line-height: 45px;
+  margin-right: 2.5em;
+  overflow: hidden;
+  position: relative;
+  transition: all 1s;
+  cursor: pointer;
+  border-bottom: 6px #2779a3 solid;
+  text-align: center;
+  font-size: 1.7em;
+  vertical-align: bottom;
+  font-family: 'Roboto';
+}
+
+.set_2_button:before {
+  left: 48%;
+}
+
+.set_2_button:active {
+  background: #cccccc;
+  color: #000000;
+  top: 2px;
+  transition: all 1s;
+  border-bottom: none;
+}
+
+.set_2_button > span {
+  display: inline-block;
+  transition: all 0.5s;
+  text-shadow: 2px 2px #2779a3;
+}
+
+.icon-down:before {
+  content: "GÖNDER";
+  position: absolute;
+}
+
+.set_2_btn-2:before {
+  top: -100%;
+  transition: all 0.5s;
+}
+
+.set_2_btn-2:hover:before {
+  top: 0px;
+}
+
+.set_2_btn-2:hover > span {
+  transform: translateY(300%);
+}
+
+.color5 {
+  background: #56c5ff;
+  color: #fff;
+}
+
+* {
+  margin: 0;
+}
+
+.set_2_button {
+  font: inherit;
+  color: #FFF;
+  width: 100%;
+  float: left;
+  padding: 0px 25px;
+  line-height: 45px;
+  margin-right: 2.5em;
+  overflow: hidden;
+  position: relative;
+  transition: all 1s;
+  cursor: pointer;
+  border-bottom: 6px #2779a3 solid;
+  text-align: center;
+  font-size: 1.4em;
+  vertical-align: bottom;
+  font-family: 'Roboto';
+}
+
+.set_2_button:before {
+  left: 33%;
+}
+
+.set_2_button:active {
+  background: #cccccc;
+  color: #000000;
+  top: 2px;
+  transition: all 1s;
+  border-bottom: none;
+}
+
+.set_2_button > span {
+  display: inline-block;
+  transition: all 0.5s;
+  text-shadow: 2px 2px #2779a3;
+}
+
+.icon-down:before {
+  content: "GÖNDER";
+  position: absolute;
+}
+
+.set_2_btn-2:before {
+  top: -100%;
+  transition: all 0.5s;
+}
+
+.set_2_btn-2:hover:before {
+  top: 0px;
+}
+
+.set_2_btn-2:hover > span {
+  transform: translateY(300%);
+}
+
+.color5 {
+  background: #56c5ff;
+  color: #fff;
+}
+
+* {
+  margin: 0;
+}
+
+* {
+  margin: 0;
+}
+

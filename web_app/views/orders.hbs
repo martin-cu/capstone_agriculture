@@ -1,5 +1,5 @@
 <div class="container-fluid" >
-    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Inventory&nbsp;</h3>
+    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Orders&nbsp;</h3>
     <div class="row" style="padding: 0px 12px;">
         <div class="col-xxl-7">
             <div class="table-responsive" style="border-style: none;">
@@ -49,6 +49,66 @@
 
     <div class="row" style="padding: 0px 12px;">
         <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>All Farms</strong></label>
+            <div role="tablist" id="accordion-1" style="margin-bottom: 20px;">
+                <div class="card">
+                    <div class="card-header" role="tab" style="background: #939C1F;padding: 16px 20px;height: auto;">
+                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="font-size: 16px;color: rgb(255,255,255);font-weight: bold;">Create Work Order</a></h5>
+                    </div>
+                    <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
+                        <div class="card-body">
+                            <form class="register-form">
+                                <fieldset>
+                                    <div class="form-row">
+                                        <div class="col-6 col-sm-6 col-md-6"><label>Farm</label>
+                                            <div id="lp-name-wrapper"></div><select class="form-control" id="lp-select-1">
+                                                <option value="">Farm 1</option>
+                                                <option value="">Farm 2</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6"><label>Type</label>
+                                            <div id="lp-lastname-wrapper"></div><select class="form-control" id="lp-select-2">
+                                                <option value="">Pesticide Application</option>
+                                                <option value="">Fertilizer Application</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6">
+                                            <div id="lp-name-wrapper-1"><label>Description</label><input class="form-control" type="text" id="lp-name-1" placeholder="Short description on the work order"></div>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6">
+                                            <div id="lp-lastname-wrapper-1"></div>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6">
+                                            <div id="lp-name-wrapper-3"><label>Start Date</label><input class="form-control" type="date"></div>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6">
+                                            <div id="lp-lastname-wrapper-2"></div><label>Due Date</label><input class="form-control" type="date">
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-12"><label>Resources Used</label>
+                                            <div id="lp-mail-wrapper"><select class="form-control d-inline-flex" id="lp-select-3" style="width: 450px;">
+                                                    <option value="">Pesticide </option>
+                                                    <option value="">Fertilizer </option>
+                                                </select><input class="form-control d-inline-flex" type="number" style="width: 200px;margin-left: 10px;" placeholder="amount"><label style="margin-left: 10px;">units</label><i class="fa fa-plus-circle" style="margin-left: 15px;"></i></div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-12">
+                                            <div id="customfield1-wrapper"><label>Notes</label><input class="form-control" type="text" id="customfield1" placeholder="Notes for the work order"></div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-12">
+                                            <div id="lp-check1-wrapper">
+                                                <div class="form-check"><input class="form-check-input" type="checkbox" id="lp-check1"><label class="form-check-label checboxtext" for="lp-check1" style="color: rgb(133,135,150);">Harvested</label></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-sm-6 col-md-6">
+                                            <div id="lp-name-wrapper-2"><label class="d-block">Rice Yield</label><input class="form-control d-inline-flex" type="number" style="width: 300px;"><label class="d-inline-flex" style="margin-left: 10px;">sacks</label></div>
+                                        </div>
+                                        <div class="col-md-12"><input class="form-control d-none" type="text" id="lp-country"><input class="form-control d-none" type="text" id="lp-website"><input class="form-control d-none" type="text" id="lp-city"><input class="form-control d-none" type="text" id="customfield10"><input class="form-control d-none" type="text" id="customfield9"><input class="form-control d-none" type="text" id="customfield8"><input class="form-control d-none" type="text" id="customfield7"><input class="form-control d-none" type="text" id="customfield6"><input class="form-control d-none" type="text" id="customfield5"><input class="form-control d-none" type="text" id="customfield4"><input class="form-control d-none" type="text" id="customfield3"><input class="form-control d-none" type="text" id="customfield2"><input class="form-control d-none" type="text" id="lp-select3"><input class="form-control d-none" type="text" id="lp-select2"><input class="form-control d-none" type="text" id="lp-check5"><input class="form-control d-none" type="text" id="lp-check4"><input class="form-control d-none" type="text" id="lp-check3"><input class="form-control d-none" type="text" id="lp-check2"><input class="form-control d-none" type="text" id="lp-telareacode"><input class="form-control d-none" type="text" id="lp-telcountrycode"></div>
+                                        <div class="col-12 col-sm-12 col-md-12"><button class="btn btn-primary float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);">Create Work Order</button></div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
                     <a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; " data-toggle="modal" data-target="#addPurchaseModal">Add Purchase</a>
