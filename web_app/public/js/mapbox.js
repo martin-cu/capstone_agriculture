@@ -281,6 +281,8 @@ $(document).ready(function() {
 			console.log(query);
 			getFarmDetails({ farm_id: viewed_farm_id });
 			getGeoData(query);
+
+			//Y2 Add Farm Monitoring Ajax
 		});
 
 		$('#toggle_ndvi').on('click', function() {
