@@ -1263,42 +1263,49 @@ exports.updatePDDetails = function(req,res){
 // Pest and Disease Diagnosis Part (Temporary)
 exports.getDiagnoses = function(req, res) {
 	var html_data = {};
+	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
 	res.render('pest_and_disease_diagnoses', html_data);
 }
 
 exports.getAddDiagnosis = function(req, res) {
 	var html_data = {};
+	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_diagnosis');
 	res.render('add_diagnosis', html_data);
 }
 
 exports.getAddPest = function(req, res) {
 	var html_data = {};
+	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_pest');
 	res.render('add_pest', html_data);
 }
 
 exports.getAddDisease = function(req, res) {
 	var html_data = {};
+	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_disease');
 	res.render('add_disease', html_data);
 }
 
 exports.getDetailedDiagnosis = function(req, res) {
 	var html_data = {};
+	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_diagnosis');
 	res.render('detailed_diagnosis', html_data);
 }
 
 exports.getDetailedPest = function(req, res) {
 	var html_data = {};
+	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_pest');
 	res.render('detailed_pest', html_data);
 }
 
 exports.getDetailedDisease = function(req, res) {
 	var html_data = {};
+	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_disease');
 	res.render('detailed_disease', html_data);
 }

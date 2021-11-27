@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard - Brand</title>
+  <title> {{title}}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -95,14 +95,18 @@
       {{> sidebar}}
     </div>
 
-    <div class="body_container secondary d-flex flex-column" id="content-wrapper" style="padding-left: 36px; background-color: #FCFCFC">
+    <div class="body_container secondary d-flex flex-column"  style="padding-left: 36px; background-color: #FCFCFC">
       {{> nav}}
 
+      <div id="content-wrapper" style="margin-top: 90px;">
+        
       {{{body}}}
 
       <div style="padding-bottom: 50px;"></div>
 
       {{> footer}}
+      </div>
+
     </div>
     <div class="loader" style="display: none;"></div>
   </div>
@@ -148,7 +152,9 @@
 
 {{!--FROM UPDATED --}}
 <script src="../../assets/js/jquery.min.js"></script>
+
 <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+
 <script src="../../assets/js/bs-init.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script src="../../assets/js/Data-Table-with-Search-Sort-Filter-and-Zoom-using-TableSorter.js"></script>
