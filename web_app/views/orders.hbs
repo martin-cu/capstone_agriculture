@@ -52,59 +52,109 @@
             <div role="tablist" id="accordion-1" style="margin-bottom: 20px;">
                 <div class="card">
                     <div class="card-header" role="tab" style="background: #939C1F;padding: 16px 20px;height: auto;">
-                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="font-size: 16px;color: rgb(255,255,255);font-weight: bold;">Create Work Order</a></h5>
+                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="font-size: 16px;color: rgb(255,255,255);font-weight: bold;">Create New Purchase</a></h5>
                     </div>
                     <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
-                        <div class="card-body">
-                            <form class="register-form">
+                        <div class="card-body" id="step1_new_purchase">
+                            <form id="new_purchase" action="/addPurchase" method="post"></form>
                                 <fieldset>
                                     <div class="form-row">
-                                        <div class="col-6 col-sm-6 col-md-6"><label>Farm</label>
-                                            <div id="lp-name-wrapper"></div><select class="form-control" id="lp-select-1">
-                                                <option value="">Farm 1</option>
-                                                <option value="">Farm 2</option>
+                                        <div class="col-3 col-sm-3 col-md-3"><label>Farm</label>
+                                            <div id="lp-name-wrapper"></div>
+                                            <select class="form-control required" id="farm" name="farm" form="new_purchase">
+                                                <option disabled selected value> -- select an option -- </option>
+                                                {{#each farms}}
+                                                    <option value="{{this.farm_id}}">{{this.farm_name}}</option>
+                                                {{/each}}
                                             </select>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-6"><label>Type</label>
-                                            <div id="lp-lastname-wrapper"></div><select class="form-control" id="lp-select-2">
-                                                <option value="">Pesticide Application</option>
-                                                <option value="">Fertilizer Application</option>
-                                            </select>
+                                        <div class="col-9 col-sm-9 col-md-9 ">
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-6">
-                                            <div id="lp-name-wrapper-1"><label>Description</label><input class="form-control" type="text" id="lp-name-1" placeholder="Short description on the work order"></div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-4 col-sm-4 col-md-4">
+                                            <div id="lp-name-wrapper" style="margin-top: 10px;"> <strong>Type</strong> </div>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-6">
-                                            <div id="lp-lastname-wrapper-1"></div>
+                                        <div class="col-4 col-sm-4 col-md-4">
+                                            <div id="lp-name-wrapper" style="margin-top: 10px;"> <strong>Name</strong> </div>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-6">
-                                            <div id="lp-name-wrapper-3"><label>Start Date</label><input class="form-control" type="date"></div>
+                                        <div class="col-4 col-sm-4 col-md-4">
+                                            <div id="lp-name-wrapper" style="margin-top: 10px;"> <strong>Amount</strong> </div>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-6">
-                                            <div id="lp-lastname-wrapper-2"></div><label>Due Date</label><input class="form-control" type="date">
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-12"><label>Resources Used</label>
-                                            <div id="lp-mail-wrapper"><select class="form-control d-inline-flex" id="lp-select-3" style="width: 450px;">
-                                                    <option value="">Pesticide </option>
-                                                    <option value="">Fertilizer </option>
-                                                </select><input class="form-control d-inline-flex" type="number" style="width: 200px;margin-left: 10px;" placeholder="amount"><label style="margin-left: 10px;">units</label><i class="fa fa-plus-circle" style="margin-left: 15px;"></i></div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-12">
-                                            <div id="customfield1-wrapper"><label>Notes</label><input class="form-control" type="text" id="customfield1" placeholder="Notes for the work order"></div>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-md-12">
-                                            <div id="lp-check1-wrapper">
-                                                <div class="form-check"><input class="form-check-input" type="checkbox" id="lp-check1"><label class="form-check-label checboxtext" for="lp-check1" style="color: rgb(133,135,150);">Harvested</label></div>
+                                    </div>
+                                    <div class="form-row last_item">
+                                        <div class="col-4 col-sm-4 col-md-4">
+                                            <div id="lp-name-wrapper" style="margin-top: 10px;">
+                                                <select class="form-control purchase_item_type " id="item_type1" name="item[0][type]" form="new_purchase">
+                                                    <option value="Seed">Seed</option>
+                                                    <option value="Pesticide">Pesticide</option>
+                                                    <option value="Fertilizer">Fertilizer</option>
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col-6 col-sm-6 col-md-6">
-                                            <div id="lp-name-wrapper-2"><label class="d-block">Rice Yield</label><input class="form-control d-inline-flex" type="number" style="width: 300px;"><label class="d-inline-flex" style="margin-left: 10px;">sacks</label></div>
+                                        <div class="col-4 col-sm-4 col-md-4">
+                                            <div id="lp-name-wrapper" style="margin-top: 10px;">
+                                                <select class="form-control required" id="item1" name="item[0][item]" form="new_purchase">
+                                                    <option disabled selected value> -- select an option -- </option>
+                                                    {{#each seeds}}
+                                                        <option class="material_item1"value="{{this.id}}">{{this.name}}</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-md-12"><input class="form-control d-none" type="text" id="lp-country"><input class="form-control d-none" type="text" id="lp-website"><input class="form-control d-none" type="text" id="lp-city"><input class="form-control d-none" type="text" id="customfield10"><input class="form-control d-none" type="text" id="customfield9"><input class="form-control d-none" type="text" id="customfield8"><input class="form-control d-none" type="text" id="customfield7"><input class="form-control d-none" type="text" id="customfield6"><input class="form-control d-none" type="text" id="customfield5"><input class="form-control d-none" type="text" id="customfield4"><input class="form-control d-none" type="text" id="customfield3"><input class="form-control d-none" type="text" id="customfield2"><input class="form-control d-none" type="text" id="lp-select3"><input class="form-control d-none" type="text" id="lp-select2"><input class="form-control d-none" type="text" id="lp-check5"><input class="form-control d-none" type="text" id="lp-check4"><input class="form-control d-none" type="text" id="lp-check3"><input class="form-control d-none" type="text" id="lp-check2"><input class="form-control d-none" type="text" id="lp-telareacode"><input class="form-control d-none" type="text" id="lp-telcountrycode"></div>
-                                        <div class="col-12 col-sm-12 col-md-12"><button class="btn btn-primary float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);">Create Work Order</button></div>
+                                        <div class="col-4 col-sm-4 col-md-4">
+                                            <div id="lp-name-wrapper" style="margin-top: 10px; display: flex; flex-flow: row;">
+                                                <input class="form-control text-right required" type="number" placeholder="amount" id="item_amt1" name="item[0][amount]" form="new_purchase" style="width: 50%;" /><span style="padding: 10px;" id="item_unit1">Kg chng dis</span> <button class="" style="background: none ;border-style: none;" id="add-btn-mat" value="2"><i class="fa fa-plus-circle" style="font-size: 1rem; margin-left: 15px;"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{!-- <div class="form-row">
+                                        <div class="col-12 col-sm-12 col-md-12">
+                                            <center>
+                                                <div id="lp-name-wrapper" style="margin-top: 10px;">
+                                                    <button class="" style="background: none ;border-style: none;" id="add-btn-mat" value="2"><i class="fa fa-plus-circle" style="font-size: 1.5rem; margin-left: 15px;"></i></button>
+                                                </div>
+                                            </center>
+                                        </div>
+                                    </div> --}}
+                                    <div class="form-row">
+                                        <div class="col-12 col-sm-12 col-md-12"><button class="btn btn-primary btn-sm new_purchase" style="float : right; margin: 15px;" id="step1">Next</button></div>
                                     </div>
                                 </fieldset>
-                            </form>
+                        </div>
+
+                        <div class="card-body" id="step2_new_purchase" style="display : none">
+                            <div class="row">
+                                <div class="col">
+                                    <h4>Review</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4 col-sm-4 col-md-4">
+                                    <div class="mb-3"><label class="form-label" for="new_purchase"><strong>Farm</strong><br /></label>
+                                        <div class="dropdown">
+                                            <label class="form-label" id="review_farm">FARM NAME</label>
+                                        </div></div>
+                                </div>
+                            </div>
+                            <div class="row" style="height : 30px;">
+                                <div class="col-4 col-sm-4 col-md-4">
+                                    <div class="mb-3"><label class="form-label" ><strong>Type</strong></label>
+                                    </div>
+                                </div>
+                                <div class="col-4 col-sm-4 col-md-4">
+                                    <div class="mb-3"><label class="form-label" ><strong>Item</strong></label>
+                                    </div>
+                                </div>
+                                <div class="col-4 col-sm-4 col-md-4">
+                                    <div class="mb-3"><label class="form-label"><strong>Amount</strong></label></div>
+                                </div>
+                            </div>
+
+                            {{!-- <div class="mb-3" id="buttons"><button class="btn btn-primary btn-sm " style="float : right; margin-left: 10px;" id="step2" type="submit" form="new_purchase">Add Item</button><button class="btn btn-primary btn-sm new_purchase" style=" float:right; width: auto; border-radius : 20px; background-color: rgb(236, 236, 236)" id="back" form="">Back</button></div> --}}
+                            <div class="form-row" id="buttons">
+                                <div class="col-12 col-sm-12 col-md-12" ><button class="btn btn-primary btn-sm " style="float : right; margin-left: 10px;" id="step2" type="submit" form="new_purchase">Add Item</button><button class="btn btn-primary btn-sm new_purchase" style=" float:right; width: auto; border-radius : 20px; background-color: rgb(236, 236, 236)" id="back" form="">Back</button></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -113,12 +163,12 @@
                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
                     <a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; " data-toggle="modal" data-target="#addPurchaseModal">Add Purchase</a>
                     <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item"><a id="per_farm" class="nav-link purchases_tab active" href="#" style="background: #F0F0F0;">Farms</a></li>
-                        <li class="nav-item"><a id="all_farms" class="nav-link purchases_tab" href="#" >All</a></li>
+                        <li class="nav-item"><a id="all_farms" class="nav-link purchases_tab active" href="#" style="background: #F0F0F0;" >All</a></li>
+                        <li class="nav-item"><a id="per_farm" class="nav-link purchases_tab" href="#">Farms</a></li>
                     </ul>
                 </div>
                 <div class="card-body">
-                    <div id="all_farm_materials" hidden>
+                    <div id="all_farm_materials">
                         <div class="row table-topper align-items-center">
                             <div class="col-4 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
                             <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
@@ -146,7 +196,7 @@
                                         </thead>
                                         <tbody id="materials_table">
                                                 {{#each purchases}}
-                                                    <tr class="clickable">
+                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
                                                         <td>{{this.farm_name}}</td>
                                                         <td>{{this.item_name}}</td>
                                                         <td>{{this.item_type}}</td>
@@ -167,7 +217,7 @@
                     </div>
                     </div>
 
-                <div id="per_farm_materials">
+                <div id="per_farm_materials" hidden>
                     {{#each farms}}
                         <div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem;">
                                 <div class="col-xl-3" style="padding: 2rem;">
@@ -287,7 +337,7 @@
           
         </div>
         <div class="modal-body">
-            <div class="card-body" id="step1_new_purchase" style="max-height: 500px; overflow-y : auto; overflow-x: hidden;" >
+            {{!-- <div class="card-body" id="step1_new_purchase" style="max-height: 500px; overflow-y : auto; overflow-x: hidden;" >
                 <form id="new_purchase" action="/addPurchase" method="post">
                     <div class="row">
                         <div class="col">
@@ -364,11 +414,11 @@
                 
                     <div class="mb-3"><button class="btn btn-primary btn-sm new_purchase" style="float : right; margin: 15px;" id="step1">Next</button></div>
                 
-            </div>
+            </div> --}}
             
 
 
-            <div class="card-body" id="step2_new_purchase" style="display : none">
+            {{!-- <div class="card-body" id="step2_new_purchase" style="display : none">
                     <div class="row">
                         <div class="col">
                             <h4>Review</h4>
@@ -397,7 +447,7 @@
                     </div>
 
                     <div class="mb-3" id="buttons"><button class="btn btn-primary btn-sm " style="float : right; margin-left: 10px;" id="step2" type="submit" form="new_purchase">Add Item</button><button class="btn btn-primary btn-sm new_purchase" style=" float:right; width: auto; border-radius : 20px; background-color: rgb(236, 236, 236)" id="back" form="">Back</button></div>
-                </div>
+                </div> --}}
 
         </div>
         <div style="text-align:center;margin-top:10px;padding-bottom:10px">

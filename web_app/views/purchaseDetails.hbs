@@ -1,0 +1,119 @@
+<div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Farms &gt; Work Order</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
+                    </div>
+                    <div class="card shadow mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
+                            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Work Order</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th style="width: 1px;">Status</th>
+                                            <th style="width: 50px;">{{details.purchase_status}}
+                                                {{!-- <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly="">
+                                                    <option value="">Pending</option>
+                                                    <option value="">Processing</option>
+                                                    <option value="">Completed</option>
+                                                </select> --}}
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr></tr>
+                                        <tr>
+                                            <td></td>
+                                            <td style="font-weight: bold;" colspan="2">Purchase Details</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td style="font-weight: bold;">Farm</td>
+                                            <td style="font-weight: normal;"> 
+                                                {{details.farm_name}}
+                                                {{!-- <input type="text" required="" readonly=""> --}}
+                                            </td>
+                                            <td style="font-weight: bold;">Date requested</td>
+                                            <td style="font-weight: normal;"> 
+                                                {{details.request_date}}
+                                            </td>
+                                            <td></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td style="font-weight: bold;">Item</td>
+                                            <td style="font-weight: normal;"> 
+                                                {{details.item_name}}
+                                                {{!-- <input type="text" required="" readonly=""> --}}
+                                            </td>
+                                            <td style="font-weight: bold;">Date Purchased</td>
+                                            <td style="font-weight: normal;"> 
+                                                {{details.date_purchased}}
+                                            </td>
+                                            <td></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td style="font-weight: bold;">Item type</td>
+                                            <td style="font-weight: normal;"> 
+                                                {{details.item_type}}
+                                                {{!-- <input type="text" required="" readonly=""> --}}
+                                            </td>
+                                            <td style="font-weight: bold;">Purchase price</td>
+                                            <td style="font-weight: normal;"> 
+                                                Php {{details.purchase_price}}
+                                            </td>
+                                            <td></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="width : 200px;"></td>
+                                            <td style="width :100px;"></td>
+                                            <td style="width : 100px;"></td>
+                                            <td style="width : 100px;"></td>
+                                            <td style="width : 100px;"></td>
+                                            <td style="width : 200px;"></td>
+                                        </tr>
+                                        {{!-- <tr>
+                                            <td style="font-weight: normal;">Current Crop Cycle</td>
+                                            <td><select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly="">
+                                                    <option value="">Pesticide Application</option>
+                                                    <option value="">Fertilizer Application</option>
+                                                </select></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;">Description</td>
+                                            <td><input type="text" required="" readonly=""></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold;"></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold;">Order Details</td>
+                                            <td style="width: 0px;"></td>
+                                            <td style="width: 0px;font-weight: bold;">Harvest Details</td>
+                                            <td style="width: 0px;"></td>
+                                        </tr> --}}
+                                    </tbody>
+                                </table>
+                            </div><button class="btn btn-primary float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);">Update</button>
+                        </div>
+                    </div>
+                </div>

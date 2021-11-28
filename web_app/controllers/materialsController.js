@@ -279,6 +279,11 @@ exports.getOrders = function(req, res){
         if(err)
             throw err;
         else{
+            for(x = 0; x < purchases.length; x++){
+                purchases[x].request_date = dataformatter.formatDate(purchases[x].request_date, 'mm DD, YYYY');
+                if(purchases[x].date_purchased != null)
+                    purchases[x].date_purchased = dataformatter.formatDate(purchases[x].date_purchased, 'mm DD, YYYY');
+            }
             html_data["purchases"] = purchases;
         }
 
@@ -290,10 +295,10 @@ exports.getOrders = function(req, res){
                 for(i = 0; i < farms.length; i++){
                     var temp_arr = [];
                     for(x = 0; x < purchases.length; x++){
-                        // purchases[x].date_purchase = dataformatter.formatDate(purchases[x].date_purchase, 'MM/DD/YYYY');
                         if(purchases[x].farm_id == farms[i].farm_id){
                             temp_arr.push(purchases[x]);
                         }
+                        
                     }
                     farms[i]["farm_purchases"] = temp_arr;
                 }
@@ -306,15 +311,17 @@ exports.getOrders = function(req, res){
                         html_data["seeds"] = seeds;
                     }
 
-                    materialModel.getAllPurchases(null, {status : "Processing"} , function(err, pending){
+                    materialModel.getAllPurchases(null, {status : "Pending"} , function(err, pending){
                         if(err)
                             throw err;
                         else{
-                            console.log(pending);
+                            
                             var i;
                             for(i = 0; i < pending.length; i++){
+                                console.log("TYPE: " + typeof(pending[i].request_date) + pending[i].request_date);
                                 pending[i].request_date = dataformatter.formatDate(pending[i].request_date, 'mm DD, YYYY');
                             }
+                            console.log(pending);
                             html_data["pending"] = pending;
                         }
                         materialModel.getAllPurchases(null, {status : "Processing"}, function(err, processing){
@@ -322,6 +329,7 @@ exports.getOrders = function(req, res){
                                 throw err;
                             else{
                                 for(i = 0; i < processing.length; i++){
+                                    if(processing[i].request_date != null)
                                     processing[i].request_date = dataformatter.formatDate(processing[i].request_date, 'mm DD, YYYY');
                                 }
                                 html_data["processing"] = processing;
@@ -497,4 +505,27 @@ exports.addPurchase = function(req,res){
 
     // html_data = {msg : "Added."}
     // res.send(html_data);
+}
+
+
+exports.getPurchaseDetails = function(req,res){
+    var html_data = {};
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'orders_tab');
+    var purchase_id = req.query.id;
+
+    materialModel.getDetailsPurchase({purchase_id : purchase_id}, function(err, details){
+        if(err)
+            throw err;
+        else{
+            console.log(details[0]);
+            details[0].request_date = dataformatter.formatDate(details[0].request_date, 'mm DD, YYYY');
+            if(details[0].date_purchased != null)
+                details[0].date_purchased = dataformatter.formatDate(details[0].date_purchased, 'mm DD, YYYY');
+            else
+            details[0].date_purchased = "not yet purchased";
+            html_data['details'] = details[0];
+            console.log(details[0]);
+        }
+        res.render("purchaseDetails", html_data);
+    });
 }

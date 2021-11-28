@@ -162,29 +162,6 @@ $(document).ready(function(){
     });
 
 
-    $("#add-btn-mat").on("click", function(){
-        var count = $(this).val();
-        if(count == "6"){
-            alert("Limit reached");
-        }
-        else{
-            $(this).val(parseInt(count) + 1);
-            //add new item
-            $(".last_item").after('<div class="row" id="row' + count +'"><div class="col"><div class="mb-3"><div class="dropdown"><select class="form-select purchase_item_type" id="item_type' + count + '" name="item[' + (count - 1)+ '][type]" form="new_purchase"><option value="Seed">Seed</option><option value="Pesticide">Pesticide</option><option value="Fertilizer">Fertilizer</option></select></div></div></div><div class="col"><div class="mb-3"><div class="dropdown"><select class="form-select requried" id="item' + count + '" name="item[' + (count - 1)+ '][item]" form="new_purchase"><option disabled selected value> -- select an option -- </option><option class="material_item' + count + '"value="1}">1</option></select></div></div></div><div class="col"><div class="mb-3"><div style="display: flex; flex-flow: row;"><input class="form-control text-right required" type="number" placeholder="amount" id="item_amt' + count + '" name="item[' + (count - 1)+ '][amount]" form="new_purchase" style="width: 50%;" /><span style="padding: 10px;" id="item_unit' + count +'">Kg</span></div></div></div></div>');
-            $(".last_item").removeClass("last_item");
-            $("#row" + count).addClass("last_item");
-
-            var select = "item" + count;
-            //populate item list
-            $.get("/ajaxGetMaterials", {type : "Seed"}, function(result){
-                var i;
-                for(i = 0; i < result.length; i++){
-                    $("#"+select).append('<option class="material_' + select + '"value="' + result[i].id + '">' + result[i].name + '</option>');
-                }
-            });
-        }
-        
-    });
 
 
 
@@ -205,7 +182,7 @@ $(document).ready(function(){
                 $("#review_farm").text($("#farm").find(":selected").text());
 
                 for(i = 1; i < parseInt(count); i++){
-                    $("#buttons").before('<div class="row review_row"><div class="col"><div class="mb-3"><div class="dropdown"><label class="form-label" id="review_type' + i +'">' + $("#item_type" + i).val() +'</label></div></div></div><div class="col"><div class="mb-3"><div class="dropdown"><label class="form-label" id="review_item' + i +'">' + $("#item" + i).find(":selected").text() +'</label></div></div></div><div class="col"><div class="mb-3"><div style="display: flex; flex-flow: row;"><label class="form-label" id="review_amount' + i +'">' + $("#item_amt" + i).val() +'</label><span style="margin-left: 10px;">' + $("#item_unit" + i).text() +'</span></div></div></div></div>');
+                    $("#buttons").before('<div class="row review_row" style="top : 5px; bottom: 5px;"><div class="col-4 col-sm-4 col-md-4"><div class=""><div class="dropdown"><label class="form-label" id="review_type' + i +'">' + $("#item_type" + i).val() +'</label></div></div></div><div class="col-4 col-sm-4 col-md-4"><div class=""><div class="dropdown"><label class="form-label" id="review_item' + i +'">' + $("#item" + i).find(":selected").text() +'</label></div></div></div><div class="col-4 col-sm-4 col-md-4"><div class=""><div style="display: flex; flex-flow: row;"><label class="form-label" id="review_amount' + i +'">' + $("#item_amt" + i).val() +'</label><span style="margin-left: 10px;">' + $("#item_unit" + i).text() +'</span></div></div></div></div>');
                 }
             }
             else{
@@ -250,6 +227,31 @@ function isComplete(count){
 
     return status;
 }
+
+$(document).on('click', "#add-btn-mat", function(){
+    var count = $(this).val();
+        if(count == "6"){
+            alert("Limit reached");
+        }
+        else{
+            
+            $(this).remove();
+            //add new item
+            $(".last_item").after('<div class="form-row" id="row' + count +'"><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div class="dropdown"><select class="form-control purchase_item_type" id="item_type' + count + '" name="item[' + (count - 1)+ '][type]" form="new_purchase"><option value="Seed">Seed</option><option value="Pesticide">Pesticide</option><option value="Fertilizer">Fertilizer</option></select></div></div></div><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div class="dropdown"><select class="form-control requried" id="item' + count + '" name="item[' + (count - 1)+ '][item]" form="new_purchase"><option disabled selected value> -- select an option -- </option><option class="material_item' + count + '"value="1}">1</option></select></div></div></div><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div style="display: flex; flex-flow: row;"><input class="form-control text-right required" type="number" placeholder="amount" id="item_amt' + count + '" name="item[' + (count - 1)+ '][amount]" form="new_purchase" style="width: 50%;" /><span style="padding: 10px;" id="item_unit' + count +'">Kg</span> <button class="" style="background: none ; border-style: none;" id="add-btn-mat" value="' + (parseInt(count) + 1) + '"><i class="fa fa-plus-circle" style="font-size: 1rem; margin-left: 15px;"></i></button></div></div></div></div>');
+            $(".last_item").removeClass("last_item");
+            $("#row" + count).addClass("last_item");
+
+            var select = "item" + count;
+            //populate item list
+            $.get("/ajaxGetMaterials", {type : "Seed"}, function(result){
+                var i;
+                for(i = 0; i < result.length; i++){
+                    $("#"+select).append('<option class="material_' + select + '"value="' + result[i].id + '">' + result[i].name + '</option>');
+                }
+            });
+        }
+});
+
 
 $(document).on('keyup',".required", function(){
     $(this).css("border-color", "#d1d3e2");

@@ -209,7 +209,7 @@ function addPolygon(map, options) {
 			}
 		});
 	});
-
+	$(".loader").toggle("hide");
 	return map;
 }
 

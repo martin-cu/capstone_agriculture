@@ -83,9 +83,10 @@ router.get('/harvest_cycle', farmController.getHarvestCycle);
 router.get('/inventory', materialController.getInventory);
 router.get('/ajaxGetInventory/:type', materialController.ajaxGetInventory);
 router.get('/orders', materialController.getOrders);
-router.post('/addMaterial', materialController.newMaterial)
+router.get('/orders/details', materialController.getPurchaseDetails);
+router.post('/addMaterial', materialController.newMaterial);
 router.get('/ajaxGetMaterials', materialController.getMaterialsAjax);
-router.post('/addPurchase', materialController.addPurchase)
+router.post('/addPurchase', materialController.addPurchase);
 
 
 //Pest and Disease

@@ -54,12 +54,12 @@
                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
                     <a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; " data-toggle="modal" data-target="#addMaterialModal">Add New Item</a>
                     <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item"><a id="per_farm" class="nav-link materials_tab active" href="#" style="background: #F0F0F0;">Farms</a></li>
-                        <li class="nav-item"><a id="all_farms" class="nav-link materials_tab" href="#" >All</a></li>
+                        <li class="nav-item"><a id="all_farms" class="nav-link materials_tab active" href="#" style="background: #F0F0F0;">All</a></li>
+                        <li class="nav-item"><a id="per_farm" class="nav-link materials_tab" href="#">Farms</a></li>
                     </ul>
                 </div>
                 <div class="card-body">
-                    <div id="all_farm_materials" hidden>
+                    <div id="all_farm_materials" >
                         <div class="row table-topper align-items-center">
                             <div class="col-4 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
                             <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
@@ -73,70 +73,11 @@
                                     <table class="table table tablesorter" id="ipi-table">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>Status</th>
-                                                <th>farm</th>
-                                                <th>name</th>
-                                                <th class="text-left">material type</th>
-                                                <th class="text-right">amount</th>
-                                                <th class="text-center">unit</th>
-                                                <th class="text-center">request date</th>
-                                                <th class="text-center">date purchased</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Pending</td>
-                                                <td>Farm 2</td>
-                                                <td>Dinorado 2021</td>
-                                                <td>Dinorado</td>
-                                                <td class="text-right">2</td>
-                                                <td class="text-center">sacks</td>
-                                                <td class="text-center">March 2, 2021</td>
-                                                <td class="text-center">March 5, 2021</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pending</td>
-                                                <td>Farm 2</td>
-                                                <td>Dinorado 2021</td>
-                                                <td>Dinorado</td>
-                                                <td class="text-right">2</td>
-                                                <td class="text-center">sacks</td>
-                                                <td class="text-center">March 2, 2021</td>
-                                                <td class="text-center">March 5, 2021</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pending</td>
-                                                <td>Farm 2</td>
-                                                <td>Dinorado 2021</td>
-                                                <td>Dinorado</td>
-                                                <td class="text-right">2</td>
-                                                <td class="text-center">sacks</td>
-                                                <td class="text-center">March 2, 2021</td>
-                                                <td class="text-center">March 5, 2021</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pending</td>
-                                                <td>Farm 2</td>
-                                                <td>Dinorado 2021</td>
-                                                <td>Dinorado</td>
-                                                <td class="text-right">2</td>
-                                                <td class="text-center">sacks</td>
-                                                <td class="text-center">March 2, 2021</td>
-                                                <td class="text-center">March 5, 2021</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div>
-                                    <table class="table table tablesorter" id="ipi-table">
-                                        <thead class="thead-dark">
-                                            <tr>
                                                 <th>Farm</th>
                                                 <th>Name</th>
                                                 <th>Material type</th>
                                                 <th>stock level</th>
                                                 <th>unit</th>
-                                                {{!-- <th>cost per unit</th> --}}
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -159,7 +100,7 @@
                     </div>
                     </div>
 
-                <div id="per_farm_materials">
+                <div id="per_farm_materials" hidden>
                     {{#each farms}}
                         <div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem;">
                             <div class="col-xl-3" style="padding: 2rem;">
