@@ -60,7 +60,7 @@ router.post('/upload_wo', workOrderController.ajaxCreateWorkOrder);
 router.get('/', farmController.getDashboard);
 router.get('/home', farmController.getDashboard);
 
-router.get('/farms', farmController.getFarms); 
+router.get('/farms', workOrderController.getWorkOrdersPage); 
 router.get('/farms/add', farmController.getAddFarm);
 
 router.get('/materials', materialController.getMaterials);

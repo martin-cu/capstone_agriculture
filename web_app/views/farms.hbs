@@ -1,57 +1,184 @@
 <div class="container-fluid">
-    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Work Order</h3>
-    <div class="row" style="padding: 0px 12px;">
-        <div class="col-xxl-6">
-            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Active Crop Calendars<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;" onclick='window.location="/crop_calendar/add"'>ADD CROP CALENDAR&nbsp;<i class="fa fa-plus"></i></button>
-	            
-	            <div class="" style="scroll-y: auto;" id="calendar_card_cont">
-	            	<div class="card" style="margin-bottom: 10px;margin-top: 20px;" id="">
-	                <div class="card-body">
-	                    <div class="row">
-	                        <div class="col-xxl-2">
-	                            <h6 class="d-xxl-flex justify-content-xxl-center align-items-xxl-center mb-2" style="text-align: center;color: #332c1f;font-weight: bold;font-size: 20px;">OCT</h6>
-	                            <h4 class="d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="text-align: center;color: #332c1f;font-weight: bold;margin-bottom: 0PX;font-size: 30px;">6</h4>
-	                        </div>
-	                        <div class="col-xxl-7">
-	                            <h4 style="font-size: 20PX;">Dinorado 2021</h4>
-	                            <h6 class="text-muted mb-2">Farm 1</h6>
-	                            <p style="margin-bottom: 0px;">Stage: Vegetation<br></p>
-	                            <p>Upcoming Activities: Pesticide Application on October 8, 2021<br></p>
-	                        </div>
-	                        <div class="col-xxl-3"><i class="fas fa-seedling d-xxl-flex justify-content-xxl-center align-items-xxl-center" style="font-size: 80PX;color: rgb(102,117,40);"></i></div>
-	                    </div>
-	                </div>
-	            </div>
-	            </div>
-            
-        </div>
-        <div class="col-xxl-6">
-            <h6 class="d-inline-flex fw-bold m-0" style="color: #000000;">Work Orders<br></h6><button class="btn btn-primary d-inline-block float-end" type="button" style="background: #EDD172;color: #584C33;font-weight: bold;padding: 2PX 12PX;font-size: 12PX;border-radius: 20PX;" onclick='window.location=""'>ADD WORK ORDER&nbsp;<i class="fa fa-plus"></i></button>
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-body" style="min-height: 400px;">
-                    <div class="row table-topper align-items-center">
-                        <div class="col-3 text-start" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
-                        <div class="col-6 text-center" style="margin: 0px;padding: 5px 10px;">
-                            <h6 id="counter-1">Showing: <strong id="filter_title">ALL</strong>&nbsp;Row(s)</h6>
-                        </div>
-                        <div class="col-3 text-end" style="margin: 0px;padding: 5px 10px;"><a href="#" data-bs-toggle="modal" data-bs-target="#tablehelpModal"><i class="fa fa-question-circle" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;" data-bs-toggle="tooltip" data-bs-placement="top"></i></a></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div>
-                                <table class="table table tablesorter" id="work_order_table">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>ACTION</th>
-                                            <th>FARM</th>
-                                            <th>STATUS</th>
-                                            <th>DUE DATE</th>
-                                            <th>WO ID</th>
-                                            <th>NOTES</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">Farms &gt; Work Order</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
+    </div>
+    <div role="tablist" id="accordion-1" style="margin-bottom: 20px;">
+        <div class="card">
+            <div class="card-header" role="tab" style="background: #939C1F;padding: 16px 20px;height: auto;">
+                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="font-size: 16px;color: rgb(255,255,255);font-weight: bold;">Create Work Order</a></h5>
+            </div>
+            <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
+                <div class="card-body detailed_cont">
+                    <form class="register-form" id="work_order_form" method="post" action="/create_work_order">
+                        <fieldset>
+                            <div class="form-row">
+                                <div class="col-6 col-sm-6 col-md-6"><label>Farm</label>
+                                    <div id="lp-name-wrapper"></div>
+                                    <select class="form-control" id="farm_id" name="farm_id">
+                                    </select>
+                                </div>
+
+                                <div class="col-6 col-sm-6 col-md-6"><label>Crop Calendar</label>
+                                    <div id="lp-name-wrapper"></div>
+                                    <select class="form-control" id="crop_calendar_id" name="crop_calendar_id">
+                                    </select>
+                                </div>
+
+                                <div class="col-6 col-sm-6 col-md-6"><label>Type</label>
+                                    <div id="lp-lastname-wrapper"></div>
+                                    <select class="form-control" id="wo_type" name="wo_type">
+                                        <!-- <option value="Sow Seed">Sow Seed</option> -->
+                                        <option value="Pesticide Application">Pesticide Application</option>
+                                        <option value="Fertilizer Application">Fertilizer Application</option>
+                                        <option value="Water Fields">Water Fields</option>
+                                        <option value="Harvest">Harvest</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 col-sm-6 col-md-6">
+                                    <div id="lp-name-wrapper-1"><label>Description</label><input class="form-control" type="text" id="lp-name-1" placeholder="Short description on the work order"></div>
+                                </div>
+                                <div class="col-6 col-sm-6 col-md-6">
+                                    <div id="lp-lastname-wrapper-1"></div>
+                                </div>
+                                
+                                <!-- <div class="col-12 col-sm-6 col-md-12">
+                                    <div id="lp-check1-wrapper">
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="lp-check1"><label class="form-check-label checboxtext" for="lp-check1" style="color: rgb(133,135,150);">Harvested</label></div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-6 col-md-6">
+                                    <div id="lp-name-wrapper-2"><label class="d-block">Rice Yield</label><input class="form-control d-inline-flex" type="number" style="width: 300px;"><label class="d-inline-flex" style="margin-left: 10px;">sacks</label></div>
+                                </div> -->
                             </div>
+
+                            <div class="form-row">
+                                <div class="col-6 col-sm-6 col-md-6">
+                                    <div id="lp-name-wrapper-3"><label>Start Date</label>
+                                        <input type="date" class="form-control" id="start_date" name="start_date" aria-describedby="emailHelp" placeholder="" required>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-6 col-md-6">
+                                    <div id="lp-lastname-wrapper-2"></div><label>Due Date</label><input type="date" class="form-control" id="due_date" name="due_date" aria-describedby="emailHelp" placeholder="" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="col-12 col-sm-6 col-md-12">
+                                    <label>Resources</label>
+                                    <div id="lp-mail-wrapper" style="max-width: 500px;">
+                                        <div class="d-flex flex-column" id="resource_cont">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-12" style="margin-top: -20px;">
+                                    <div id="customfield1-wrapper"><label>Notes</label>
+                                        <textarea type="text" class="form-control" id="notes" name="notes" aria-describedby="emailHelp" placeholder="" rows="3" style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-md-12 mt-3"><button class="btn btn-primary float-right shadow" type="submit" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);">Create Work Order</button></div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-5">
+        <div class="card-header py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
+            <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Work Order Records</p>
+        </div>
+        <div class="card-body">
+            <div class="card" id="TableSorterCard-1">
+                <div class="row table-topper align-items-center">
+                    <div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                    <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
+                        <h6 id="counter-1">Showing: <strong id="rowCount-1">ALL</strong>&nbsp;Row(s)</h6>
+                    </div>
+                    <div class="col-4 text-right" style="margin: 0px;padding: 5px 10px;"><a href="#" data-toggle="modal" data-target="#tablehelpModal"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;"></i></a></div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div>
+                            <table class="table table tablesorter tablesorter-bootstrap tablesorter9e88e9e114509 hasFilters" id="ipi-table" role="grid"><colgroup class="tablesorter-colgroup" id="work_order_table"><col style="width: 14.8%;"><col style="width: 23.2%;"><col style="width: 12%;"><col style="width: 26.5%;"><col style="width: 13.3%;"></colgroup>
+                                <thead class="thead-dark">
+                                    <tr style="background: #332C1F;" role="row" class="tablesorter-headerRow">
+                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="0" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="Status: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Status</div></th>
+                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="1" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="FARM: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">FARM</div></th>
+                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="2" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="TYPE: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">TYPE</div></th>
+                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="3" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="NAME: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">NAME</div></th>
+                                        
+                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="4" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="Date: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Date</div></th>
+                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="5" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="WO_ID: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">WO ID</div></th>
+                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="6" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="notes: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">notes</div></th>
+                                    </tr>
+                                <tr role="search" class="tablesorter-filter-row tablesorter-ignoreRow">
+                                    <td data-column="0">
+                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="0" aria-label="Filter &quot;Status&quot; column by..." data-lastsearchtime="1638066339162">
+                                    </td>
+                                    <td data-column="1">
+                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="1" aria-label="Filter &quot;FARM&quot; column by..." data-lastsearchtime="1638066339162">
+                                    </td>
+                                    <td data-column="2">
+                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="2" aria-label="Filter &quot;TYPE&quot; column by..." data-lastsearchtime="1638066339162">
+                                    </td>
+                                    <td data-column="3">
+                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="3" aria-label="Filter &quot;NAME&quot; column by..." data-lastsearchtime="1638066339162">
+                                    </td>
+                                    <td data-column="4">
+                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="4" aria-label="Filter &quot;Date&quot; column by..." data-lastsearchtime="1638066339162">
+                                    </td>
+                                    <td data-column="5">
+                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="5" aria-label="Filter &quot;notes&quot; column by..." data-lastsearchtime="1638066339162">
+                                    </td>
+                                    <td data-column="6">
+                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="6" aria-label="Filter &quot;notes&quot; column by..." data-lastsearchtime="1638066339162">
+                                    </td>
+                                </tr></thead>
+                                <tbody aria-live="polite" aria-relevant="all">
+                                    {{#each wo_list}}
+                                    <tr role="row" class="">
+                                        <td>{{this.status}}</td>
+                                        <td>{{this.farm_name}}</td>
+                                        <td>{{this.type}}</td>
+                                        <td>{{this.crop_plan}}</td>
+                                        <td>{{this.date_created}}</td>
+                                        <td><a href="/farms/work_order&id={{this.work_order_id}}">{{this.work_order_id}}</a></td>
+                                        <td>{{this.notes}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="tablehelpModal-1" aria-labeledby="tablehelpModal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Table Filtering Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table" id="work_order_table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:1%">Priority</th>
+                                                <th style="width:9%">Operator</th>
+                                                <th style="width:30%">Description</th>
+                                                <th style="width:60%">Examples</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer"><button class="btn btn-danger" type="button" data-dismiss="modal">Close</button></div>
                         </div>
                     </div>
                 </div>
@@ -60,239 +187,402 @@
     </div>
 </div>
 
-{{!-- <div class="card" style="margin-bottom: 10px;margin-top: 20px;" id=""> --}}
+<!-- Create WO JS -->
 <script type="text/javascript">
-	jQuery.ajaxSetup({async: false});
 
-	function createDOM(obj) {
-		var ele;
+    function changeCropCalendarVals(farm_id) {
+        $('#crop_calendar_id').empty();
+        $.get('/get_crop_plans', { status: ['Active', 'In-Progress'], where: { key: 'ft.farm_id', val: farm_id } }, function(plans) {
+            console.log(plans);
+            for (var i = 0; i < plans.length; i++) {
+                $('#crop_calendar_id').append("<option value='"+plans[i].calendar_id+"'>"+plans[i].crop_plan+"</option>");
+            }
+        });
+    }
 
-		ele = document.createElement(obj.type);
-		ele.setAttribute('class', obj.class);
-		ele.setAttribute('style', obj.style);
-		ele.innerHTML = obj.html;
+    function createDOM(obj) {
+        var ele;
 
-		for (prop in obj.attr) {
-			if (Object.prototype.hasOwnProperty.call(obj.attr, prop)) {
-				if (prop == 'data_href') {
-					new_prop = 'data-href';
-				}
-				else {
-					new_prop = prop;
-				}
-				ele.setAttribute(new_prop, obj.attr[prop]);
-		    }
-		}
+        ele = document.createElement(obj.type);
+        ele.setAttribute('class', obj.class);
+        ele.setAttribute('style', obj.style);
+        ele.innerHTML = obj.html;
 
-		return ele;
-	}
+        for (prop in obj.attr) {
+            if (Object.prototype.hasOwnProperty.call(obj.attr, prop)) {
+                ele.setAttribute(prop, obj.attr[prop]);
+            }
+        }
 
-	function appendWorkOrder(data) {
-		var cont = $('#work_order_table');
-		var keys = ['type', 'farm_name', 'status', 'date_due', 'work_order_id', 'wo_notes'];
-		var attr = {
-			data_href: ''
-		};
-		var props;
+        return ele;
+    }
 
-		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+    function appendResourceOpts(target, type, farm_id) {
+        target = $('#resource_cont');
 
-		for (var i = 0; i < keys.length; i++) {
+        target.empty();
+        if (type == 'Fertilizer' || type == 'Pesticide') {
+            var div, name, id, qty_cont, qty, lbl;
+            var key, id_key;
+            var name_attr = {
+                type: 'text',
+                name: type,
+                value: '',
+                readonly: true
+            };
+            var id_attr = {
+                type: 'text',
+                name: type+'_id',
+                value: '',
+                readonly: true
+            }
+            var qty_attr = {
+                type: 'number',
+                name: type+'_qty',
+                value: '0',
+                min: '0',
+                max: ''
+            };
 
-			if (keys[i] != 'work_order_id') {
-				props = { type: 'td', class: '', style: '', html: data[keys[i]], attr: null };
-			}
-			else {
-				attr['data_href'] = '/farms/work_order&id='+data[keys[i]];
-				props = { type: 'td', class: 'link', style: '', html: data[keys[i]], attr: attr }
-			}
+            $.get('/getAll_materials', { type: type, filter: farm_id }, function(materials) {
+                console.log(materials);
+                if (type == 'Fertilizer') {
+                    key = 'fertilizer_name';
+                    id_key = 'fertilizer_id';
+                }
+                else if (type == 'Pesticide') {
+                    key = 'pesticide_name';
+                    id_key = 'pesticide_id';
+                }
+                else if (type == '') {
 
-			tr.appendChild(createDOM(props));
-		}
+                }
 
-		cont.append(tr);
-	}
+                for (var i = 0; i < materials.length; i++) {
+                    console.log(materials[i]);
+                    name_attr.value = materials[i][key];
+                    id_attr.value = materials[i][id_key];
+                    qty_attr.max = materials[i].current_amount;
 
-	function appendCards(data) {
-		var cont = $('#calendar_card_cont');
-		var card, card_body, row, col2, col3, col7, h6, h4, p1, p2, i, calendar_id;
-		card = createDOM({ type: 'div', class: 'card', style: 'margin-bottom: 10px;margin-top: 20px;', html: '' });
-		card_body = createDOM({ type: 'div', class: 'card-body calendar_card', style: '', html: '' });
-		row = createDOM({ type: 'div', class: 'row', style: '', html: '' });
-		col2 = createDOM({ type: 'div', class: 'col-xxl-2', style: '', html: '' });
-		h6 = createDOM({ type: 'h6', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center mb-2', style: 'text-align: center;color: #332c1f;font-weight: bold;font-size: 20px;', html: data.start_month });
-		h4 = createDOM({ type: 'h4', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center', style: 'text-align: center;color: #332c1f;font-weight: bold;margin-bottom: 0PX;font-size: 30px;', html: data.start_day });
+                    div = createDOM({ type: 'div', class: 'd-flex', style: '', html: '' });
+                    id = createDOM({ type: 'input', class: 'hide', style: '', html: '', attr: id_attr });
+                    name = createDOM({ type: 'input', class: 'form-control', style: '', html: '', attr: name_attr });
 
-		col2.appendChild(h6);
-		col2.appendChild(h4);
+                    qty_cont = createDOM({ type: 'div', class: 'd-flex flex-column', style: '', html: '' });
 
-		col7 = createDOM({ type: 'div', class: 'col-xxl-7', style: '', html: '' });
-		h4 = createDOM({ type: 'h4', class: 'crop_plan', style: 'font-size: 20PX;', html: data.crop_plan });
-		h6 = createDOM({ type: 'h6', class: 'text-muted mb-2 farm_name', style: '', html: data.farm_name });
-		p1 = createDOM({ type: 'p', class: '', style: 'margin-bottom: 0px;', html: 'Stage: '+data.current_stage });
-		p2 = createDOM({ type: 'p', class: '', style: '', html: 'Upcoming Activities: '+data.upcoming_activity });
+                    qty = createDOM({ type: 'input', class: 'form-control mx-2', style: 'width: 100px;', html: '', attr: qty_attr });
+                    lbl = createDOM({ type: 'label', class: '', style: 'font-size: 12px; text-align:center;', html: 'In-stock: '+materials[i].current_amount+'' });
 
-		col7.appendChild(h4);
-		col7.appendChild(h6);
-		col7.appendChild(p1);
-		col7.appendChild(p2);
+                    qty_cont.appendChild(qty);
+                    qty_cont.appendChild(lbl);
 
-		col3 = createDOM({ type: 'div', class: 'col-xxl-3', style: '', html: '' });
-		i = createDOM({ type: 'i', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center '+data.stage_icon, style: 'font-size: 80PX; color: RGB(102,117,40)', html: '' });
+                    div.appendChild(name);
+                    div.appendChild(id);
+                    div.appendChild(qty_cont);
 
-		col3.appendChild(i);
+                    target.append(div);
+                }
+            });
+        }
+            
+    }
 
-		row.appendChild(col2);
-		row.appendChild(col7);
-		row.appendChild(col3);
+    function changeResourceOpts(type) {
+        var val;
+        if (type == 'Pesticide Application') {
+            val = 'Pesticide';
+        }
+        else if (type == 'Fertilizer Application') {
+            val = 'Fertilizer';
+        }
+        else if (type == 'Harvest') {
+            val = '';
+        }
+        return val;
+    }
 
-		card_body.appendChild(row);
-		card.appendChild(card_body);
-		cont.append(card);
-	}
+    $(document).ready(function() {
 
-	function getCurrentStage(date, last_order) {
-		var obj = { };
-		var icons = ['fas fa-seedling'];
-		if (date == null || date == '') {
-			obj['stage'] = last_order;
-			obj['icon'] = icons[0];
-		}
-		else {
-			var now = new Date();
-			var diff = now.getDate() - date.getDate();
+        // $('#work_order_form').on('submit', function(e) {
+        //  e.preventDefault();
 
-			if (diff < 90) {
-				obj['stage'] = 'Vegetation';
-				obj['icon'] = icons[0];
-			}
-			else if (diff >= 90 && diff < 180) {
-				obj['stage'] = 'Harvesting';
-				obj['icon'] = icons[0];
-			}
-		}
+        //  var form_data = $('#work_order_form').serializeJSON();
 
-		return obj;
-	}
+        //  console.log(form_data);
 
-	function formatDate(date, format) {
-		var year,month,day;
-		const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-		  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-		];
-		year = date.getFullYear();
-		month = date.getMonth()+1;
-		day = date.getDate();
+        //  // $.post('/create_work_order', form_data, function(crop_plan) {
 
-		if (format === 'MM/DD/YYYY') {
-			if (month < 10)
-				month = '0'+month;
-			if (day < 10)
-				day = '0'+day;
-			date = month+'/'+day+'/'+year;
-		}
-		else if (format === 'YYYY-MM-DD') {
-			if (month < 10)
-				month = '0'+month;
-			if (day < 10)
-				day = '0'+day;
-			date = year+'-'+month+'-'+day;
-		}
-		else if (format === 'mm DD, YYYY') {
-			date = monthNames[month]+' '+day+', '+year;
-		}
+        //  // });
+        // })
 
-		return date;
-	}
+        $.get('/get_farm_list', { where: "farm_id in (select farm_id from crop_calendar_table where status = 'In-Progress' or status = 'Active') " }, function(result) {
 
-	function prepareCalendarData(plan, work_order) {
-		var obj = {};
+            if (result.length != 0) {
+                farm_list = result;
+                for (var i = 0; i < result.length; i++) {
+                    $('#farm_id').append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
+                }
 
-		var stage = getCurrentStage(new Date(plan.sowing_date), work_order[0].type);
-		obj['farm_name'] = plan.farm_name;
-		obj['current_stage'] = stage.stage;
-		obj['stage_icon'] = stage.icon;
-		obj['crop_plan'] = plan.crop_plan;
+                changeCropCalendarVals(result[0].farm_id);
 
-		if (work_order.length != 0) {
-			var date = new Date(work_order[0].date_start);
-			var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-		  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-			var month = months[date.getMonth()];
-			var day = date.getDate();
+                appendResourceOpts(null, 'Pesticide', result[0].farm_id);
+            }
+            else {
+                //Show no farm record error
+            }
+        });
 
-			obj['start_date'] = work_order[0].date_start;
-			obj['start_month'] = month;
-			obj['start_day'] = day;
-			obj['upcoming_activity'] = work_order[0].type+' by '+formatDate(new Date(work_order[0].date_due), 'mm DD, YYYY');
-		}
+        $('#farm_id').on('change', function(e) {
+            var type = changeResourceOpts($('#wo_type').val());
+            var farm_id = $(this).val();
 
-		return obj;
-	}
+            changeCropCalendarVals(farm_id);
 
-	function getWorkOrders(where, title) {
-		$('#work_order_table').children().not(':first').remove();
-		$('#filter_title').html(title);
-		var query = {
-			where: where,
-			order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
-		}
-		$.get('/get_work_orders', query, function(work_order_list) {
-			if (work_order_list.length != 0) {
-				for (var i = 0; i < work_order_list.length; i++) {
-					work_order_list[i].date_due = formatDate(new Date(work_order_list[i].date_due), 'MM/DD/YYYY');
-					appendWorkOrder(work_order_list[i]);
-				}
-			}
-			// Show 'No work order records'
-			else {
-				console.log('No work order records!');
-			}
-		});
-	}
+            appendResourceOpts(null, type, farm_id);
+        });
 
-	$(document).ready(function() {
+        $('#wo_type').on('change', function(e) {
+            var type = changeResourceOpts($(this).val());
+            var farm_id = $('#farm_id').find(":selected").val();
 
-		$('#calendar_card_cont').on('click', '.calendar_card', function() {
-			var target = $(this);
-			var crop_plan = $(this).find('.crop_plan').html();
-			var farm_name = $(this).find('.farm_name').html();
-			console.log(crop_plan+' - '+farm_name);
+            appendResourceOpts(null, type, farm_id);
+        });
 
-			var query = {
-				key: ['crop_plan'],
-				value: [crop_plan]
-			}
-
-			getWorkOrders(query, farm_name+' - '+crop_plan);
-		});
-
-		$.get('/get_crop_plans', { status: ['Active', 'In-Progress']}, function(plans) {
-			let plan_list = plans;
-			let counter = 0;
-			var plan_arr = [];
-			var query = {
-				where: {
-					key: ['crop_calendar_id', 'work_order_table.status'],
-					value: null
-				}
-			};
-			for (var i = 0; i < plan_list.length; i++) {
-				query['where']['value'] = [plan_list[i].calendar_id, 'Pending'];
-				$.get('/get_work_orders', query, function(work_orders) {
-					if (work_orders.length != 0) {
-						counter++;
-						appendCards(prepareCalendarData(plan_list[i], work_orders));
-					}
-				});
-			}
-			// Show 'No Active Calendars'
-			if (counter == 0) {
-				console.log('No active calendars!');
-			}
-		});
-
-		getWorkOrders({}, 'All');
-	});
-
+    });
 </script>
+
+<!-- <script type="text/javascript">
+    jQuery.ajaxSetup({async: false});
+
+    function createDOM(obj) {
+        var ele;
+
+        ele = document.createElement(obj.type);
+        ele.setAttribute('class', obj.class);
+        ele.setAttribute('style', obj.style);
+        ele.innerHTML = obj.html;
+
+        for (prop in obj.attr) {
+            if (Object.prototype.hasOwnProperty.call(obj.attr, prop)) {
+                if (prop == 'data_href') {
+                    new_prop = 'data-href';
+                }
+                else {
+                    new_prop = prop;
+                }
+                ele.setAttribute(new_prop, obj.attr[prop]);
+            }
+        }
+
+        return ele;
+    }
+
+    function appendWorkOrder(data) {
+        var cont = $('#work_order_table');
+        var keys = ['type', 'farm_name', 'status', 'date_due', 'work_order_id', 'wo_notes'];
+        var attr = {
+            data_href: ''
+        };
+        var props;
+        console.log(data);
+        tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+
+        for (var i = 0; i < keys.length; i++) {
+
+            if (keys[i] != 'work_order_id') {
+                props = { type: 'td', class: '', style: '', html: data[keys[i]], attr: null };
+            }
+            else {
+                attr['data_href'] = '/farms/work_order&id='+data[keys[i]];
+                props = { type: 'td', class: 'link', style: '', html: data[keys[i]], attr: attr }
+            }
+
+            tr.appendChild(createDOM(props));
+        }
+
+        cont.append(tr);
+    }
+
+    function appendCards(data) {
+        var cont = $('#calendar_card_cont');
+        var card, card_body, row, col2, col3, col7, h6, h4, p1, p2, i, calendar_id;
+        card = createDOM({ type: 'div', class: 'card', style: 'margin-bottom: 10px;margin-top: 20px;', html: '' });
+        card_body = createDOM({ type: 'div', class: 'card-body calendar_card', style: '', html: '' });
+        row = createDOM({ type: 'div', class: 'row', style: '', html: '' });
+        col2 = createDOM({ type: 'div', class: 'col-xxl-2', style: '', html: '' });
+        h6 = createDOM({ type: 'h6', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center mb-2', style: 'text-align: center;color: #332c1f;font-weight: bold;font-size: 20px;', html: data.start_month });
+        h4 = createDOM({ type: 'h4', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center', style: 'text-align: center;color: #332c1f;font-weight: bold;margin-bottom: 0PX;font-size: 30px;', html: data.start_day });
+
+        col2.appendChild(h6);
+        col2.appendChild(h4);
+
+        col7 = createDOM({ type: 'div', class: 'col-xxl-7', style: '', html: '' });
+        h4 = createDOM({ type: 'h4', class: 'crop_plan', style: 'font-size: 20PX;', html: data.crop_plan });
+        h6 = createDOM({ type: 'h6', class: 'text-muted mb-2 farm_name', style: '', html: data.farm_name });
+        p1 = createDOM({ type: 'p', class: '', style: 'margin-bottom: 0px;', html: 'Stage: '+data.current_stage });
+        p2 = createDOM({ type: 'p', class: '', style: '', html: 'Upcoming Activities: '+data.upcoming_activity });
+
+        col7.appendChild(h4);
+        col7.appendChild(h6);
+        col7.appendChild(p1);
+        col7.appendChild(p2);
+
+        col3 = createDOM({ type: 'div', class: 'col-xxl-3', style: '', html: '' });
+        i = createDOM({ type: 'i', class: 'd-xxl-flex justify-content-xxl-center align-items-xxl-center '+data.stage_icon, style: 'font-size: 80PX; color: RGB(102,117,40)', html: '' });
+
+        col3.appendChild(i);
+
+        row.appendChild(col2);
+        row.appendChild(col7);
+        row.appendChild(col3);
+
+        card_body.appendChild(row);
+        card.appendChild(card_body);
+        cont.append(card);
+    }
+
+    function getCurrentStage(date, last_order) {
+        var obj = { };
+        var icons = ['fas fa-seedling'];
+        if (date == null || date == '') {
+            obj['stage'] = last_order;
+            obj['icon'] = icons[0];
+        }
+        else {
+            var now = new Date();
+            var diff = now.getDate() - date.getDate();
+
+            if (diff < 90) {
+                obj['stage'] = 'Vegetation';
+                obj['icon'] = icons[0];
+            }
+            else if (diff >= 90 && diff < 180) {
+                obj['stage'] = 'Harvesting';
+                obj['icon'] = icons[0];
+            }
+        }
+
+        return obj;
+    }
+
+    function formatDate(date, format) {
+        var year,month,day;
+        const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        year = date.getFullYear();
+        month = date.getMonth()+1;
+        day = date.getDate();
+
+        if (format === 'MM/DD/YYYY') {
+            if (month < 10)
+                month = '0'+month;
+            if (day < 10)
+                day = '0'+day;
+            date = month+'/'+day+'/'+year;
+        }
+        else if (format === 'YYYY-MM-DD') {
+            if (month < 10)
+                month = '0'+month;
+            if (day < 10)
+                day = '0'+day;
+            date = year+'-'+month+'-'+day;
+        }
+        else if (format === 'mm DD, YYYY') {
+            date = monthNames[month]+' '+day+', '+year;
+        }
+
+        return date;
+    }
+
+    function prepareCalendarData(plan, work_order) {
+        var obj = {};
+
+        var stage = getCurrentStage(new Date(plan.sowing_date), work_order[0].type);
+        obj['farm_name'] = plan.farm_name;
+        obj['current_stage'] = stage.stage;
+        obj['stage_icon'] = stage.icon;
+        obj['crop_plan'] = plan.crop_plan;
+
+        if (work_order.length != 0) {
+            var date = new Date(work_order[0].date_start);
+            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var month = months[date.getMonth()];
+            var day = date.getDate();
+
+            obj['start_date'] = work_order[0].date_start;
+            obj['start_month'] = month;
+            obj['start_day'] = day;
+            obj['upcoming_activity'] = work_order[0].type+' by '+formatDate(new Date(work_order[0].date_due), 'mm DD, YYYY');
+        }
+
+        return obj;
+    }
+
+    function getWorkOrders(where, title) {
+        $('#work_order_table').children().not(':first').remove();
+        //$('#filter_title').html(title);
+        var query = {
+            where: where,
+            order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+        }
+        $.get('/get_work_orders', query, function(work_order_list) {
+            if (work_order_list.length != 0) {
+                for (var i = 0; i < work_order_list.length; i++) {
+                    work_order_list[i].date_due = formatDate(new Date(work_order_list[i].date_due), 'MM/DD/YYYY');
+                    appendWorkOrder(work_order_list[i]);
+                }
+            }
+            // Show 'No work order records'
+            else {
+                console.log('No work order records!');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+
+        $('#calendar_card_cont').on('click', '.calendar_card', function() {
+            var target = $(this);
+            var crop_plan = $(this).find('.crop_plan').html();
+            var farm_name = $(this).find('.farm_name').html();
+            console.log(crop_plan+' - '+farm_name);
+
+            var query = {
+                key: ['crop_plan'],
+                value: [crop_plan]
+            }
+
+            getWorkOrders(query, farm_name+' - '+crop_plan);
+        });
+
+        // $.get('/get_crop_plans', { status: ['Active', 'In-Progress']}, function(plans) {
+        //     let plan_list = plans;
+        //     let counter = 0;
+        //     var plan_arr = [];
+        //     var query = {
+        //         where: {
+        //             key: ['crop_calendar_id', 'work_order_table.status'],
+        //             value: null
+        //         }
+        //     };
+        //     for (var i = 0; i < plan_list.length; i++) {
+        //         query['where']['value'] = [plan_list[i].calendar_id, 'Pending'];
+        //         $.get('/get_work_orders', query, function(work_orders) {
+        //             if (work_orders.length != 0) {
+        //                 counter++;
+        //                 appendCards(prepareCalendarData(plan_list[i], work_orders));
+        //             }
+        //         });
+        //     }
+        //     // Show 'No Active Calendars'
+        //     if (counter == 0) {
+        //         console.log('No active calendars!');
+        //     }
+        // });
+
+        getWorkOrders({}, 'All');
+    });
+
+</script> -->

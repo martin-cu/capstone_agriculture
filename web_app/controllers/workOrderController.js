@@ -202,6 +202,27 @@ exports.ajaxGetWorkOrders = function(req, res) {
 	});
 }
 
+exports.getWorkOrdersPage = function(req, res) {
+	var query = {
+        order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+    }
+	workOrderModel.getWorkOrders(query, function(err, list) {
+		if (err)
+			throw err;
+		else {
+			for (var i = 0; i < list.length; i++) {
+				list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+				list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes[i];
+			}
+
+			var html_data = { wo_list: list };
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+			console.log(html_data.wo_list);
+			res.render('farms', html_data);
+		}
+	});
+}
+
 exports.editWorkOrder = function(req, res) {
 	var query = {
 		type: req.body.type,

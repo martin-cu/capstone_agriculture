@@ -94,7 +94,7 @@ exports.ajaxGetCropPlans = function(req, res) {
 				const unique = [...new Map(plans.map(plan =>
 	  							[plan.crop_plan, plan])).values()];
 			}
-
+			
 
 			res.send(plans);
 		}
