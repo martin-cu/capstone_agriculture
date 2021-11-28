@@ -225,36 +225,6 @@ exports.getPurchases = function(req, res){
 
 
 
-
-
-exports.updatePurchase = function(req, res){
-
-    var status = req.query.status;
-    var type = req.query.type;
-    var item_id = req.query.item_id;
-    var amount = req.query.amount;
-    var purchase_id = req.query.purchase_id;
-    var farm_mat_id = req.query.farm_mat_id;
-    if(status == "Purchased"){
-        //should add to Materials
-        console.log("Add farm materials");
-        materialModel.addFarmMaterials(amount, farm_mat_id, function(err, result){
-        });
-    }
-    var data = {
-        item_desc : "New description from website.",
-        purchase_status : status
-    };
-    materialModel.updatePurchase(purchase_id, data, function(err, result){
-    });
-    var html_data = {
-        msg : "Data updated."
-    }
-    res.send(html_data);
-}
-
-
-
 //API Test
 exports.testAPI = function(req, res){
     res.render("api");
@@ -471,7 +441,7 @@ exports.newMaterial = function(req, res){
 exports.addPurchase = function(req,res){ 
 
     console.log("------------------------------------------------------------------");
-    console.log(req.body);
+    console.log(req.body.item);
     console.log("------------------------------------------------------------------");
     var farm_id = req.body.farm;
 
@@ -485,9 +455,13 @@ exports.addPurchase = function(req,res){
             amount : req.body.item[i].amount,
             request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
         }
-        materialModel.addPurchase(purchase, function(){});
-    }
+        materialModel.addPurchase(purchase, function(err, add){
+            if(err)
+                console.log(err);
+        });
         console.log("Add purchase");
+    }
+        
     res.redirect("orders");
     // var purchase = {
     //     item_type : "Pesticide",
@@ -526,6 +500,82 @@ exports.getPurchaseDetails = function(req,res){
             html_data['details'] = details[0];
             console.log(details[0]);
         }
+        html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
         res.render("purchaseDetails", html_data);
     });
+}
+
+
+exports.updatePurchase = function(req, res){
+    var id = {purchase_id : req.body.purchase_id};
+    var amount = {amount : req.body.amount};
+    var date_purchased = {date_purchased : req.body.date_purchased};
+    var purchase_price = {purchase_price : req.body.purchase_price};
+    console.log(req.body);
+
+    if(purchase_price.purchase_price == ""){
+        materialModel.updatePurchase(id, {purchase_status : "Processing"}, function(err, result){
+        });
+    }
+    else if(purchase_price.purchase_price != ""){
+        var data = {
+            purchase_status : "Purchased",
+            amount : amount.amount,
+            date_purchased : date_purchased.date_purchased,
+            purchase_price : purchase_price.purchase_price
+        }
+        materialModel.updatePurchase(id, data, function(err, result){
+        });
+
+        //Add to Farm materials
+        materialModel.getDetailsPurchase(id, function(err, purchase_id){
+            if(err)
+                throw err;
+            else{
+
+                materialModel.getFarmMaterialsSpecific({farm_id : purchase_id[0].farm_id}, {item_type : purchase_id[0].item_type}, function(err, farm_materials){
+                    if(err)
+                        throw err;
+                    else{
+                        var i, farm_mat_id;
+                        for(i = 0; i < farm_materials.length; i++){
+                            if(purchase_id[0].item_id == farm_materials[i].item_id){
+                                farm_mat_id = farm_materials[i].farm_mat_id;
+                                break;
+                            }
+                        }
+                        materialModel.addFarmMaterials(amount.amount, farm_mat_id, function(err, result){
+                            if(err)
+                                console.log(err);
+                        });
+                    }
+                });
+            }
+        });
+        
+    }
+
+    res.redirect("/orders/details?id="+id.purchase_id);
+    // var status = req.query.status;
+    // var type = req.query.type;
+    // var item_id = req.query.item_id;
+    // var amount = req.query.amount;
+    // var purchase_id = req.query.purchase_id;
+    // var farm_mat_id = req.query.farm_mat_id;
+    // if(status == "Purchased"){
+    //     //should add to Materials
+    //     console.log("Add farm materials");
+        // materialModel.addFarmMaterials(amount, farm_mat_id, function(err, result){
+        // });
+    // }
+    // var data = {
+    //     item_desc : "New description from website.",
+    //     purchase_status : status
+    // };
+    // materialModel.updatePurchase(purchase_id, data, function(err, result){
+    // });
+    // var html_data = {
+    //     msg : "Data updated."
+    // }
+    // res.send(html_data);
 }

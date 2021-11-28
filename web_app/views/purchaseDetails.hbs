@@ -4,7 +4,7 @@
                     </div>
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
-                            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Work Order</h6>
+                            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Order</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -13,13 +13,7 @@
                                         <tr>
                                             <th></th>
                                             <th style="width: 1px;">Status</th>
-                                            <th style="width: 50px;">{{details.purchase_status}}
-                                                {{!-- <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly="">
-                                                    <option value="">Pending</option>
-                                                    <option value="">Processing</option>
-                                                    <option value="">Completed</option>
-                                                </select> --}}
-                                            </th>
+                                            <th style="width: 50px;"id="purchase_status">{{details.purchase_status}}</th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -113,7 +107,128 @@
                                         </tr> --}}
                                     </tbody>
                                 </table>
-                            </div><button class="btn btn-primary float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);">Update</button>
+                            </div><button class="btn btn-primary float-right shadow" id="update_purchase_btn"  data-toggle="modal" data-target="#updatePurchaseModal" type="button" style="display : none; border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);" value="{{details.purchase_status}}">Update</button>
                         </div>
                     </div>
                 </div>
+
+
+
+
+{{!-- MODAL --}}
+<div class="modal fade" id="updatePurchaseModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+            <div class="modal-header" ><h4 class="modal-title">Update Purchase</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        <center>
+        <div class="modal-body">
+            
+                <div class="card-body" id="process_step" style="display: none; width : 40%;" >
+                    <form id="update_purchase_form" action="/updatePurchase" method="post">
+                        <input type="text" id="purchase_id" name="purchase_id" value="{{details.purchase_id}}" hidden>
+                        <div class="row" style="height : 30px;">
+                            <div class="col">
+                                <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong>Type</strong> </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3" style="text-align : right;"><label class="form-label" ><span>{{details.item_type}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="height : 30px;">
+                            <div class="col">
+                                <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong>Item</strong> </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3" style="text-align : right;"><label class="form-label" ><span>{{details.item_name}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="height : 30px;">
+                            <div class="col">
+                                <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong>Amount</strong> </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3" style="text-align : right;"><label class="form-label" ><span>{{details.amount}} Kg</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                        <div class="mb-3" style="margin-top : 70px;" ><center>Process order? <br><button class="btn btn-primary btn-sm add-material-btn" stype="submit" form="update_purchase_form">Process</button></center></div>
+                </div>
+            
+            
+            <div class="card-body" id="purchase_step" style="display: none; width : 50%;">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong>Type</strong> </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3" style="text-align : left;"><label class="form-label" ><span>{{details.item_type}}</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong>Item</strong> </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3" style="text-align : left;"><label class="form-label" ><span>{{details.item_name}}</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong>Amount</strong> </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3" style="text-align : right;"><label class="form-label" ><div style="display: flex; flex-flow: row;"><input class="form-control text-right required" type="number" placeholder="amount" id="amount" name="amount" form="update_purchase_form" style="width: 70%;" value="{{details.amount}}"/><span style="padding: 10px;" id="item_unit1">Kg</span></div></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong><span>Purchase price</span></strong> </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3" style="text-align : right;"><label class="form-label" ><span><div style="display: flex; flex-flow: row;"><span style="padding: 10px;" id="">Php </span><input class="form-control text-right required" type="number" placeholder="0.00" id="purchase_price" name="purchase_price" form="update_purchase_form" style="width: 70%;" /></div></span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col">
+                            <div class="mb-3" style="text-align : left;"><label class="form-label" ><strong><span>Purchase date</span></strong> </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3" style="text-align : right;"><label class="form-label" ><span><div style="display: flex; flex-flow: row;"><input class="form-control text-right required" type="date" placeholder="amount" id="date_purchased" name="date_purchased" form="update_purchase_form" style="width: 90%; margin : auto;" value="{{cur_date}}"/></div></span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3" style="margin-top : 50px;" ><button class="btn btn-primary btn-sm add-material-btn" id="" type="submit" form="update_purchase_form">Confirm Purchase</button></div>
+            </div>
+        </div>
+        </center>
+        {{!-- <div style="text-align:center;margin-top:10px;padding-bottom:10px">
+                        <span class="step active" id="step1_status"></span>
+                        <span class="step " id="step2_status"></span>
+        </div> --}}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+</div>
+</div>

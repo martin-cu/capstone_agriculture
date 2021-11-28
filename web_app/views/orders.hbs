@@ -161,7 +161,7 @@
             </div>
             <div class="card">
                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
-                    <a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; " data-toggle="modal" data-target="#addPurchaseModal">Add Purchase</a>
+                    {{!-- <a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; " data-toggle="modal" data-target="#addPurchaseModal">Add Purchase</a> --}}
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item"><a id="all_farms" class="nav-link purchases_tab active" href="#" style="background: #F0F0F0;" >All</a></li>
                         <li class="nav-item"><a id="per_farm" class="nav-link purchases_tab" href="#">Farms</a></li>
@@ -327,7 +327,7 @@
 </div>
 
 
-
+{{!-- 
 <div class="modal fade" id="addPurchaseModal" role="dialog">
     <div class="modal-dialog modal-lg" >
       <!-- Modal content-->
@@ -337,7 +337,7 @@
           
         </div>
         <div class="modal-body">
-            {{!-- <div class="card-body" id="step1_new_purchase" style="max-height: 500px; overflow-y : auto; overflow-x: hidden;" >
+            <div class="card-body" id="step1_new_purchase" style="max-height: 500px; overflow-y : auto; overflow-x: hidden;" >
                 <form id="new_purchase" action="/addPurchase" method="post">
                     <div class="row">
                         <div class="col">
@@ -414,11 +414,11 @@
                 
                     <div class="mb-3"><button class="btn btn-primary btn-sm new_purchase" style="float : right; margin: 15px;" id="step1">Next</button></div>
                 
-            </div> --}}
+            </div>
             
 
 
-            {{!-- <div class="card-body" id="step2_new_purchase" style="display : none">
+            <div class="card-body" id="step2_new_purchase" style="display : none">
                     <div class="row">
                         <div class="col">
                             <h4>Review</h4>
@@ -447,7 +447,7 @@
                     </div>
 
                     <div class="mb-3" id="buttons"><button class="btn btn-primary btn-sm " style="float : right; margin-left: 10px;" id="step2" type="submit" form="new_purchase">Add Item</button><button class="btn btn-primary btn-sm new_purchase" style=" float:right; width: auto; border-radius : 20px; background-color: rgb(236, 236, 236)" id="back" form="">Back</button></div>
-                </div> --}}
+                </div>
 
         </div>
         <div style="text-align:center;margin-top:10px;padding-bottom:10px">
@@ -460,4 +460,4 @@
       </div>
       
     </div>
-</div>
+</div> --}}
