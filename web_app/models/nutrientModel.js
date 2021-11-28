@@ -8,7 +8,7 @@ exports.addSoilRecord = function(data, next) {
 };
 
 exports.getSoilRecord = function(data, next) {
-	var sql = "select ft.farm_name, ft.farm_area, ft.land_type, sqt.* from farm_table ft join soil_quality_table sqt on ft.farm_id = sqt.farm_id where ? order by date_taken desc";
+	var sql = "select cct.method, ft.farm_name, ft.farm_area, ft.land_type, sqt.* from farm_table ft left join crop_calendar_table as cct using(farm_id) join soil_quality_table sqt on ft.farm_id = sqt.farm_id where ? group by farm_id order by date_taken desc";
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 };

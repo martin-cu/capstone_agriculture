@@ -53,6 +53,7 @@ exports.getResourceDetails = function(query, type, next) {
 	sql = "select max(wo_resources_id) as wo_resources_id, max(work_order_id) as work_order_id, max(type) as type, max(units) as units, case when isnull(max(qty)) then 0 else max(qty) end as qty, max(item_id) as item_id, max(material_name) as material_name, max(material_desc) as material_desc from ( SELECT *, null as material_name, null as material_desc FROM wo_resources_table where ? union select null, null, null, null, null, "+column_names+" from "+table_name+") as t group by item_id order by item_id asc";
 
 	sql = mysql.format(sql, query);
+	
 	mysql.query(sql, next);
 }
 
@@ -65,7 +66,12 @@ exports.getWorkOrders = function(query, next) {
 					sql += ' where '+query.where.key[i]+' = ?';
 				}
 				else {
-					sql += ' and '+query.where.key[i]+' = ?';
+					if (query.where.key[i-1] == query.where.key[i]) {
+						sql += ' or '+query.where.key[i]+' = ?';
+					}
+					else {
+						sql += ' and '+query.where.key[i]+' = ?';
+					}
 				}
 				sql = mysql.format(sql, query.where.value[i]);
 			}
@@ -87,6 +93,7 @@ exports.getWorkOrders = function(query, next) {
 			}
 		}
 	}
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

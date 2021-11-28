@@ -625,11 +625,11 @@ exports.addSoilRecord = function(req, res) {
 
 function recommendFertilizerPlan(obj, materials) {
 	var model;
-	var multiplier = 1.3;
+	var multiplier = 1.5;
 	var constraints = {
-		N: { min: obj.n_lvl, max: obj.n_lvl * multiplier },
-		P: { min: obj.p_lvl, max: obj.p_lvl * multiplier },
-		K: { min: obj.k_lvl, max: obj.k_lvl * multiplier },
+		N: { min: obj.n_lvl },
+		P: { min: obj.p_lvl },
+		K: { min: obj.k_lvl },
 	};
 	var variables = {};
 	for (var i = 0; i < materials.length; i++) {
@@ -712,7 +712,7 @@ exports.detailedNutrientManagement = function(req, res) {
         		else {
         			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_diagnose');
 					html_data['detailed_data'] = dataformatter.processNPKValues(result, result.farm_area, applied);
-
+					console.log(html_data.detailed_data);
 					res.render('nutrient_mgt_detailed', html_data);
         		}
         	});

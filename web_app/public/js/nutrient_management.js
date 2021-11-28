@@ -209,62 +209,116 @@ function appendWorkOrder(data) {
 	}
 
 function processInventory(arr, recommendation, applied) {
-	var obj = {
-		headers: [''],
-		amount: ['Current Stock'],
-		requirements: ['Requirement'],
-		style: [''],
-		applied: ['Applied'],
-		deficiency: ['Deficiency']
-	};
-	var deficiency;
+	// var obj = {
+	// 	headers: [''],
+	// 	amount: ['Current Stock'],
+	// 	requirements: ['Requirement'],
+	// 	style: [''],
+	// 	applied: ['Applied'],
+	// 	deficiency: ['Deficiency']
+	// };
+	// var deficiency;
+	// for (var i = 0; i < arr.length; i++) {
+	// 	if (recommendation.hasOwnProperty(arr[i].fertilizer_name)) {
+	// 		deficiency = Math.round((recommendation[arr[i].fertilizer_name] - applied[i].resources_used) * 100)/100;
+	// 		obj.requirements.push(recommendation[arr[i].fertilizer_name]);
+	// 		obj.deficiency.push(deficiency);
+	// 		//if (arr[i].current_amount >= recommendation[arr[i].fertilizer_name]) {
+	// 		if (deficiency != 'N/A') {
+	// 			obj.style.push('text-danger font-weight-bold');
+	// 		}
+	// 		else {
+	// 			obj.style.push('text-success font-weight-bold');
+	// 		}
+	// 	}
+	// 	else {
+	// 		obj.requirements.push('N/A');
+	// 		obj.style.push('');
+	// 		obj.deficiency.push('N/A');
+	// 	}
+
+	// 	obj.headers.push(arr[i].fertilizer_name);
+	// 	obj.amount.push(arr[i].current_amount);
+	// 	obj.applied.push(applied[i].resources_used);
+	// }
+
+	var row_arr = [];
+	var temp_obj = {};
+	var qty, recommendation_amt, applied_fertilizer, deficiency;
+	var mat;
+
+	//Fertilizer - Current Stock - Recommendation - Applied - Deficiency
 	for (var i = 0; i < arr.length; i++) {
+		mat = applied.filter(ele => ele.fertilizer_name == arr[i].fertilizer_name)[0];
+
 		if (recommendation.hasOwnProperty(arr[i].fertilizer_name)) {
-			deficiency = Math.round((recommendation[arr[i].fertilizer_name] - applied[i].resources_used) * 100)/100;
-			obj.requirements.push(recommendation[arr[i].fertilizer_name]);
-			obj.deficiency.push(deficiency);
-			//if (arr[i].current_amount >= recommendation[arr[i].fertilizer_name]) {
-			if (deficiency != 'N/A') {
-				obj.style.push('text-danger font-weight-bold');
-			}
-			else {
-				obj.style.push('text-success font-weight-bold');
-			}
+			recommendation_amt = recommendation[arr[i].fertilizer_name];
 		}
 		else {
-			obj.requirements.push('N/A');
-			obj.style.push('');
-			obj.deficiency.push('N/A');
+			recommendation_amt = 'N/A';
 		}
 
-		obj.headers.push(arr[i].fertilizer_name);
-		obj.amount.push(arr[i].current_amount);
-		obj.applied.push(applied[i].resources_used);
+
+		qty = arr[i].current_amount;
+		applied_fertilizer = mat.resources_used;
+
+		deficiency = recommendation_amt != 'N/A' ? recommendation_amt - applied_fertilizer : 'N/A';
+		deficiency = deficiency != 'N/A' ? Math.round(deficiency * 100) / 100 : 'N/A';
+
+		if (deficiency != 'N/A') {
+			deficiency = deficiency < 0 ? 'N/A' : deficiency;
+		}
+
+		temp_obj = {
+			fertilizer: arr[i].fertilizer_name,
+			desc: '('+arr[i].N+'-'+arr[i].P+'-'+arr[i].K+')',
+			qty: qty,
+			recommendation: recommendation_amt,
+			applied: applied_fertilizer,
+			deficiency: deficiency
+		}
+
+		row_arr.push(temp_obj);
 	}
 
-	return obj;
+	return row_arr;
 }
 
 function appendInventory(data) {
 	var cont = $('#inventory_table');
-	var obj_keys = ['headers', 'amount', 'requirements', 'applied', 'deficiency'];
-	var tr;
-	var ele_class;
-	for (var y = 0; y < obj_keys.length; y++) {
-		tr = '';
+	var headers = ['Fertilizer', 'Current Stock', 'Recommended', 'Applied', 'Deficiency'];
+	var ele_class = '';
+	for (var i = 0; i < data.length; i++) {
+
 		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
-		for (var i = 0; i < data.headers.length; i++) {
-			if (y != 0) {
-				ele_class = data['style'][i];
-			}
-			else {
-				ele_class = '';
-			}
-			tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[obj_keys[y]][i] }));
-		}
+
+		tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[i].fertilizer }));
+		tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[i].qty }));
+		tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[i].recommendation }));
+		tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[i].applied }));
+		tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[i].deficiency }));
 
 		cont.append(tr);
 	}
+
+	// var obj_keys = ['headers', 'amount', 'requirements', 'applied', 'deficiency'];
+	// var tr;
+	// var ele_class;
+	// for (var y = 0; y < obj_keys.length; y++) {
+	// 	tr = '';
+	// 	tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+	// 	for (var i = 0; i < data.headers.length; i++) {
+	// 		if (y != 0) {
+	// 			ele_class = data['style'][i];
+	// 		}
+	// 		else {
+	// 			ele_class = '';
+	// 		}
+	// 		tr.appendChild(createDOM({ type: 'td', class: ele_class, style: '', html: data[obj_keys[y]][i] }));
+	// 	}
+
+	// 	cont.append(tr);
+	// }
 
 }
 
@@ -463,35 +517,12 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 		p_fertilizer: { strongest: { name: null, val: null }, arr: [] },
 		k_fertilizer: { strongest: { name: null, val: null }, arr: [] }
 	};
+
+	materials = materials.sort((a,b) => (b.N - a.N));
+
 	var empty = true;
 	for (var i = 0; i < materials.length; i++) {
 		if (recommendation.hasOwnProperty(materials[i].fertilizer_name)) {
-			if (empty) {
-				fertilizer_cont.n_fertilizer.strongest.name = materials[i].fertilizer_name;
-				fertilizer_cont.p_fertilizer.strongest.name = materials[i].fertilizer_name;
-				fertilizer_cont.k_fertilizer.strongest.name = materials[i].fertilizer_name;
-
-				fertilizer_cont.n_fertilizer.strongest.val = materials[i].N;
-				fertilizer_cont.p_fertilizer.strongest.val = materials[i].P;
-				fertilizer_cont.k_fertilizer.strongest.val = materials[i].K;
-
-				empty = false;
-			}
-			else {
-				if (fertilizer_cont.n_fertilizer.strongest.val < materials[i].N) {
-					fertilizer_cont.n_fertilizer.strongest.name = materials[i].fertilizer_name;
-					fertilizer_cont.n_fertilizer.strongest.val = materials[i].N;
-				}
-				if (fertilizer_cont.p_fertilizer.strongest.val < materials[i].P) {
-					fertilizer_cont.p_fertilizer.strongest.name = materials[i].fertilizer_name;
-					fertilizer_cont.p_fertilizer.strongest.val = materials[i].P;
-				}
-				if (fertilizer_cont.k_fertilizer.strongest.val < materials[i].K) {
-					fertilizer_cont.k_fertilizer.strongest.name = materials[i].fertilizer_name;
-					fertilizer_cont.k_fertilizer.strongest.val = materials[i].K;
-				}
-			}
-
 			if (materials[i].N != 0) {
 				fertilizer_cont.n_fertilizer.arr.push(materials[i]);
 			}
@@ -502,48 +533,89 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 				fertilizer_cont.k_fertilizer.arr.push(materials[i]);
 			}
 		}
+		if (empty) {
+			fertilizer_cont.n_fertilizer.strongest.name = materials[i].fertilizer_name;
+			fertilizer_cont.p_fertilizer.strongest.name = materials[i].fertilizer_name;
+			fertilizer_cont.k_fertilizer.strongest.name = materials[i].fertilizer_name;
+
+			fertilizer_cont.n_fertilizer.strongest.val = materials[i].N;
+			fertilizer_cont.p_fertilizer.strongest.val = materials[i].P;
+			fertilizer_cont.k_fertilizer.strongest.val = materials[i].K;
+
+			empty = false;
+		}
+		else {
+			if (fertilizer_cont.n_fertilizer.strongest.val < materials[i].N) {
+				fertilizer_cont.n_fertilizer.strongest.name = materials[i].fertilizer_name;
+				fertilizer_cont.n_fertilizer.strongest.val = materials[i].N;
+			}
+			if (fertilizer_cont.p_fertilizer.strongest.val < materials[i].P) {
+				fertilizer_cont.p_fertilizer.strongest.name = materials[i].fertilizer_name;
+				fertilizer_cont.p_fertilizer.strongest.val = materials[i].P;
+			}
+			if (fertilizer_cont.k_fertilizer.strongest.val < materials[i].K) {
+				fertilizer_cont.k_fertilizer.strongest.name = materials[i].fertilizer_name;
+				fertilizer_cont.k_fertilizer.strongest.val = materials[i].K;
+			}
+		}
 	}
 
 	//Create obj for P recommendation
-	temp_obj = {
-		fertilizer: fertilizer_cont.p_fertilizer.strongest.name,
-		amount: recommendation[fertilizer_cont.p_fertilizer.strongest.name]+' bags',
-		desc: obj.P[0].desc,
-		date: obj.P[0].date,
-		nutrient: 'P'
-	}
-	result_arr.push(temp_obj);
-	//Create obj for K recommendation
-	var first, second, k_amt;
-	var single_f_amt = materials.filter(ele => ele.fertilizer_name == fertilizer_cont.k_fertilizer.strongest.name)[0].K;;
-	if (obj.K.length != 1) {
-		var K_reco_total = materials.filter(ele => ele.fertilizer_name == fertilizer_cont.k_fertilizer.strongest.name)[0].K;
-		K_reco_total *= recommendation[fertilizer_cont.k_fertilizer.strongest.name];
-		var applied_K = materials.filter(ele => ele.fertilizer_name == fertilizer_cont.p_fertilizer.strongest.name)[0].K;
-		applied_K *= recommendation[fertilizer_cont.p_fertilizer.strongest.name];
-		first = (K_reco_total - applied_K) / 2;
-		second = K_reco_total / 2;
-	}
-	else {
-		first = recommendation[fertilizer_cont.p_fertilizer.strongest.name];
-		second = first;
-	}
-	for (var i = 0; i < obj.K.length; i++) {
-		if (i == 0) {
-			k_amt = first;
-		}
-		else if (i == 1) {
-			k_amt = second;
-		}
+	if (fertilizer_cont.p_fertilizer.arr.length != 0) {
 		temp_obj = {
-			fertilizer: fertilizer_cont.k_fertilizer.strongest.name,
-			amount: Math.round(k_amt / single_f_amt * 100) / 100+' bags',
-			desc: obj.K[i].desc,
-			date: obj.K[i].date,
-			nutrient: 'K'
+			fertilizer: fertilizer_cont.p_fertilizer.strongest.name,
+			amount: recommendation[fertilizer_cont.p_fertilizer.strongest.name]+' bags',
+			desc: obj.P[0].desc,
+			date: obj.P[0].date,
+			nutrient: 'P'
 		}
 		result_arr.push(temp_obj);
 	}
+	//Create obj for K recommendation
+	if (fertilizer_cont.k_fertilizer.arr.length != 0) {
+		var first, second, k_amt;
+		var single_f_amt = materials.filter(ele => ele.fertilizer_name == fertilizer_cont.k_fertilizer.strongest.name)[0].K;
+		if (obj.K.length != 1) {
+			var K_reco_total = materials.filter(ele => ele.fertilizer_name == fertilizer_cont.k_fertilizer.strongest.name)[0].K;
+			K_reco_total *= recommendation[fertilizer_cont.k_fertilizer.strongest.name];
+			var applied_K;
+
+
+			if (fertilizer_cont.p_fertilizer.arr.length != 0) {
+				applied_K = materials.filter(ele => ele.fertilizer_name == fertilizer_cont.p_fertilizer.strongest.name)[0].K;
+			applied_K *= recommendation[fertilizer_cont.p_fertilizer.strongest.name];
+			}
+			else {
+				applied_K = 0;
+			}
+			
+			first = (K_reco_total - applied_K) / 2;
+			second = K_reco_total / 2;
+		}
+		else {
+			first = recommendation[fertilizer_cont.p_fertilizer.strongest.name];
+			second = first;
+		}
+
+		for (var i = 0; i < obj.K.length; i++) {
+			if (i == 0) {
+				k_amt = first;
+			}
+			else if (i == 1) {
+				k_amt = second;
+			}
+
+			temp_obj = {
+				fertilizer: fertilizer_cont.k_fertilizer.strongest.name,
+				amount: Math.round(k_amt / single_f_amt * 100) / 100+' bags',
+				desc: obj.K[i].desc,
+				date: obj.K[i].date,
+				nutrient: 'K'
+			}
+			result_arr.push(temp_obj);
+		}
+	}
+		
 
 	//Create obj for N recommendation
 	var n_fertilizer_amt;
@@ -626,6 +698,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 	}
 
 	$.get('/get_work_orders', query, function(work_order_list) {
+
 		var land_prep = work_order_list.filter(ele => ele.type == 'Land Preparation')[0];
 		var sowing = work_order_list.filter(ele => ele.type == 'Sow Seed')[0];
 
@@ -649,7 +722,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			DAT = new Date();
 			DAT = DAT.getDate() - (new Date (sowing.date_due).getDate());
 			console.log('DAT: '+DAT);
-
+			
 			//target_date = formatDate(target_date, 'YYYY-MM-DD');
 			//K Fertilizer changes depending on K requirement
 			var k_date, k_stage;
@@ -675,7 +748,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			}
 			else {
 				K.push({
-					desc: 'K Application',
+					desc: 'Potassium Application',
 					date: formatDate(new Date(target_date),'YYYY-MM-DD'),
 					amount: details.k_lvl,
 					nutrient: 'K'
@@ -683,7 +756,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			}
 			//P Fertilizer 100% always
 			P = [{
-				desc: 'P Application',
+				desc: 'Phosphorous Application',
 				date: formatDate(new Date(target_date),'YYYY-MM-DD'),
 				amount: details.p_lvl,
 				nutrient: 'P'
@@ -848,8 +921,55 @@ function consolidateUniqueWO(arr, calendar_id, material_list) {
 		wo_obj.notes += ' (Recommendation)';
 		wo_arr.push(wo_obj);
 	}
-	console.log(wo_arr);
+
 	return wo_arr;
+}
+
+function appendFertilizerHistory(records) {
+	var target = $('#fertilizer_history');
+	var tr, td;
+	var keys = [];
+	var resources_arr = [];
+	var date, desc, fertilizer, amount;
+
+	for (var i = 0; i < records.length; i++) {
+		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+
+		date = formatDate(new Date(records[i].date_due), 'YYYY-MM-DD');
+		desc = records[i].notes == null || records[i].notes == undefined ? 'N/A' : records[i].notes;
+
+		date = createDOM({ type: 'td', class: 'align-middle', style: '', html: date });
+		desc = createDOM({ type: 'td', class: 'align-middle', style: '', html: desc });
+
+		tr.appendChild(date);
+		
+
+		$.get('/get_wo_resources', { work_order_id: records[i].work_order_id, type: 'Fertilizer' }, function(wo_resources) {
+			resources_arr = wo_resources;
+			resources_arr = resources_arr.filter(ele => ele.qty > 0);
+
+			for (var x = 0; x < resources_arr.length; x++) {
+				if (x != 0) {
+					tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
+				}
+				tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: resources_arr[x].material_name }));
+				if (x == 0)
+					tr.appendChild(desc);
+				tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: resources_arr[x].qty+' bags' }));
+			
+				target.append(tr);
+			}
+
+			if (resources_arr.length > 1) {
+				date = $(date).attr('rowspan', '2');
+				desc = $(desc).attr('rowspan', '2');
+			}
+		});
+
+		// for (var y = 0; y < keys.length; y++) {
+		// 	tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: records[y][keys[i]] }));
+		// }
+	}
 }
 
 $(document).ready(function() {
@@ -884,7 +1004,7 @@ $(document).ready(function() {
 	else if (type == 'Soil Detailed') {
 		console.log('Getting data for farm: '+id);
 		console.log(area);
-
+		jQuery.ajaxSetup({async: false });
 		$.get('/filter_nutrient_mgt', { farm_name: farm_name, type: 'Fertilizer', filter: id }, function(details) {
 			appendDetails(details);
 			calendar_id = details.calendar_id;
@@ -892,10 +1012,23 @@ $(document).ready(function() {
 			$.get('/getAll_materials', { type: 'Fertilizer', filter: id }, function(materials) {
 				material_list = materials;
 				$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: id }, function(list) {
-					var recommendation = processInventory(materials, details.recommendation, list);
-					appendInventory(recommendation);
 					
-					createSchedule(materials, details.recommendation, list, id, calculateDeficientN(details, list), details);
+					var query = {
+						where: {
+							key: ['farm_id'],
+							value: [id]
+						},
+						order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+					}
+					$.get('/get_work_orders', query, function(work_order_list) {
+						appendFertilizerHistory(work_order_list.filter(ele => ele.type == 'Fertilizer Application'));
+
+						var recommendation = processInventory(materials, details.recommendation, list);
+						appendInventory(recommendation);
+						
+						createSchedule(materials, details.recommendation, list, id, calculateDeficientN(details, list), details);
+					});
+						
 				});
 			});
 		});

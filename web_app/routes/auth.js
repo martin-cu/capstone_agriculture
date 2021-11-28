@@ -71,7 +71,7 @@ router.get("/farm_pestdisease", environmentController.getFarmPestDiseases);
 
 
 //Crop Calendar
-router.get('/crop_calendar', farmController.getCropCalendar);
+router.get('/crop_calendar', cropCalendarController.getCropCalendarTab);
 router.get('/crop_calendar/add', farmController.getAddCropCalendar);
 
 router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later

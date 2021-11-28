@@ -21,11 +21,37 @@ exports.createCropCalendar = function(data, next) {
 };
 
 
+// exports.getCropCalendars = function(query, next) {
+// 	var filter;
+
+// 	var sql = "select cct.*, ft.farm_name, ft.land_type, st.seed_name from crop_calendar_table cct join farm_table ft on cct.farm_id = ft.farm_id join seed_table st on cct.seed_planted = st.seed_id ";
+
+// 	for (var i = 0; i < query.status.length; i++) {
+// 		if (i == 0) {
+// 			sql += 'where ';
+// 			sql += 'cct.status = "'+query.status[i]+'"';
+// 		}
+// 		else {
+// 			sql += ' or cct.status = "'+query.status[i]+'"';
+// 		}
+
+// 	}
+
+// 	if (query.where != null || query.where != undefined) {
+// 		sql += ' and '+query.where.key +' = ?';
+// 		sql = mysql.format(sql, query.where.val);
+// 	}
+// 	sql += ' order by cct.harvest_date desc, cct.calendar_id desc';
+// 	console.log(sql);
+// 	mysql.query(sql, next);
+// }
+
+//New sql with calendar stage based on seed maturity days
+// stages : Land Prepation / Sowing / Vegetation / Reproductive / Ripening / Harvesting
 exports.getCropCalendars = function(query, next) {
 	var filter;
 
-	var sql = "select cct.*, ft.farm_name, ft.land_type, st.seed_name from crop_calendar_table cct join farm_table ft on cct.farm_id = ft.farm_id join seed_table st on cct.seed_planted = st.seed_id ";
-
+	var sql = "select t.*, case when max(t.type) = 'Sow Seed' then case when max(t.date_completed) is null then 'Sowing' when datediff(now(), max(t.date_completed)) < maturity_days then 'Vegetation' when datediff(now(), max(t.date_completed)) >= maturity_days && datediff(now(), max(t.date_completed)) < (maturity_days+35) then 'Reproductive' when datediff(now(), max(t.date_completed)) >= (maturity_days+35) && datediff(now(), max(t.date_completed)) < (maturity_days+65) then 'Ripening' when datediff(now(), max(t.date_completed)) >= (maturity_days+65) then 'Harvesting' end else 'Land Preparation' end as stage from ( select cct.*, ft.farm_name, ft.land_type, st.seed_name, st.maturity_days, null as type, null as date_completed from crop_calendar_table cct join farm_table ft on cct.farm_id = ft.farm_id join seed_table st on cct.seed_planted = st.seed_id ";
 	for (var i = 0; i < query.status.length; i++) {
 		if (i == 0) {
 			sql += 'where ';
@@ -41,7 +67,8 @@ exports.getCropCalendars = function(query, next) {
 		sql += ' and '+query.where.key +' = ?';
 		sql = mysql.format(sql, query.where.val);
 	}
-	sql += ' order by cct.harvest_date desc, cct.calendar_id desc';
+	sql += " union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, type, date_completed from work_order_table where type = 'Sow Seed' ) as t group by calendar_id";
+	
 	mysql.query(sql, next);
 }
 

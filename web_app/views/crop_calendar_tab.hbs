@@ -1,0 +1,138 @@
+<div class="container-fluid">
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">Farms &gt; Crop Calendar</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
+    </div>
+    <div class="card shadow">
+        <div class="card-header py-3" style="background: #667529;height: auto;">
+            <p class="d-inline-flex m-0 font-weight-bold" style="color: rgb(255,255,255);">Active Crop Calendar</p><button class="btn btn-primary d-inline-flex float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);font-size: 12px;"><span>Create Crop Calendar<i class="fa fa-plus-circle" style="margin-left: 5px;"></i></span></button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Land Preparation</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Sowing</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Vegetation</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Reproductive</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Ripening</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Harvest</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr class="text-center">
+                            <!-- Land Prep -->
+                            <td class="text-center" style="width: 170px;">
+                                {{#each calendar_list.land_prep}}
+                                <div class="text-center" style="background: #ffffff;border-radius: 5px;padding: 2px;min-height: 45px;box-shadow: 0px 0px 1px;border: 1px solid rgb(88,76,51);margin-bottom: 10px;">
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-weight: bold;">{{this.crop_plan}}</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;">{{this.farm_name}}</p>
+                                    
+                                    {{#each this.wo_list}}
+                                    <p class="text-center calendar-wo" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;background: #ffea79;">
+                                        {{this.type}} on {{this.date_start}}
+                                    </p>
+                                    {{/each}}
+
+                                </div>
+                                {{/each}}
+
+                            </td>
+
+                            <!-- Sowing -->
+                            <td class="text-center" style="width: 170px;">
+                                <!-- <div class="text-center" style="background: #ffffff;border-radius: 5px;padding: 2px;min-height: 45px;box-shadow: 0px 0px 1px;border: 1px solid rgb(88,76,51);margin-bottom: 10px;">
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-weight: bold;">Dinorado 2021</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;">Farm 3</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;background: #ffea79;">Transplanting on October 1, 2021</p>
+                                </div> -->
+                                {{#each calendar_list.sowing}}
+                                <div class="text-center" style="background: #ffffff;border-radius: 5px;padding: 2px;min-height: 45px;box-shadow: 0px 0px 1px;border: 1px solid rgb(88,76,51);margin-bottom: 10px;">
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-weight: bold;">{{this.crop_plan}}</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;">{{this.farm_name}}</p>
+                                    
+                                    {{#each this.wo_list}}
+                                    <p class="text-center calendar-wo" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;background: #ffea79;">
+                                        {{this.type}} on {{this.date_start}}
+                                    </p>
+                                    {{/each}}
+
+                                </div>
+                                {{/each}}
+                            </td>
+
+                            <!-- Vegetation -->
+                            <td class="text-center" style="width: 170px;">
+                                {{#each calendar_list.vegetation}}
+                                <div class="text-center" style="background: #ffffff;border-radius: 5px;padding: 2px;min-height: 45px;box-shadow: 0px 0px 1px;border: 1px solid rgb(88,76,51);margin-bottom: 10px;">
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-weight: bold;">{{this.crop_plan}}</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;">{{this.farm_name}}</p>
+                                    
+                                    {{#each this.wo_list}}
+                                    <p class="text-center calendar-wo" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;background: #ffea79;">
+                                        {{this.type}} on {{this.date_start}}
+                                    </p>
+                                    {{/each}}
+
+                                </div>
+                                {{/each}}
+                            </td>
+
+                            <!-- Reproductive -->
+                            <td class="text-center" style="width: 170px;">
+                                {{#each calendar_list.reproductive}}
+                                <div class="text-center" style="background: #ffffff;border-radius: 5px;padding: 2px;min-height: 45px;box-shadow: 0px 0px 1px;border: 1px solid rgb(88,76,51);margin-bottom: 10px;">
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-weight: bold;">{{this.crop_plan}}</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;">{{this.farm_name}}</p>
+                                    
+                                    {{#each this.wo_list}}
+                                    <p class="text-center calendar-wo" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;background: #ffea79;">
+                                        {{this.type}} on {{this.date_start}}
+                                    </p>
+                                    {{/each}}
+
+                                </div>
+                                {{/each}}
+                            </td>
+
+                            <!-- Ripening -->
+                            <td class="text-center" style="width: 170px;">
+                                {{#each calendar_list.ripening}}
+                                <div class="text-center" style="background: #ffffff;border-radius: 5px;padding: 2px;min-height: 45px;box-shadow: 0px 0px 1px;border: 1px solid rgb(88,76,51);margin-bottom: 10px;">
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-weight: bold;">{{this.crop_plan}}</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;">{{this.farm_name}}</p>
+                                    
+                                    {{#each this.wo_list}}
+                                    <p class="text-center calendar-wo" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;background: #ffea79;">
+                                        {{this.type}} on {{this.date_start}}
+                                    </p>
+                                    {{/each}}
+
+                                </div>
+                                {{/each}}
+                            </td>
+
+                            <!-- Harvest -->
+                            <td class="text-center" style="width: 170px;">
+                                {{#each calendar_list.harvesting}}
+                                <div class="text-center" style="background: #ffffff;border-radius: 5px;padding: 2px;min-height: 45px;box-shadow: 0px 0px 1px;border: 1px solid rgb(88,76,51);margin-bottom: 10px;">
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-weight: bold;">{{this.crop_plan}}</p>
+                                    <p class="text-center" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;">{{this.farm_name}}</p>
+                                    
+                                    {{#each this.wo_list}}
+                                    <p class="text-center calendar-wo" style="margin-bottom: 0px;color: rgb(88,76,51);text-align: center;font-size: 12px;background: #ffea79;">
+                                        {{this.type}} on {{this.date_start}}
+                                    </p>
+                                    {{/each}}
+                                    
+                                </div>
+                                {{/each}}
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

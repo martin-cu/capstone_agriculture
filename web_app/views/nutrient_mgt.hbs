@@ -1,65 +1,90 @@
-<div class="bg-secondary rounded m-3 px-3 py-2 w-75 h-100">
-	<form method="post" id="soil_data_form">
-		<label>Soil Test</label>
-		<div class="form-group">
-			<label for="exampleFormControlSelect1">Farm:</label>
-			<select class="form-control" id="farm_id" name="farm_id">
-			</select>
+<div class="container-fluid">
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">Farms &gt; Farm Monitoring &gt; Soil Test</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
+    </div>
+    <div role="" id="" style="margin-bottom: 20px;">
+		<div class="card">
+		    <div class="card-header" role="tab" style="background: #939C1F;padding: 16px 20px;height: auto;">
+		        <h5 class="mb-0 text-white">Create Soil Test</h5>
+		    </div>
+		    <div class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="">
+		        <div class="card-body">
+		            <form class="register-form" method="post" id="soil_data_form">
+		                <fieldset>
+		                    <div class="form-row">
+		                        <div class="col-6 col-sm-6 col-md-6"><label>Farm</label>
+		                            <div id="lp-name-wrapper"></div>
+		                            <select class="form-control" id="farm_id" name="farm_id">
+									</select>
+		                        </div>
+		                        <div class="col-6 col-sm-6 col-md-6"><label>Date Taken: </label>
+		                            <div id="lp-lastname-wrapper"></div>
+		                            <input type="date" class="form-control" id="date_taken" name="date_taken" aria-describedby="emailHelp" placeholder="">
+		                        </div>
+		                        <div class="col-6 col-sm-6 col-md-6">
+		                            <div id="lp-name-wrapper-1">
+		                            	<label>pH Level:</label>
+		                            	<select class="form-control" id="ph_test" name="ph_test">
+											<option value="7.5">pH 7.5 - Alkaline</option>
+											<option value="7.0">pH 7.0 - Neutral</option>
+											<option value="6.5">pH 6.5 - Slight Acid</option>
+											<option value="6.0">pH 6.0 - Acid</option>
+											<option value="5.5">pH 5.5 - Acid</option>
+											<option value="5.0">pH 5.0 - Very Acid</option>
+											<option value="4.5">pH 4.5 - Very Acid</option>
+										</select>
+		                            </div>
+		                        </div>
+		                        <div class="col-6 col-sm-6 col-md-6">
+		                            <div id="lp-lastname-wrapper-1"></div>
+		                        </div>
+		                        
+		                        <div class="col-6 col-sm-6 col-md-6">
+		                            <div id="lp-name-wrapper-3">
+		                            	<label>N Test</label>
+		                            	<select class="form-control" id="n_test" name="n_test">
+											<option value="Surplus">Surplus</option>
+											<option value="Sufficient">Sufficient</option>
+											<option value="Adequate">Adequate</option>
+											<option value="Deficient">Deficient</option>
+											<option value="Depleted">Depleted</option>
+										</select>
+		                            </div>
+		                        </div>
+
+		                        <div class="col-6 col-sm-6 col-md-6">
+		                            <div id="lp-name-wrapper-3">
+		                            	<label>P Test</label>
+		                            	<select class="form-control" id="p_test" name="p_test">
+											<option value="Surplus">Surplus</option>
+											<option value="Sufficient">Sufficient</option>
+											<option value="Adequate">Adequate</option>
+											<option value="Deficient">Deficient</option>
+											<option value="Depleted">Depleted</option>
+										</select>
+		                            </div>
+		                        </div>
+
+		                        <div class="col-6 col-sm-6 col-md-6">
+		                            <div id="lp-name-wrapper-3">
+		                            	<label>K Test</label>
+		                            	<select class="form-control" id="k_test" name="k_test">
+											<option value="Surplus">Surplus</option>
+											<option value="Sufficient">Sufficient</option>
+											<option value="Adequate">Adequate</option>
+											<option value="Deficient">Deficient</option>
+											<option value="Depleted">Depleted</option>
+										</select>
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <button class="btn btn-primary float-right">Submit</button>
+		                </fieldset>
+		            </form>
+		        </div>
+		    </div>
 		</div>
-
-		<div class="form-group">
-		    <label for="exampleInputEmail1">Date Taken: </label>
-		    <input type="date" class="form-control" id="date_taken" name="date_taken" aria-describedby="emailHelp" placeholder="">
-		  </div>
-
-		<div class="form-group">
-			<label for="exampleInputEmail1">pH Level: </label>
-			<select class="form-control" id="ph_test" name="ph_test">
-				<option value="7.5">pH 7.5 - Alkaline</option>
-				<option value="7.0">pH 7.0 - Neutral</option>
-				<option value="6.5">pH 6.5 - Slight Acid</option>
-				<option value="6.0">pH 6.0 - Acid</option>
-				<option value="5.5">pH 5.5 - Acid</option>
-				<option value="5.0">pH 5.0 - Very Acid</option>
-				<option value="4.5">pH 4.5 - Very Acid</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="inputPassword" class="col-form-label">P Test</label>
-			<select class="form-control" id="p_test" name="p_test">
-				<option value="Surplus">Surplus</option>
-				<option value="Sufficient">Sufficient</option>
-				<option value="Adequate">Adequate</option>
-				<option value="Deficient">Deficient</option>
-				<option value="Depleted">Depleted</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="inputPassword" class="col-form-label">K Test</label>
-			<select class="form-control" id="k_test" name="k_test">
-				<option value="Surplus">Surplus</option>
-				<option value="Sufficient">Sufficient</option>
-				<option value="Adequate">Adequate</option>
-				<option value="Deficient">Deficient</option>
-				<option value="Depleted">Depleted</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="inputPassword" class="col-form-label">N Test</label>
-			<select class="form-control" id="n_test" name="n_test">
-				<option value="Surplus">Surplus</option>
-				<option value="Sufficient">Sufficient</option>
-				<option value="Adequate">Adequate</option>
-				<option value="Deficient">Deficient</option>
-				<option value="Depleted">Depleted</option>
-			</select>
-		</div>
-
-		<button class="btn btn-primary float-right">Submit</button>
-	</form>
+    </div>
 
 </div>
 

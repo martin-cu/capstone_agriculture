@@ -2,7 +2,66 @@ const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
+const workOrderModel = require('../models/workOrderModel.js');
 var request = require('request');
+
+exports.getCropCalendarTab = function(req, res) {
+	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
+		if (err)
+			throw err;
+		else {
+			var list_obj = {
+				land_prep: [],
+				sowing: [],
+				vegetation: [],
+				reproductive: [],
+				ripening: [],
+				harvesting: []
+			};
+
+			list_obj.land_prep = list.filter(ele => ele.stage == 'Land Preparation');
+			list_obj.sowing = list.filter(ele => ele.stage == 'Sowing');
+			list_obj.vegetation = list.filter(ele => ele.stage == 'Vegetation');
+			list_obj.reproductive = list.filter(ele => ele.stage == 'Reproductive');
+			list_obj.ripening = list.filter(ele => ele.stage == 'Ripening');
+			list_obj.harvesting = list.filter(ele => ele.stage == 'Harvesting');
+
+			var query = {
+				where: {
+					key: ['work_order_table.status', 'work_order_table.status'],
+					value: ['Pending', 'In-Progress']
+				},
+				order: ['work_order_table.status ASC', 'work_order_table.date_due DESC', 'farm_table.farm_id']
+			}
+
+			workOrderModel.getWorkOrders(query, function(err, wo_list) {
+				if (err)
+					throw err;
+				else {
+					for (var i = 0; i < wo_list.length; i++) {
+						wo_list[i].date_created = dataformatter.formatDate(new Date(wo_list[i].date_created), 'YYYY-MM-DD');
+						wo_list[i].date_due = dataformatter.formatDate(new Date(wo_list[i].date_due), 'YYYY-MM-DD');
+						wo_list[i].date_start = dataformatter.formatDate(new Date(wo_list[i].date_start), 'YYYY-MM-DD');
+					}
+
+					console.log(wo_list);
+
+					for (prop in list_obj) {
+						for (var i = 0; i < list_obj[prop].length; i++) {
+							list_obj[prop][i]['wo_list'] = wo_list.filter(ele => ele.farm_id == list_obj[prop][i].farm_id);
+						}
+					}
+
+					var html_data = {};
+					html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+					html_data['calendar_list'] = list_obj;
+					
+					res.render('crop_calendar_tab', html_data);
+				}
+			});
+		}
+	});
+}
 
 exports.ajaxCreateCropPlan = function(req, res) {
 	var query = {
@@ -20,7 +79,7 @@ exports.ajaxCreateCropPlan = function(req, res) {
 			throw err;
 		else {
 			console.log(plan);
-			res.send({ });
+				res.send({ });
 		}
 	});
 }

@@ -10,6 +10,7 @@ exports.processNPKValues = function(obj, area, applied) {
 		Adequate: [3.75, 1.0, 4.75],
 		Surplus: [0, 0, 0]
 	};
+	var count_deficiencies = 0;
 
 	for (var i = 0; i < keys.length; i++) {
 			switch(keys[i]) {
@@ -27,9 +28,11 @@ exports.processNPKValues = function(obj, area, applied) {
 
 		if (obj_result['Depleted'][index] == obj[keys[i]]) {
 			val = 'Depleted';
+			count_deficiencies++;
 		}
 		else if (obj_result['Deficient'][index] == obj[keys[i]]) {
 			val = 'Deficient';
+			count_deficiencies++;
 		}
 		else if (obj_result['Adequate'][index] == obj[keys[i]]) {
 			val = 'Adequate';
@@ -52,7 +55,10 @@ exports.processNPKValues = function(obj, area, applied) {
 
 	for (var  i = 0; i < keys.length; i++) {
 		obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;
+
+		obj[keys[i]] = obj[keys[i]] < 0 ? 0 : obj[keys[i]];
 	}
+	obj['deficiencies'] = count_deficiencies+' out of 3';
 
 	return obj;
 }

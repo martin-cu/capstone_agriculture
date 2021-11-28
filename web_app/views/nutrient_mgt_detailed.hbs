@@ -1,146 +1,190 @@
-<div class="d-flex w-100">
-	<div class="rounded w-75 ml-3 card shadow-lg">
-		<div class="w-100 bg-dark text-white rounded">Optimizations for </div>
-		<div class="px-2">
-			a
-		</div>
-	</div>
-	<div class="d-flex flex-column w-25 mx-3">
-		<div class="rounded card shadow-lg">
-			<div class="w-100 bg-dark text-white rounded">Soil Data</div>
-			<div class="px-2">
-				<table class="table">
-					<tr>
-						<td class="soil_data_lbl">Soil Texture</td>
-						<td id="soil_texture"></td>
-					</tr>
-					<tr>
-						<td class="soil_data_lbl">pH lvl</td>
-						<td id="ph_lvl" class="text-right">{{detailed_data.pH_lvl}}</td>
-					</tr>
-					<tr>
-						<td class="soil_data_lbl">P205</td>
-						<td id="p_lvl" class="text-right">{{detailed_data.p_val}}</td>
-					</tr>
-					<tr>
-						<td class="soil_data_lbl">K20</td>
-						<td id="k_lvl" class="text-right">{{detailed_data.k_val}}</td>
-					</tr>
-					<tr>
-						<td class="soil_data_lbl">N</td>
-						<td id="n_lvl" class="text-right">{{detailed_data.n_val}}</td>
-					</tr>
-					<tr>
-						<td class="soil_data_lbl">Soil Moisture</td>
-						<td id="soil_moisture" class="text-right"></td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div class="rounded card shadow-lg mt-3">
-			<div class="w-100 bg-dark text-white rounded">Nutrient Requirements (kg/ha)</div>
-			<div class="px-3">
-				<table class="table">
-					<tr>
-						<td class="soil_data_lbl">P205</td>
-						<td id="p_req" class="text-right">{{detailed_data.p_lvl}}</td>
-					</tr>
-					<tr>
-						<td class="soil_data_lbl">K20</td>
-						<td id="k_req" class="text-right">{{detailed_data.k_lvl}}</td>
-					</tr>
-					<tr>
-						<td class="soil_data_lbl">N</td>
-						<td id="n_req" class="text-right">{{detailed_data.n_lvl}}</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</div>
+<div class="container-fluid">
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0" style="font-weight: bold;color: #332c1f;">Nutrient Management</h3>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-xl-8 col-xxl-12">
+            <div class="card">
+                <div class="card-header" style="height: auto;background: #939C1F;padding: 16px 20px;height: auto;">
+                    <h5 class="text-white">
+                        Fertilizer Optimization
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7 col-xxl-8">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Optimization Requirements<br></h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive" style="border-style: none;">
+                                        <table class="table">
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr style="border-style: none;">
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm</span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.farm_name}}</span></td>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method<br></span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.method}}<br></span></td>
+                                                </tr>
+                                                <tr style="border-style: none;">
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Nutrient Deviations (-)<br></span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.deficiencies}}<br></span></td>
+                                                    <td style="border-style: none;">
+                                                        <!-- <span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Level Requirement<br></span><span class="d-xxl-flex justify-content-xxl-start">1250 mm<br></span> -->
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-style: none;">
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Expected Yield<br></span><span class="d-xxl-flex justify-content-xxl-start">todo<br></span></td>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Forecasted Yield<br></span><span class="d-xxl-flex justify-content-xxl-start">todo<br></span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Nutrient Calculations (kg/ha)<br></h6>
+                                </div>
+                                <div class="card-body">
+                                    <!-- <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th style="text-align: right;">Required (-)</th>
+                                                    <th style="text-align: right;">Added (+)</th>
+                                                    <th style="text-align: right;">Total</th>
+                                                    <th style="text-align: right;">Avg/Year</th>
+                                                    <th style="text-align: right;">Nutrient Deviation</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>N:</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>P2O5 (mg/100g):<br></td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>K2O (mg/100g):<br></td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                    <td style="text-align: right;">0</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div> -->
+                                    
+                                    <div class="">
+                                        <label>Fertilizer Calculations</label>
+                                        <div class="table-responsive">
+                                            <table class="table" id="inventory_table">
+                                                <tr>
+                                                    <th>Fertilizer</th>
+                                                    <th>Current Stock</th>
+                                                    <th>Recommendation</th>
+                                                    <th>Applied</th>
+                                                    <th>Deficiency</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
 
-</div>
+                                    <div class="my-3">
+                                        <label>Fertilizer Application History</label>
+                                        <div class="table-responsive">
+                                            <table class="table" id="fertilizer_history">
+                                                <tr>
+                                                    <th>Date Applied</th>
+                                                    <th>Fertilizer</th>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                </tr>
 
-<div class="rounded w-75 mx-3 card shadow-lg mt-3">
-	<div class="w-100 bg-dark text-white rounded">Nutrient Calculation</div>
-	<div class="px-2">
-		<table class="table">
-			<tr>
-				<td></td>
-				<td>Required (-)</td>
-				<td>Added (+)</td>
-				<td>Total</td>
-				<td>Deficiency</td>
-			</tr>
-			<tr>
-				<td>P205</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>K20</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>N</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</table>
-	</div>
-</div>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-xxl-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Soil Data&nbsp;</h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><span>Soil Texture</span><span class="float-end" id="soil_texture"></span></li>
+                                        <li class="list-group-item"><span>pH Lvl</span><span class="float-end" id="ph_lvl">{{detailed_data.pH_lvl}}</span></li>
+                                        <li class="list-group-item"><span>N</span><span class="float-end" id="n_lvl">{{detailed_data.n_val}}</span></li>
+                                        <li class="list-group-item"><span>P205</span><span class="float-end" id="p_lvl">{{detailed_data.p_val}}</span></li>
+                                        <li class="list-group-item"><span>K20</span><span class="float-end" id="k_lvl">{{detailed_data.k_val}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #332C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Soil Nutrient Requirements (kg/ha)<br></h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><span>N</span><span class="float-end">{{detailed_data.n_lvl}}</span></li>
+                                        <li class="list-group-item"><span>P205 (mg/100)</span><span class="float-end">{{detailed_data.p_lvl}}</span></li>
+                                        <li class="list-group-item"><span>K2O (mg/100)</span><span class="float-end">{{detailed_data.k_lvl}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7 col-xxl-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Recommendation<br></h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table" id="schedule_table">
+                                        <tr>
+                                            <th>Application Date</th>
+                                            <th>Fertilizer</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </table>
 
-<div class="rounded  mx-3 mt-3">
-	<div class="w-100 bg-dark text-white rounded">Fertilizer Planning</div>
-	<div class="rounded card shadow-lg d-flex flex-column" style="min-height: 350px;">
-		<div class="d-flex">
-			<div class="w-100 p-3">
-				<table class="table" id="inventory_table">
-
-				</table>
-			</div>
-			<!-- <div class="ml-auto d-flex flex-column p-3" style="width: 170px;">
-				<button class="btn btn-dark" style="font-size: 10px;">Current Resources</button>
-				<button class="btn btn-dark mt-2" style="font-size: 10px;">Optimal</button>
-			</div> -->
-		</div>
-		<div class="mx-3">
-			<div>Recommended Fertilizer Application Schedule:</div>
-			<div class="mt-2">
-				<table class="table" id="schedule_table">
-					<tr>
-						<th>Application Date</th>
-						<th>Fertilizer</th>
-						<th>Description</th>
-						<th>Amount</th>
-						<th></th>
-					</tr>
-				</table>
-
-				<button class="btn btn-success float-right hide mb-3" type="button" id="generate_wo">Submit</button>
-			</div>
-		</div>
-	</div>
+                                    <button class="btn btn-success float-right hide mb-3" type="button" id="generate_wo">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
-	var type = 'Soil Detailed';
-	var id = {{detailed_data.farm_id}};
-	var area = {{detailed_data.farm_area}};
-	var farm_name = '{{detailed_data.farm_name}}';
+    var type = 'Soil Detailed';
+    var id = {{detailed_data.farm_id}};
+    var area = {{detailed_data.farm_area}};
+    var farm_name = '{{detailed_data.farm_name}}';
+    var results;
 </script>
 
 <script src="../../js/nutrient_management.js"></script>
-
-
-<script type="text/javascript">
-	
-var results;
-
-</script>
