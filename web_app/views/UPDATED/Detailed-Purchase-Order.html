@@ -115,140 +115,94 @@
                 </nav>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Farms &gt; Work Order</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
+                        <h3 class="text-dark mb-0">Material Management &gt; Orders</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
                     </div>
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
-                            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Work Order</h6>
+                            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Purchase Order</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
-                                            <th style="width: 1px;">Status</th>
-                                            <th style="width: 50px;"><select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly="">
+                                            <th style="width: 1px;border-style: none;">Status</th>
+                                            <th style="border-style: none;"><select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;border-style: none;" required="" readonly="">
                                                     <option value="">Pending</option>
                                                     <option value="">Processing</option>
                                                     <option value="">Completed</option>
                                                 </select></th>
-                                            <th></th>
-                                            <th></th>
+                                            <th style="border-style: none;"></th>
+                                            <th style="border-style: none;"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
                                         <tr></tr>
                                         <tr>
-                                            <td style="font-weight: bold;">Farm Information</td>
-                                            <td style="width: 50px;"></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td style="font-weight: bold;border-style: none;">Farm Information</td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: normal;">Farm</td>
-                                            <td><input type="text" required="" readonly=""></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td style="font-weight: normal;border-style: none;">Farm</td>
+                                            <td style="border-style: none;"><input type="text" required="" readonly=""></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: normal;">Current Crop Cycle</td>
-                                            <td><select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly="">
+                                            <td style="font-weight: normal;border-style: none;">Current Crop Cycle</td>
+                                            <td style="border-style: none;"><select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;border-style: none;" required="" readonly="">
                                                     <option value="">Pesticide Application</option>
                                                     <option value="">Fertilizer Application</option>
                                                 </select></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: normal;">Description</td>
-                                            <td><input type="text" required="" readonly=""></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td style="font-weight: bold;border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: bold;"></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td style="font-weight: bold;border-style: none;">Purchase Details</td>
+                                            <td style="width: 0px;border-style: none;"></td>
+                                            <td style="width: 0px;font-weight: bold;border-style: none;">Payment Details</td>
+                                            <td style="width: 0px;border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: bold;">Order Details</td>
-                                            <td style="width: 0px;"></td>
-                                            <td style="width: 0px;font-weight: bold;">Harvest Details</td>
-                                            <td style="width: 0px;"></td>
+                                            <td style="font-weight: normal;border-style: none;">Date requested</td>
+                                            <td style="width: 100px;border-style: none;"><input type="date" required="" readonly=""></td>
+                                            <td style="width: 100px;border-style: none;">Purchase Price</td>
+                                            <td style="width: 100px;border-style: none;"><input type="number" style="width: 150px;"><span style="margin-left: 5px;">pesos</span></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: normal;">Start Date</td>
-                                            <td style="width: 100px;"><input type="date" required="" readonly=""></td>
-                                            <td style="width: 100px;">Harvested</td>
-                                            <td style="width: 100px;">
-                                                <div class="custom-control custom-radio"><input type="radio" id="customRadio1" class="custom-control-input" name="customRadio" checked=""><label class="custom-control-label" for="customRadio1">Yes</label></div>
-                                                <div class="custom-control custom-radio"><input type="radio" id="customRadio-1" class="custom-control-input" name="customRadio" checked=""><label class="custom-control-label" for="customRadio1">No</label></div>
-                                            </td>
+                                            <td style="font-weight: normal;border-style: none;">Date Purchased</td>
+                                            <td style="width: 100px;border-style: none;"><input type="date" required="" readonly="" style="border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: normal;">Due Date</td>
-                                            <td style="width: 100px;"><input type="date" required="" readonly=""></td>
-                                            <td style="width: 100px;">Rice Yield</td>
-                                            <td style="width: 100px;"><input type="number" style="width: 80px;"><span style="margin-left: 5px;">sacks</span></td>
+                                            <td style="font-weight: normal;border-style: none;">Note</td>
+                                            <td style="border-style: none;"><input type="text" required="" readonly="" style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: normal;"></td>
-                                            <td style="width: 100px;"></td>
-                                            <td style="width: 100px;"></td>
-                                            <td style="width: 100px;"></td>
+                                            <td style="font-weight: normal;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td style="font-weight: normal;"><strong>Resources Used</strong><br></td>
-                                            <td style="width: 100px;"></td>
-                                            <td style="width: 100px;"></td>
-                                            <td style="width: 100px;"></td>
+                                            <td style="font-weight: normal;border-style: none;"><strong>Item Purchased</strong><br></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td class="text-center" style="font-weight: normal;">1</td>
-                                            <td colspan="2"><input type="text" required="" readonly="" style="width: 180px;"><input type="number" style="width: 100px;margin-left: 5px;"><span style="margin-left: 5px;">bags</span></td>
-                                            <td>
-                                                <div>
-                                                    <fieldset></fieldset>
-                                                    <fieldset></fieldset>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center" style="font-weight: normal;">2</td>
-                                            <td colspan="2"><input type="text" required="" readonly="" style="width: 180px;"><input type="number" style="width: 100px;margin-left: 5px;"><span style="margin-left: 5px;">bags</span></td>
-                                            <td>
-                                                <div>
-                                                    <fieldset></fieldset>
-                                                    <fieldset></fieldset>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center" style="font-weight: normal;">3</td>
-                                            <td colspan="2"><input type="text" required="" readonly="" style="width: 180px;"><input type="number" style="width: 100px;margin-left: 5px;"><span style="margin-left: 5px;">bags</span></td>
-                                            <td>
-                                                <div>
-                                                    <fieldset></fieldset>
-                                                    <fieldset></fieldset>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center" style="font-weight: normal;">4</td>
-                                            <td colspan="2"><input type="text" required="" readonly="" style="width: 180px;"><input type="number" style="width: 100px;margin-left: 5px;"><span style="margin-left: 5px;">bags</span></td>
-                                            <td>
-                                                <div>
-                                                    <fieldset></fieldset>
-                                                    <fieldset></fieldset>
-                                                </div>
-                                            </td>
+                                            <td class="text-left" style="font-weight: normal;border-style: none;" colspan="4"><input type="text" required="" readonly="" placeholder="Item"><input type="text" required="" readonly="" placeholder="Item Type" style="margin-left: 10px;"><input type="number" style="width: 100px;margin-left: 5px;"><span style="margin-left: 5px;">bags</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
