@@ -87,6 +87,7 @@ router.get('/orders/details', materialController.getPurchaseDetails);
 router.post('/addMaterial', materialController.newMaterial);
 router.get('/ajaxGetMaterials', materialController.getMaterialsAjax);
 router.post('/addPurchase', materialController.addPurchase);
+router.post('/updatePurchase', materialController.updatePurchase)
 
 
 //Pest and Disease

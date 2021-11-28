@@ -3,6 +3,14 @@ function clearList(){
 }
 
 $(document).ready(function(){
+    
+    if($("#purchase_status").text() != "Purchased"){
+        $("#update_purchase_btn").toggle("show");
+    }
+
+
+
+
     $(window).keydown(function(event){
         if(event.target.tagName != 'TEXTAREA') { // Added to allow enter key on textarea inputs
             if(event.keyCode == 13) {
@@ -274,3 +282,15 @@ $(document).on("change",'.purchase_item_type', function(){
         }
     });
  });
+
+
+
+ //UPDATE PURCHASE
+ $(document).on('click',"#update_purchase_btn", function(){
+     if($(this).val() == "Pending"){
+         $("#process_step").toggle("show");
+     }
+     else if($(this).val() == "Processing"){
+        $("#purchase_step").toggle("show");
+     }
+});

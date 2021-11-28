@@ -229,6 +229,7 @@ exports.addFarmMaterials = function(amount, farm_mat_id, next){
 	var sql = "UPDATE farm_materials set current_amount = current_amount + ? WHERE farm_mat_id = ?";
 	sql = mysql.format(sql, amount);
 	sql = mysql.format(sql, farm_mat_id);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -293,6 +294,7 @@ exports.updatePurchase = function(id, data, next){
 	var sql = "UPDATE purchase_table SET ? WHERE ?;";
 	sql = mysql.format(sql, data);
 	sql = mysql.format(sql, id);
+	console.log(sql);
 	mysql.query(sql, next);
 };
 
