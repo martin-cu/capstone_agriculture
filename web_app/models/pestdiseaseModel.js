@@ -58,7 +58,7 @@ exports.addPestDiseaseSymptom = function(type, id, symptom, next){
 	sql = sql + table + " set symptom_id = ?, " + variable + "= ?";
 	sql = mysql.format(sql, symptom);
 	sql = mysql.format(sql, id);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -117,7 +117,7 @@ exports.getPestPreventions = function(pest_id, next){
 exports.addPest = function(pest, next){
 	var sql = "INSERT INTO pest_table SET ?";
 	sql = mysql.format(sql, pest);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -138,7 +138,7 @@ exports.getAllDiseases = function(next){
 exports.getDiseaseDetails = function(id,next){
 	var sql = "SELECT *, disease_id as pd_id, disease_name as pd_name, disease_desc as pd_desc FROM disease_table WHERE ?;";
 	sql = mysql.format(sql, id);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -210,7 +210,7 @@ exports.getPestsBasedWeather = function(weather, next){
 		sql = sql + " a.precipitation = " + weather.humidity;
 	}
 	sql = sql + " GROUP BY a.pest_name";
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -244,7 +244,7 @@ exports.getDiseaseBasedWeather = function(weather, next){
 		sql = sql + " a.precipitation = " + weather.humidity;
 	}
 	// sql = sql + " GROUP BY a.disease_name";
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -329,7 +329,7 @@ exports.getPestPossibilities = function(weather, season, fertilizer, stage, next
 
 
 	sql = sql + end_qry;
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -457,7 +457,7 @@ exports.getPestProbability = function(weather, season, fertilizer, stage, next){
 		first = true;
 	}
 
-	console.log("\n\n\n" + sql);
+	// console.log("\n\n\n" + sql);
 
 	if(weather.humidity != null){
 		if(first)
@@ -744,7 +744,7 @@ exports.getPestProbabilityPercentage = function(weather, season, fertilizer, sta
 	var sql2 = ' INNER JOIN (SELECT a.pest_id, a.pest_name, COUNT(a.pest_id) AS factor_count FROM (SELECT p.pest_id, p.pest_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id UNION SELECT p.pest_id, p.pest_name, s.season_name as factor, s.season_desc as description, "season" as type FROM pest_table p INNER JOIN season_pest sp ON p.pest_id = sp.pest_id INNER JOIN seasons s ON s.season_id = sp.season_pest UNION SELECT p.pest_id, p.pest_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM pest_table p INNER JOIN stages_pest sp ON sp.pest_id = p.pest_id INNER JOIN stages s ON s.stage_id = sp.stages_pest_id UNION SELECT p.pest_id, p.pest_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM pest_table p INNER JOIN farmtypes_pest ftp ON p.pest_id = ftp.pest_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id UNION SELECT p.pest_id, p.pest_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM pest_table p INNER JOIN fertilizer_pest fp ON p.pest_id = fp.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id) a GROUP BY pest_id) b ON a.pest_id = b.pest_id GROUP BY a.pest_id ORDER BY probability DESC;';
 
 	sql = sql + sql2;
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -855,7 +855,7 @@ exports.getDiseaseProbabilityPercentage = function(weather, season, fertilizer, 
 	var sql2 = ' INNER JOIN (SELECT a.disease_id, a.disease_name, COUNT(a.disease_id) AS factor_count FROM (SELECT p.disease_id, p.disease_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id UNION SELECT p.disease_id, p.disease_name, s.season_name as factor, s.season_desc as description, "season" as type FROM disease_table p INNER JOIN seasons_disease sp ON p.disease_id = sp.disease_id INNER JOIN seasons s ON s.season_id = sp.season_id UNION SELECT p.disease_id, p.disease_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM disease_table p INNER JOIN stages_disease sp ON sp.disease_id = p.disease_id INNER JOIN stages s ON s.stage_id = sp.stages_disease_id UNION SELECT p.disease_id, p.disease_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM disease_table p INNER JOIN farm_types_disease ftp ON p.disease_id = ftp.disease_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id UNION SELECT p.disease_id, p.disease_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM disease_table p INNER JOIN fertilizer_disease fp ON p.disease_id = fp.disease_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id) a GROUP BY disease_id) b ON a.disease_id = b.disease_id GROUP BY a.disease_id ORDER BY probability DESC;';
 
 	sql = sql + sql2;
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 
 }
@@ -1076,9 +1076,9 @@ exports.getPDProbabilityPercentage = function(weather, season, fertilizer, stage
 
 	var sql2 = ' INNER JOIN (SELECT a.pest_id, a.pest_name, COUNT(a.pest_id) AS factor_count FROM (SELECT p.pest_id, p.pest_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id UNION SELECT p.pest_id, p.pest_name, s.season_name as factor, s.season_desc as description, "season" as type FROM pest_table p INNER JOIN season_pest sp ON p.pest_id = sp.pest_id INNER JOIN seasons s ON s.season_id = sp.season_pest UNION SELECT p.pest_id, p.pest_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM pest_table p INNER JOIN stages_pest sp ON sp.pest_id = p.pest_id INNER JOIN stages s ON s.stage_id = sp.stages_pest_id UNION SELECT p.pest_id, p.pest_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM pest_table p INNER JOIN farmtypes_pest ftp ON p.pest_id = ftp.pest_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id UNION SELECT p.pest_id, p.pest_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM pest_table p INNER JOIN fertilizer_pest fp ON p.pest_id = fp.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id) a GROUP BY pest_id) b ON a.pest_id = b.pest_id GROUP BY a.pest_id ORDER BY probability DESC';
 
-	sql = sql + sql2 + ")";
+	sql = sql + sql2 + ") ORDER BY probability DESC";
 
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1101,7 +1101,7 @@ exports.getDiagnosis = function(farm_id, type, next){
 		sql = pest_diagnosis + " UNION " + disease_diagnosis;
 	}
 
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 

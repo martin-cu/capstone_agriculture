@@ -26,8 +26,10 @@ exports.addAssignedFarmers = function(data, next) {
 }
 
 exports.filteredFarmDetails = function(data, next) {
-	var sql = 'select * from farm_table where ?';
+	var sql = 'SELECT * FROM (SELECT ft.*, a.last_name, a.first_name, a.phone_number, a.position FROM farm_table ft INNER JOIN (SELECT et.*, fa.farm_id FROM farm_assignment fa INNER JOIN employee_table et ON et.employee_id = fa.employee_id) a ON ft.farm_id = a.farm_id) a WHERE position = "Farm Manager" &&  ?';
 	sql = mysql.format(sql, data);
+
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -81,5 +83,21 @@ exports.getPlotData = function(data, next) {
 		sql = "select * from farm_plots where ?";
 		sql = mysql.format(sql, data);
 	}
+	mysql.query(sql, next);
+}
+
+
+exports.getFarmerQueries = function(farm_id, employee_id, next){
+	var sql = "SELECT * FROM farmer_queries fq INNER JOIN employee_table et ON et.employee_id = fq.employee_id INNER JOIN farm_assignment fa ON fa.employee_id = fq.employee_id";
+
+	if(farm_id != null){
+		sql = sql + " WHERE farm_id = ?";
+		sql = mysql.format(sql, farm_id);
+	}
+	else if(employee_id != null){
+		sql = sql + ' fa.employee_id = ?';
+		sql = mysql.format(sql, employee_id);
+	}
+
 	mysql.query(sql, next);
 }

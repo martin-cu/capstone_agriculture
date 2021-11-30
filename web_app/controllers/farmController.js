@@ -53,14 +53,232 @@ exports.getAddFarm = function(req, res) {
 	res.render('add_farm', html_data);
 }
 
+//AJAX
 exports.getFarmDetails = function(req, res) {
+	var html_data = {};
 	var query = req.query;
-	farmModel.filteredFarmDetails(query, function(err, details) {
+	var farm_id = req.query.farm_id;
+	farmModel.filteredFarmDetails({farm_id : req.query.farm_id}, function(err, details) {
 		if (err)
 			throw err;
 		else {
-			res.send(details);
+			html_data["details"] = details;
+			console.log(details);
 		}
+
+		materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Seed"}, function(err, seeds){
+			if(err)
+				throw err;
+			else{
+				if(seeds == null){
+	
+				}
+				else{
+					var ctr = seeds.length;
+					if(seeds == null)
+						ctr = 0;
+					while(ctr < 5){
+						seeds.push({});
+						ctr++;
+					}
+					html_data["seed"] = seeds;
+				}
+	
+				materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Fertilizer"}, function(err, fertilizers){
+					if(err)
+						throw err;
+					else{
+						if(fertilizers == null){
+	
+						}
+						else{
+							var ctr = fertilizers.length;
+							if(fertilizers == null)
+								ctr = 0;
+							while(ctr < 5){
+								fertilizers.push({});
+								ctr++;
+							}
+							html_data["fertilizer"] = fertilizers;
+						}
+						materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Pesticide"}, function(err, pesticides){
+							if(err)
+								throw err;
+							else{
+								if(pesticides == null){
+	
+								}
+								else{
+									var ctr = pesticides.length;
+									if(pesticides == null)
+										ctr = 0;
+									while(ctr < 5){
+										pesticides.push({});
+										ctr++;
+									}
+									html_data["pesticide"] = pesticides;
+								}
+								
+								console.log(req.query.center);
+								console.log("CENTER");
+								var center = req.query.center;
+								if(center == null){
+									var lat = 13.073091;
+									var lon = 121.388563;
+								}
+								else{
+									var lat = center[1];
+									var lon = center[0];
+								}
+								
+								new Date(Date.now());
+
+								var d1 = new Date(Date.now());
+								var d2 = new Date(Date.now());
+								d2.setDate(d2.getDate() - 2);
+								d1.setDate(d1.getDate() - 1);
+
+								var start_date = dataformatter.dateToUnix(d2);
+								var end_date = dataformatter.dateToUnix(d1);
+								
+								var x = new Date();
+								var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
+
+								request(url, { json: true }, function(err, response, body) {
+									if (err)
+										throw err;
+									else {
+										// console.log(body);
+										for (var i = 0; i < body.length; i++) {
+											body[i].dt = dataformatter.unixtoDate(body[i].dt);
+										}
+										
+										//***** Call Agro API for succeeding 5 day forecast
+										var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+										request(forecast_url, { json: true }, function(err, response, forecast_body) {
+											if (err)
+												throw err;
+											else {
+												forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
+			
+												var hour_arr = [];
+												for (var i = 0; i < forecast_body.length; i++) {
+													forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
+													hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
+												}
+												// console.log(forecast_body);
+												
+												//***** Get unique hour timestamps from forecast and filter data
+												hour_arr = [...new Map(hour_arr.map(item =>
+													[item, item])).values()];
+							
+												body = dataformatter.smoothHourlyData(body, hour_arr);
+												forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
+							
+												//***** Build on Agro API and use ANN to forecast remaining 9 days
+												var result = analyzer.weatherForecast14D(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
+												var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
+												
+												result.forecast = dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
+							
+												forecast = dataformatter.mapAndFormatForecastResult(result, hour_arr);
+												
+												// console.log(forecast[0]);
+												var daily_ctr = 0;
+												var dmin_temp = 0, dmax_temp = 0, dhumidity = 0, dpressure = 0, drainfall = 0;
+												for(var i = 0; i < forecast.length; i++){
+													// console.log(forecast[i]);
+			
+													var ctr = 0;
+													var min_temp = 0, max_temp = 0, humidity = 0, pressure = 0, rainfall = 0;
+													for(var y = 0;y < forecast[i].data.length; y++){
+														min_temp = min_temp + forecast[i].data[y].min_temp;
+														max_temp = max_temp + forecast[i].data[y].max_temp;
+														humidity = humidity + forecast[i].data[y].humidity;
+														pressure = pressure + forecast[i].data[y].pressure;
+														rainfall = rainfall + forecast[i].data[y].rainfall;
+			
+														ctr++;
+													}
+													min_temp = min_temp / ctr;
+													max_temp = max_temp / ctr;
+													humidity = humidity / ctr;
+													pressure = pressure / ctr;
+													rainfall = rainfall / ctr;
+			
+													dmin_temp = dmin_temp + min_temp;
+													dmax_temp = dmax_temp + max_temp;
+													dhumidity = dhumidity + humidity;
+													dpressure = dpressure + pressure;
+													drainfall = drainfall + rainfall;
+			
+													daily_ctr++;
+												}
+			
+												var weather = {
+													min_temp : ((dmin_temp / ctr) - 32) / 1.8,
+													max_temp : ((dmax_temp / ctr) - 32) / 1.8,
+													humidity : dhumidity / ctr,
+													precipitation : drainfall / ctr
+												}
+												
+												// console.log(weather);
+			
+			
+												var season = {
+													season_temp : 35,
+													season_humidity : 65
+												}
+			
+												var stage = {
+													stage_name : "Reproductive"
+												}
+			
+												pestdiseaseModel.getPDProbabilityPercentage(weather, season, null, stage,function(err, possible_pests){
+													if(err){
+														throw err;
+													}else{
+														var statements = new Array();
+														for(i = 0; i < possible_pests.length; i++){
+															stmt = possible_pests[i].pest_name + " - May occur due to ";
+															if(possible_pests[i].weather_id != null)
+																stmt = stmt + possible_pests[i].weather + " weather, ";
+															if(possible_pests[i].season_id != null)
+																stmt = stmt + possible_pests[i].season_name + " season ";
+															if(possible_pests[i].stage_id != null)
+																stmt = stmt + possible_pests[i].t_stage_name + " stage ";
+															statements.push({ statement : stmt});
+														}
+			
+														for(x =0; x < possible_pests.length; x++){
+															if(x >= 3)
+																possible_pests.pop(x);
+														}
+														console.log(possible_pests);
+													}
+													farmModel.getFarmerQueries(farm_id, null, function(err, queries){
+														if(err)
+															throw err;
+														else{
+															
+														}
+														html_data["queries"] = queries;
+														html_data["statements"] = statements;
+														html_data["probability"] = possible_pests;
+														html_data["main"] = forecast_body[0].main;
+														res.send(html_data);
+													});
+												});
+											}
+										});
+									}
+								});
+							}
+						});
+					}
+				});
+			}
+		});
 	});
 }
 
@@ -83,7 +301,7 @@ exports.getMonitorFarms = function(req, res) {
 				var ctr = seeds.length;
 				if(seeds == null)
 					ctr = 0;
-				while(ctr < 3){
+				while(ctr < 5){
 					seeds.push({});
 					ctr++;
 				}
@@ -101,7 +319,7 @@ exports.getMonitorFarms = function(req, res) {
 						var ctr = fertilizers.length;
 						if(fertilizers == null)
 							ctr = 0;
-						while(ctr < 3){
+						while(ctr < 5){
 							fertilizers.push({});
 							ctr++;
 						}
@@ -118,7 +336,7 @@ exports.getMonitorFarms = function(req, res) {
 								var ctr = pesticides.length;
 								if(pesticides == null)
 									ctr = 0;
-								while(ctr < 3){
+								while(ctr < 5){
 									pesticides.push({});
 									ctr++;
 								}
@@ -246,35 +464,33 @@ exports.getMonitorFarms = function(req, res) {
 														if(possible_pests[i].stage_id != null)
 															stmt = stmt + possible_pests[i].t_stage_name + " stage ";
 														statements.push({ statement : stmt});
-		
 													}
 		
-													weather = {
-														min_temp : 29,
-														max_temp : 29,
-														humidity : 70,
-														precipitation : 30
+													for(x =0; x < possible_pests.length; x++){
+														if(x >= 3)
+															possible_pests.pop(x);
 													}
-		
-													// pestdiseaseModel.getDiseaseProbability(weather, season, null, stage, function(err, probability){
-													// 	console.log(probability);
-													// });
-		
-													// html_data["img"] = body2[0].image.truecolor;
+													
+												}
+												farmModel.getFarmerQueries(1, null, function(err, queries){
+													if(err)
+														throw err;
+													else{
+														
+													}
+													console.log("queries");
+													html_data["queries"] = queries;
 													html_data["statements"] = statements;
 													html_data["probability"] = possible_pests;
 													html_data["weather"] = weather;
 													html_data["main"] = forecast_body[0].main;
 													res.render('farm_monitoring', html_data);
-												}
+												});
 											});
 										}
 									});
 								}
 							});
-								
-							
-							
 						}
 					});
 				}
