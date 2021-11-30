@@ -282,8 +282,8 @@ a.dropdown-item.notSidebar:hover {
 
 /* MAPBOX */
 #map {
-    height: 750px;
-    width: 1000px;
+    height: 600px;
+    width: 800px;
 }
 
 .mgl-map {
