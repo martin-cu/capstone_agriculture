@@ -192,19 +192,25 @@ exports.getFarmDetails = function(req, res) {
 													var ctr = 0;
 													var min_temp = 0, max_temp = 0, humidity = 0, pressure = 0, rainfall = 0;
 													for(var y = 0;y < forecast[i].data.length; y++){
-														min_temp = min_temp + forecast[i].data[y].min_temp;
-														max_temp = max_temp + forecast[i].data[y].max_temp;
-														humidity = humidity + forecast[i].data[y].humidity;
-														pressure = pressure + forecast[i].data[y].pressure;
-														rainfall = rainfall + forecast[i].data[y].rainfall;
-			
-														ctr++;
+														if(!isNaN(forecast[i].data[y].min_temp)){
+															min_temp = min_temp + forecast[i].data[y].min_temp;
+															max_temp = max_temp + forecast[i].data[y].max_temp;
+															humidity = humidity + forecast[i].data[y].humidity;
+															pressure = pressure + forecast[i].data[y].pressure;
+															rainfall = rainfall + forecast[i].data[y].rainfall;
+				
+															ctr++;
+														}
+														
 													}
-													min_temp = min_temp / ctr;
-													max_temp = max_temp / ctr;
-													humidity = humidity / ctr;
-													pressure = pressure / ctr;
-													rainfall = rainfall / ctr;
+													if(ctr != 0){
+														min_temp = min_temp / ctr;
+														max_temp = max_temp / ctr;
+														humidity = humidity / ctr;
+														pressure = pressure / ctr;
+														rainfall = rainfall / ctr;
+													}
+													
 			
 													dmin_temp = dmin_temp + min_temp;
 													dmax_temp = dmax_temp + max_temp;
@@ -216,10 +222,10 @@ exports.getFarmDetails = function(req, res) {
 												}
 			
 												var weather = {
-													min_temp : ((dmin_temp / ctr) - 32) / 1.8,
-													max_temp : ((dmax_temp / ctr) - 32) / 1.8,
-													humidity : dhumidity / ctr,
-													precipitation : drainfall / ctr
+													min_temp : ((dmin_temp / daily_ctr) - 32) / 1.8,
+													max_temp : ((dmax_temp / daily_ctr) - 32) / 1.8,
+													humidity : dhumidity / daily_ctr,
+													precipitation : drainfall / daily_ctr
 												}
 												
 												// console.log(weather);
@@ -397,7 +403,7 @@ exports.getMonitorFarms = function(req, res) {
 						
 											forecast = dataformatter.mapAndFormatForecastResult(result, hour_arr);
 											
-											// console.log(forecast[0]);
+											// console.log(forecast[5]);
 											var daily_ctr = 0;
 											var dmin_temp = 0, dmax_temp = 0, dhumidity = 0, dpressure = 0, drainfall = 0;
 											for(var i = 0; i < forecast.length; i++){
@@ -406,19 +412,25 @@ exports.getMonitorFarms = function(req, res) {
 												var ctr = 0;
 												var min_temp = 0, max_temp = 0, humidity = 0, pressure = 0, rainfall = 0;
 												for(var y = 0;y < forecast[i].data.length; y++){
-													min_temp = min_temp + forecast[i].data[y].min_temp;
-													max_temp = max_temp + forecast[i].data[y].max_temp;
-													humidity = humidity + forecast[i].data[y].humidity;
-													pressure = pressure + forecast[i].data[y].pressure;
-													rainfall = rainfall + forecast[i].data[y].rainfall;
-		
-													ctr++;
+													if(!isNaN(forecast[i].data[y].min_temp)){
+														min_temp = min_temp + forecast[i].data[y].min_temp;
+														max_temp = max_temp + forecast[i].data[y].max_temp;
+														humidity = humidity + forecast[i].data[y].humidity;
+														pressure = pressure + forecast[i].data[y].pressure;
+														rainfall = rainfall + forecast[i].data[y].rainfall;
+			
+														ctr++;
+													}
+													
 												}
-												min_temp = min_temp / ctr;
-												max_temp = max_temp / ctr;
-												humidity = humidity / ctr;
-												pressure = pressure / ctr;
-												rainfall = rainfall / ctr;
+												if(ctr != 0){
+													min_temp = min_temp / ctr;
+													max_temp = max_temp / ctr;
+													humidity = humidity / ctr;
+													pressure = pressure / ctr;
+													rainfall = rainfall / ctr;
+												}
+												
 		
 												dmin_temp = dmin_temp + min_temp;
 												dmax_temp = dmax_temp + max_temp;
@@ -430,13 +442,13 @@ exports.getMonitorFarms = function(req, res) {
 											}
 		
 											var weather = {
-												min_temp : ((dmin_temp / ctr) - 32) / 1.8,
-												max_temp : ((dmax_temp / ctr) - 32) / 1.8,
-												humidity : dhumidity / ctr,
-												precipitation : drainfall / ctr
+												min_temp : ((dmin_temp / daily_ctr) - 32) / 1.8,
+												max_temp : ((dmax_temp / daily_ctr) - 32) / 1.8,
+												humidity : dhumidity / daily_ctr,
+												precipitation : drainfall / daily_ctr
 											}
 											
-											// console.log(weather);
+											
 		
 		
 											var season = {

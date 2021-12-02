@@ -4,7 +4,6 @@ mysql = mysql.connection;
 //Create and register valid materials
 exports.registerMaterial = function(type, data, next) {
 	var sql;
-console.log(type);
 	if (type == "Seed") {
 		sql = "insert into seed_table set ?";
 	}
@@ -16,7 +15,7 @@ console.log(type);
 	}
 
 	sql = mysql.format(sql, data);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -107,7 +106,7 @@ exports.getMaterialsList = function(type, filter, next){
 		}
 	}
 
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -207,7 +206,7 @@ exports.addMaterials = function(type,name, desc, next){
 
 	sql = mysql.format(sql, name);
 	sql = mysql.format(sql, desc);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -221,7 +220,7 @@ exports.updateFarmMaterials = function(data, farm_mat_id, next){
 	var sql = "UPDATE farm_materials set ? WHERE ?";
 	sql = mysql.format(sql, data);
 	sql = mysql.format(sql, farm_mat_id);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -229,7 +228,7 @@ exports.addFarmMaterials = function(amount, farm_mat_id, next){
 	var sql = "UPDATE farm_materials set current_amount = current_amount + ? WHERE farm_mat_id = ?";
 	sql = mysql.format(sql, amount);
 	sql = mysql.format(sql, farm_mat_id);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -294,7 +293,7 @@ exports.updatePurchase = function(id, data, next){
 	var sql = "UPDATE purchase_table SET ? WHERE ?;";
 	sql = mysql.format(sql, data);
 	sql = mysql.format(sql, id);
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 };
 
@@ -355,7 +354,7 @@ exports.getAllPurchases = function(type, status, next){
 		sql = mysql.format(sql, status.status);
 	}
 	
-	console.log("\n\n\n" + sql);
+	// console.log("\n\n\n" + sql);
 	mysql.query(sql, next);
 
 }
@@ -367,7 +366,7 @@ exports.getDetailsPurchase = function(purchase_id, next){
 	var sql;
 	sql = "SELECT * FROM (" + fertilizer + " UNION " + seed + " UNION " + pesticide + ") a WHERE ?";
 	sql = mysql.format(sql, purchase_id);
-	console.log("\n\n\n" + sql);
+	// console.log("\n\n\n" + sql);
 	mysql.query(sql, next);
 
 }

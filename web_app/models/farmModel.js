@@ -29,7 +29,7 @@ exports.filteredFarmDetails = function(data, next) {
 	var sql = 'SELECT * FROM (SELECT ft.*, a.last_name, a.first_name, a.phone_number, a.position FROM farm_table ft INNER JOIN (SELECT et.*, fa.farm_id FROM farm_assignment fa INNER JOIN employee_table et ON et.employee_id = fa.employee_id) a ON ft.farm_id = a.farm_id) a WHERE position = "Farm Manager" &&  ?';
 	sql = mysql.format(sql, data);
 
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 

@@ -11,6 +11,91 @@
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
+                                            <th style="width: 1px;border-style: none;">Status</th>
+                                            <th style="border-style: none;" id="purchase_status">{{details.purchase_status}}</th>
+                                            <th style="border-style: none;"></th>
+                                            <th style="border-style: none;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr></tr>
+                                        <tr>
+                                            <td style="font-weight: bold;border-style: none;">Farm Information</td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;border-style: none;">Farm</td>
+                                            <td style="border-style: none;">{{details.farm_name}}</td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;border-style: none;">Current Crop Cycle</td>
+                                            <td style="border-style: none;"> TO ADD BY y2
+                                                {{!-- <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;border-style: none;" required="" readonly="">
+                                                    <option value="">Pesticide Application</option>
+                                                    <option value="">Fertilizer Application</option>
+                                                </select> --}}
+                                            </td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold;border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold;border-style: none;">Purchase Details</td>
+                                            <td style="width: 0px;border-style: none;"></td>
+                                            <td style="width: 0px;font-weight: bold;border-style: none;">Payment Details</td>
+                                            <td style="width: 0px;border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;border-style: none;">Date requested</td>
+                                            <td style="width: 100px;border-style: none;">{{details.request_date}}</td>
+                                            <td style="width: 100px;border-style: none;">Purchase Price</td>
+                                            <td style="width: 100px;border-style: none;">{{#if details.purchase_price}} {{details.purchase_price}} {{else}} 0.00{{/if}} pesos</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;border-style: none;">Date Purchased</td>
+                                            <td style="width: 100px;border-style: none;">{{details.date_purchased}}</td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;border-style: none;">Note</td>
+                                            <td style="border-style: none;">To be added by Y2</td>
+                                            <td style="border-style: none;"></td>
+                                            <td style="border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: normal;border-style: none;"><strong>Item Purchased</strong><br></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                            <td style="width: 100px;border-style: none;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left" style="font-weight: normal;border-style: none;" colspan="4"><input style="border-radius : 5px; " type="text" required="" readonly="" placeholder="Item" value="{{details.item_name}}"><input type="text" required="" readonly="" placeholder="Item Type" style="margin-left: 10px; border-radius : 5px;" value="{{details.item_type}}"><input type="number" style="width: 100px;margin-left: 5px; border-radius : 5px;" value="{{details.amount}}"><span style="margin-left: 5px;">units</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div><button class="btn btn-primary float-right shadow" id="update_purchase_btn"  data-toggle="modal" data-target="#updatePurchaseModal" type="button" style="display : none; border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);" value="{{details.purchase_status}}">Update</button>
+                        </div>
+                        {{!-- <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
                                             <th></th>
                                             <th style="width: 1px;">Status</th>
                                             <th style="width: 50px;"id="purchase_status">{{details.purchase_status}}</th>
@@ -33,7 +118,6 @@
                                             <td style="font-weight: bold;">Farm</td>
                                             <td style="font-weight: normal;"> 
                                                 {{details.farm_name}}
-                                                {{!-- <input type="text" required="" readonly=""> --}}
                                             </td>
                                             <td style="font-weight: bold;">Date requested</td>
                                             <td style="font-weight: normal;"> 
@@ -47,7 +131,6 @@
                                             <td style="font-weight: bold;">Item</td>
                                             <td style="font-weight: normal;"> 
                                                 {{details.item_name}}
-                                                {{!-- <input type="text" required="" readonly=""> --}}
                                             </td>
                                             <td style="font-weight: bold;">Date Purchased</td>
                                             <td style="font-weight: normal;"> 
@@ -61,7 +144,6 @@
                                             <td style="font-weight: bold;">Item type</td>
                                             <td style="font-weight: normal;"> 
                                                 {{details.item_type}}
-                                                {{!-- <input type="text" required="" readonly=""> --}}
                                             </td>
                                             <td style="font-weight: bold;">Purchase price</td>
                                             <td style="font-weight: normal;"> 
@@ -78,37 +160,10 @@
                                             <td style="width : 100px;"></td>
                                             <td style="width : 200px;"></td>
                                         </tr>
-                                        {{!-- <tr>
-                                            <td style="font-weight: normal;">Current Crop Cycle</td>
-                                            <td><select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly="">
-                                                    <option value="">Pesticide Application</option>
-                                                    <option value="">Fertilizer Application</option>
-                                                </select></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: normal;">Description</td>
-                                            <td><input type="text" required="" readonly=""></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold;"></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold;">Order Details</td>
-                                            <td style="width: 0px;"></td>
-                                            <td style="width: 0px;font-weight: bold;">Harvest Details</td>
-                                            <td style="width: 0px;"></td>
-                                        </tr> --}}
                                     </tbody>
                                 </table>
-                            </div><button class="btn btn-primary float-right shadow" id="update_purchase_btn"  data-toggle="modal" data-target="#updatePurchaseModal" type="button" style="display : none; border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);" value="{{details.purchase_status}}">Update</button>
-                        </div>
+                            </div>
+                        </div> --}}
                     </div>
                 </div>
 

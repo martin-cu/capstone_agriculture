@@ -49,13 +49,37 @@
                                 {{!-- TAB 1 --}}
                                 <div class="tab-pane fade show active" id="diagnoses" role="tabpanel" aria-labelledby="diagnoses-tab">
                                 
-                                <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
+                                {{!-- <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
                                 <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
                                     <div class="input-group"><input id="filterDiagnosesTable" onkeyup="diagnosesFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
-                                </form>
-
-                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button>
-                                        
+                                </form> --}}
+                                <button class="btn btn-primary d-flex float-end" role="button" style=" margin-bottom: 20px; background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button>
+                                <div>
+                                    <table class="table table tablesorter" id="ipi-table">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Diagnosis ID</th>
+                                                <th>Type</th>
+                                                <th>Date Diagnosed</th>
+                                                <th>Farm Affected</th>
+                                                {{!-- <th>cost per unit</th> --}}
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="materials_table">
+                                                {{#each purchases}}
+                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
+                                                        <td>{{this.farm_name}}</td>
+                                                        <td>{{this.item_name}}</td>
+                                                        <td>{{this.item_type}}</td>
+                                                        <td>{{this.amount}}</td>
+                                                        <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
+                                                    </tr>
+                                                {{/each}}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>        
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="diagnosesTable">
                                     <thead style="color: rgb(255,255,255);">
