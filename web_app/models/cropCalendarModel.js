@@ -51,7 +51,8 @@ exports.createCropCalendar = function(data, next) {
 exports.getCropCalendars = function(query, next) {
 	var filter;
 
-	var sql = "select t.*, case when max(t.type) = 'Sow Seed' then case when max(t.date_completed) is null then 'Sowing' when datediff(now(), max(t.date_completed)) < maturity_days then 'Vegetation' when datediff(now(), max(t.date_completed)) >= maturity_days && datediff(now(), max(t.date_completed)) < (maturity_days+35) then 'Reproductive' when datediff(now(), max(t.date_completed)) >= (maturity_days+35) && datediff(now(), max(t.date_completed)) < (maturity_days+65) then 'Ripening' when datediff(now(), max(t.date_completed)) >= (maturity_days+65) then 'Harvesting' end else 'Land Preparation' end as stage from ( select cct.*, ft.farm_name, ft.land_type, st.seed_name, st.maturity_days, null as type, null as date_completed from crop_calendar_table cct join farm_table ft on cct.farm_id = ft.farm_id join seed_table st on cct.seed_planted = st.seed_id ";
+	//var sql = "select t.*, case when max(t.type) = 'Sow Seed' then case when max(t.date_completed) is null then 'Sowing' when datediff(now(), max(t.date_completed)) < maturity_days then 'Vegetation' when datediff(now(), max(t.date_completed)) >= maturity_days && datediff(now(), max(t.date_completed)) < (maturity_days+35) then 'Reproductive' when datediff(now(), max(t.date_completed)) >= (maturity_days+35) && datediff(now(), max(t.date_completed)) < (maturity_days+65) then 'Ripening' when datediff(now(), max(t.date_completed)) >= (maturity_days+65) then 'Harvesting' end else 'Land Preparation' end as stage from ( select cct.*, ft.farm_name, ft.land_type, st.seed_name, st.maturity_days, null as type, null as date_completed from crop_calendar_table cct join farm_table ft on cct.farm_id = ft.farm_id join seed_table st on cct.seed_planted = st.seed_id ";
+	var sql = "select t.*, case when max(t.lp_type) is not null then case when max(sow_date_completed) is null then 'Sowing' when datediff(now(), max(sow_date_completed)) < maturity_days then 'Vegetation' when datediff(now(), max(sow_date_completed)) >= maturity_days && datediff(now(), max(sow_date_completed)) < (maturity_days+35) then 'Reproductive' when datediff(now(), max(sow_date_completed)) >= (maturity_days+35) && datediff(now(), max(sow_date_completed)) < (maturity_days+65) then 'Ripening' when datediff(now(), max(sow_date_completed)) >= (maturity_days+65) then 'Harvesting' end else 'Land Preparation' end as stage from ( select cct.*, ft.farm_name, ft.land_type, st.seed_name, st.maturity_days, null as sow_type, null as sow_date_completed, null as lp_type, null as lp_date_completed from crop_calendar_table cct join farm_table ft on cct.farm_id = ft.farm_id join seed_table st on cct.seed_planted = st.seed_id ";
 	for (var i = 0; i < query.status.length; i++) {
 		if (i == 0) {
 			sql += 'where ';
@@ -67,9 +68,9 @@ exports.getCropCalendars = function(query, next) {
 		sql += ' and '+query.where.key +' = ?';
 		sql = mysql.format(sql, query.where.val);
 	}
-	sql += " union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, type, date_completed from work_order_table where type = 'Sow Seed' ) as t group by calendar_id";
-	
-	console.log(sql);
+	//sql += " union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, type, date_completed from work_order_table where type = 'Sow Seed' ) as t group by calendar_id";
+	sql += " union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, type, date_completed,null, null from work_order_table where type = 'Sow Seed' and status = 'Completed' union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,type, date_completed from work_order_table where type = 'Land Preparation' and status = 'Completed' ) as t group by calendar_id order by farm_id";
+
 	mysql.query(sql, next);
 }
 

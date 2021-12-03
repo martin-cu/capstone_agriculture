@@ -18,6 +18,7 @@ exports.getCropCalendarTab = function(req, res) {
 				ripening: [],
 				harvesting: []
 			};
+			console.log(list);
 
 			list_obj.land_prep = list.filter(ele => ele.stage == 'Land Preparation');
 			list_obj.sowing = list.filter(ele => ele.stage == 'Sowing');
@@ -44,7 +45,7 @@ exports.getCropCalendarTab = function(req, res) {
 						wo_list[i].date_start = dataformatter.formatDate(new Date(wo_list[i].date_start), 'YYYY-MM-DD');
 					}
 
-					console.log(wo_list);
+					//console.log(wo_list);
 
 					for (prop in list_obj) {
 						for (var i = 0; i < list_obj[prop].length; i++) {
@@ -67,8 +68,9 @@ exports.ajaxCreateCropPlan = function(req, res) {
 	console.log(req.body);
 	var query = {
 		farm_id: req.body.farm_id,
-		land_prep_date: req.body.land_prep_date,
-		sowing_date: req.body.sowing_date,
+		land_prep_date: req.body.land_prep_date_end,
+		sowing_date: req.body.sowing_date_end,
+		harvest_date: req.body.harvest_date_end,
 		// planting_method: req.body.planting_method,
 		seed_planted: req.body.seed_id,
 		status: 'In-Progress',
@@ -80,8 +82,7 @@ exports.ajaxCreateCropPlan = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			console.log(plan);
-				res.send({ });
+			res.send(plan);
 		}
 	});
 }

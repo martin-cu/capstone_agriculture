@@ -35,7 +35,7 @@ exports.getMaterials = function(type, filter, next){
 	var sql;
 	var table;
 	if (type == "Seed") {
-		table = "SELECT seed_id as id, seed_name as name, seed_desc as mat_desc FROM seed_table";
+		table = "SELECT seed_id as id, seed_name as name, seed_desc as mat_desc, maturity_days, amount, units, average_yield FROM seed_table";
 	
 		if(filter == null){
 			sql = table + ";";
