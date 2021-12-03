@@ -91,99 +91,141 @@
         <div class="card-header py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
             <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Work Order Records</p>
         </div>
-        <div class="card-body">
-            <div class="card" id="TableSorterCard-1">
-                <div class="row table-topper align-items-center">
-                    <div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
-                    <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
-                        <h6 id="counter-1">Showing: <strong id="rowCount-1">ALL</strong>&nbsp;Row(s)</h6>
-                    </div>
-                    <div class="col-4 text-right" style="margin: 0px;padding: 5px 10px;"><a href="#" data-toggle="modal" data-target="#tablehelpModal"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;"></i></a></div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div>
-                            <table class="table table tablesorter tablesorter-bootstrap tablesorter9e88e9e114509 hasFilters" id="ipi-table" role="grid"><colgroup class="tablesorter-colgroup" id="work_order_table"><col style="width: 14.8%;"><col style="width: 23.2%;"><col style="width: 12%;"><col style="width: 26.5%;"><col style="width: 13.3%;"></colgroup>
-                                <thead class="thead-dark">
-                                    <tr style="background: #332C1F;" role="row" class="tablesorter-headerRow">
-                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="0" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="Status: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Status</div></th>
-                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="1" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="FARM: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">FARM</div></th>
-                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="2" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="TYPE: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">TYPE</div></th>
-                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="3" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="NAME: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">NAME</div></th>
-                                        
-                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="4" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="Date: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">Date</div></th>
-                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="5" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="WO_ID: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">WO ID</div></th>
-                                        <th style="background: rgb(51, 44, 31); user-select: none;" data-column="6" class="tablesorter-header tablesorter-headerUnSorted" tabindex="0" scope="col" role="columnheader" aria-disabled="false" aria-controls="ipi-table" unselectable="on" aria-sort="none" aria-label="notes: No sort applied, activate to apply an ascending sort"><div class="tablesorter-header-inner">notes</div></th>
-                                    </tr>
-                                <tr role="search" class="tablesorter-filter-row tablesorter-ignoreRow">
-                                    <td data-column="0">
-                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="0" aria-label="Filter &quot;Status&quot; column by..." data-lastsearchtime="1638066339162">
-                                    </td>
-                                    <td data-column="1">
-                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="1" aria-label="Filter &quot;FARM&quot; column by..." data-lastsearchtime="1638066339162">
-                                    </td>
-                                    <td data-column="2">
-                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="2" aria-label="Filter &quot;TYPE&quot; column by..." data-lastsearchtime="1638066339162">
-                                    </td>
-                                    <td data-column="3">
-                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="3" aria-label="Filter &quot;NAME&quot; column by..." data-lastsearchtime="1638066339162">
-                                    </td>
-                                    <td data-column="4">
-                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="4" aria-label="Filter &quot;Date&quot; column by..." data-lastsearchtime="1638066339162">
-                                    </td>
-                                    <td data-column="5">
-                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="5" aria-label="Filter &quot;notes&quot; column by..." data-lastsearchtime="1638066339162">
-                                    </td>
-                                    <td data-column="6">
-                                        <input type="search" placeholder="" class="tablesorter-filter" data-column="6" aria-label="Filter &quot;notes&quot; column by..." data-lastsearchtime="1638066339162">
-                                    </td>
-                                </tr></thead>
-                                <tbody aria-live="polite" aria-relevant="all">
-                                    {{#each wo_list}}
-                                    <tr role="row" class="">
-                                        <td>{{this.status}}</td>
-                                        <td>{{this.farm_name}}</td>
-                                        <td>{{this.type}}</td>
-                                        <td>{{this.crop_plan}}</td>
-                                        <td>{{this.date_created}}</td>
-                                        <td><a href="/farms/work_order&id={{this.work_order_id}}">{{this.work_order_id}}</a></td>
-                                        <td>{{this.notes}}</td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" role="dialog" tabindex="-1" id="tablehelpModal-1" aria-labeledby="tablehelpModal" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Table Filtering Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="table-responsive">
-                                    <table class="table" id="work_order_table">
-                                        <thead>
-                                            <tr>
-                                                <th style="width:1%">Priority</th>
-                                                <th style="width:9%">Operator</th>
-                                                <th style="width:30%">Description</th>
-                                                <th style="width:60%">Examples</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        </tbody>
-                                    </table>
+         <div class="card-body">
+                            <div class="card" id="TableSorterCard-1">
+                                <div class="row table-topper align-items-center">
+                                    <div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
+                                    <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
+                                        <h6 id="counter-1">Showing: <strong id="rowCount-1">ALL</strong>&nbsp;Row(s)</h6>
+                                    </div>
+                                    <div class="col-4 text-right" style="margin: 0px;padding: 5px 10px;"><a href="#" data-toggle="modal" data-target="#tablehelpModal"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;"></i></a></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div>
+                                            <table class="table table tablesorter" id="ipi-table">
+                                                <thead class="thead-dark">
+                                                    <tr style="background: #332C1F;">
+                                                        <th style="background: #332C1F;">Status</th>
+                                                        <th style="background: #332C1F;">FARM</th>
+                                                        <th style="background: #332C1F;">Type</th>
+                                                        <th style="background: #332C1F;">NAME</th>
+                                                        <th style="background: #332C1F;">Date</th>
+                                                        <th style="background: #332C1F;">wo id</th>
+                                                        <th style="background: #332C1F;">notes</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody aria-live="polite" aria-relevant="all">
+                                                 {{#each wo_list}}
+                                                   <tr role="row">
+                                                        <td>{{this.status}}</td>
+                                                        <td>{{this.farm_name}}</td>
+                                                        <td>{{this.type}}</td>
+                                                        <td>{{this.crop_plan}}</td>
+                                                        <td>{{this.date_created}}</td>
+                                                        <td><a href="/farms/work_order&id={{this.work_order_id}}">{{this.work_order_id}}</a></td>
+                                                        <td>{{this.notes}}</td>
+                                                    </tr>
+                                                    {{/each}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" role="dialog" tabindex="-1" id="tablehelpModal-1" aria-labeledby="tablehelpModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Table Filtering Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:1%">Priority</th>
+                                                                <th style="width:9%">Operator</th>
+                                                                <th style="width:30%">Description</th>
+                                                                <th style="width:60%">Examples</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td><code>|</code>&nbsp;or&nbsp;&nbsp;<code>OR</code><br></td>
+                                                                <td>Logical "or" (Vertical bar). Filter the column for content that matches text from either side of the bar.<br></td>
+                                                                <td><code>&lt;20 | &gt;40</code>&nbsp;(matches a column cell with either "&lt;20" or "&gt;40")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2</td>
+                                                                <td><code>&amp;&amp;</code>&nbsp;or <code>AND</code><br></td>
+                                                                <td>Logical "and". Filter the column for content that matches text from either side of the operator.<br></td>
+                                                                <td><code>&gt;20 &amp;&amp; &gt;40</code>&nbsp;(matches a column cell that contains both "&gt;20" and "&lt;40")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>3</td>
+                                                                <td><code>/\d/</code><br></td>
+                                                                <td>Add any regex to the query to use in the query ("mig" flags can be included&nbsp;<code>/\w/mig</code>)<br></td>
+                                                                <td><code>/b[aeiou]g/i</code>&nbsp;(finds "bag", "beg", "BIG", "Bug", etc);<code>&gt;/r$/</code>&nbsp;(matches text that ends with an "r")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4</td>
+                                                                <td><code>&lt; &lt;= &gt;= &gt;</code><br></td>
+                                                                <td>Find alphabetical or numerical values less than or greater than or equal to the filtered query .<br></td>
+                                                                <td><code>&lt;=10</code>&nbsp;(find values greater than or equal to 10)<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>5</td>
+                                                                <td><code>!</code>&nbsp;or&nbsp;<code>!=</code><br></td>
+                                                                <td>Not operator, or not exactly match. Filter the column with content that&nbsp;<strong>do not</strong>&nbsp;match the query. Include an equal (<code>=</code>), single (<code>'</code>) or double quote (<code>"</code>) to exactly&nbsp;<em>not</em>&nbsp;match a filter.<br><br><br></td>
+                                                                <td><code>!e</code>&nbsp;(find text that doesn't contain an "e");<code>!"ELISA"</code>&nbsp;(find content that does not exactly match "ELISA")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>6</td>
+                                                                <td><code>"</code>&nbsp;or&nbsp;<code>=</code><br></td>
+                                                                <td>To exactly match the search query, add a quote, apostrophe or equal sign to the beginning and/or end of the query<br></td>
+                                                                <td><code>abc"</code>&nbsp;or&nbsp;<code>abc=</code>&nbsp;(exactly match "abc")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>7</td>
+                                                                <td><code>-</code>&nbsp;or <code>to</code><br></td>
+                                                                <td>Find a range of values. Make sure there is a space before and after the dash (or the word "to").<br></td>
+                                                                <td><code>10 - 30</code>&nbsp;or&nbsp;<code>10 to 30</code>&nbsp;(match values between 10 and 30)<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>8</td>
+                                                                <td><code>?</code><br></td>
+                                                                <td>Wildcard for a single, non-space character.<br></td>
+                                                                <td><code>S?c</code>&nbsp;(finds "Sec" and "Soc", but not "Seec")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>8</td>
+                                                                <td><code>*</code><br></td>
+                                                                <td>Wildcard for zero or more non-space characters.<br></td>
+                                                                <td><code>B*k</code>&nbsp;(matches "Black" and "Book")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>9</td>
+                                                                <td><code>~</code><br></td>
+                                                                <td>Perform a fuzzy search (matches sequential characters) by adding a tilde to the beginning of the query<br></td>
+                                                                <td><code>~bee</code>&nbsp;(matches "Bruce Lee" and "Brenda Dexter"), or&nbsp;<code>~piano</code>&nbsp;(matches "Philip Aaron Wong")<br></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>10</td>
+                                                                <td>text<br></td>
+                                                                <td>Any text entered in the filter will&nbsp;<strong>match</strong>&nbsp;text found within the column<br></td>
+                                                                <td><code>abc</code>&nbsp;(finds "abc", "abcd", "abcde", etc);<code>SEC</code>&nbsp;(finds "SEC" and "Analytical SEC")<br></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer"><button class="btn btn-danger" type="button" data-dismiss="modal">Close</button></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="modal-footer"><button class="btn btn-danger" type="button" data-dismiss="modal">Close</button></div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
