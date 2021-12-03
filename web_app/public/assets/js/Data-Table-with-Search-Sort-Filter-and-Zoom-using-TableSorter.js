@@ -2,7 +2,7 @@ $(function() {
     
     // Table zoom scaling START
 	var _zoomLevel = 100;
-	var oDiv = document.getElementById("ipi-table");
+	var oDiv = document.getElementsByClassName(".table.table.tablesorter");
 	$("#zoom_in").click(function(e){
 		_zoomLevel += 10;
 		if (typeof oDiv.style.MozTransform == "string")
@@ -21,7 +21,7 @@ $(function() {
 	// Table zoom scaling END
 
 	// call the tablesorter plugin
-	$("#ipi-table").tablesorter({
+	$(".table.table.tablesorter").tablesorter({
 		theme: 'bootstrap',
 
 		// hidden filter input/selects will resize the columns, so try to minimize the change
@@ -161,7 +161,7 @@ $(function() {
 
 	// Clear stored filters - added v2.25.6
 	$('.resetsaved').click(function() {
-		$('#ipi-table').trigger('filterResetSaved');
+		$('.table.table.tablesorter').trigger('filterResetSaved');
 
 		// show quick popup to indicate something happened
 		var $message = $('<span class="results"> Reset</span>').insertAfter(this);
