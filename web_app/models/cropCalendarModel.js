@@ -69,6 +69,7 @@ exports.getCropCalendars = function(query, next) {
 	}
 	sql += " union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, type, date_completed from work_order_table where type = 'Sow Seed' ) as t group by calendar_id";
 	
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

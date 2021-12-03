@@ -710,17 +710,20 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			var active_calendar = crop_calendar.filter(ele => ele.farm_id == farm_id && ele.status == 'In-Progress' || ele.status == 'Active')[0];
 			var method = active_calendar.method;
 			var obj;
+			var temp_d;
 			console.log(method);
 			if (method == 'Transplanting') {
-				target_date = new Date(land_prep.date_due);
+				temp_d = land_prep.date_completed != null || land_prep.date_completed != undefined ? land_prep.date_completed : land_prep.date_due;
+				target_date = new Date(temp_d);
 			}
 			else if (method == 'Direct Seeding') {
-				target_date = new Date(sowing.date_due);
+				temp_d = sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due;
+				target_date = new Date(temp_d);
 				target_date = target_date.getDate() + 12;
 			}
 
 			DAT = new Date();
-			DAT = DAT.getDate() - (new Date (sowing.date_due).getDate());
+			DAT = DAT.getDate() - (new Date (sowing.date_completed).getDate());
 			console.log('DAT: '+DAT);
 			
 			//target_date = formatDate(target_date, 'YYYY-MM-DD');
@@ -729,11 +732,11 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			if (details.k_lvl >= 30) {
 				for (var i = 0; i < 2; i++) {
 					if (i == 0) {
-						k_date = new Date(land_prep.date_due);
+						k_date = new Date(land_prep.date_completed != null || land_prep.date_completed != undefined ? land_prep.date_completed : land_prep.date_due);
 						k_stage = 'Basal Potassium Application';
 					}
 					else {
-						k_date = new Date(sowing.date_due);
+						k_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
 						k_date = new Date(k_date.setDate(k_date.getDate() + 35));
 						k_stage = 'Early Panicle Potassium Application';
 					}
@@ -931,11 +934,10 @@ function appendFertilizerHistory(records) {
 	var keys = [];
 	var resources_arr = [];
 	var date, desc, fertilizer, amount;
-
 	for (var i = 0; i < records.length; i++) {
 		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
 
-		date = formatDate(new Date(records[i].date_due), 'YYYY-MM-DD');
+		date = formatDate(new Date(records[i].date_completed != null || records[i].date_completed != undefined ? records[i].date_completed : records[i].date_due), 'YYYY-MM-DD');
 		desc = records[i].notes == null || records[i].notes == undefined ? 'N/A' : records[i].notes;
 
 		date = createDOM({ type: 'td', class: 'align-middle', style: '', html: date });

@@ -60,11 +60,12 @@ exports.getDetailedWO = function(req, res) {
 			details['date_start'] = dataformatter.formatDate(new Date(details['date_start']), 'YYYY-MM-DD');
 			details['date_due'] = dataformatter.formatDate(new Date(details['date_due']), 'YYYY-MM-DD');
 			details['date_created'] = dataformatter.formatDate(new Date(details['date_created']), 'YYYY-MM-DD');
+			details['date_completed'] = dataformatter.formatDate(new Date(details['date_completed']), 'YYYY-MM-DD');
 
 			var type;
 			var html_data = {
 				work_order: details,
-				editable: details.status == 'Completed' ? false : true
+				editable: details.status == 'Completed' || details.status == 'Cancelled' ? false : true
 			};
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
 
@@ -238,6 +239,10 @@ exports.editWorkOrder = function(req, res) {
 		work_order_id: req.body.wo_id
 	};
 
+	console.log(query.status);
+
+	query['date_completed'] = dataformatter.formatDate(new Date(), 'YYYY-MM-DD');
+
 	workOrderModel.updateWorkOrder(query, filter, function(err, list) {
 		if (err)
 			throw err;
@@ -254,6 +259,8 @@ exports.editWorkOrder = function(req, res) {
 						resource_type = 'Fertilizer;'
 					}
 
+					console.log(resource_type, req.body[''+resource_type+'_id']);
+					console.log(req.body[''+resource_type+'_qty']);
 					var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
 						, req.body[''+resource_type+'_qty'], filter.work_order_id);
 

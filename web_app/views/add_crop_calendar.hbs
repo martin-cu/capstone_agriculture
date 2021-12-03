@@ -69,7 +69,7 @@ li > span {
 
                                 <div class="col">
                                 <label for="crop_plan">Crop Plan <span style="color: #CA4E0C;">*</span></label>
-			                    <input type="text" class="form-control" id="crop_plan" name="crop_plan" value="PALAY 2022" disabled>
+			                    <input type="text" class="form-control" id="crop_plan" name="crop_plan" value="">
 
                                 </div>
 
@@ -232,6 +232,15 @@ li > span {
                             </div>
 
                         </div>
+                        <div class="row w-50">
+                            <div class="col">
+                                <label for="method">Planting Method</label>
+                                <select class="form-select" id="method" name="method">
+                                    <option value="Transplanting">Transplanting</option>
+                                    <option value="Direct Seeding">Direct Seeding</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <h6 style="font-weight: bold; margin-top: 40px">Planting Dates</h6>
@@ -253,27 +262,27 @@ li > span {
                     </div>
 
             {{!-- WEATHER FORECAST --}}
-            <h6 style="font-weight: bold; margin-top: 40px">14-Day Weather Forecast and Expected yield</h6>
+            <h6 style="font-weight: bold; margin-top: 40px"><!-- 14-Day Weather Forecast and  -->Expected yield</h6>
 
             <div class="form-group" style="margin-left: 5px;">
                 <div class="row">
             
-                    <div class="col" style="padding-top: 10px;">
+                    <!-- <div class="col" style="padding-top: 10px;">
                     <label for="forecast_filer">Weather Forecast Filter Date</label>
                     <input type="date" class="form-control" id="forecast_filter" name="forecast_filter">
-                    </div>
+                    </div> -->
 
                     <div class="col" style="padding-top: 10px;">
                     <label for="seed_expected_yield">Expected Yield (cavans/ha)</label>
-                    <input type="text" class="form-control" id="seed_expected_yield" name="seed_expected_yield" value="0 cavans/ha" disabled>
+                    <input type="text" class="form-control w-50" id="seed_expected_yield" name="seed_expected_yield" value="0 cavans/ha" disabled>
                     </div>
 
             </div>
             </div>
 
-            <div class="forecast_cont" id="weather_forecast" style="margin: 0px auto">
+            <div class="forecast_cont hide" id="weather_forecast" style="margin: 0px auto">
             
-			<div class="mx-4 bg-secondary forecast_body" style="margin-top: 20px">
+			<div class="mx-4 bg-secondary hide forecast_body" style="margin-top: 20px">
 
 			    <div class="d-flex w-100 px-3 py-2" style="min-height: 50px; background-color: #212529; color: white">
 					<div class="" id="icon_detail" style="font-size: 40px;">
@@ -313,10 +322,10 @@ li > span {
 				</div>
 			</div>
 
-			<ol class="carousel-indicators hide" id="page">
+			<!-- <ol class="carousel-indicators hide" id="page">
 			    <li onclick="switchWeek(0, this)" class="active"></li>
 			    <li onclick="switchWeek(1, this)"></li>
-			</ol>
+			</ol> -->
 
 			</div>
             {{!-- END OF WEATHER FORECAST --}}
@@ -653,4 +662,4 @@ function fixStepIndicator(n) {
 
 </script>
 
-{{!-- <script src="../js/crop_calendar.js"></script> --}}
+<script src="../js/crop_calendar.js"></script>

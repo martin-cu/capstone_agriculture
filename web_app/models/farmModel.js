@@ -39,8 +39,13 @@ exports.getFarmData = function(data, next) {
 	if (JSON.stringify(data) != '{ }') {
 		if (data.hasOwnProperty('where') && data.where != null) {
 			if (data.where.hasOwnProperty('key') && data.where.key != null) {
-				sql += ' where '+data.where.key+' = ?';
-				sql = mysql.format(sql, data.where.value);
+				if (data.where.type != 'Data validation') {
+					sql += ' where '+data.where.key+' = ?';
+					sql = mysql.format(sql, data.where.value);
+				}
+				else {
+					sql += ' where '+data.where.key+' '+data.where.value;
+				}
 			}
 			else {
 				sql += ' where '+data.where;
@@ -52,6 +57,7 @@ exports.getFarmData = function(data, next) {
 		
 		}
 	}
+	
 	mysql.query(sql, next);
 };
 

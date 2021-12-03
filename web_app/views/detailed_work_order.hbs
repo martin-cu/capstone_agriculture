@@ -5,144 +5,147 @@
     <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
             <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Work Order {{work_order.work_order_id}}</h6>
-            <input type="hidden" name="wo_id" value="{{work_order.work_order_id}}" class="hide">
         </div>
         <div class="card-body">
-            <div class="">
-                <table class="table table-sm detailed_cont">
-                    <thead>
-                        <tr>
-                            <td style="width: 1px;">Status</td>
-                            <td style="width: 50px;">
-                            	<select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" id="status" name="status" readonly>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Completed">Completed</option>
-                                </select>
-                            </td>
-                            <td></td>
-                            <td>
-                                {{#if editable}}
-                                <button class="btn btn-primary float-right" type="button" id="wo_edit">Edit</button>
-                                {{/if}}
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        	<td colspan="4"></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Farm Information</td>
-                            <td style="width: 50px;"></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: normal;">Farm</td>
-                            <td><input type="text" class="" required="" readonly id="farm_name" name="farm_name" value="{{work_order.farm_name}}"></td>
-                            <td>Crop Calendar</td>
-                            <td>
-                                <input type="text" class="form-control" id="crop_plan" name="crop_plan" value="{{work_order.crop_plan}}" readonly>
-                                <input type="hidden" name="crop_calendar_id" id="crop_calendar_id" value="{{work_order.crop_calendar_id}}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: normal;">Type</td>
-                            <td>
-                            	<!-- <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly id="type" name="type">
-                                    <option value="">Pesticide Application</option>
-                                    <option value="">Fertilizer Application</option>
-                                </select> -->
-                                <input type="text" required="" readonly id="type" name="type" value="{{work_order.type}}">
-                            </td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: normal;">Description</td>
-                            <td colspan="3">
-                                <textarea type="text" class="w-50" required="" readonly id="notes" name="notes"  rows="3" style="resize: none;" value="{{work_order.notes}}"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Order Details</td>
-                            <td style="width: 0px;"></td>
-                            <td style="width: 0px;font-weight: bold;"></td>
-                            <td style="width: 0px;"></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: normal;">Start Date</td>
-                            <td style="width: 100px;">
-                                <input type="date" required="" readonly id="date_start" name="date_start" value="{{work_order.date_start}}">
-                            </td>
-                            <td style="width: 100px;">Completion Date</td>
-                            <td style="width: 100px;">
-                            	{{#if work_order.date_completed}}
-                                <input type="date" required="" readonly id="" name="" value="">
-                            	{{else}}
-                            	N/A
-                            	{{/if}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: normal;">Due Date</td>
-                            <td ><input type="date" required="" readonly id="date_due" name="date_due" value="{{work_order.date_due}}"></td>
-                            <td ></td>
-                            <td>
-                                
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: normal;"></td>
-                            <td style="width: 100px;"></td>
-                            <td style="width: 100px;"></td>
-                            <td style="width: 100px;"></td>
-                        </tr>
-
-                        <!-- <td style="width: 0px;font-weight: bold;">Harvest Details</td> -->
-                        <!-- <td style="width: 100px;">Rice Yield</td>
-                            <td style="width: 100px;"><input type="number" style="width: 80px;"><span style="margin-left: 5px;">sacks</span></td> -->
-
-                        {{#if resources}}
-                        <tr>
-                            <td style="font-weight: normal;"><strong>{{resources.title}}</strong><br></td>
-                            <td style="width: 100px;"></td>
-                            <td style="width: 100px;"></td>
-                            <td style="width: 100px;"></td>
-                        </tr>
-                            {{#each resources}}
+            <form method="post" action="/edit_work_order" id="edit_wo_form">
+                <input type="hidden" name="wo_id" value="{{work_order.work_order_id}}" class="hide">
+                <div class="">
+                    <table class="table table-sm detailed_cont">
+                        <thead>
                             <tr>
-                            	<td></td>
-                                <td colspan="3">
-                                	<div class="d-flex">
-                                		<input type="text" required="" readonly id="{{../resources.lbl.name}}" name="{{../resources.lbl.name}}" value="{{this.material_name}}" style="">
-			                            <input class="hide" style="" type="text" id="{{../resources.lbl.item}}" name="{{../resources.lbl.item}}" value="{{this.item_id}}" readonly="true">
-			                            <div class="d-flex flex-column" style="">
-	                                        <input class=" mx-2" style="width: 100px;" type="number" id="{{../resources.lbl.qty}}" name="{{../resources.lbl.qty}}" value="{{this.qty}}" readonly>
-	                                    </div>
-                                	</div>
-			                    		
+                                <td style="width: 1px;">Status</td>
+                                <td style="width: 50px;">
+                                    <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" id="status" name="status" readonly>
+                                        <option value="Pending" {{#compareTwoValues work_order.status 'Pending' operator='==='}}selected{{/compareTwoValues}}>Pending</option>
+                                        <option value="In-Progress" {{#compareTwoValues work_order.status 'In-Progress' operator='==='}}selected{{/compareTwoValues}}>In-Progress</option>
+                                        <option value="Completed" {{#compareTwoValues work_order.status 'Completed' operator='==='}}selected{{/compareTwoValues}}>Completed</option>
+                                        <option value="Cancelled" {{#compareTwoValues work_order.status 'Cancelled' operator='==='}}selected{{/compareTwoValues}}>Cancelled</option>
+                                    </select>
                                 </td>
-
+                                <td></td>
+                                <td>
+                                    {{#if editable}}
+                                    <button class="btn btn-primary float-right" type="button" id="wo_edit">Edit</button>
+                                    {{/if}}
+                                </td>
                             </tr>
-                            {{/each}}
-                        {{/if}}
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Farm Information</td>
+                                <td style="width: 50px;"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal;">Farm</td>
+                                <td><input type="text" class="" required="" readonly id="farm_name" name="farm_name" value="{{work_order.farm_name}}"></td>
+                                <td>Crop Calendar</td>
+                                <td>
+                                    <input type="text" class="form-control" id="crop_plan" name="crop_plan" value="{{work_order.crop_plan}}" readonly>
+                                    <input type="hidden" name="crop_calendar_id" id="crop_calendar_id" value="{{work_order.crop_calendar_id}}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal;">Type</td>
+                                <td>
+                                    <!-- <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly id="type" name="type">
+                                        <option value="">Pesticide Application</option>
+                                        <option value="">Fertilizer Application</option>
+                                    </select> -->
+                                    <input type="text" required="" readonly id="type" name="type" value="{{work_order.type}}">
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal;">Description</td>
+                                <td colspan="3">
+                                    <textarea type="text" class="w-50" readonly id="notes" name="notes"  rows="3" style="resize: none;" value="{{work_order.notes}}"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Order Details</td>
+                                <td style="width: 0px;"></td>
+                                <td style="width: 0px;font-weight: bold;"></td>
+                                <td style="width: 0px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal;">Start Date</td>
+                                <td style="width: 100px;">
+                                    <input type="date" required="" readonly id="date_start" name="date_start" value="{{work_order.date_start}}">
+                                    <input type="hidden" id="date_created" name="date_created" value="{{work_order.date_created}}">
+                                </td>
+                                <td style="width: 100px;">Completion Date</td>
+                                <td style="width: 100px;">
+                                    {{#if work_order.date_completed}}
+                                    <input type="date" required="" readonly id="date_completed" name="date_completed" value="{{work_order.date_completed}}">
+                                    {{else}}
+                                    N/A
+                                    {{/if}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal;">Due Date</td>
+                                <td ><input type="date" required="" readonly id="date_due" name="date_due" value="{{work_order.date_due}}"></td>
+                                <td ></td>
+                                <td>
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal;"></td>
+                                <td style="width: 100px;"></td>
+                                <td style="width: 100px;"></td>
+                                <td style="width: 100px;"></td>
+                            </tr>
 
-                    </tbody>
-                </table>
-            </div>
+                            <!-- <td style="width: 0px;font-weight: bold;">Harvest Details</td> -->
+                            <!-- <td style="width: 100px;">Rice Yield</td>
+                                <td style="width: 100px;"><input type="number" style="width: 80px;"><span style="margin-left: 5px;">sacks</span></td> -->
 
-            <div id="btn_cont">
-    
-            </div>
+                            {{#if resources}}
+                            <tr>
+                                <td style="font-weight: normal;"><strong>{{resources.title}}</strong><br></td>
+                                <td style="width: 100px;"></td>
+                                <td style="width: 100px;"></td>
+                                <td style="width: 100px;"></td>
+                            </tr>
+                                {{#each resources}}
+                                <tr>
+                                    <td></td>
+                                    <td colspan="3">
+                                        <div class="d-flex">
+                                            <input type="text" required="" readonly id="{{../resources.lbl.name}}" name="{{../resources.lbl.name}}" value="{{this.material_name}}" style="">
+                                            <input class="hide" style="" type="text" id="{{../resources.lbl.item}}" name="{{../resources.lbl.item}}" value="{{this.item_id}}" readonly="true">
+                                            <div class="d-flex flex-column" style="">
+                                                <input class=" mx-2" style="width: 100px;" type="number" id="{{../resources.lbl.qty}}" name="{{../resources.lbl.qty}}" value="{{this.qty}}" readonly>
+                                            </div>
+                                        </div>
+                                            
+                                    </td>
 
+                                </tr>
+                                {{/each}}
+                            {{/if}}
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="btn_cont">
+        
+                </div>
+            </form>
         </div>
     </div>
 </div>

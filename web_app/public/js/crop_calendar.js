@@ -300,7 +300,7 @@ $(document).ready(function() {
 		console.log(form_data);
 
 		$.post('/create_crop_plan', form_data, function(crop_plan) {
-
+			window.location.href = '/crop_calendar';
 		});
 	})
 
@@ -314,7 +314,7 @@ $(document).ready(function() {
 
 	});
 
-	$.get('/get_farm_list', {  }, function(result) {
+	$.get('/get_farm_list', { where: { key: 't1.farm_id', value: 'not in (SELECT farm_id FROM capstone_agriculture_db.crop_calendar_table where status != "Completed")', type: 'Data validation' } }, function(result) {
 		farm_list = result;
 		for (var i = 0; i < result.length; i++) {
 			farm_select.append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
@@ -326,9 +326,9 @@ $(document).ready(function() {
 		changeFarmDetails($(this).val(), farm_list);
 	});
 
-	$.get('/getMaterials', { type: 'Seed' }, function(result) {
+	$.get('/get_materials', { type: 'Seed' }, function(result) {
 		for (var i = 0; i < result.length; i++) {
-			seed_select.append("<option value='"+result[i].seed_id+"'>"+result[i].seed_name+"</option>");
+			seed_select.append("<option value='"+result[i].id+"'>"+result[i].name+"</option>");
 		}
 	});
 
