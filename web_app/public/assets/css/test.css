@@ -61,7 +61,7 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
 }
 
 #back {
-    
+
     width: 25px;
     border-radius: 100%;
     background-color: white;
@@ -83,7 +83,7 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
 }
 
 #footer {
-    margin-top: auto; 
+    margin-top: auto;
     background-color: #EEEEEE !important;
  }
 
@@ -119,7 +119,7 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
     /* background-color: #FCFCFC; */
     background-color: white;
 }
-/* 
+/*
 #map {
     height: 400px;
     width: 100%;
@@ -132,11 +132,13 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
 
 /* START OF MULTI-STEP FORM */
 
+/* TAB 1 */
+
 /* Hide all steps by default: */
 .tab {
     display: none;
 }
-  
+
 /* Make circles that indicate the steps of the form: */
 .step {
     height: 15px;
@@ -148,16 +150,80 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
     display: inline-block;
     opacity: 0.5;
 }
-  
+
 /* Mark the active step: */
 .step.active {
     opacity: 1;
 }
-  
+
 /* Mark the steps that are finished and valid: */
 .step.finish {
     background-color: #BDBE14;
 }
+
+/* END OF TAB 1 */
+
+/* TAB 2 */
+
+/* Hide all steps by default: */
+.tab2 {
+    display: none;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step2 {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+}
+
+/* Mark the active step: */
+.step2.active {
+    opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step2.finish {
+    background-color: #BDBE14;
+}
+
+/* END OF TAB 2 */
+
+/* TAB 3 */
+
+/* Hide all steps by default: */
+.tab3 {
+    display: none;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step3 {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+}
+
+/* Mark the active step: */
+.step3.active {
+    opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step3.finish {
+    background-color: #BDBE14;
+}
+
+/* END OF TAB 2 */
 
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
@@ -230,7 +296,7 @@ div.card-header {
 
 .nav-tabs .nav-link.active {
     color: white;
-    background: #BDBE14 !important; 
+    background: #BDBE14 !important;
 }
 
 .nav-tabs .nav-link {
@@ -240,7 +306,7 @@ div.card-header {
 
 .nav-pills .nav-link.active {
     color: white;
-    background: #BDBE14 !important; 
+    background: #BDBE14 !important;
 }
 
 .nav-pills .nav-link {
@@ -253,7 +319,7 @@ div.card-header {
 
 /* END OF NAV TABS */
 
-div.card-header.py-3 {
+div.card-header.mini.py-3 {
     background-color: #212529 !important;
     color: white !important;
 }

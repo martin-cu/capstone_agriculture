@@ -1,12 +1,13 @@
 <style>
     thead {
-        background-color: #212529;
+        background-color: #212529 !important;
         color: white;
     }
 
     table td {
         color: #332c1f;
     }
+    
 </style>
 
 <div class="container-fluid">
@@ -20,7 +21,7 @@
 
             <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
 
-                <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff; height:auto">
+                <div class="card-header d-flex justify-content-between align-items-center" style="height:auto">
 
                     <ul class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
                         <li class="nav-item"><a id="diagnoses-tab" class="nav-link active" data-toggle="tab" href="#diagnoses"role="tab" aria-controls="diagnoses" aria-selected="true" 
@@ -42,6 +43,7 @@
                     </div>
 
                     <div class="card-body">
+                             
                             {{!-- TAB CONTENT --}}
 
                             <div class="tab-content" id="nav-tabContent">
@@ -49,11 +51,240 @@
                                 {{!-- TAB 1 --}}
                                 <div class="tab-pane fade show active" id="diagnoses" role="tabpanel" aria-labelledby="diagnoses-tab">
                                 
+                                {{!-- ADD DIAGNOSIS --}}
+                                <div role="tablist" id="accordion-diagnosis" style="margin-bottom: 20px;">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
+                                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-diagnosis .item-diagnosis" href="#accordion-diagnosis .item-diagnosis" style="font-size: 16px;color: #584C33!important;font-weight: bold;">Create New Diagnosis</a></h5>
+                                        </div>
+                                        <div class="collapse item-diagnosis" role="tabpanel" data-parent="#accordion-diagnosis">
+                                            
+                                        <div class="card-body" style="color: #332c1f;">
+                                            {{!-- START FORM --}}
+              	                            <form autocomplete="off" method="post" action="" id="add_diagnosis_form">
+                    
+                                            {{!-- STEP 1 --}}
+                                            <div class="tab">
+                                            <div class="modal_body_content" id="body_step1">
+                                                    <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Add Diagnosis Information</h5>
+
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                        <label for="diagnosis_ID">Diagnosis ID <span style="color: #CA4E0C;">*</span></label>
+                                                            <input type="text" class="form-control" id="diagnosis_ID" name="diagnosis_ID" value="DG-xx" disabled>
+
+                                                        </div>
+
+                                                        <div class="col">
+                                                            <label for="type">Farm Affected <span style="color: #CA4E0C;">*</span></label>
+                                                            <select class="form-select" id="farm_affected" name="farm_affected">
+                                                                
+                                                            </select>
+                                                        </div>     
+
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                        <label for="type">Type <span style="color: #CA4E0C;">*</span></label>
+                                                            <select class="form-select" id="type" name="type">
+                                                            <option value="Pest">Pest</option>
+                                                            <option value="Disease">Disease</option>
+                                                        </select>
+
+                                                        </div>
+
+                                                        <div class="col">
+                                                        <label for="name">Pest/Disease Name <span style="color: #CA4E0C;">*</span></label>
+                                                            <select class="form-select" id="name" name="name">
+                                                
+                                                        </select>
+
+                                                        </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                        <label for="date_diagnosed">Date Diagnosed <span style="color: #CA4E0C;">*</span></label>
+                                                        <input type="date" class="form-control" id="date_diagnosed" name="date_diagnosed">
+
+                                                        </div>
+
+                                                    <div class="col">
+                                                            <label for="type">Diagnosed By <span style="color: #CA4E0C;">*</span></label>
+                                                            <select class="form-select" id="diagnosed_by" name="diagnosed_by">
+                                                                
+                                                            </select>
+                                                        </div>  
+
+                                                    </div>
+                                                    
+                                                    </div>
+
+                                    {{!-- DAMAGE ASSESSMENT --}}
+                                    <h6 style="font-weight: bold; margin-top: 40px">Damage Assessment</h6>
+
+                                    <div class="form-group" style="margin-left: 5px;">
+                                        
+                                        <div class="row">
+
+                                            <div class="col" style="padding-top: 10px;">
+                                                <label for="num_affected_crops">Number of Affected Crops <span style="color: #CA4E0C;">*</span></label>
+                                                <input type="text" class="form-control" id="num_affected_crops" name="num_affected_crops" placeholder="Qty">
+                                            </div>
+
+                                            <div class="col" style="padding-top: 10px;">
+                                                <label for="num_crops_lost">Number of Crops Lost <span style="color: #CA4E0C;">*</span></label>
+                                                <input type="text" class="form-control" id="num_crops_lost" name="num_crops_lost" placeholder="Qty">
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                            
+                                    {{!-- END OF DAMAGE ASSESSMENT --}}
+
+
+                                    </div>
+                                            </div>
+                                            {{!-- END OF STEP 1 --}}
+
+                                            {{!-- STEP 2 --}}
+                                            <div class="tab">
+                                                <div class="hide modal_body_content" id="body_step2">
+                                                    <h5 for="" style="font-weight: bold;  padding-bottom: 5px; padding-top: 10px">Step 2: View Pesticide Application Plan</h5>
+
+                                                    {{!-- START CARDS --}}
+                                                    <div class="row" style="margin-top: 20px">
+
+                                                    {{!-- PEST/DISEASE INFORMATION CARD --}}
+                                                        <div class="col-lg-5 col-xxl-4">         
+                                                        <div class="card shadow mb-4">
+
+                                                            <div class="card-header mini py-3">
+                                                            <h6 class="fw-bold m-0" style="color: #FFFFFF;">(Pest/Disease)<br></h6>
+                                                            </div>
+
+                                                            <div class="card-body" style="height: 239.97px;">
+
+                                                            <div class="table-responsive" style="border-style: none;">
+                                                                <table class="table">
+                                                                <thead>
+                                                                    {{!-- <tr></tr> --}}
+                                                                </thead>
+
+                                                                <tbody>
+                                                                    <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">(Pest/Disease) ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">(Pest/Disease) Name<br></span><span class="d-xxl-flex justify-content-xxl-start">[(Pest/Disease) Name]<br></span></td>
+                                                                    </tr>
+
+                                                                    <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                                                
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    {{!-- END OF PEST/DISEASE INFORMATION CARD --}}
+
+
+                                                    {{!-- PEST APPLICATION PLAN CARD --}}
+                                                        <div class="col-lg-7 col-xxl-8">
+
+                                                                <div class="card shadow mb-4">
+                                                                    <div class="card-header mini py-3">
+                                                                        <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan Information<br></h6>
+                                                                    </div>
+                                                                <div class="card-body">
+                                                                    <div class="table-responsive" style="border-style: none;">
+                                                                        <table class="table">
+                                                                            <thead>
+                                                                            {{!-- <tr></tr> --}}
+                                                                            </thead>
+                                                                        <tbody>
+                                                                            <tr style="border-style: none;">
+                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
+                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
+                                                                            </tr>
+
+                                                                            <tr style="border-style: none;">
+                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
+                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
+                                                                            </tr>
+
+                                                                            <tr style="border-style: none;">
+                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
+                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
+                                                                            </tr>
+                                                                        </tbody>
+
+                                                                        </table>
+                                                                    </div>
+                                                                    
+                                                                    </div>
+
+                                                                </div>
+
+                                                        </div>
+                                                        {{!-- END OF PEST APPLICATION PLAN CARD --}}
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            {{!-- END OF STEP 2 --}}
+
+                                            </form>
+                                            {{!-- END FORM --}}
+
+                                            <!-- Circles which indicates the steps of the form: -->
+                                            <div style="text-align:center;padding-top:40px;padding-bottom:10px">
+                                                <span class="step"></span>
+                                                <span class="step"></span>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <div class="modal_footer_content" id="_step1">
+                                                    <button type="button" class="btn round btn-secondary" onclick='window.location="/pest_and_disease/diagnose"'>Cancel</button>
+                                                    <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1)">Next</button>
+                                                </div>
+
+                                                <div class="hide modal_footer_content" id="_step2">
+                                                    <button type="button" class="btn round btn-secondary prev_step" value="_step1" onclick="nextPrev(-1)">Back</button>
+                                                    <button type="button" class="btn round btn-primary" form="add_diagnosis_form">Create Diagnosis</button>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {{!-- END OF ADD DIAGNOSIS --}}
+                                
                                 {{!-- <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
                                 <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
                                     <div class="input-group"><input id="filterDiagnosesTable" onkeyup="diagnosesFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
                                 </form> --}}
-                                <button class="btn btn-primary d-flex float-end" role="button" style=" margin-bottom: 20px; background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button>
+                                {{!-- <button class="btn btn-primary d-flex float-end" role="button" style=" margin-bottom: 20px; background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button> --}}
+                                
                                 <div>
                                     <table class="table table tablesorter" id="ipi-table">
                                         <thead class="thead-dark">
@@ -79,7 +310,8 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>        
+                                </div> 
+                                    
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="diagnosesTable">
                                     <thead style="color: rgb(255,255,255);">
@@ -157,12 +389,202 @@
                                 {{!-- TAB 2 --}}
                                 <div class="tab-pane fade" id="pests" role="tabpanel" aria-labelledby="pests-tab">
                                 
-                                <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
+                                {{!-- <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
                                 <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
                                     <div class="input-group"><input id="filterPestsTable" onkeyup="pestsFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
-                                </form>
+                                </form> --}}
 
-                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_pest"'>Add Pest</button>
+                                {{!-- ADD PEST --}}
+                                <div role="tablist" id="accordion-pest" style="margin-bottom: 20px;">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
+                                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-pest .item-pest" href="#accordion-pest .item-pest" style="font-size: 16px;color: #584C33!important;font-weight: bold;">Create New Pest</a></h5>
+                                        </div>
+                                        <div class="collapse item-pest" role="tabpanel" data-parent="#accordion-pest">
+                                            
+                                        <div class="card-body" style="color: #332c1f;">
+                                        {{!-- START FORM --}}
+              	                        <form autocomplete="off" method="post" action="" id="add_pest_form">
+                    
+                                        {{!-- STEP 1 --}}
+                                        <div class="tab2">
+                                        <div class="modal_body_content" id="body_pstep1">
+                                                <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Add Pest Information</h5>
+
+                                                <div class="form-group" style="margin-left: 5px;">
+                                                <div class="row">
+
+                                                    <div class="col">
+                                                    <label for="pest_ID">Pest ID <span style="color: #CA4E0C;">*</span></label>
+                                                    <input type="text" class="form-control" id="pest_ID" name="pest_ID" value="P-xx" disabled>
+
+                                                    </div>
+
+                                                    <div class="col">
+                                                    <label for="pest_name">Pest Name <span style="color: #CA4E0C;">*</span></label>
+                                                    <input type="text" class="form-control" id="pest_name" name="pest_name" placeholder="Pest Name" required>
+
+                                                    </div>
+
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group" style="margin-left: 5px;">
+                                                <div class="row">
+
+                                                    <div class="col">
+                                                    <label for="pest_name">Scientific Name</label>
+                                                    <input type="text" class="form-control" id="pest_scientific_name" name="pest_scientific_name" placeholder="Scientific Name">
+
+                                                    </div>
+
+                                                    </div>
+                                                </div>
+
+                                {{!-- SYMPTOMS --}}
+                                <h6 style="font-weight: bold; margin-top: 40px">Symptoms</h6>
+
+                                <div class="form-group" style="margin-left: 5px;">
+                                    
+                                    <div class="row">
+
+                                        <div class="col" style="padding-top: 10px;">
+                                    
+                                        <label for="pest_desc">Description  <span style="color: #CA4E0C;">*</span></label>
+                                        <textarea class="form-control" rows="5" id="pest_desc" placeholder="Description" name="pest_desc" required></textarea>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+
+                        
+                                {{!-- END OF SYMPTOMS --}}
+
+
+                                </div>
+                                        </div>
+                                        {{!-- END OF STEP 1 --}}
+
+                                        {{!-- STEP 2 --}}
+                                        <div class="tab2">
+                                            <div class="hide modal_body_content" id="body_pstep2">
+                                                <h5 for="" style="font-weight: bold;  padding-bottom: 5px; padding-top: 10px">Step 2: View Pesticide Application Plan</h5>
+
+                                                {{!-- START CARDS --}}
+                                                <div class="row" style="margin-top: 20px">
+
+                                                {{!-- PEST/DISEASE INFORMATION CARD --}}
+                                                    <div class="col-lg-5 col-xxl-4">         
+                                                    <div class="card shadow mb-4">
+
+                                                        <div class="card-header mini py-3">
+                                                        <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest<br></h6>
+                                                        </div>
+
+                                                        <div class="card-body" style="height: 239.97px;">
+
+                                                        <div class="table-responsive" style="border-style: none;">
+                                                            <table class="table">
+                                                            <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <tr style="border-style: none;">
+                                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
+                                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest Name<br></span><span class="d-xxl-flex justify-content-xxl-start">Pest Name<br></span></td>
+                                                                </tr>
+
+                                                                <tr style="border-style: none;">
+                                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
+                                                                </tr>
+                                                            </tbody>
+                                                            </table>
+
+                                                        </div>
+                                                                            
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                {{!-- END OF PEST/DISEASE INFORMATION CARD --}}
+
+
+                                                {{!-- PEST APPLICATION PLAN CARD --}}
+                                                    <div class="col-lg-7 col-xxl-8">
+
+                                                            <div class="card shadow mb-4">
+                                                                <div class="card-header mini py-3">
+                                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan Information<br></h6>
+                                                                </div>
+                                                            <div class="card-body">
+                                                                <div class="table-responsive" style="border-style: none;">
+                                                                    <table class="table">
+                                                                        <thead>
+                                                                        {{!-- <tr></tr> --}}
+                                                                        </thead>
+                                                                    <tbody>
+                                                                        <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
+                                                                        </tr>
+
+                                                                        <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
+                                                                        </tr>
+
+                                                                        <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
+                                                                        </tr>
+                                                                    </tbody>
+
+                                                                    </table>
+                                                                </div>
+                                                                
+                                                                </div>
+
+                                                            </div>
+
+                                                    </div>
+                                                    {{!-- END OF PEST APPLICATION PLAN CARD --}}
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        {{!-- END OF STEP 2 --}}
+
+                                        </form>
+                                        {{!-- END FORM --}}
+
+                                        <!-- Circles which indicates the steps of the form: -->
+                                        <div style="text-align:center;padding-top:40px;padding-bottom:10px">
+                                            <span class="step2"></span>
+                                            <span class="step2"></span>
+                                        </div>
+
+                                    <div class="modal-footer">
+                                    <div class="modal_footer_content" id="_pstep1">
+                                        <button type="button" class="btn round btn-secondary" onclick='window.location="/pest_and_disease/diagnose"'>Cancel</button>
+                                        <button type="button" class="btn round btn-primary next_step" value="_pstep2" onclick="nextPrev2(1)">Next</button>
+                                    </div>
+
+                                    <div class="hide modal_footer_content" id="_pstep2">
+                                        <button type="button" class="btn round btn-secondary prev_step" value="_pstep1" onclick="nextPrev2(-1)">Back</button>
+                                        <button type="submit" class="btn round btn-primary" form="add_pest_form">Create Pest</button>
+                                    </div>
+
+                                    </div>
+
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {{!-- END OF ADD PEST --}}
+
+                                {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_pest"'>Add Pest</button> --}}
 
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="pestsTable">
@@ -235,12 +657,206 @@
 
                                 {{!-- TAB 3 --}}
                                 <div class="tab-pane fade" id="diseases" role="tabpanel" aria-labelledby="diseases-tab">
-                                <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
+                                {{!-- <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
                                 <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
                                     <div class="input-group"><input id="filterDiseasesTable" onkeyup="diseasesFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
-                                </form>
+                                </form> --}}
 
-                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_disease"'>Add Disease</button>
+                                {{!-- ADD DISEASE --}}
+                                <div role="tablist" id="accordion-pest" style="margin-bottom: 20px;">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
+                                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-pest .item-pest" href="#accordion-pest .item-pest" style="font-size: 16px;color: #584C33!important;font-weight: bold;">Create New Disease</a></h5>
+                                        </div>
+                                        <div class="collapse item-pest" role="tabpanel" data-parent="#accordion-pest">
+                                            
+                                        <div class="card-body" style="color: #332c1f;">
+                                        
+                                        {{!-- START FORM --}}
+                                        <form autocomplete="off" method="post" action="" id="add_disease_form">
+                                            
+                                            {{!-- STEP 1 --}}
+                                            <div class="tab3">
+                                            <div class="modal_body_content" id="body_dstep1">
+                                                    <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Add Disease Information</h5>
+
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                        <label for="Disease_ID">Disease ID <span style="color: #CA4E0C;">*</span></label>
+                                                        <input type="text" class="form-control" id="disease_ID" name="disease_ID" value="DS-xx" disabled>
+
+                                                        </div>
+
+                                                        <div class="col">
+                                                        <label for="disease_name">Disease Name <span style="color: #CA4E0C;">*</span></label>
+                                                        <input type="text" class="form-control" id="disease_name" name="disease_name" placeholder="Disease Name" required>
+
+                                                        </div>
+
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                        <label for="disease_name">Scientific Name</label>
+                                                        <input type="text" class="form-control" id="disease_scientific_name" name="disease_scientific_name" placeholder="Scientific Name">
+
+                                                        </div>
+
+                                                        </div>
+                                                    </div>
+
+                                    {{!-- SYMPTOMS --}}
+                                    <h6 style="font-weight: bold; margin-top: 40px">Symptoms</h6>
+
+                                    <div class="form-group" style="margin-left: 5px;">
+                                        
+                                        <div class="row">
+
+                                            <div class="col" style="padding-top: 10px;">
+                                        
+                                            <label for="disease_desc">Description  <span style="color: #CA4E0C;">*</span></label>
+                                            <textarea class="form-control" rows="5" id="disease_desc" placeholder="Description" name="disease_desc" required></textarea>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+
+                            
+                                    {{!-- END OF SYMPTOMS --}}
+
+
+                                    </div>
+                                    </div>
+                                    {{!-- END OF STEP 1 --}}
+
+                                    {{!-- STEP 2 --}}
+                                    <div class="tab3">
+                                        <div class="hide modal_body_content" id="body_dstep2">
+                                            <h5 for="" style="font-weight: bold;  padding-bottom: 5px; padding-top: 10px">Step 2: View Pesticide Application Plan</h5>
+
+                                            {{!-- START CARDS --}}
+                                            <div class="row" style="margin-top: 20px">
+
+                                            {{!-- PEST/DISEASE INFORMATION CARD --}}
+                                                <div class="col-lg-5 col-xxl-4">         
+                                                <div class="card shadow mb-4">
+
+                                                    <div class="card-header mini py-3" style="height: auto;">
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Disease<br></h6>
+                                                    </div>
+
+                                                    <div class="card-body" style="height: 239.97px;">
+
+                                                    <div class="table-responsive" style="border-style: none;">
+                                                        <table class="table">
+                                                        <thead>
+                                                            {{!-- <tr></tr> --}}
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <tr style="border-style: none;">
+                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Disease ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">D-01<br></span></td>
+                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Disease Name<br></span><span class="d-xxl-flex justify-content-xxl-start">Disease Name<br></span></td>
+                                                            </tr>
+
+                                                            <tr style="border-style: none;">
+                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                                        
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            {{!-- END OF PEST/DISEASE INFORMATION CARD --}}
+
+
+                                            {{!-- PEST APPLICATION PLAN CARD --}}
+                                                <div class="col-lg-7 col-xxl-8">
+
+                                                        <div class="card shadow mb-4">
+                                                            <div class="card-header mini py-3" style="height: auto;">
+                                                                <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan Information<br></h6>
+                                                            </div>
+                                                        <div class="card-body">
+                                                            <div class="table-responsive" style="border-style: none;">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                    {{!-- <tr></tr> --}}
+                                                                    </thead>
+                                                                <tbody>
+                                                                    <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
+                                                                    </tr>
+
+                                                                    <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
+                                                                    </tr>
+
+                                                                    <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
+                                                                    </tr>
+                                                                </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                            
+                                                            </div>
+
+                                                        </div>
+
+                                                </div>
+                                                {{!-- END OF PEST APPLICATION PLAN CARD --}}
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {{!-- END OF STEP 2 --}}
+
+                                        </form>
+                                        {{!-- END FORM --}}
+
+                                        <!-- Circles which indicates the steps of the form: -->
+                                        <div style="text-align:center;padding-top:40px;padding-bottom:10px">
+                                            <span class="step3"></span>
+                                            <span class="step3"></span>
+                                        </div>
+
+                                    <div class="modal-footer">
+                                    <div class="modal_footer_content" id="_dstep1">
+                                        <button type="button" class="btn round btn-secondary" onclick='window.location="/pest_and_disease/diagnose"'>Cancel</button>
+                                        <button type="button" class="btn round btn-primary next_step" value="_dstep2" onclick="nextPrev3(1)">Next</button>
+                                    </div>
+
+                                    <div class="hide modal_footer_content" id="_dstep2">
+                                        <button type="button" class="btn round btn-secondary prev_step" value="_dstep1" onclick="nextPrev3(-1)">Back</button>
+                                        <button type="submit" class="btn round btn-primary" form="add_disease_form">Create Disease</button>
+                                    </div>
+
+                                    </div>
+
+
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {{!-- END OF ADD DISEASE --}}
+
+
+
+                                {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_disease"'>Add Disease</button> --}}
 
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="diseasesTable">
@@ -329,6 +945,160 @@ var view = "pest_and_disease_diagnoses";
 function goBack() {
   window.history.back();
 }
+
+// TAB 1
+
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+
+  // Exit the function if any field in the current tab is invalid:
+  if (!dataValidation(currentTab+2)) return false;
+  // Hide the current tab:
+ // x[currentTab].style.display = "none";
+
+document.getElementsByClassName("step")[currentTab].className += " finish";
+
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("create_farm_form").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+// END OF TAB 1
+
+// TAB 2
+var currentTab2 = 0; // Current tab is set to be the first tab (0)
+showTab2(currentTab2); // Display the current tab
+
+
+function showTab2(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab2");
+  x[n].style.display = "block";
+
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator2(n)
+}
+
+
+function nextPrev2(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab2");
+
+  // Exit the function if any field in the current tab is invalid:
+  if (!dataValidation(currentTab2+2)) return false;
+  // Hide the current tab:
+ // x[currentTab].style.display = "none";
+
+document.getElementsByClassName("step2")[currentTab].className += " finish";
+
+  // Increase or decrease the current tab by 1:
+  currentTab2 = currentTab2 + n;
+
+  // if you have reached the end of the form...
+  if (currentTab2 >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("create_farm_form").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab2(currentTab2);
+}
+
+
+function fixStepIndicator2(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step2");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+
+// END OF TAB 2
+
+// TAB 3
+var currentTab3 = 0; // Current tab is set to be the first tab (0)
+showTab3(currentTab3); // Display the current tab
+
+
+function showTab3(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab3");
+  x[n].style.display = "block";
+
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator3(n)
+}
+
+
+function nextPrev3(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab3");
+
+  // Exit the function if any field in the current tab is invalid:
+  if (!dataValidation(currentTab3+2)) return false;
+  // Hide the current tab:
+ // x[currentTab].style.display = "none";
+
+document.getElementsByClassName("step3")[currentTab].className += " finish";
+
+  // Increase or decrease the current tab by 1:
+  currentTab3 = currentTab3 + n;
+
+  // if you have reached the end of the form...
+  if (currentTab3 >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("create_farm_form").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab3(currentTab3);
+}
+
+
+function fixStepIndicator3(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step3");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
+}
+
+// END OF TAB 3
 
 function diagnosesFilter() {
   var input, filter, table, tr, td, i, txtValue;
