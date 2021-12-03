@@ -1,3 +1,9 @@
+function addDays(d1, days) {
+	d1.setDate(d1.getDate() + days);
+
+	return d1;
+}
+
 function changeFarmDetails(id, farm_list) {
 	var i = 0;
 	while (farm_list[i].farm_id != id) {
@@ -288,19 +294,131 @@ document.addEventListener("click", function (e) {
 });
 }
 
+function adjustDates(seed_list, event) {
+	var selected_seed_dat = seed_list[$('#seed_id').prop('selectedIndex')].maturity_days;
+	var land_prep_start = new Date(formatDate(new Date($('#land_prep_date_start').val()), 'YYYY-MM-DD'));
+	var land_prep_end = addDays(land_prep_start, 21);
+	$('#land_prep_date_end').val(formatDate(land_prep_end, 'YYYY-MM-DD'));
+
+	if (event == 'sow_date') {
+		var sowing_start = new Date($('#sowing_date_start').val());
+	}
+	else if (event == 'seed') {
+		var sowing_start = new Date($('#sowing_date_start').val());
+	}
+	else if (event == 'land_prep') {
+		var sowing_start = land_prep_end;
+		sowing_start = addDays(sowing_start, 1);
+	}
+
+	$('#sowing_date_start').val(formatDate(sowing_start, 'YYYY-MM-DD'));
+
+	var sowing_end = sowing_start;
+	sowing_end = addDays(sowing_end, 7);
+	$('#sowing_date_end').val(formatDate(sowing_end, 'YYYY-MM-DD'));
+
+	var harvest_start = sowing_end;
+	harvest_start = addDays(harvest_start, selected_seed_dat - 60);
+	$('#harvest_date_start').val(formatDate(harvest_start, 'YYYY-MM-DD'));
+
+	var harvest_end = harvest_start;
+	harvest_end = addDays(harvest_end, 7);
+	$('#harvest_date_end').val(formatDate(harvest_end, 'YYYY-MM-DD'));
+}
+
+function processSeedRate(seed_list, farm_list) {
+	if ($('#seed_rate').val() != '') {
+		var seed_qty;
+		var seed_details = seed_list[$('#seed_id').prop('selectedIndex')];
+		var farm_area = farm_list[$('#farm_id').prop('selectedIndex')].farm_area;
+		var conversion = 2.205;
+		var seed_rate = $('#seed_rate').val();
+
+		seed_rate = (seed_rate / conversion) * farm_area;
+
+		seed_rate = Math.round((seed_rate/seed_details.amount) * 100) / 100;
+
+		$('#seed_qty').html(seed_rate+' bags');
+
+		$('#num_seed_bags').val(seed_rate);
+	}
+}
+
 $(document).ready(function() {
+	jQuery.ajaxSetup({async: false });
+
 	var farm_select = $('#farm_id'), seed_select = $('#seed_id');
 	var farm_list, seed_list;
 
+	//Event listeners
+	$('#land_prep_date_start').on('change', function() {
+		adjustDates(seed_list, 'land_prep');
+	});
+
+	$('#seed_id').on('change', function() {
+		adjustDates(seed_list, 'seed');
+
+		processSeedRate(seed_list, farm_list);
+	});
+
+	$('#sowing_date_start').on('change', function() {
+		adjustDates(seed_list, 'sow_date');
+	});
+
+	$('#seed_rate').on('change', function() {
+		processSeedRate(seed_list, farm_list);
+	});
+
+
+	//
 	$('#crop_calendar_form').on('submit', function(e) {
 		e.preventDefault();
 
 		var form_data = $('#crop_calendar_form').serializeJSON();
-
 		console.log(form_data);
-
 		$.post('/create_crop_plan', form_data, function(crop_plan) {
-			window.location.href = '/crop_calendar';
+			var wo_data = [];
+			var wo_obj;
+			wo_obj = {
+				wo_type: 'Land Preparation',
+				crop_calendar_id: crop_plan.insertId,
+				due_date: form_data.land_prep_date_end,
+				start_date: form_data.land_prep_date_start,
+				resources: { name: [''], ids: [''], qty: [''] },
+				notes: 'Generated Land Preparation Work Order'
+			}
+			wo_data.push(wo_obj);
+
+			var wo_obj;
+			wo_obj = {
+				wo_type: 'Sow Seed',
+				crop_calendar_id: crop_plan.insertId,
+				due_date: form_data.sowing_date_end,
+				start_date: form_data.sowing_date_start,
+				resources: { name: [''], ids: [form_data.seed_id], qty: [parseFloat(form_data.num_seed_bags)] },
+				notes: 'Generated Sow Seed Work Order'
+			}
+			wo_data.push(wo_obj);
+
+			var wo_obj;
+			wo_obj = {
+				wo_type: 'Harvest',
+				crop_calendar_id: crop_plan.insertId,
+				due_date: form_data.harvest_date_end,
+				start_date: form_data.harvest_date_start,
+				resources: { name: [''], ids: [''], qty: [''] },
+				notes: 'Generated Harvest Work Order'
+			}
+			wo_data.push(wo_obj);
+
+			for (var i = 0; i < wo_data.length; i++) {
+				$.post('/upload_wo', wo_data[i], function(wo) {
+					if (i == wo_data.length - 1) {
+						window.location.href = '/crop_calendar';
+					}
+				});
+			}
+
 		});
 	})
 
@@ -316,10 +434,17 @@ $(document).ready(function() {
 
 	$.get('/get_farm_list', { where: { key: 't1.farm_id', value: 'not in (SELECT farm_id FROM capstone_agriculture_db.crop_calendar_table where status != "Completed")', type: 'Data validation' } }, function(result) {
 		farm_list = result;
-		for (var i = 0; i < result.length; i++) {
-			farm_select.append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
+
+		if (result.length != 0) {
+			for (var i = 0; i < result.length; i++) {
+				farm_select.append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
+			}
+			changeFarmDetails(result[0].farm_id, farm_list);
 		}
-		changeFarmDetails(result[0].farm_id, farm_list);
+		else {
+			$('#farm_id').attr('disabled', true);
+			$($('#farm_id').parent()).append('<label class="text-danger">All farms have existing crop calendar. Unable to create new crop calendar</label>')
+		}
 	});
 
 	$('#farm_id').on('change', function(e) {
@@ -327,9 +452,9 @@ $(document).ready(function() {
 	});
 
 	$.get('/get_materials', { type: 'Seed' }, function(result) {
+		seed_list = result;
 		for (var i = 0; i < result.length; i++) {
 			seed_select.append("<option value='"+result[i].id+"'>"+result[i].name+"</option>");
 		}
 	});
-
 });

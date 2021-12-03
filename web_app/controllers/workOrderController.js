@@ -172,6 +172,9 @@ exports.ajaxCreateWorkOrder = function(req, res) {
 			else if (query.type == 'Fertilizer Application') {
 				resource_type = 'Fertilizer'
 			}
+			else if (query.type == 'Sow Seed') {
+				resource_type = 'Seed'
+			}
 
 			if (resource_type != null) {
 				var query_arr = consolidateResources(resource_type, resource_ids
