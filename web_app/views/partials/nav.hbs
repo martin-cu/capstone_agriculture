@@ -95,13 +95,13 @@
             {{!-- Start User Profile Section --}}
 
             <div class="nav-item dropdown no-arrow" style="margin-top: 10px;">
-                <button type="button" class="btn btn-primary dropdown-toggle" aria-expanded="false" data-toggle="dropdown" type="button" data-target="#userDropdown"
+                <button type="button" class="btn btn-primary dropdown-toggle" aria-expanded="false" data-toggle="dropdown" type="button"
                 style="background-color: white; border-radius: 20px; color: #584c33; border-color: white; height: 50px; margin-top: 5px" id="userNav">
                         <img src="../../images/guest.png" width="35px" height="35px" id="user">
                         <span class="d-none d-lg-inline me-2 small" style="color: #584c33; padding-left: 10px; font-weight: bold;">administrator</span>
                 </button>
 
-                <div class="dropdown-menu dropdown-menu-right notSidebar" id="userDropdown" style="width: fit-content;">
+                <div class="dropdown-menu dropdown-menu-right notSidebar" style="width: fit-content;">
                 <a class="dropdown-item notSidebar" href="#">
                     <i class="fas fa-user-circle fa-sm fa-fw mr-2 text-white-400"></i>&nbsp;Profile</a>
                 </a>
@@ -135,3 +135,15 @@
     {{!-- End Main Div Class --}}
 </nav>
 {{!-- End Main Nav Class --}}
+
+<script>
+
+// this function fixes the double-click bug of dropdowns
+$(".nav-item").on("click", ".dropdown-toggle", function(e) { 
+    e.preventDefault();
+    $(this).parent().addClass("show");
+    $(this).attr("aria-expanded", "true");
+    $(this).next().addClass("show"); 
+  });
+
+</script>
