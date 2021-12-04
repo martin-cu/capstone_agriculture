@@ -73,20 +73,18 @@ $(document).ready(function() {
 
 
 		var form_data = $('#create_farm_form').serializeJSON();
-		
 		form_data.coordinates = [];
-
-		form_data.coordinates = preparePolygonCoordinates(coordinate_arr);
+		// form_data.coordinates = preparePolygonCoordinates(coordinate_arr);
+		form_data.coordinates.push(coordinate_arr);
 		console.log(form_data);
 
 		$.post('/readFarmDetails', form_data, function(farm_record) {
 			console.log(farm_record);
 			if (farm_record.farm_list.length == 0) {
-
 				$.post('/agroapi/polygon/create', form_data, function(result) {
 					// Create db record of farm
 					console.log(result);
-		        	if (result.success) {
+		        	if (result) {
 		        		$.post('/createFarmRecord', form_data, function(db_record) {
 		        			if (db_record.success) {
 		        				var workers = $('[name="worker_checkbox"]').serializeArray();
@@ -96,7 +94,7 @@ $(document).ready(function() {
 		        					var m = prepareWorkerIDs(workers, db_record.farm_id, status);
 
 		        					$.post('/assign_farmers', { query: m }, function(assign_farmer) {
-			        					console.log(assign_farmer);
+
 			        					if (assign_farmer.success) {
 			        						console.log('success');
 			        						window.location.href = "/farms";

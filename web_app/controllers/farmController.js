@@ -7,8 +7,8 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
 
-//var key = '1d1823be63c5827788f9c450fb70c595'; // Unpaid
-var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
+var key = '1d1823be63c5827788f9c450fb70c595'; // Unpaid
+//var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;
@@ -593,7 +593,8 @@ exports.getGeoMap = function(req, res) {
 }
 
 exports.singleFarmDetails = function(req, res) {
-	var query = { where: { farm_name: req.body.farm_name } };
+	var query = { where: { key: 'farm_name', value: req.body.farm_name } };
+
 	farmModel.getFarmData(query, function(err, result) {
 		if (err)
 			throw err;
@@ -607,8 +608,8 @@ exports.singleFarmDetails = function(req, res) {
 exports.createFarmRecord = function(req, res) {
 	var query = {
 		farm_name: req.body.farm_name,
-		farm_desc: req.body.farm_desc,
-		farm_area: 0,
+		farm_desc: req.body.farm_desc == '' ? req.body.farm_desc : null,
+		farm_area: req.body.polygon_area,
 		land_type: req.body.land_type,
 	};
 
@@ -955,9 +956,15 @@ exports.createPolygon = function(req, res) {
 		if (err)
 			throw err;
 		else {
+			body = JSON.parse(body);
 			console.log(body);
+			var success = true;
 
-			res.send({ success: true });
+			if (body.name == 'UnprocessableEntityError') {
+				success = false;
+			}
+
+			res.send(success);
 		}
 	})
 }

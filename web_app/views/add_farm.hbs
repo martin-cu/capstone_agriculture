@@ -79,7 +79,7 @@
 
                              <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control" rows="5" id="description" placeholder="Description" name="farm_desc" required></textarea>
+                                <textarea class="form-control" rows="5" id="description" placeholder="Description" name="farm_desc"></textarea>
                             </div>
                
                     </div>
@@ -116,9 +116,10 @@
                                         
                                         <div class="col">
                                            <div class="container-fluid">
-                            
+                                            <input type="hidden" form="create_farm_form" name="polygon_area" id="polygon_area" value="">
                                             <div id="calculated-area">
                                                  <p>Click the map to draw a polygon.</p>
+
                                             </div>
                                         </div>
 
@@ -126,12 +127,12 @@
 
                                     </div>
 
-                                    {{!-- Div for showing coordinates (if ever) --}}
-                                    {{!-- <div class="row" style="padding-left: 5px;">
+                                    
+                                    <div class="row" style="padding-left: 5px;">
                                         
                                         <div class="col">
                                            <div class="container-fluid">
-                            
+                                            <label class="hide" id="coordinate_lbl">Coordinates</label>
                                             <div id="show-coords">
                                                  <p></p>
                                             </div>
@@ -139,7 +140,7 @@
 
                                         </div>
 
-                                    </div> --}}
+                                    </div>
 
                             </div>
 
