@@ -18,7 +18,6 @@ exports.getCropCalendarTab = function(req, res) {
 				ripening: [],
 				harvesting: []
 			};
-			console.log(list);
 
 			list_obj.land_prep = list.filter(ele => ele.stage == 'Land Preparation');
 			list_obj.sowing = list.filter(ele => ele.stage == 'Sowing');
@@ -44,8 +43,6 @@ exports.getCropCalendarTab = function(req, res) {
 						wo_list[i].date_due = dataformatter.formatDate(new Date(wo_list[i].date_due), 'YYYY-MM-DD');
 						wo_list[i].date_start = dataformatter.formatDate(new Date(wo_list[i].date_start), 'YYYY-MM-DD');
 					}
-
-					//console.log(wo_list);
 
 					for (prop in list_obj) {
 						for (var i = 0; i < list_obj[prop].length; i++) {

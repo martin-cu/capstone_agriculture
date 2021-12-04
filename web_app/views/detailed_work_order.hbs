@@ -19,7 +19,9 @@
                                         <option value="Pending" {{#compareTwoValues work_order.status 'Pending' operator='==='}}selected{{/compareTwoValues}}>Pending</option>
                                         <option value="In-Progress" {{#compareTwoValues work_order.status 'In-Progress' operator='==='}}selected{{/compareTwoValues}}>In-Progress</option>
                                         <option value="Completed" {{#compareTwoValues work_order.status 'Completed' operator='==='}}selected{{/compareTwoValues}}>Completed</option>
+                                        {{#if isCancellable}}
                                         <option value="Cancelled" {{#compareTwoValues work_order.status 'Cancelled' operator='==='}}selected{{/compareTwoValues}}>Cancelled</option>
+                                        {{/if}}
                                     </select>
                                 </td>
                                 <td></td>
@@ -113,6 +115,21 @@
                             <!-- <td style="width: 100px;">Rice Yield</td>
                                 <td style="width: 100px;"><input type="number" style="width: 80px;"><span style="margin-left: 5px;">sacks</span></td> -->
 
+                            {{#if harvest_details}}
+                            <tr>
+                                <td colspan="4" style="font-weight: normal;">Harvest Details</td>
+
+                            </tr>
+                            <tr>
+                                <td style="font-weight: normal;">Sacks Harvested</td>
+                                <td>
+                                    <input type="number" name="sacks_harvested" id="sacks_harvested" value="" readonly min="0">
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            {{/if}}
+
                             {{#if resources}}
                             <tr>
                                 <td style="font-weight: normal;"><strong>{{resources.title}}</strong><br></td>
@@ -152,7 +169,7 @@
 
 <script type="text/javascript">
     var resource = '{{resources.lbl.name}}';
-
+    var status_editable = {{status_editable}};
     function createDOM(obj) {
         var ele;
 
@@ -172,7 +189,11 @@
 
     function toggleEditState(show) {
         var editable = ['#status', '#date_start', '#date_due', '#notes', '#'+resource+'_qty'];
+        if (!status_editable)
+            editable = editable.filter(ele => ele != '#status');
+
         var eles = $(editable.join()).attr('readonly', !show);
+
         if (show) {
 
             //Create save button
@@ -205,10 +226,12 @@
 
         $('#wo_edit').on('click', function() {
             toggleEditState(true);
+            $('#wo_edit').addClass('hide');
         });
 
         $('#btn_cont').on('click', '#btn_cancel', function() {
             toggleEditState(false);
+            $('#wo_edit').removeClass('hide');
         });
     });
 

@@ -34,6 +34,7 @@ router.get('/get_weather_forecast', environmentController.getWeatherForecast);
 router.get('/clear_weather_forecast', environmentController.clearWeatherForecastRecords);
 
 router.get('/get_work_orders', workOrderController.ajaxGetWorkOrders);
+router.get('/ajax_edit_wo', workOrderController.ajaxEditStatus);
 router.get('/get_wo_resources', workOrderController.ajaxGetWOResources);
 router.get('/get_materials', materialController.ajaxGetMaterials);
 router.get('/getAll_materials', materialController.ajaxGetAllMaterials);

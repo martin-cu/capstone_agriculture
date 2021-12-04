@@ -2,6 +2,7 @@ const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const workOrderModel = require('../models/workOrderModel.js');
+const cropCalendarModel = require('../models/cropCalendarModel.js');
 var request = require('request');
 
 function consolidateResources(type, ids, qty, wo_id) {
@@ -60,7 +61,8 @@ exports.getDetailedWO = function(req, res) {
 			details['date_start'] = dataformatter.formatDate(new Date(details['date_start']), 'YYYY-MM-DD');
 			details['date_due'] = dataformatter.formatDate(new Date(details['date_due']), 'YYYY-MM-DD');
 			details['date_created'] = dataformatter.formatDate(new Date(details['date_created']), 'YYYY-MM-DD');
-			details['date_completed'] = dataformatter.formatDate(new Date(details['date_completed']), 'YYYY-MM-DD');
+			if (details.date_completed != null || details.date_completed != undefined)
+				details['date_completed'] = dataformatter.formatDate(new Date(details['date_completed']), 'YYYY-MM-DD');
 
 			var type;
 			var html_data = {
@@ -68,10 +70,12 @@ exports.getDetailedWO = function(req, res) {
 				editable: details.status == 'Completed' || details.status == 'Cancelled' ? false : true
 			};
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
-
+			html_data['status_editable'] = true;
+			html_data['isCancellable'] = true;
 			switch (details.type) {
 				case 'Sow Seed':
 				type = 'Seed';
+				html_data['isCancellable'] = false;
 				break;
 				case 'Pesticide Application':
 				type = 'Pesticide';
@@ -79,21 +83,82 @@ exports.getDetailedWO = function(req, res) {
 				case 'Fertilizer Application':
 				type = 'Fertilizer';
 				break;
+				case 'Harvest':
+				type = 'Harvest';
+				html_data['isCancellable'] = false;
+				break;
+				case 'Land Preparation':
+				html_data['isCancellable'] = false;
+				break;
 				default:
 				type = null;
 			}
 
 			if (type != null) {
-				workOrderModel.getResourceDetails(query, type, function(err, resource_details) {
-					if (err)
-						throw err;
-					else {
-						html_data['resources'] = resource_details;
-						html_data['resources']['title'] = type+'s:';
-						html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
-						res.render('detailed_work_order', html_data);
+				if (type == 'Harvest') {
+					var wo_list_query = {
+						where: {
+							key: ['crop_calendar_id', 'type'],
+							value: [details.crop_calendar_id, 'Sow Seed']
+						},
+						order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+					};
+					workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+						if (err)
+							throw err;
+						else {
+							cropCalendarModel.getCropCalendars({ status: ['Completed', 'In-Progress', 'Cancelled', 'Active'], where: { key: 'calendar_id', val: details.crop_calendar_id } }, function(err, crop_calendar) {
+								if (err)
+									throw err;
+								else {
+									html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
+									html_data['harvest_details'] = crop_calendar.harvest_yield == null ? 'N/A' : crop_calendar.harvest_yield;
+									res.render('detailed_work_order', html_data);
+								}
+							});	
+						}
+					});
+				}
+				else {
+					if (type == 'Seed') {
+						var wo_list_query = {
+							where: {
+								key: ['crop_calendar_id', 'type'],
+								value: [details.crop_calendar_id, 'Land Preparation']
+							},
+							order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+						};
+						workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+							if (err)
+								throw err;
+							else {
+								workOrderModel.getResourceDetails(query, type, function(err, resource_details) {
+									if (err)
+										throw err;
+									else {
+										html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
+										html_data['resources'] = resource_details;
+										html_data['resources']['title'] = type+'s:';
+										html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
+										res.render('detailed_work_order', html_data);
+									}
+								});
+							}
+						});
 					}
-				});
+					else {
+						workOrderModel.getResourceDetails(query, type, function(err, resource_details) {
+							if (err)
+								throw err;
+							else {
+								html_data['resources'] = resource_details;
+								html_data['resources']['title'] = type+'s:';
+								html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
+								res.render('detailed_work_order', html_data);
+							}
+						});
+					}
+				}
 			}
 			else {
 				res.render('detailed_work_order', html_data);
@@ -125,6 +190,9 @@ exports.createWorkOrder = function(req, res) {
 			}
 			else if (query.type == 'Fertilizer Application') {
 				resource_type = 'Fertilizer'
+			}
+			else if (query.type == 'Sow Seed') {
+				resource_type = 'Seed;'
 			}
 
 			if (resource_type != null) {
@@ -221,13 +289,42 @@ exports.getWorkOrdersPage = function(req, res) {
 
 			var html_data = { wo_list: list };
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
-			console.log(html_data.wo_list);
+			//console.log(html_data.wo_list);
 			res.render('farms', html_data);
 		}
 	});
 }
 
+exports.ajaxEditStatus = function(req, res) {
+	var query = { status: 'In-Progress' };
+
+	var wo_list_query = {
+		where: {
+			key: ['crop_calendar_id', 'type'],
+			value: [req.query.calendar_id, 'Harvest']
+		},
+		order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+	};
+	workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+		if (err)
+			throw err;
+		else {
+			if (wo_list[0].status == 'Pending') {
+				var filter = { work_order_id: wo_list[0].work_order_id };
+				workOrderModel.updateWorkOrder(query, filter, function(err, edit_status) {
+					if (err)
+						throw err;
+					else {
+						res.send('Changed!!');
+					}
+				});
+			} 
+		}
+	});
+}
+
 exports.editWorkOrder = function(req, res) {
+	var next_stage = null;
 	var query = {
 		type: req.body.type,
 		crop_calendar_id: req.body.crop_calendar_id,
@@ -242,9 +339,13 @@ exports.editWorkOrder = function(req, res) {
 		work_order_id: req.body.wo_id
 	};
 
-	console.log(query.status);
+	if (query.status == 'Completed') {
+		query['date_completed'] = dataformatter.formatDate(new Date(), 'YYYY-MM-DD');
 
-	query['date_completed'] = dataformatter.formatDate(new Date(), 'YYYY-MM-DD');
+		if (query.type == 'Land Preparation') {
+			next_stage = 'Sow Seed';
+		}
+	}
 
 	workOrderModel.updateWorkOrder(query, filter, function(err, list) {
 		if (err)
@@ -261,19 +362,81 @@ exports.editWorkOrder = function(req, res) {
 					else if (query.type == 'Fertilizer Application') {
 						resource_type = 'Fertilizer;'
 					}
+					else if (query.type == 'Sow Seed') {
+						resource_type = 'Seed;'
+					}
 
-					console.log(resource_type, req.body[''+resource_type+'_id']);
-					console.log(req.body[''+resource_type+'_qty']);
-					var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
-						, req.body[''+resource_type+'_qty'], filter.work_order_id);
+					if (resource_type != null) {
+						var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
+							, req.body[''+resource_type+'_qty'], filter.work_order_id);
 
-					workOrderModel.createWorkOrderResources(query_arr, function(err, resource_create) {
-						if (err)
-							throw err;
+						workOrderModel.createWorkOrderResources(query_arr, function(err, resource_create) {
+							if (err)
+								throw err;
+							else {
+								if (next_stage != null) {
+									var wo_list_query = {
+										where: {
+											key: ['crop_calendar_id', 'type'],
+											value: [query.crop_calendar_id, next_stage]
+										},
+										order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+									};
+									workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+										if (err)
+											throw err;
+										else {
+											var edit_next_query = {
+												status: 'In-Progress'
+											};
+											workOrderModel.updateWorkOrder(edit_next_query, { work_order_id: wo_list[0].work_order_id }, function(err, next_status) {
+												if (err)
+													throw err;
+												else {
+													console.log(next_status);
+													res.redirect('/farms/work_order&id='+filter.work_order_id);
+												}
+											});
+										}
+									});
+								}
+								else {
+									res.redirect('/farms/work_order&id='+filter.work_order_id);
+								}
+							}
+						})
+					}
+					else {
+						if (next_stage != null) {
+							var wo_list_query = {
+								where: {
+									key: ['crop_calendar_id', 'type'],
+									value: [query.crop_calendar_id, next_stage]
+								},
+								order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+							};
+							workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+								if (err)
+									throw err;
+								else {
+									var edit_next_query = {
+										status: 'In-Progress'
+									};
+									workOrderModel.updateWorkOrder(edit_next_query, { work_order_id: wo_list[0].work_order_id }, function(err, next_status) {
+										if (err)
+											throw err;
+										else {
+											console.log(next_status);
+											res.redirect('/farms/work_order&id='+filter.work_order_id);
+										}
+									});
+								}
+							});
+						}
 						else {
 							res.redirect('/farms/work_order&id='+filter.work_order_id);
 						}
-					})
+					}
 				}
 			});
 		}
