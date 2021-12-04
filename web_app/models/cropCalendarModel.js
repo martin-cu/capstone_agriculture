@@ -79,3 +79,10 @@ exports.getCurrentCropCalendar = function(query, next) {
 	sql = mysql.format(sql, query);
 	mysql.query(sql, next);
 }
+
+exports.updateCropCalendar = function(query, filter, next) {
+	var sql = "update crop_calendar_table set ? where ?"
+	sql = mysql.format(sql, query);
+	sql = mysql.format(sql, filter);
+	mysql.query(sql, next);
+}

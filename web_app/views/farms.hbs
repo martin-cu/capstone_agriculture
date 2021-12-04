@@ -31,7 +31,6 @@
                                         <option value="Pesticide Application">Pesticide Application</option>
                                         <option value="Fertilizer Application">Fertilizer Application</option>
                                         <option value="Water Fields">Water Fields</option>
-                                        <option value="Harvest">Harvest</option>
                                     </select>
                                 </div>
                                 <div class="col-6 col-sm-6 col-md-6">
@@ -235,6 +234,7 @@
     function changeCropCalendarVals(farm_id) {
         $('#crop_calendar_id').empty();
         $.get('/get_crop_plans', { status: ['Active', 'In-Progress'], where: { key: 'ft.farm_id', val: farm_id } }, function(plans) {
+            plans = plans.filter(ele => ele.crop_plan != null || ele.crop_plan != undefined);
             console.log(plans);
             for (var i = 0; i < plans.length; i++) {
                 $('#crop_calendar_id').append("<option value='"+plans[i].calendar_id+"'>"+plans[i].crop_plan+"</option>");
@@ -287,7 +287,6 @@
             };
 
             $.get('/getAll_materials', { type: type, filter: farm_id }, function(materials) {
-                console.log(materials);
                 if (type == 'Fertilizer') {
                     key = 'fertilizer_name';
                     id_key = 'fertilizer_id';
@@ -301,7 +300,6 @@
                 }
 
                 for (var i = 0; i < materials.length; i++) {
-                    console.log(materials[i]);
                     name_attr.value = materials[i][key];
                     id_attr.value = materials[i][id_key];
                     qty_attr.max = materials[i].current_amount;
@@ -343,6 +341,30 @@
         return val;
     }
 
+    function addDays(d1, days) {
+        d1.setDate(d1.getDate() + days);
+
+        return d1;
+    }
+
+    function adjustDueDate() {
+        var val = new Date($('#start_date').val());
+        var type = $('#wo_type').val();
+        var add_days;
+        if (type == 'Pesticide Application') {
+            add_days = 7;
+        }
+        else if (type == 'Fertilizer Application') {
+            add_days = 7;
+        }
+        else {
+            add_days = 1;
+        }
+
+        val = addDays(val, add_days);
+        $('#due_date').val(formatDate(val, 'YYYY-MM-DD'));
+    }
+
     $(document).ready(function() {
 
         // $('#work_order_form').on('submit', function(e) {
@@ -356,6 +378,14 @@
 
         //  // });
         // })
+
+        $('#start_date').on('change', function() {
+            adjustDueDate();
+        });
+
+        $('#wo_type').on('change', function() {
+            adjustDueDate();
+        });
 
         $.get('/get_farm_list', { where: "farm_id in (select farm_id from crop_calendar_table where status = 'In-Progress' or status = 'Active') " }, function(result) {
 
