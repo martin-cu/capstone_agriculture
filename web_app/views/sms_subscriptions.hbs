@@ -1,6 +1,6 @@
 <style>
     thead {
-        background-color: #212529;
+        background-color: #212529 !important;
         color: white;
     }
 
@@ -46,16 +46,126 @@
                                 {{!-- TAB 1 --}}
                                 <div class="tab-pane fade show active" id="activeSubscriptions" role="tabpanel" aria-labelledby="active-subscriptions-tab">
                                 
-                                <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
+                                {{!-- <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
                                 <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
                                     <div class="input-group"><input id="filterDiagnosesTable" onkeyup="activeSubscriptionsFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
-                                </form>
+                                </form> --}}
 
-                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/sms/subscriptions_add"'>Add Subscription</button>
+                                {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/sms/subscriptions_add"'>Add Subscription</button> --}}
+                                {{!-- ADD SUBSCRIPTIONS --}}
+                                <div role="tablist" id="accordion-subscriptions" style="margin-bottom: 20px;">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
+                                            <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-subscriptions .item-subscriptions" href="#accordion-subscriptions .item-subscriptions" style="font-size: 16px;color: #584C33!important;font-weight: bold;">Create New Subscription</a></h5>
+                                        </div>
+                                        <div class="collapse item-subscriptions" role="tabpanel" data-parent="#accordion-subscriptions">
+                                            
+                                        <div class="card-body" style="color: #332c1f;">
+                                        {{!-- START FORM --}}
+              	                        <form autocomplete="off" method="post" action="" id="add_subscription_form">
+                    
+                                        {{!-- STEP 1 --}}
+                                        <div class="tab">
+                                            <div class="modal_body_content" id="body_step1">
+                                                    {{!-- <h5 for="" style="font-weight: bold; padding-bottom: 5px; padding-top: 10px">Step 1: Add Diagnosis Information</h5> --}}
+
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                        <label for="subscription_ID">Subscription ID <span style="color: #CA4E0C;">*</span></label>
+                                                            <input type="text" class="form-control" id="subscription_ID" name="subscription_ID" value="S-xx" disabled>
+
+                                                        </div>
+
+                                                        <div class="col">
+                                                        <label for="subscription_ID">Name <span style="color: #CA4E0C;">*</span></label>
+                                                            <input type="text" class="form-control" id="subscription_name" name="subscription_name" placeholder="Name">
+
+                                                        </div>
+
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                            <label for="subscription_recipients">Recipient(s) <span style="color: #CA4E0C;">*</span></label>
+                                                            <select class="form-select" id="subscription_recipients" name="subscription_recipients">
+                                                                <option value="All">All</option>
+                                                                <option value="...">...</option>
+                                                            </select>
+                                                        </div>     
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group" style="margin-left: 5px;">
+                                                    
+                                                    <div class="row">
+
+                                                        <div class="col">
+                                                        <label for="subscriptions_send_date">Send At <span style="color: #CA4E0C;">*</span></label>
+                                                        <input type="datetime-local" class="form-control" id="subscriptions_send_date" name="subscriptions_send_date">
+
+                                                        </div>
+
+                                                        <div class="col">
+                                                        <label for="subscriptions_end_date">Until </label> <!-- End date not required (empty = user wants it permanent?) -->
+                                                        <input type="datetime-local" class="form-control" id="subscriptions_end_date" name="subscriptions_end_date">
+
+                                                        </div>
+
+                                                    </div>
+                                                    
+                                                    </div>
+
+                                    {{!-- SMS MESSAGE --}}
+                                    <h6 style="font-weight: bold; margin-top: 40px">Place Message Content</h6>
+
+                                    <div class="form-group" style="margin-left: 5px;">
+                                        
+                                        <label for="subscriptions_sms_message" style="padding-top: 10px;">SMS Message <span style="color: #CA4E0C;">*</span></label>
+                                        <textarea class="form-control" rows="10" id="subscriptions_sms_message" placeholder="SMS Message" name="subscriptions_sms_message"></textarea>
+                                    </div>
+
+                            
+                                    {{!-- END OF SMS MESSAGE --}}
+
+
+                                    </div>
+                                        </div>
+                                        {{!-- END OF STEP 1 --}}
+
+                                        </form>
+                                        {{!-- END FORM --}}
+
+                                        
+                                        <!-- Circles which indicates the steps of the form: -->
+                                            <div style="text-align:center;padding-top:40px;padding-bottom:10px">
+                                                {{!-- <span class="step"></span>
+                                                <span class="step"></span> --}}
+                                            </div>
+
+                                            <div class="modal-footer">
+                                            <div class="modal_footer_content" id="_step1">
+                                                <button type="button" class="btn round btn-secondary" onclick='window.location="/sms/subscriptions"'>Cancel</button>
+                                                <button type="button" class="btn round btn-primary" form="add_subscription_form">Create Subscription</button>
+                                            </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {{!-- END OF ADD SUBSCRIPTIONS --}}
                                         
                                 <div class="table-responsive" style="margin-top: 20px; height: 420px">
-                                <table class="table" id="activeSubscriptionsTable">
-                                    <thead style="color: rgb(255,255,255);">
+                                <table class="table table tablesorter" id="activeSubscriptionsTable">
+                                    <thead class="thead-dark" style="background-color: #212529 !important">
                                         <tr style="background: #212529;">
                                             <th>Subscription ID</th>
                                             <th>Name</th>
@@ -130,17 +240,17 @@
                                 {{!-- TAB 2 --}}
                                 <div class="tab-pane fade" id="archivedSubscriptions" role="tabpanel" aria-labelledby="archived-subscriptions-tab">
                                 
-                                <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
+                                {{!-- <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
                                 <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
                                     <div class="input-group"><input id="filterPestsTable" onkeyup="archivedSubscriptionsFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
-                                </form>
+                                </form> --}}
 
-                                <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location=""'>Add Subscription</button>
-
-                                <div class="table-responsive" style="margin-top: 20px; height: 420px">
-                                <table class="table" id="archivedSubscriptionsTable">
-                                    <thead>
-                                        <tr>
+                                {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location=""'>Add Subscription</button> --}}
+                                
+                                <div class="table-responsive" style="margin-top: 5px; height: 450px">
+                                <table class="table table tablesorter" id="activeSubscriptionsTable">
+                                    <thead class="thead-dark" style="background-color: #212529 !important">
+                                        <tr style="background: #212529;">
                                             <th>Subscription ID</th>
                                             <th>Name</th>
                                             <th>Recipient(s)</th>
@@ -159,7 +269,7 @@
                                             <td>All</td>
                                             <td>dd-mmm-yyyy hh:mm</td>
                                             <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>Ended</td>
+                                            <td>Active</td>
                                             <td> 
                             
                                                 <div class="dropdown no-arrow">
@@ -183,9 +293,12 @@
                                             <td>Farm 1</td>
                                             <td>dd-mmm-yyyy hh:mm</td>
                                             <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>Ended</td>
+                                            <td>Active</td>
                                             <td> 
-                                            <div class="dropdown no-arrow">
+                                                
+                                            {{!-- <button type="submit" class="btn btn-primary btn-sm" id="more"><i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i></button> --}}
+                                            
+                                                <div class="dropdown no-arrow">
                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
                                                         <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
                                                     </button>
@@ -196,8 +309,7 @@
                                                         <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
                                                     </div>
                                                 </div>
-                                                 
-                                            </td>                                        
+                                            </td>
                                         </tr>
 
                                     </tbody>
@@ -205,6 +317,8 @@
                                 </table>
                                 
                                 </div>
+
+                             
                                     
                                 </div>
                                 {{!-- END OF TAB 2 --}}
@@ -226,61 +340,50 @@ function goBack() {
   window.history.back();
 }
 
-function diagnosesFilter() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("filterDiagnosesTable");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("diagnosesTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
 }
 
-function pestsFilter() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("filterPestsTable");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("pestsTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+
+  // Exit the function if any field in the current tab is invalid:
+  if (!dataValidation(currentTab+2)) return false;
+  // Hide the current tab:
+ // x[currentTab].style.display = "none";
+
+document.getElementsByClassName("step")[currentTab].className += " finish";
+
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("create_farm_form").submit();
+    return false;
   }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
 }
 
-function diseasesFilter() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("filterDiseasesTable");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("diseasesTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
   }
+  //... and adds the "active" class on the current step:
+  x[n].className += " active";
 }
 
 </script>

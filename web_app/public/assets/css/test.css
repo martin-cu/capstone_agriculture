@@ -249,6 +249,15 @@ div.form-check {
     display: none;
  } */
 
+ nav a i.fas.fa-caret-down {
+    transition: 0.1s !important;
+}
+
+nav a i.fas.fa-caret-down.rotate {
+    transform: rotate(-180deg);
+    animation-duration: 0.1s !important;
+}
+
  a.dropdown-lbl.text-decoration-none.collapsed:hover > i {
      color: white !important;
  }
