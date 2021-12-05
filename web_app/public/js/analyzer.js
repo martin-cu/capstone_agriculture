@@ -23,11 +23,6 @@ exports.weatherForecast14D = function(dataset, testing, length) {
 	  outputSize: 6,
 	});
 
-
-	// console.log(dataset.data_arr);
-	// console.log('----------------------');
-	//console.log(testing.data_arr.length);
-
 	const trainingData = dataset.data_arr;
 
 	net.train(trainingData, { 
