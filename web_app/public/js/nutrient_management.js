@@ -333,9 +333,17 @@ function appendDetails(obj) {
 	$('#k_req').html(obj.k_lvl);
 }
 
-function getNDVI(farm_name, dat, N_recommendation) {
+function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 	console.log(farm_name);
 	var result_arr = [];
+	var temp_dat;
+
+	if (dat == null)
+		temp_dat = 0
+	else {
+		temp_dat = dat;
+	}
+
 	$.get('/agroapi/polygon/readAll', {}, function(polygons) {
 		var polygon_id;
 		var options = {};
@@ -440,7 +448,7 @@ function getNDVI(farm_name, dat, N_recommendation) {
 					for (prop in split_pattern) {
 						range_start = split_pattern[prop].dat_range[0];
 						range_end = split_pattern[prop].dat_range[1];
-						if (dat >= range_start && dat <= range_end) {
+						if (temp_dat >= range_start && temp_dat <= range_end) {
 							stage = prop;
 						}
 					}
@@ -457,6 +465,9 @@ function getNDVI(farm_name, dat, N_recommendation) {
 					else if (N_recommendation > 120 && N_recommendation <= 160) {
 						index = 3;
 					}
+					else {
+						index = 3
+					}
 
 					for (var i = 0; i < pattern_arr.length; i++) {
 						if (stage == pattern_arr[i]) {
@@ -469,7 +480,7 @@ function getNDVI(farm_name, dat, N_recommendation) {
 					}
 
 					var obj;
-						
+
 					for (var i = 0; i < stages_arr.length; i++) {
 						var now = new Date();
 
@@ -484,7 +495,9 @@ function getNDVI(farm_name, dat, N_recommendation) {
 							|| stage == 'Panicle') {
 							N_amount -= 10;
 						}
-
+						if (dat == null) {
+							dat = sowing_date - 1;
+						}
 						var diff = (split_pattern[stages_arr[i]].dat_range[0] - dat);
 
 						obj = {
@@ -493,7 +506,7 @@ function getNDVI(farm_name, dat, N_recommendation) {
 							amount: N_amount,
 							nutrient: 'N'
 						};
-							
+					
 
 						result_arr.push(obj);
 					}
@@ -649,7 +662,7 @@ function isInRecommendation(attr, reco_obj, db_obj) {
 		date = db_obj[i].date == reco_obj.date ? true : false;
 		temp_obj = db_obj[i].fertilizer.filter(ele => ele == reco_obj.fertilizer);
 
-
+		console.log(temp_obj);
 		if (temp_obj.length != 0 && date) {
 			fertilizer = true;
 			desc = db_obj[i].desc.filter(ele => ele.indexOf(reco_obj.desc) >= 0);
@@ -714,18 +727,27 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			var obj;
 			var temp_d;
 			console.log(method);
+
 			if (method == 'Transplanting') {
-				temp_d = land_prep.date_completed != null || land_prep.date_completed != undefined ? land_prep.date_completed : land_prep.date_due;
+				temp_d = land_prep.date_completed == null || land_prep.date_completed == undefined ? land_prep.date_due : land_prep.date_completed;
 				target_date = new Date(temp_d);
 			}
 			else if (method == 'Direct Seeding') {
-				temp_d = sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due;
+				temp_d = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
 				target_date = new Date(temp_d);
 				target_date = target_date.getDate() + 12;
 			}
 
-			DAT = new Date();
-			DAT = DAT.getDate() - (new Date (sowing.date_completed).getDate());
+			var temp_date = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
+			var temp_date = new Date(temp_date);
+			var now = new Date();
+
+			var diffTime = (now - temp_date);
+			var DAT = Math.ceil(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
+			if (DAT < 0) 
+				DAT = null
+
 			console.log('DAT: '+DAT);
 			
 			//target_date = formatDate(target_date, 'YYYY-MM-DD');
@@ -767,9 +789,8 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 				nutrient: 'P'
 			}];
 
-
 			//N Need-Based Approach
-			N = getNDVI(farm_name, DAT, N_recommendation);
+			N = getNDVI(farm_name, DAT, N_recommendation, Math.ceil(Math.ceil(diffTime / (1000 * 60 * 60 * 24))));
 
 			obj = { N: N, P: P, K: K};
 			var schedule_arr = mapFertilizertoSchedule(obj, materials, applied, recommendation);
@@ -785,13 +806,14 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 				name: 'checkbox',
 				value: ''
 			};
-
+			//console.log(schedule_arr);
 			var created_recommendation = work_order_list.filter(ele => ele.notes != '' && ele.notes != null && ele.notes.indexOf('Recommendation') >= 0);
 			var cr_notes;
 			var recommended_obj;
 			var recommended_arr = [];
 			var resources_arr = [];
 			var t_arr = [];
+			console.log(created_recommendation);
 			for (var i = 0; i < created_recommendation.length; i++) {
 				cr_notes = created_recommendation[i].notes.replace('(Recommendation)', '');
 
@@ -804,8 +826,11 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 					date: formatDate(new Date(created_recommendation[i].date_start), 'YYYY-MM-DD'),
 					fertilizer: [],
 					desc: [],
-					amount: []
+					amount: [],
+					status: []
 				};
+
+				recommended_obj.status.push(created_recommendation[i].status);
 
 				if (cr_notes.search('Application and ') && resources_arr.length > 1) {
 					var split = cr_notes.split(' and ');
@@ -920,15 +945,17 @@ function appendFertilizerHistory(records) {
 	var tr, td;
 	var keys = [];
 	var resources_arr = [];
-	var date, desc, fertilizer, amount;
+	var date, desc, fertilizer, amount, status;
 	for (var i = 0; i < records.length; i++) {
 		tr = createDOM({ type: 'tr', class: '', style: '', html: '' });
 
 		date = formatDate(new Date(records[i].date_completed != null || records[i].date_completed != undefined ? records[i].date_completed : records[i].date_due), 'YYYY-MM-DD');
 		desc = records[i].notes == null || records[i].notes == undefined ? 'N/A' : records[i].notes;
+		status = records[i].status;
 
 		date = createDOM({ type: 'td', class: 'align-middle', style: '', html: date });
 		desc = createDOM({ type: 'td', class: 'align-middle', style: '', html: desc });
+		status = createDOM({ type: 'td', class: 'align-middle', style: '', html: status });
 
 		tr.appendChild(date);
 		
@@ -944,14 +971,20 @@ function appendFertilizerHistory(records) {
 				tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: resources_arr[x].material_name }));
 				if (x == 0)
 					tr.appendChild(desc);
-				tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: resources_arr[x].qty+' bags' }));
-			
+				tr.appendChild(createDOM({ type: 'td', class: '', style: '', html: (Math.round(resources_arr[x].qty*100)/100)+' bags' }));
+
+				if (x == resources_arr.length - 1) {
+					console.log('!!!!');
+					tr.appendChild(status);
+				}
+
 				target.append(tr);
 			}
 
 			if (resources_arr.length > 1) {
-				date = $(date).attr('rowspan', '2');
-				desc = $(desc).attr('rowspan', '2');
+				date = $(date).attr('rowspan', resources_arr.length+1);
+				desc = $(desc).attr('rowspan', resources_arr.length+1);
+				status = $(date).attr('rowspan', resources_arr.length+1);
 			}
 		});
 
