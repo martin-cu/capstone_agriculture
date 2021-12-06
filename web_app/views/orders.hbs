@@ -191,7 +191,6 @@
                                                 <th>Date purchased date</th>
                                                 <th>Status</th>
                                                 {{!-- <th>cost per unit</th> --}}
-                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody id="materials_table">
@@ -205,7 +204,6 @@
                                                         <td>{{this.request_date}}</td>
                                                         <td>{{this.date_purchased}}</td>
                                                         <td>{{this.purchase_status}}</td>
-                                                        <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
                                                     </tr>
                                                 {{/each}}
                                             </tr>
@@ -244,7 +242,7 @@
                                             </thead>
                                             <tbody style="overflow: auto">
                                                 {{#each this.farm_purchases}}
-                                                    <tr>
+                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
                                                         <td>{{this.item_name}}</td>
                                                         <td>{{this.item_type}}</td>
                                                         <td>{{this.amount}}</td>
@@ -274,7 +272,7 @@
                         </div>
                         <div class="card-body">
                             {{#each pending}}
-                                <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;">
+                                <div class="card clickable" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="/orders/details?id={{this.purchase_id}}">
                                     <div class="row">
                                         <div class="col">
                                             <div class="mb-3"><label class="form-label">{{this.item_name}}</label></div>
@@ -301,7 +299,7 @@
                         </div>
                         <div class="card-body">
                             {{#each processing}}
-                                <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;">
+                                <div class="card clickable" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="/orders/details?id={{this.purchase_id}}">
                                     <div class="row">
                                         <div class="col">
                                             <div class="mb-3"><label class="form-label">{{this.item_name}}</label></div>
@@ -323,6 +321,8 @@
         </div>
             
     </div>
+
+</div>
 
 </div>
 

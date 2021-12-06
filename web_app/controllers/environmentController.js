@@ -603,7 +603,7 @@ exports.addSoilRecord = function(req, res) {
 		date_taken: req.body.date_taken
 	 };
 	 var farm_query = {
-	 	where: { key: 'ft.farm_id', value: req.body.farm_id },
+	 	where: { key: 't1.farm_id', value: req.body.farm_id },
 	 	group: 'farm_id'
 	 };
 
@@ -727,9 +727,9 @@ exports.detailedNutrientManagement = function(req, res) {
         				result[0].p_lvl = p_lvl;
         				result[0].k_lvl = k_lvl;
 					}
-        			html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_diagnose');
+        			html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
 					html_data['detailed_data'] = dataformatter.processNPKValues(result, result.farm_area, applied);
-					//console.log(html_data.detailed_data);
+					console.log(html_data.detailed_data);
 					res.render('nutrient_mgt_detailed', html_data);
         		}
         	});
@@ -1262,6 +1262,39 @@ exports.getPestDiseaseDetails = function(req, res){
 			}
 		});
 	}
+}
+
+
+//AJAX Soil Data
+exports.getFarmSoilData = function(req,res){
+	console.log("AJAX GET SOIL DETIALS");
+
+	var query = { farm_name: req.query.farm_name };
+	console.log(req.params.farm_name);
+
+	nutrientModel.getSoilRecord(query, function(err, result) {
+		if (err) {
+			throw err;
+		}
+		else {
+			materialModel.readResourcesUsed('Fertilizer', query.farm_name, function(err, applied) {
+        		if (err)
+        			throw err;
+        		else {
+        			if (result[0].soil_quality_id == null) {
+        				//Serves as default soil data if soil test has never been done
+        				var ph_lvl = 'N/A', n_lvl = 7.75, p_lvl = 4.0, k_lvl = 0;
+        				result[0].pH_lvl = ph_lvl;
+        				result[0].n_lvl = n_lvl;
+        				result[0].p_lvl = p_lvl;
+        				result[0].k_lvl = k_lvl;
+					}
+					var soil_data = dataformatter.processNPKValues(result, result.farm_area, applied);
+					res.send(soil_data);
+        		}
+        	});
+		}
+	});
 }
 
 

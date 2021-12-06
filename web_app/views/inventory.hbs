@@ -181,6 +181,43 @@
             </div>
             
         </div>
+        <div class="col">
+            <div class="card shadow mb-4" >
+                <div class="card-header " style="height: auto;background: rgba(255,165,0,0);">
+                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Low Stocks</h6>
+                </div>
+                <div class="card-body">
+                    <div class="card clickable" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="#">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3"><label class="form-label">{{this.item_name}}</label></div>
+                                <div class="mb-3"><label class="form-label">{{this.request_date}}</label></div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3 text-right"><label class="form-label">{{this.amount}} {{this.units}}</label></div>
+                                <div class="mb-3 text-right"><label class="form-label">Php {{this.purchase_price}}</label></div>
+                            </div>
+                        </div>
+                    </div>
+                    {{#each low_stocks}}
+                        <div class="card clickable" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="/orders/details?id={{this.purchase_id}}">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3"><label class="form-label">{{this.item_name}}</label></div>
+                                    <div class="mb-3"><label class="form-label">{{this.request_date}}</label></div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3 text-right"><label class="form-label">{{this.amount}} {{this.units}}</label></div>
+                                    <div class="mb-3 text-right"><label class="form-label">Php {{this.purchase_price}}</label></div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                        
+                </div>
+                
+            </div>
+        </div>
     </div>
 
     
