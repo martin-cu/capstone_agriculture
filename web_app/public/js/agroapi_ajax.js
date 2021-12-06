@@ -17,13 +17,15 @@ function preparePolygonCoordinates(data) {
 	return result_arr;
 }
 
-function prepareWorkerIDs(emp_arr, farm_id, status) {
+function prepareWorkerIDs(emp_arr, farm_id, status, mngr) {
 	var str = '';
 	for (var i = 0; i < emp_arr.length; i++) {
 		if (str != 0)
 			str += ', ';
 		str += "("+emp_arr[i].value+","+farm_id+',"'+status+'")'
 	}
+	str += ", ("+mngr+","+farm_id+',"'+status+'")';
+
 	return str;
 }
 
@@ -91,7 +93,7 @@ $(document).ready(function() {
 
 		        				if (workers.length != 0) {
 		        					var status = 'Active';
-		        					var m = prepareWorkerIDs(workers, db_record.farm_id, status);
+		        					var m = prepareWorkerIDs(workers, db_record.farm_id, status, form_data.farm_mngr);
 
 		        					$.post('/assign_farmers', { query: m }, function(assign_farmer) {
 

@@ -13,10 +13,13 @@ function update_color_meter(){
 
 function getFarmDetails(obj) {
 	var query = obj;
+	console.log('!!!')
+	console.log(obj);
 	$.get('/filter_farm_details', query, function(details) {
-		$('#monitor_land_type').html(details[0].land_type);
-		$('#monitor_farm_area').html(details[0].farm_area);
-		$('#monitor_desc').html(details[0].farm_desc);
+		console.log(details);
+		$('#monitor_land_type').html(details.details[0].land_type);
+		$('#monitor_farm_area').html(details.details[0].farm_area);
+		$('#monitor_desc').html(details.details[0].farm_desc);
 
 		query['status'] = 'Active';
 		query['position'] = 'Farm Manager'
@@ -240,29 +243,15 @@ function loadGeoMap(options) {
 	    
 }
 
-function tempReplaceFarm(reference) {
-	var query = '';
-	if (reference == 'farm1') {
-		query = 'Iowa Demo Field';
-	}
-	else if (reference == 'farm2') {
-		query = 'Iowa Demo Field';
-	}
-	else {
-		query = 'LA Farm (API Paid)';
-	}
-
-	return query;
-}
-
 $(document).ready(function() {
 	
-	console.log('sadasd');
+	console.log('GIS Map Loader!!');
 	console.log(view);
 
 	if (view == 'farm_monitoring') {
 		var viewed_farm_id;
 		var viewed_farm_name;
+		jQuery.ajaxSetup({async: false });
 
 		$.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
 			console.log(farms);
@@ -276,14 +265,15 @@ $(document).ready(function() {
 				li = '<li style="'+style+'" class="farm_li list-group-item" data="'+farms[i].farm_id+'"><span>'+farms[i].farm_name+'</span><span class="float-end">'+farms[i].farm_area+'ha'+'</span></li>';
 				$('#monitor_farm_list').append(li);
 			}
-			var query = tempReplaceFarm(farms[0].farm_name);
+			var query = farms[0].farm_name;
 
 			getFarmDetails({ farm_id: viewed_farm_id });
 			getGeoData(query);
 		});
 
-
-		$.get("ajax_farm_details", {farm_id : 1}, function(farm_details){
+		console.log(viewed_farm_id);
+		$.get("/ajax_farm_details", {farm_id : viewed_farm_id}, function(farm_details){
+			console.log(farm_details);
 			$("#farm_id").text(farm_details.details[0].farm_id);
 			$("#farm_name").text(farm_details.details[0].farm_name);
 			$("#farm_type").text(farm_details.details[0].land_type);
@@ -302,7 +292,7 @@ $(document).ready(function() {
 			$('#monitor_farmers_table').empty();
 
 			//To be removed
-			var query = tempReplaceFarm(viewed_farm_name);
+			var query = viewed_farm_name;
 			console.log(query);
 			getFarmDetails({ farm_id: viewed_farm_id });
 			getGeoData(query);
@@ -370,7 +360,7 @@ $(document).ready(function() {
 			type = 'NDVI';
 
 			//To be removed
-			var query = tempReplaceFarm(viewed_farm_name);
+			var query = viewed_farm_name;
 
 			getGeoData(query);
 		});
@@ -379,7 +369,7 @@ $(document).ready(function() {
 			type = 'Weather';
 			
 			//To be removed
-			var query = tempReplaceFarm(viewed_farm_name);
+			var query = viewed_farm_name;
 
 			getGeoData(query);
 		});

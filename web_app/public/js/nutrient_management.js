@@ -559,7 +559,8 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 			}
 		}
 	}
-
+	console.log(recommendation);
+	console.log(obj);
 	//Create obj for P recommendation
 	if (fertilizer_cont.p_fertilizer.arr.length != 0) {
 		temp_obj = {
@@ -619,14 +620,15 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 
 	//Create obj for N recommendation
 	var n_fertilizer_amt;
+	console.log(obj);
 	obj.N = obj.N.filter(ele => ele.amount != 0);
-
+	console.log(obj.N);
 	for (var i = 0; i < obj.N.length; i++) {
 		n_fertilizer_amt = obj.N[i].amount / fertilizer_cont.n_fertilizer.strongest.val;
 		temp_obj = {
 			fertilizer: fertilizer_cont.n_fertilizer.strongest.name,
 			amount: Math.round(n_fertilizer_amt * 100) / 100+' bags',
-			desc: obj.N[i].desc+' Nitrogen Application',
+			desc: obj.N[i].desc+' Nitrogen Application (N)',
 			date: obj.N[i].date,
 			nutrient: 'N'
 		}
@@ -688,7 +690,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			fertilizer_arr.push(fertilizer);
 		}
 	}
-
+	console.log("Farm ID: "+farm_id);
 	var query = {
 		where: {
 			key: ['farm_id'],
@@ -733,12 +735,12 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 				for (var i = 0; i < 2; i++) {
 					if (i == 0) {
 						k_date = new Date(land_prep.date_completed != null || land_prep.date_completed != undefined ? land_prep.date_completed : land_prep.date_due);
-						k_stage = 'Basal Potassium Application';
+						k_stage = 'Basal Potassium Application (K)';
 					}
 					else {
 						k_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
 						k_date = new Date(k_date.setDate(k_date.getDate() + 35));
-						k_stage = 'Early Panicle Potassium Application';
+						k_stage = 'Early Panicle Potassium Application (K)';
 					}
 
 					K.push({
@@ -751,7 +753,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			}
 			else {
 				K.push({
-					desc: 'Potassium Application',
+					desc: 'Potassium Application (K)',
 					date: formatDate(new Date(target_date),'YYYY-MM-DD'),
 					amount: details.k_lvl,
 					nutrient: 'K'
@@ -759,7 +761,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			}
 			//P Fertilizer 100% always
 			P = [{
-				desc: 'Phosphorous Application',
+				desc: 'Phosphorous Application (P)',
 				date: formatDate(new Date(target_date),'YYYY-MM-DD'),
 				amount: details.p_lvl,
 				nutrient: 'P'
@@ -767,7 +769,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 
 
 			//N Need-Based Approach
-			N = getNDVI(tempReplaceFarm(farm_name), DAT, N_recommendation);
+			N = getNDVI(farm_name, DAT, N_recommendation);
 
 			obj = { N: N, P: P, K: K};
 			var schedule_arr = mapFertilizertoSchedule(obj, materials, applied, recommendation);
@@ -860,21 +862,6 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			}
 		});
 	});
-}
-
-function tempReplaceFarm(reference) {
-	var query = '';
-	if (reference == 'farm1') {
-		query = 'Iowa Demo Field';
-	}
-	else if (reference == 'farm2') {
-		query = 'Iowa Demo Field';
-	}
-	else {
-		query = 'LA Farm (API Paid)';
-	}
-
-	return query;
 }
 
 function calculateDeficientN(reqs, applied) {

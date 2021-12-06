@@ -63,7 +63,7 @@ exports.getFarmDetails = function(req, res) {
 			throw err;
 		else {
 			html_data["details"] = details;
-			console.log(details);
+			//console.log(details);
 		}
 
 		materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Seed"}, function(err, seeds){
@@ -119,8 +119,8 @@ exports.getFarmDetails = function(req, res) {
 									html_data["pesticide"] = pesticides;
 								}
 								
-								console.log(req.query.center);
-								console.log("CENTER");
+								//console.log(req.query.center);
+								//console.log("CENTER");
 								var center = req.query.center;
 								if(center == null){
 									var lat = 13.073091;
@@ -260,7 +260,7 @@ exports.getFarmDetails = function(req, res) {
 															if(x >= 3)
 																possible_pests.pop(x);
 														}
-														console.log(possible_pests);
+														//console.log(possible_pests);
 													}
 													farmModel.getFarmerQueries(farm_id, null, function(err, queries){
 														if(err)
@@ -272,6 +272,8 @@ exports.getFarmDetails = function(req, res) {
 														html_data["statements"] = statements;
 														html_data["probability"] = possible_pests;
 														html_data["main"] = forecast_body[0].main;
+														console.log('********************');
+														//console.log(html_data);
 														res.send(html_data);
 													});
 												});
