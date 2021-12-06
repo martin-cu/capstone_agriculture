@@ -971,7 +971,6 @@ $(document).ready(function() {
 		// ph_inp.addEventListener('input', (e) => {
 		// 	initializeBars(e);
 		// });
-
 		$.get('/get_farm_list', {  }, function(result) {
 			farm_list = result;
 			for (var i = 0; i < result.length; i++) {
@@ -1073,6 +1072,23 @@ $(document).ready(function() {
 			}
 		});
 
+		$.get('/get_farm_list', {  }, function(result) {
+			farm_list = result;
+			for (var i = 0; i < result.length; i++) {
+				$('#farm_id').append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
+			}
+		});
+
+		$('#soil_data_form').on('submit', function(e) {
+			e.preventDefault();
+			var form_data = $('#soil_data_form').serializeJSON();
+			form_data = processSoilTest(form_data);
+			
+			$.post('/nutrient_management/add_record', form_data, function(record) {
+				console.log('Successfully added soil record');
+				window.location.href = record;
+			})
+		});
 	}
 
 });
