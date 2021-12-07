@@ -280,6 +280,13 @@ $(document).ready(function() {
 			$("#farm_desc").text(farm_details.details[0].farm_desc);
 			$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 
+
+			$.get("/get_crop_plans", { status: ['Active', 'In-Progress'], where : {key : "farm_name", val : farm_details.details[0].farm_name}}, function(result){
+				$("#crop_calendar_list").empty();
+				for(i = 0; i < result.length; i++)
+					$("#crop_calendar_list").append('<option value="' + result[i].calendar_id + '">' + result[i].crop_plan + '</option>');
+				
+			});
 			$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
 				
 				$("#ph_lvl").text(soil_data.pH_lvl);
@@ -357,7 +364,13 @@ $(document).ready(function() {
 					$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
 					$("#farm_desc").text(farm_details.details[0].farm_desc);
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm22");
-	
+					
+					$("#crop_calendar_list").empty();
+					$.get("/get_crop_plans", { status: [], where : {key : "farm_name", val : farm_details.details[0].farm_name}}, function(result){
+						for(i = 0; i < result.length; i++)
+							$("#crop_calendar_list").append('<option value="' + result[i].calendar_id + '">' + result[i].crop_plan + '</option>');
+						
+					});
 					var i;
 					//UPDATE ROUSEOURCES
 					for(i = 0; i < 5; i++){
