@@ -308,6 +308,15 @@ div.scrollmenu {
 	  margin-right: 10px;
   }
 
+.wo-card{
+	max-width: 500px;
+	min-width: 500px;
+	min-height: 200px;
+	max-height: 200px;
+	text-align: justify;
+	margin-right: 15px;
+}
+
 .link {
 	color:  #0000FF;
 }

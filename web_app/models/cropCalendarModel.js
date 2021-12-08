@@ -70,10 +70,7 @@ exports.getCropCalendars = function(query, next) {
 	}
 	//sql += " union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, type, date_completed from work_order_table where type = 'Sow Seed' ) as t group by calendar_id";
 	sql += " union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, type, date_completed,null, null from work_order_table where type = 'Sow Seed' and status = 'Completed' union select crop_calendar_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,type, date_completed from work_order_table where type = 'Land Preparation' and status = 'Completed' ) as t group by calendar_id order by farm_id";
-	console.log("999999999999999999999999999999999");
-	console.log(sql);
-	console.log("999999999999999999999999999999999");
-
+	// console.log(sql);
 	mysql.query(sql, next);
 }
 
