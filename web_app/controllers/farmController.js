@@ -366,18 +366,18 @@ exports.retireFarm = function(req, res) {
 // 	res.render('crop_calendar', html_data); //crop_calendar
 // }
 
-exports.getAddCropCalendar = function(req, res) {
-	var html_data = {};
-	html_data["title"] = "Crop Calendar";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
-	res.render('add_crop_calendar', html_data); //crop_calendar_test
-}
+// exports.getAddCropCalendar = function(req, res) {
+// 	var html_data = {};
+// 	html_data["title"] = "Crop Calendar";
+// 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
+// 	res.render('add_crop_calendar', html_data); //crop_calendar_test
+// }
 
-exports.getAddCropCalendar2 = function(req, res) { //delete later
-	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
-	res.render('crop_calendar_test', html_data); //crop_calendar_test
-}
+// exports.getAddCropCalendar2 = function(req, res) { //delete later
+// 	var html_data = {};
+// 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+// 	res.render('crop_calendar_test', html_data); //crop_calendar_test
+// }
 
 exports.getHarvestCycle = function(req, res) {
 	var html_data = {};

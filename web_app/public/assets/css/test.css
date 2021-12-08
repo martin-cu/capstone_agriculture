@@ -333,6 +333,11 @@ div.card-header.mini.py-3 {
     color: white !important;
 }
 
+div.card-header.mini2.py-3, div.card-header.mini2.py-3 h6  {
+    background-color: white !important;
+    color: #657429 !important;
+}
+
 h6 {
     font-weight: bold;
 }

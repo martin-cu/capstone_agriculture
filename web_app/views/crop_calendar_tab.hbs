@@ -7,16 +7,18 @@
             <p class="d-inline-flex m-0 font-weight-bold" style="color: rgb(255,255,255);">Active Crop Calendar</p><button onclick='window.location="/crop_calendar/add"' class="btn btn-primary d-inline-flex float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);font-size: 12px;"><span>Create Crop Calendar<i class="fa fa-plus-circle" style="margin-left: 5px;"></i></span></button>
         </div>
         <div class="card-body">
+            {{!-- Temporary navigation to detailed crop calendar page --}}
+            <button onclick='window.location="/crop_calendar/details"' class="btn btn-primary d-inline-flex float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px; margin-bottom: 10px; background: #EDD172;border-style: none;color: rgb(51,44,31);font-size: 12px;"><span>Crop Calendar Details (temporary)</span></button>
             <div class="table-responsive">
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Land Preparation</th>
-                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Sowing</th>
-                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Vegetation</th>
-                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Reproductive</th>
-                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Ripening</th>
-                            <th style="text-align: center;padding: 10px 12px;background: #584c33;color: rgb(255,255,255);">Harvest</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #212529;color: rgb(255,255,255);">Land Preparation</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #212529;color: rgb(255,255,255);">Sowing</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #212529;color: rgb(255,255,255);">Vegetation</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #212529;color: rgb(255,255,255);">Reproductive</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #212529;color: rgb(255,255,255);">Ripening</th>
+                            <th style="text-align: center;padding: 10px 12px;background: #212529;color: rgb(255,255,255);">Harvest</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
