@@ -309,12 +309,15 @@ div.scrollmenu {
   }
 
 .wo-card{
-	max-width: 500px;
-	min-width: 500px;
+	max-width: 400px;
+	min-width: 400px;
 	min-height: 200px;
 	max-height: 200px;
 	text-align: justify;
 	margin-right: 15px;
+	padding-top : 5px; 
+	padding-left : 10px; 
+	padding-right : 10px;
 }
 
 .link {
@@ -342,6 +345,7 @@ div.scrollmenu {
 /* width */
 ::-webkit-scrollbar {
 	width: 10px;
+	height: 10px;
   }
   
   /* Track */
@@ -379,4 +383,14 @@ div.scrollmenu {
   @keyframes spin {
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
+  }
+
+
+
+  .calendar-wos{
+	width: 70%; padding : 10px; 
+	flex-direction: row-reverse;
+	justify-content: right; 
+	border-radius : 5px; 
+	border: 1px solid #979797; 
   }
