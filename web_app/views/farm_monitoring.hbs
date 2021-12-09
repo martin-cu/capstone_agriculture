@@ -532,21 +532,94 @@
                         <div class="col-xl-12">
                             <div class="card shadow" style="margin-bottom: 10px;">
                                 <div class="card-body">
-                                    <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Current Crop Cycle</h6>
+                                    <div class="row">
+                                        <div class="col-xl-2"><h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px; margin : 20px;">Current Crop Cycle </h6></div>
+                                        <div class="col-xl-8">
+
+                                        </div>
+                                        <div class="col-xl-1">
+                                            <select class="form-control  " id="crop_calendar_list" name="" form="" style="width: 200px;">
+                                                <option value="Seed">Crop Calendar 1</option>
+                                                <option value="Pesticide">Crop Calendar 2</option>
+                                                <option value="Fertilizer">Crop Calendar 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    
                                     <div class="multisteps-form__progress" style="margin-top: 20px;"><a class="btn multisteps-form__progress-btn js-active" role="button" title="User Info">Land Preparation</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Sowing</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Vegetation&nbsp;</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Reproduction</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Ripening</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Harvest</a></div>
                                     <form id="main-form" class="multisteps-form__form" style="margin-top: 10px;">
                                         <div id="single-form-next" class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn">
                                             <h3 class="text-center multisteps-form__title">Land Preparation</h3>
-                                            <div class="form-row">
-                                                <div class="col-xl-2"><img src="assets/img/land_prep.jpg" style="width: 200px;"></div>
-                                                <div class="col-xl-9"><span>IRRI's guidelines here</span></div>
+                                            <div class="scrollmenu" id="" style="justify-content: center; ">
+                                                    <div class="card-body card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350" style="width : 500px; padding : 5px;">
+                                                            
+                                                            <div class="row" style="height: 40px; margin-top : 0px;">
+                                                                <div class="col card-title">
+                                                                    <h4 class="card-title">TYPE</h4>
+                                                                </div>
+                                                                <div class="col">
+                                                                    Pending
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="height: 30px;">
+                                                                <div class="col">
+                                                                    desc desc desc desc desc desc desc desc desc 
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="height: 30px;">
+                                                                <div class="col">
+                                                                    START DATE
+                                                                </div>
+                                                                <div class="col">
+                                                                    COMPLETE DATE
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="height: 30px;">
+                                                                <div class="col">
+                                                                    2021-12-02
+                                                                </div>
+                                                                <div class="col">
+                                                                    2021-12-02
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="height: 30px;">
+                                                                <div class="col">
+                                                                    NOTES
+                                                                </div>
+                                                                <div class="col">
+                                                                    Pending
+                                                                </div>
+                                                            </div>
+                                                    </div>
                                             </div>
+                                            {{!-- <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align: left;">Status</th>
+                                                        <th>Type</th>
+                                                        <th>Start Date</th>
+                                                        <th>Complete Date</th>
+                                                        <th>Notes</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-details" id="land-prep-table">
+                                                    <tr class="clickable">
+                                                        <td style="text-align: left;">Status</td>
+                                                        <td>Type</td>
+                                                        <td>Start Date</td>
+                                                        <td>Complete Date</td>
+                                                        <td>Notes</td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                                            </table> --}}
                                             <div id="form-content" class="multisteps-form__content">
                                                 <div id="next-button" class="button-row d-flex mt-4"><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev-3" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
-                                            <h3 class="text-center multisteps-form__title">About</h3>
+                                            <h3 class="text-center multisteps-form__title">Sowing</h3>
                                             <div id="form-content-4" class="multisteps-form__content">
                                                 <div id="input-grp-double-4" class="form-row mt-4">
                                                     <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
@@ -559,7 +632,7 @@
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev-2" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
-                                            <h3 class="text-center multisteps-form__title">About</h3>
+                                            <h3 class="text-center multisteps-form__title">Vegetation</h3>
                                             <div id="form-content-3" class="multisteps-form__content">
                                                 <div id="input-grp-double-3" class="form-row mt-4">
                                                     <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
@@ -572,7 +645,7 @@
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev-1" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
-                                            <h3 class="text-center multisteps-form__title">About</h3>
+                                            <h3 class="text-center multisteps-form__title">Reproduction</h3>
                                             <div id="form-content-2" class="multisteps-form__content">
                                                 <div id="input-grp-double-2" class="form-row mt-4">
                                                     <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
@@ -585,7 +658,7 @@
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev-4" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
-                                            <h3 class="text-center multisteps-form__title">About</h3>
+                                            <h3 class="text-center multisteps-form__title">Ripening</h3>
                                             <div id="form-content-5" class="multisteps-form__content">
                                                 <div id="input-grp-double-5" class="form-row mt-4">
                                                     <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
@@ -598,7 +671,7 @@
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
-                                            <h3 class="text-center multisteps-form__title">About</h3>
+                                            <h3 class="text-center multisteps-form__title">Harvest</h3>
                                             <div id="form-content-1" class="multisteps-form__content">
                                                 <div id="input-grp-double-1" class="form-row mt-4">
                                                     <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>

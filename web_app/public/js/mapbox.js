@@ -54,6 +54,11 @@ function getFarmDetails(obj) {
 
 		});
 
+		$.get("/get_crop_plans", { status: ['Active', 'In-Progress'], where : {key : "farm_name", val : details.details[0].farm_name}}, function(result){
+			$("#crop_calendar_list").empty();
+			for(i = 0; i < result.length; i++)
+				$("#crop_calendar_list").append('<option value="' + result[i].calendar_id + '">' + result[i].crop_plan + '</option>');
+		});
 	});
 }
 
@@ -252,6 +257,7 @@ $(document).ready(function() {
 		var viewed_farm_name;
 		jQuery.ajaxSetup({async: false });
 
+
 		$.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
 			console.log(farms);
 			var li, style = 'border: 1px solid rgba(0,0,0,.125)';
@@ -266,65 +272,102 @@ $(document).ready(function() {
 			}
 			var query = farms[0].farm_name;
 
-			getFarmDetails({ farm_id: viewed_farm_id });
+			getFarmDetails({ farm_id: viewed_farm_id, calendar_id : viewed_farm_id});
 			getGeoData(query);
 		});
 
-		console.log(viewed_farm_id);
-		$.get("/ajax_farm_details", {farm_id : viewed_farm_id}, function(farm_details){
-			console.log(farm_details);
-			$("#farm_id").text(farm_details.details[0].farm_id);
-			$("#farm_name").text(farm_details.details[0].farm_name);
-			$("#farm_type").text(farm_details.details[0].land_type);
-			$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
-			$("#farm_desc").text(farm_details.details[0].farm_desc);
-			$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
+		// console.log("viewed_farm_id");
+		// console.log(viewed_farm_name);
+		
+		var coordinates = [];
+		var center = [];
 
-			$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
+		$.get('/agroapi/polygon/readAll', {}, function(polygons) {
+			var polygon_id;
+			var options = {};
+			for (var i = 0; i < polygons.length; i++) {
+				if (viewed_farm_name == polygons[i].name) {
+					polygon_id = polygons[i].id;
+					coordinates = polygons[i].geo_json.geometry.coordinates[0];
+
+					center = polygons[i].center;
+				}
+			}
+			console.log(polygons)
+			var n_date = new Date();
+			n_date.setDate(n_date.getDate() - 30);
+
+			options = {
+				center: center,
+				coordinates: coordinates
+			}
+
+			//Get Crop calendar id
+			var calendar_id = $("#crop_calendar_list").val();
+			$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
+				$("#farm_id").text(farm_details.details[0].farm_id);
+				$("#farm_name").text(farm_details.details[0].farm_name);
+				$("#farm_type").text(farm_details.details[0].land_type);
+				$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
+				$("#farm_desc").text(farm_details.details[0].farm_desc);
+				$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
+	
+	
 				
-				$("#ph_lvl").text(soil_data.pH_lvl);
-				$("#n_lvl").text(soil_data.n_val);
-				$("#p_lvl").text(soil_data.p_val);
-				$("#k_lvl").text(soil_data.k_val);
+				$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
+					
+					$("#ph_lvl").text(soil_data.pH_lvl);
+					$("#n_lvl").text(soil_data.n_val);
+					$("#p_lvl").text(soil_data.p_val);
+					$("#k_lvl").text(soil_data.k_val);
+	
+					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name);
+				});
+	
+				var i;
+				//UPDATE ROUSEOURCES
+				for(i = 0; i < 5; i++){
+					if(farm_details.seed[i].item_name == null)
+						$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"> <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					else
+						$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.seed[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.seed[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+				}
+				for(i = 0; i < 5; i++){
+					if(farm_details.fertilizer[i].item_name == null)
+						$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					else
+						$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.fertilizer[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.fertilizer[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+				}
+				for(i = 0; i < 5; i++){
+					if(farm_details.pesticide[i].item_name == null)
+						$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					else
+						$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+				}
+				//UPDATE PEST AND DISEASE CARD
+				for(i = 0; i < 3; i++){
+					if(farm_details.probability[i].pd_name == null)
+						$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
+					else
+						$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
+					
+	
+				}
 
-				$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name);
+				for(i = 0; i < farm_details.workorders.length; i++){
+					$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
+				}
+				update_color_meter();
 			});
-
-			var i;
-			//UPDATE ROUSEOURCES
-			for(i = 0; i < 5; i++){
-				if(farm_details.seed[i].item_name == null)
-					$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"> <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-				else
-					$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.seed[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.seed[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-			}
-			for(i = 0; i < 5; i++){
-				if(farm_details.fertilizer[i].item_name == null)
-					$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-				else
-					$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.fertilizer[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.fertilizer[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-			}
-			for(i = 0; i < 5; i++){
-				if(farm_details.pesticide[i].item_name == null)
-					$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-				else
-					$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-			}
-			//UPDATE PEST AND DISEASE CARD
-			for(i = 0; i < 3; i++){
-				if(farm_details.probability[i].pd_name == null)
-					$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
-				else
-					$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
-				
-
-			}
-			update_color_meter();
 		});
 
-		
 
 
+
+
+
+
+		//ONCLICK
 		$('#monitor_farm_list').on('click', '.farm_li', function() {
 
 			viewed_farm_id = $(this).attr('data');
@@ -335,7 +378,7 @@ $(document).ready(function() {
 			//To be removed
 			var query = viewed_farm_name;
 			console.log(query);
-			getFarmDetails({ farm_id: viewed_farm_id });
+			getFarmDetails({ farm_id: viewed_farm_id ,  calendar_id : viewed_farm_id});
 			getGeoData(query);
 
 			//Y2 Add Farm Monitoring Ajax
@@ -350,14 +393,16 @@ $(document).ready(function() {
 				}
 				
 				//GET DETAILS OF NEW FARM
-				$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center}, function(farm_details){
+
+				var calendar_id = $("#crop_calendar_list").val();
+				$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
 					$("#farm_id").text(farm_details.details[0].farm_id);
 					$("#farm_name").text(farm_details.details[0].farm_name);
 					$("#farm_type").text(farm_details.details[0].land_type);
 					$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
 					$("#farm_desc").text(farm_details.details[0].farm_desc);
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm22");
-	
+					
 					var i;
 					//UPDATE ROUSEOURCES
 					for(i = 0; i < 5; i++){

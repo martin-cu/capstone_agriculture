@@ -2,6 +2,7 @@ const employeeModel = require('../models/employeeModel');
 const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
 const materialModel = require('../models/materialModel.js');
+const workOrderModel = require('../models/workOrderModel.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
@@ -57,7 +58,18 @@ exports.getAddFarm = function(req, res) {
 exports.getFarmDetails = function(req, res) {
 	var html_data = {};
 	var query = req.query;
+	var center = req.query.center;
+	var coordinates = req.query.coordinates;
 	var farm_id = req.query.farm_id;
+
+
+
+	// console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+	// console.log(center);
+	// console.log(coordinates);
+	// console.log(farm_id);
+	// console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+
 	farmModel.filteredFarmDetails({farm_id : req.query.farm_id}, function(err, details) {
 		if (err)
 			throw err;
@@ -268,13 +280,36 @@ exports.getFarmDetails = function(req, res) {
 														else{
 															
 														}
-														html_data["queries"] = queries;
-														html_data["statements"] = statements;
-														html_data["probability"] = possible_pests;
-														html_data["main"] = forecast_body[0].main;
-														console.log('********************');
-														//console.log(html_data);
-														res.send(html_data);
+
+
+														//ADD CROP CYCLE DETAILS (WORK ORDERS)
+														var calendar_id = req.query.calendar_id;
+														var wo_query = {
+															where: {
+																key: ['crop_calendar_id'],
+																value: [calendar_id]
+															},
+															order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+														};
+														workOrderModel.getWorkOrders(wo_query, function(err, workorders){
+															if(err)
+																 throw err;
+															else{
+
+															}
+															console.log("WORKORDERS");
+															console.log(workorders);
+
+															html_data["workorders"] = workorders;
+															html_data["queries"] = queries;
+															html_data["statements"] = statements;
+															html_data["probability"] = possible_pests;
+															html_data["main"] = forecast_body[0].main;
+															console.log('********************');
+															//console.log(html_data);
+															res.send(html_data);
+														});
+
 													});
 												});
 											}
@@ -331,18 +366,18 @@ exports.retireFarm = function(req, res) {
 // 	res.render('crop_calendar', html_data); //crop_calendar
 // }
 
-exports.getAddCropCalendar = function(req, res) {
-	var html_data = {};
-	html_data["title"] = "Crop Calendar";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
-	res.render('add_crop_calendar', html_data); //crop_calendar_test
-}
+// exports.getAddCropCalendar = function(req, res) {
+// 	var html_data = {};
+// 	html_data["title"] = "Crop Calendar";
+// 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
+// 	res.render('add_crop_calendar', html_data); //crop_calendar_test
+// }
 
-exports.getAddCropCalendar2 = function(req, res) { //delete later
-	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
-	res.render('crop_calendar_test', html_data); //crop_calendar_test
-}
+// exports.getAddCropCalendar2 = function(req, res) { //delete later
+// 	var html_data = {};
+// 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+// 	res.render('crop_calendar_test', html_data); //crop_calendar_test
+// }
 
 exports.getHarvestCycle = function(req, res) {
 	var html_data = {};

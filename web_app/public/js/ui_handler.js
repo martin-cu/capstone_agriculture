@@ -68,6 +68,12 @@ $(document).ready(function() {
 		processModalStep($(this).parent().attr('id'), $(this).val());
 	});
 	$('[data-dismiss="modal"]').on('click', function() {
+		if($("#update_purchase_btn").val() == "Pending"){
+			$("#process_step").toggle("show");
+		}
+		else if($("#update_purchase_btn").val() == "Processing"){
+		   $("#purchase_step").toggle("show");
+		}
 		resetForm($(this).val());
 	});
 })

@@ -75,9 +75,10 @@ router.get("/ajaxGetSoilData", environmentController.getFarmSoilData);
 
 //Crop Calendar
 router.get('/crop_calendar', cropCalendarController.getCropCalendarTab);
-router.get('/crop_calendar/add', farmController.getAddCropCalendar);
+router.get('/crop_calendar/add', cropCalendarController.getAddCropCalendar);
+router.get('/crop_calendar/details', cropCalendarController.getDetailedCropCalendar); //fix path later
 
-router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later
+//router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later
 
 router.get('/harvest_cycle', farmController.getHarvestCycle);
 

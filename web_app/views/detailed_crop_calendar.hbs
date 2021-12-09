@@ -1,0 +1,532 @@
+<style>
+
+table td{
+    color:#332C1F;
+} 
+
+thead {
+    background-color: #212529 !important;
+    color: white;
+}
+
+li > span {
+    color:#332C1F;
+}
+
+div.card-body h6, div.card-body p {
+    color:#332C1F;
+}
+
+
+
+
+.table.table.tablesorter > thead > tr, .table.table.tablesorter > thead > tr > td {
+  font-size: .9em;
+  font-weight: 400;
+  background: white !important;
+  text-transform: capitalize !important;
+  color: #ffffff;
+}
+
+.table.table.tablesorter th {
+    background-color: white;
+    color: #BD9E4B;
+}
+
+</style>
+
+<div class="container-fluid" style="color: #332C1F;">
+
+     <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">Farms &gt; {{title}}</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
+    </div>
+    <!-- {{!-- HEADER --}}
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0" style="font-family: Roboto, sans-serif;color: #584c33;font-weight: 500;">Farms</h3>
+    </div> -->
+
+    <div class="row">
+        {{!-- <div class="col-lg-12 col-xl-12 col-xxl-12"> --}}
+        <div class="col-lg-12 col-lg-12 col-xxl-12">
+
+            {{!-- CARD --}}
+            <div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto;">
+
+                {{!-- START CARD HEADER --}}
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
+                    
+                    <div class="col" style="max-width: 70px; padding-top: 2px">
+
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/crop_calendar"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
+                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                        </button>        
+
+                    </div>
+
+                    <div class="col" style="margin-right: 650px; padding-top: 15px">
+                        <h6>PALAY 2021 </h6>
+            
+                    </div>
+
+
+                    {{!-- <div class="btn-group" role="group"><button class="btn btn-primary" type="button" style="background: #BDBE14;font-weight: bold;border-style: none;border-left-color: rgba(78,115,223,0);border-radius: 10px;padding: 4px 10px;">Farms</button><a class="btn btn-primary" role="button" style="margin-left: 10px;background: rgba(189,190,20,0);border-style: none;border-color: var(--bs-pink);padding: 4px 10px;" href="Materials.html">Materials</a></div> --}}
+                    <div class="dropdown no-arrow" style="padding-top: 5px">
+                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                        </button>
+                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                            <a class="dropdown-item notSidebar" href="#">&nbsp;View Materials</a>
+                            <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item notSidebar" href="#">&nbsp;Cancel Crop Calendar</a>
+                        </div>
+                    </div>
+                </div>
+                {{!-- END CARD HEADER --}}
+
+                {{!-- START CARD BODY --}}
+                <div class="card-body">
+                    
+                    <div class="row">
+                                <div class="col" style="padding-top: 5px;">
+                                            <div class="card" style="margin-bottom: 10px; border-style: none">
+                                                <div class="card-header mini py-3" style="background-color: white !important; border-style: none;">
+                                                    <h5 class="fw-bold m-0" style="color: #332C1F;">Crop Calendar Information<br></h5>
+                                                </div>
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive" style="border-style: none;">
+                                                        <table class="table">
+                                                            <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr style="border-style: none; height: 90px;">
+                                                                    <td style="border-style: none; padding-left: 50px; padding-right: 120px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Name<br></span> <span class="d-xxl-flex justify-content-xxl-start">PALAY 2021<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 50px;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm<br></span><span class="d-xxl-flex justify-content-xxl-start">Farm Name<br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none; padding-left: 50px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Land Preparation Date<br></span><span class="d-xxl-flex justify-content-xxl-start">dd/mm/yyyy<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 50px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Current Stage<br></span><span class="d-xxl-flex justify-content-xxl-start">Land Preparation<br></span></td>
+                                                                </tr>
+                                          
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <div class="container-fluid" style="background-color: #EEEEEE; padding: 20px; border-radius: 10px;  outline: 1px solid #e3e6f0; width:auto">      
+                                                    
+                                                    <label for="" style="font-weight: bold">Soil Data</label>
+                                                    <center>
+                                                    <div class="row" style="padding-left: 5px;">
+                                                    
+                                                    <div class="col">
+                                                    <label for="soil_texture" style="font-weight: bold;">Soil Texture</label>
+                                                    <div id="soil_texture">
+                                                    N/A
+                                                    </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                    <label for="ph_lvl" style="font-weight: bold;">pH Lvl</label>
+                                                    <div id="ph_lvl">
+                                                    N/A
+                                                    </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                    <label for="n_lvl" style="font-weight: bold;">N</label>
+                                                    <div id="n_lvl">
+                                                    N/A
+                                                    </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                    <label for="p_lvl" style="font-weight: bold;">P</label>
+                                                    <div id="p_lvl">
+                                                    N/A
+                                                    </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                    <label for="k_lvl" style="font-weight: bold;">K</label>
+                                                    <div id="k_lvl">
+                                                    N/A
+                                                    </div>
+                                                    </div>
+
+                                                    </div>
+                                                    </center>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                
+                                {{!-- CARD TABS --}}
+                                <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto">
+ 
+                                <div class="card-header d-flex justify-content-between align-items-center" style="height:auto; background-color: #212529 !important;">
+
+                                    <ul class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
+                                        <li class="nav-item"><a id="sowing-plan-tab" class="nav-link active" data-toggle="tab" href="#sowing-plan"role="tab" aria-controls="sowing-plan" aria-selected="true" 
+                                            style="background: #F0F0F0;">Sowing Plan</a></li>
+
+                                        <li class="nav-item"><a id="fertilizer-plan-tab" class="nav-link" data-toggle="tab" href="#fertilizer-plan"role="tab" aria-controls="fertilizer-plan" aria-selected="false" 
+                                            style="background: #F0F0F0;">Fertilizer Plan</a></li>
+
+                                        <li class="nav-item"><a id="pesticide-application-plan-tab" class="nav-link" data-toggle="tab" href="#pesticide-application-plan"role="tab" aria-controls="pesticide-application-plan" aria-selected="false" 
+                                            style="background: #F0F0F0;">Pesticide Application Plan</a></li>
+                                            
+                                        <li class="nav-item"><a id="work-orders-tab" class="nav-link" data-toggle="tab" href="#work-orders"role="tab" aria-controls="work-orders" aria-selected="false" 
+                                            style="background: #F0F0F0;">Work Orders</a></li>
+                                    </ul>
+                                        {{!-- <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"><i class="fas fa-ellipsis-v d-xxl-flex justify-content-xxl-end text-gray-400"></i></button>
+                                            <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                                                <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
+                                                    <div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a>
+                                            </div>
+                                        </div> --}}
+
+                                </div>
+
+                                <div class="card-body" style="background-color: #FCFCFC !important;">
+                                        
+                                        {{!-- TAB CONTENT --}}
+
+                                        <div class="tab-content" id="nav-tabContent">
+
+                                            {{!-- TAB 1 --}}
+                                            <div class="tab-pane fade show active" id="sowing-plan" role="tabpanel" aria-labelledby="sowing-plan-tab">
+                                            
+                                            <div class="card" style="margin-bottom: 10px; border-style: none; background-color: #FCFCFC !important;">
+                                           
+
+                                                <div class="card-body" style="background-color: #FCFCFC !important;">
+                                                    <div class="table-responsive" style="border-style: none;">
+                                                        <table class="table">
+                                                            <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr style="border-style: none; height: 90px;">
+                                                                    <td style="border-style: none; padding-left: 30px; padding-right: 260px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed<br></span> <span class="d-xxl-flex justify-content-xxl-start">Seed Name<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Rate (kg/ha)<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty<br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none; height: 90px">
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method<br></span><span class="d-xxl-flex justify-content-xxl-start">Planting Method Name<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Dates<br></span><span class="d-xxl-flex justify-content-xxl-start">dd/mm/yyyy to dd/mm/yyyy<br></span></td>
+                                                                </tr>
+
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Harvest Dates<br></span><span class="d-xxl-flex justify-content-xxl-start">dd/mm/yyyy to dd/mm/yyyy<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Expected Yield (cavans/ha)<br></span><span class="d-xxl-flex justify-content-xxl-start">0 cavans/ha<br></span></td>
+                                                                </tr>
+                                          
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            </div>
+                                            {{!-- END OF TAB 1 --}}
+
+                                            {{!-- TAB 2 --}}
+                                            <div class="tab-pane fade" id="fertilizer-plan" role="tabpanel" aria-labelledby="fertilizer-plan-tab">                               
+                                            
+                                            <div class="row">
+                                            <div class="col">
+                            
+                                                <div class="card shadow mb-4">
+                                                    <div class="card-header mini2 py-3" style="height: auto; border-style: none">
+                                                        <h6 class="fw-bold m-0">Fertilizer Application History<br></h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                <table class="table" id="fertilizer_history">
+                                                                    <tr>
+                                                                        <th>Date Applied</th>
+                                                                        <th>Fertilizer</th>
+                                                                        <th>Description</th>
+                                                                        <th>Amount</th>
+                                                                        <th>Status</th>
+                                                                    </tr>
+
+                                                                </table>
+                                                            </div>
+                                                      
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            </div>
+                    
+
+                                                <div class="row">
+                                                <div class="col">
+                                                    <div class="card shadow mb-4">
+                                                        <div class="card-header mini2 py-3" style="height: auto; border-style: none">
+                                                            <h6 class="fw-bold m-0" style="color: #FFFFFF;">Optimal Recommendation<br></h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <table class="table" id="schedule_table">
+                                                                <tr>
+                                                                    <th>Application Date</th>
+                                                                    <th>Fertilizer</th>
+                                                                    <th>Description</th>
+                                                                    <th>Amount</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </table>
+
+                                                            <button class="btn btn-success float-right hide mb-3" type="button" id="generate_wo">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                           
+                                                
+                                            </div>
+                                            {{!-- END OF TAB 2 --}}
+
+                                            {{!-- TAB 3 --}}
+                                            <div class="tab-pane fade" id="pesticide-application-plan" role="tabpanel" aria-labelledby="pesticide-application-tab">
+                                            
+                                            <h6 style="font-weight: bold; margin-bottom: 10px; margin-top: 20px">Recently Detected Pests</h6>
+                        
+                                            {{!-- START CARDS --}}
+
+                                            {{!-- Maybe the for each handlebar could be used for each detected pest? --}}
+                                            <div class="row">
+
+                                            {{!-- PEST INFORMATION CARD --}}
+                                            <div class="col">
+                                                <div class="card shadow mb-4">
+                                                    <div class="card-header mini2 py-3" style="height: auto; border-style: none">
+                                                        <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest 1<br></h6>
+                                                    </div>
+                                                    <div class="card-body" style="height: 239.97px;">
+                                                        <div class="table-responsive" style="border-style: none;">
+                                                            <table class="table">
+                                                                <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest Name<br></span><span class="d-xxl-flex justify-content-xxl-start">[Pest Name]<br></span></td>
+                                                                    </tr>
+                                                                    <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{!-- END OF PEST INFORMATION CARD --}}
+ 
+                                            {{!-- PEST APPLICATION PLAN CARD --}}
+                                            <div class="col">
+                                                <div class="card shadow mb-4">
+                                                    <div class="card-header mini2 py-3" style="height: auto; border-style: none">
+                                                        <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan 1 Information<br></h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="table-responsive" style="border-style: none;">
+                                                            <table class="table">
+                                                                <thead>
+                                                                {{!-- <tr></tr> --}}
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
+                                                                    </tr>
+                                                                    <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
+                                                                    </tr>
+                                                                    <tr style="border-style: none;">
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
+                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            {{!-- END OF PEST APPLICATION PLAN CARD --}}
+
+                                            </div>
+                                            {{!-- END CARDS --}}
+ 
+                                            <h6 style="font-weight: bold; margin-bottom: 20px">Recently Detected Diseases</h6>
+
+                                            {{!-- If none detected --}}
+                                            <p>No Detected Diseases Yet</p>
+
+                                            {{!-- Else, add for each row of cards like the one above --}}
+                                            </div>
+                                            
+                                            {{!-- END OF TAB 3 --}}
+
+                                            {{!-- TAB 4 --}}
+                                            <div class="tab-pane fade" id="work-orders" role="tabpanel" aria-labelledby="work-orders-tab">
+                                                {{!-- Table styles subject to change...made it white 
+                                                    cause it looks weird if it has the same color as the parent card div --}}
+                                                <div>
+                                                    <table class="table table tablesorter" id="ipi-table">
+                                                        <thead class="thead-dark" style="max-height: 0px;">
+                                                            <tr>
+                                                                <th style="border-color: #dee2e6">Farm</th>
+                                                                <th style="border-color: #dee2e6">Name</th>
+                                                                <th style="border-color: #dee2e6">Material type</th>
+                                                                <th style="border-color: #dee2e6">Amount</th>
+                                                                <th style="border-color: #dee2e6">Unit</th>
+                                                                <th style="border-color: #dee2e6">Request date</th>
+                                                                <th style="border-color: #dee2e6">Date purchased</th>
+                                                                <th style="border-color: #dee2e6">Status</th>
+                                                                <th style="border-color: #dee2e6"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="materials_table">
+                                                            {{!-- Delete later --}}
+                                                            <tr>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td style="text-align: center"> 
+                                                                        <div class="dropdown no-arrow">
+                                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                            </button>
+                                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                <div class="dropdown-divider"></div>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                                            </div>
+                                                                        </div>
+                                                                </td>   
+                                                            </tr>
+                                                            <tr>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td style="text-align: center"> 
+                                                                        <div class="dropdown no-arrow">
+                                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                            </button>
+                                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                <div class="dropdown-divider"></div>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                                            </div>
+                                                                        </div>
+                                                                </td>   
+                                                            </tr>
+                                                            <tr>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td>hello</td>
+                                                                <td style="text-align: center"> 
+                                                                        <div class="dropdown no-arrow">
+                                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                            </button>
+                                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                <div class="dropdown-divider"></div>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                                            </div>
+                                                                        </div>
+                                                                </td>   
+                                                            </tr>
+                                                             {{!-- End of Delete later --}}
+
+                                                                {{#each purchases}}
+                                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
+                                                                        <td>{{this.farm_name}}</td>
+                                                                        <td>{{this.item_name}}</td>
+                                                                        <td>{{this.item_type}}</td>
+                                                                        <td>{{this.amount}}</td>
+                                                                        <td>{{this.units}}</td>
+                                                                        <td>{{this.request_date}}</td>
+                                                                        <td>{{this.date_purchased}}</td>
+                                                                        <td>{{this.purchase_status}}</td>
+                                                                        <td style="text-align: center"> 
+                                                                        <div class="dropdown no-arrow">
+                                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                            </button>
+                                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                <div class="dropdown-divider"></div>
+                                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        </td>     
+                                                                    </tr>
+                                                                {{/each}}
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+    
+                                            </div>
+                                            
+                                            {{!-- END OF TAB 4 --}}
+
+                                        </div>
+                                        {{!-- END OF TAB CONTENT --}}
+
+                                </div>
+                                </div>
+                                {{!-- END OF CARD TABS --}}
+                                            
+                            </div>
+                               
+                    </div>
+
+                </div>
+                {{!-- END CARD BODY --}}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var view = "crop_calendar_detailed";
+function goBack() {
+  window.history.back();
+}
+
+</script>
+
+{{!-- <script src="../js/crop_calendar.js"></script> --}}

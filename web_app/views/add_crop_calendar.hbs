@@ -31,7 +31,7 @@ li > span {
                     
                     <div class="col" style="max-width: 70px; padding-top: 2px">
 
-                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/farms"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/crop_calendar"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
                             <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
                         </button>        
 
@@ -86,30 +86,33 @@ li > span {
                             <div class="form-group" style="background-color: #EEEEEE; padding: 20px; border-radius: 10px;  outline: 1px solid #e3e6f0;">      
                         
                                 <label for="" style="font-weight: bold">Farm Details</label>
+
+                                <center>
                                         <div class="row" style="padding-left: 5px;">
                                         
                                         <div class="col">
                                         <label for="farm_desc" style="font-weight: bold;">Description</label>
 		                                 <div id="farm_desc">
-		      
+                                        N/A
 		                                </div>
                                         </div>
 
                                         <div class="col">
                                         <label for="land_type" style="font-weight: bold;">Land Type</label>
 		                                <div id="land_type">
-		      
+                                        N/A
 		                                </div>
                                         </div>
 
                                         <div class="col">
                                         <label for="farm_area" style="font-weight: bold;">Farm Area </label>
                                         <div id="farm_area">
-		      
+                                         N/A
 		                                </div>
                                         </div>
 
                                     </div>
+                                </center>
 
                             </div>
 
@@ -596,7 +599,7 @@ li > span {
 
                     <div class="modal-footer">
                         <div class="modal_footer_content" id="_step1">
-                            <button type="button" class="btn round btn-secondary" value="create_farm_form" onclick='window.location="/farms"'>Cancel</button>
+                            <button type="button" class="btn round btn-secondary" value="create_farm_form" onclick='window.location="/crop_calendar"'>Cancel</button>
                             <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1)">Next</button>
                         </div>
 

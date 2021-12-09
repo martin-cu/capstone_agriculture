@@ -3,12 +3,12 @@ function clearList(){
 }
 
 $(document).ready(function(){
-    
+    jQuery.ajaxSetup({async: false });
     if($("#purchase_status").text() != "Purchased"){
         $("#update_purchase_btn").toggle("show");
     }
 
-
+    
 
 
     $(window).keydown(function(event){
@@ -235,17 +235,20 @@ function isComplete(count){
 
     return status;
 }
-
+$(document).on('click','.remove-btn', function(){
+    $("#row" + $(this).val()).remove();
+});
 $(document).on('click', "#add-btn-mat", function(){
     var count = $(this).val();
-        if(count == "6"){
+        if($(".new-item").length == 5){
             alert("Limit reached");
         }
         else{
+            $(this).after('<button class="remove-btn" style="background: none ;border-style: none;"  value="' + ($(this).val() - 1) +'"><i class="fa fa-minus-circle" style="font-size: 1rem; margin-left: 15px;"></i></button>');
             
             $(this).remove();
             //add new item
-            $(".last_item").after('<div class="form-row" id="row' + count +'"><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div class="dropdown"><select class="form-control purchase_item_type" id="item_type' + count + '" name="item[' + (count - 1)+ '][type]" form="new_purchase"><option value="Seed">Seed</option><option value="Pesticide">Pesticide</option><option value="Fertilizer">Fertilizer</option></select></div></div></div><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div class="dropdown"><select class="form-control requried" id="item' + count + '" name="item[' + (count - 1)+ '][item]" form="new_purchase"><option disabled selected value> -- select an option -- </option><option class="material_item' + count + '"value="1}">1</option></select></div></div></div><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div style="display: flex; flex-flow: row;"><input class="form-control text-right required" type="number" placeholder="amount" id="item_amt' + count + '" name="item[' + (count - 1)+ '][amount]" form="new_purchase" style="width: 50%;" /><span style="padding: 10px;" id="item_unit' + count +'">Kg</span> <button class="" style="background: none ; border-style: none;" id="add-btn-mat" value="' + (parseInt(count) + 1) + '"><i class="fa fa-plus-circle" style="font-size: 1rem; margin-left: 15px;"></i></button></div></div></div></div>');
+            $(".last_item").after('<div class="form-row new-item" id="row' + count +'"><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div class="dropdown"><select class="form-control purchase_item_type" id="item_type' + count + '" name="item[' + (count - 1)+ '][type]" form="new_purchase"><option value="Seed">Seed</option><option value="Pesticide">Pesticide</option><option value="Fertilizer">Fertilizer</option></select></div></div></div><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div class="dropdown"><select class="form-control requried" id="item' + count + '" name="item[' + (count - 1)+ '][item]" form="new_purchase"><option disabled selected value> -- select an option -- </option><option class="material_item' + count + '"value="1}">1</option></select></div></div></div><div class="col-4 col-sm-4 col-md-4"><div id="lp-name-wrapper" style="margin-top: 10px;"><div style="display: flex; flex-flow: row;"><input class="form-control text-right required" type="number" placeholder="amount" id="item_amt' + count + '" name="item[' + (count - 1)+ '][amount]" form="new_purchase" style="width: 50%;" /><span style="padding: 10px;" id="item_unit' + count +'">Kg</span> <button class="" style="background: none ; border-style: none;" id="add-btn-mat" value="' + (parseInt(count) + 1) + '"><i class="fa fa-plus-circle" style="font-size: 1rem; margin-left: 15px;"></i></button></div></div></div></div>');
             $(".last_item").removeClass("last_item");
             $("#row" + count).addClass("last_item");
 

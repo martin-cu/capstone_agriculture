@@ -112,3 +112,18 @@ exports.ajaxGetCropPlanDetails = function(req, res) {
 		}
 	})
 }
+
+// ADD CROP CALENDAR PAGE (Maybe convert this into a dropdown too in the main crop calendar page?)
+exports.getAddCropCalendar = function(req, res) {
+	var html_data = {};
+	html_data["title"] = "Crop Calendar";
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
+	res.render('add_crop_calendar', html_data);
+}
+
+exports.getDetailedCropCalendar = function(req, res) {
+	var html_data = {};
+	html_data["title"] = "Crop Calendar";
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'detailed_crop_calendar');
+	res.render('detailed_crop_calendar', html_data); 
+}

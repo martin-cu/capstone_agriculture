@@ -19,8 +19,14 @@ exports.init_session = function(obj, role, name, username, tab) {
 		obj['farm_tab'] = true;
 	else if (tab === 'monitor_farms')
 		obj['monitor_farms_tab'] = true;
+	// Crop Calendar Tab
 	else if (tab === 'crop_calendar') 
 		obj['calendar_tab'] = true;
+	else if (tab === 'detailed_crop_calendar') 
+		obj['calendar_tab'] = true;
+	else if (tab === 'add_crop_calendar') 
+		obj['calendar_tab'] = true;
+
 	else if (tab === 'harvest_cycle') 
 		obj['harvest_cycle_tab'] = true;
 	else if (tab === 'sms_subcription') 
