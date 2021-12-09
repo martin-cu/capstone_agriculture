@@ -123,7 +123,7 @@
                             <tr>
                                 <td style="font-weight: normal;">Sacks Harvested</td>
                                 <td>
-                                    <input type="number" name="sacks_harvested" id="sacks_harvested" value="" readonly min="0">
+                                    <input type="number" name="sacks_harvested" id="sacks_harvested" value="{{work_order.harvest_yield}}" readonly min="0">
                                 </td>
                                 <td></td>
                                 <td></td>
@@ -170,6 +170,7 @@
 <script type="text/javascript">
     var resource = '{{resources.lbl.name}}';
     var status_editable = {{status_editable}};
+    var harvest = {{harvest_editable}}
     function createDOM(obj) {
         var ele;
 
@@ -191,6 +192,9 @@
         var editable = ['#status', '#date_start', '#date_due', '#notes', '#'+resource+'_qty'];
         if (!status_editable)
             editable = editable.filter(ele => ele != '#status');
+
+        if (!harvest)
+            editable.push('#sacks_harvested');
 
         var eles = $(editable.join()).attr('readonly', !show);
 

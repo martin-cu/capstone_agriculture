@@ -20,6 +20,7 @@ exports.getCropCalendarTab = function(req, res) {
 			};
 
 			list_obj.land_prep = list.filter(ele => ele.stage == 'Land Preparation');
+			console.log(list_obj.land_prep);
 			list_obj.sowing = list.filter(ele => ele.stage == 'Sowing');
 			list_obj.vegetation = list.filter(ele => ele.stage == 'Vegetation');
 			list_obj.reproductive = list.filter(ele => ele.stage == 'Reproductive');
