@@ -17,7 +17,6 @@ var temp_lon = 121.388563;
 
 exports.ajaxGetFarmList = function(req, res) {
 	let where = req.query.where;
-	console.log(req.query.where);
 	farmModel.getFarmData({ where: where, group: 'farm_id'}, function(err, farms) {
 		if (err)
 			throw err;
@@ -62,14 +61,6 @@ exports.getFarmDetails = function(req, res) {
 	var center = req.query.center;
 	var coordinates = req.query.coordinates;
 	var farm_id = req.query.farm_id;
-
-
-
-	// console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
-	// console.log(center);
-	// console.log(coordinates);
-	// console.log(farm_id);
-	// console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
 
 	farmModel.filteredFarmDetails({farm_id : req.query.farm_id}, function(err, details) {
 		if (err)
@@ -287,8 +278,8 @@ exports.getFarmDetails = function(req, res) {
 														var calendar_id = req.query.calendar_id;
 
 														// console.log(calendar_id);
-														var crop_calendar_query = { status: ['In-Progress', 'Active','Completed'] , where : {key : ["calendar_id"], val : [calendar_id]}}
-
+														var crop_calendar_query = { status: ['In-Progress', 'Active','Completed'] , where : {key : "calendar_id", val : calendar_id}}
+														console.log("---------------------");
 														cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calendar_details){
 															if(err)
 																throw err;
@@ -342,8 +333,6 @@ exports.getFarmDetails = function(req, res) {
 																html_data["statements"] = statements;
 																html_data["probability"] = possible_pests;
 																html_data["main"] = forecast_body[0].main;
-																console.log('********************');
-																//console.log(html_data);
 																res.send(html_data);
 															});
 														});
@@ -747,7 +736,7 @@ exports.getForecastWeather = function(req, res) {
         	//***** Call Agro API for succeeding 5 day forecast
 
         	var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
-        	console.log(forecast_url);
+        	// console.log(forecast_url);
 		    request(forecast_url, { json: true }, function(err, forecast_response, forecast_body) {
 		        if (err)
 		        	throw err;

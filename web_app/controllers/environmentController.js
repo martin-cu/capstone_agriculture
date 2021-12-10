@@ -1270,7 +1270,6 @@ exports.getFarmSoilData = function(req,res){
 	console.log("AJAX GET SOIL DETIALS");
 
 	var query = { farm_name: req.query.farm_name };
-	console.log(req.params.farm_name);
 
 	nutrientModel.getSoilRecord(query, function(err, result) {
 		if (err) {
