@@ -188,7 +188,7 @@ exports.addMaterials = function(req,res){
 }
 
 //Purchase history
-exports.addPurchase = function(req,res){ 
+exports.addPurchase3 = function(req,res){ 
 
     console.log(req.body);
     res.redirect("orders");
@@ -448,9 +448,11 @@ exports.addPurchase = function(req,res){
     var i;
     for(i = 0; i < req.body.item.length; i++){
         var purchase = {
+            purchase_status : "Processing",
             requested_by : 1,
             farm_id : farm_id,
             item_type : req.body.item[i].type,
+            item_desc : req.body.item_desc,
             item_id : req.body.item[i].item,
             amount : req.body.item[i].amount,
             request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')

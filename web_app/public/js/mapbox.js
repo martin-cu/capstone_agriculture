@@ -53,7 +53,7 @@ function getFarmDetails(obj) {
 
 		});
 
-		$.get("/get_crop_plans", { status: ['Active', 'In-Progress'], where : {key : "farm_name", val : details.details[0].farm_name}}, function(result){
+		$.get("/get_crop_plans", { status: ['Active', 'In-Progress',"Completed"], where : {key : "farm_name", val : details.details[0].farm_name}}, function(result){
 			$("#crop_calendar_list").empty();
 			for(i = 0; i < result.length; i++)
 				if(result[i].crop_plan != null)
@@ -272,7 +272,7 @@ $(document).ready(function() {
 			}
 			var query = farms[0].farm_name;
 
-			//getFarmDetails({ farm_id: viewed_farm_id, calendar_id : viewed_farm_id});
+			getFarmDetails({ farm_id: viewed_farm_id, calendar_id : viewed_farm_id});
 			getGeoData(query);
 		});
 
@@ -293,7 +293,6 @@ $(document).ready(function() {
 					center = polygons[i].center;
 				}
 			}
-			console.log(polygons)
 			var n_date = new Date();
 			n_date.setDate(n_date.getDate() - 30);
 
@@ -304,6 +303,8 @@ $(document).ready(function() {
 
 			//Get Crop calendar id
 			var calendar_id = $("#crop_calendar_list").val();
+			console.log("CALENDAR ID");
+			console.log(calendar_id);
 			$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
 				$("#farm_id").text(farm_details.details[0].farm_id);
 				$("#farm_name").text(farm_details.details[0].farm_name);
@@ -394,20 +395,20 @@ $(document).ready(function() {
 			//To be removed
 			var query = viewed_farm_name;
 			console.log(query);
-			//getFarmDetails({ farm_id: viewed_farm_id ,  calendar_id : viewed_farm_id});
+			getFarmDetails({ farm_id: viewed_farm_id ,  calendar_id : viewed_farm_id});
 			getGeoData(query);
 
 			//Y2 Add Farm Monitoring Ajax
 			//UPDATE FARM DETAILS
 			$(".table-details").empty();
 			$.get('/agroapi/polygon/readAll', {}, function(polygons) {
+				alert("polygon");
 				var center = [];
 				for (var i = 0; i < polygons.length; i++) {
 					if (viewed_farm_name == polygons[i].name) {
 						center = polygons[i].center;
 					}
 				}
-				
 				//GET DETAILS OF NEW FARM
 
 				var calendar_id = $("#crop_calendar_list").val();
@@ -417,7 +418,15 @@ $(document).ready(function() {
 					$("#farm_type").text(farm_details.details[0].land_type);
 					$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
 					$("#farm_desc").text(farm_details.details[0].farm_desc);
-					$("#farm_area").text(farm_details.details[0].farm_area + " sqm22");
+					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
+					
+					alert(farm_details.crop_calendar_details.crop_plan);
+					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
+					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
+					$(".calendar_planting").text(farm_details.crop_calendar_details.method);
+					$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
+					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
+					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
 					
 					var i;
 					//UPDATE ROUSEOURCES
@@ -457,6 +466,21 @@ $(document).ready(function() {
 						$("#p_lvl").text(soil_data.p_val);
 						$("#k_lvl").text(soil_data.k_val);
 					});
+
+					$("#landprep-wo, #sowing-wo, #vegetation-wo, #harvest-wo, #reproduction-wo, #ripening-wo").empty();
+					for(i = 0; i < farm_details.workorders.length; i++){
+						$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
+						var tag_id = "#";
+						if(farm_details.workorders[i].stage == "Land Preparation")
+							tag_id = tag_id + "landprep-wo";
+						else if(farm_details.workorders[i].stage == "Sowing")
+							tag_id = tag_id + "sowing-wo";
+						else if(farm_details.workorders[i].stage == "Vegetation")
+							tag_id = tag_id + "vegetation-wo";
+						else if(farm_details.workorders[i].stage == "Harvest")
+							tag_id = tag_id + "harvest-wo";
+						$(tag_id).append('<div class="card-body card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+					}
 				});
 			});
 			
@@ -492,4 +516,8 @@ $(document).ready(function() {
 
 	}	
 
+});
+
+$(document).on("change", "#crop_calendar_list", function(){
+	//UPDATE FARM CROP CYCLE DETAILS
 });
