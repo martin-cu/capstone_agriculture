@@ -294,7 +294,7 @@ exports.getFarmDetails = function(req, res) {
 															order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
 														};
 														console.log(calendar_id);
-														var crop_calendar_query = { status: ['In-Progress', 'Active'] , where : {key : ["calendar_id"], val : [calendar_id]}}
+														var crop_calendar_query = { status: ['In-Progress', 'Active'] , where : {key : "calendar_id", val : calendar_id}}
 
 														cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calednar_details){
 															if(err)

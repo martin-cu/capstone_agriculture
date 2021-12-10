@@ -22,7 +22,9 @@ exports.weatherForecast14D = function(dataset, testing, length) {
 	  hiddenLayers: [3],
 	  outputSize: 6,
 	});
-
+	//console.log(dataset);
+	console.log('*****************************');
+	//console.log(testing);
 	const trainingData = dataset.data_arr;
 
 	net.train(trainingData, { 

@@ -518,7 +518,9 @@ exports.prepareData = function(arr, size) {
 
 	for (var y = 0; y < json_obj.dt.length; y++) {
 		for (var k = 0; k < keys.length; k++) {
+			json_obj[keys[k]][y] = json_obj[keys[k]][y] == NaN ? json_obj[keys[k]][y] : 0;
 			temp_arr.push(json_obj[keys[k]][y]);
+			console.log(json_obj[keys[k]][y]);
 		}
 		result_arr.data_arr.push(temp_arr);
 		temp_arr = [];
