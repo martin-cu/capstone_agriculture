@@ -1,6 +1,6 @@
 <div class="container-fluid" >
     <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;"></a>&nbsp;Orders&nbsp;</h3>
-    <div class="row" style="padding: 0px 12px;">
+    {{!-- <div class="row" style="padding: 0px 12px;">
         <div class="col-xxl-7">
             <div class="table-responsive" style="border-style: none;">
                 <table class="table">
@@ -44,7 +44,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
     <div class="row" style="padding: 0px 12px;">
@@ -117,6 +117,9 @@
                                             </center>
                                         </div>
                                     </div> --}}
+                                    <div class="form-row" style="padding-top : 15px;">
+                                        <div class="col-1 col-sm-1 col-md-1" style="padding : 5px;">NOTE</div><div class="col-10 col-sm-10 col-md-10"><input class=" text-left" type="text" placeholder="note" id="item_desc" name="item_desc" form="new_purchase" style="padding : 5px; width: 100%; border-radius : 5px; border-width : 1px; border-color : rgb(182, 182, 182)" /></div>
+                                    </div>
                                     <div class="form-row">
                                         <div class="col-12 col-sm-12 col-md-12"><button class="btn btn-primary btn-sm new_purchase" style="float : right; margin: 15px;" id="step1">Next</button></div>
                                     </div>
@@ -150,7 +153,7 @@
                                     <div class="mb-3"><label class="form-label"><strong>Amount</strong></label></div>
                                 </div>
                             </div>
-
+                            
                             {{!-- <div class="mb-3" id="buttons"><button class="btn btn-primary btn-sm " style="float : right; margin-left: 10px;" id="step2" type="submit" form="new_purchase">Add Item</button><button class="btn btn-primary btn-sm new_purchase" style=" float:right; width: auto; border-radius : 20px; background-color: rgb(236, 236, 236)" id="back" form="">Back</button></div> --}}
                             <div class="form-row" id="buttons">
                                 <div class="col-12 col-sm-12 col-md-12" ><button class="btn btn-primary btn-sm " style="float : right; margin-left: 10px;" id="step2" type="submit" form="new_purchase">Add Item</button><button class="btn btn-primary btn-sm new_purchase" style=" float:right; width: auto; border-radius : 20px; background-color: rgb(236, 236, 236)" id="back" form="">Back</button></div>
@@ -203,7 +206,7 @@
                                                         <td>{{this.units}}</td>
                                                         <td>{{this.request_date}}</td>
                                                         <td>{{this.date_purchased}}</td>
-                                                        <td>{{this.purchase_status}}</td>
+                                                        <td class="{{this.purchase_status}}">{{this.purchase_status}}</td>
                                                     </tr>
                                                 {{/each}}
                                             </tr>
@@ -249,7 +252,7 @@
                                                         <td>{{this.units}}</td>
                                                         <td>{{this.request_date}}</td>
                                                         <td>{{this.date_purchased}}</td>
-                                                        <td>{{this.purchase_status}}</td>
+                                                        <td class="{{this.purchase_status}}">{{this.purchase_status}}</td>
                                                     </tr>
                                                 {{/each}}
                                             </tbody>

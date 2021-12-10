@@ -394,3 +394,17 @@ div.scrollmenu {
 	border-radius : 5px; 
 	border: 1px solid #979797; 
   }
+
+
+  .Pending{
+	color : purple;
+}
+.Processing{
+	color : rgb(214, 127, 93);
+}
+.Purchased{
+	color : rgb(138, 230, 0);
+}
+.Completed{
+	color : rgb(138, 230, 0);
+}

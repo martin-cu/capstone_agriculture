@@ -12,7 +12,7 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 1px;border-style: none;">Status</th>
-                                            <th style="border-style: none;" id="purchase_status">{{details.purchase_status}}</th>
+                                            <th class="{{details.purchase_status}}" style="border-style: none;" id="purchase_status">{{details.purchase_status}}</th>
                                             <th style="border-style: none;"></th>
                                             <th style="border-style: none;"></th>
                                         </tr>
@@ -68,7 +68,7 @@
                                         </tr>
                                         <tr>
                                             <td style="font-weight: normal;border-style: none;">Note</td>
-                                            <td style="border-style: none;">To be added by Y2</td>
+                                            <td style="border-style: none;">{{details.item_desc}}</td>
                                             <td style="border-style: none;"></td>
                                             <td style="border-style: none;"></td>
                                         </tr>
@@ -183,7 +183,7 @@
         <div class="modal-body">
             
                 <div class="card-body" id="process_step" style="display: none; width : 40%;" >
-                    <form id="update_purchase_form" action="/updatePurchase" method="post">
+                    <form id="update_purchase_form" action="/updatePurchase" method="post" >
                         <input type="text" id="purchase_id" name="purchase_id" value="{{details.purchase_id}}" hidden>
                         <div class="row" style="height : 30px;">
                             <div class="col">
@@ -271,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3" style="margin-top : 50px;" ><button class="btn btn-primary btn-sm add-material-btn" id="" type="submit" form="update_purchase_form">Confirm Purchase</button></div>
+                    <div class="mb-3" style="margin-top : 50px;" ><button class="btn btn-primary btn-sm add-material-btn" id="submit_update" form="update_purchase_form">Confirm Purchase</button></div>
             </div>
         </div>
         </center>
@@ -283,7 +283,5 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-      
     </div>
-</div>
 </div>

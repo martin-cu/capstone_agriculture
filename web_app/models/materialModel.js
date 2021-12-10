@@ -353,8 +353,8 @@ exports.getAllPurchases = function(type, status, next){
 		sql = "SELECT * FROM (" + sql + ") a WHERE purchase_status = ?";
 		sql = mysql.format(sql, status.status);
 	}
-	
-	// console.log("\n\n\n" + sql);
+	sql = sql + " ORDER BY purchase_status"
+	console.log("\n\n\n" + sql);
 	mysql.query(sql, next);
 
 }

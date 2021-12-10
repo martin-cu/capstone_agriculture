@@ -286,31 +286,33 @@ exports.getFarmDetails = function(req, res) {
 														//ADD CROP CYCLE DETAILS (WORK ORDERS)
 														var calendar_id = req.query.calendar_id;
 
-														var wo_query = {
-															where: {
-																key: ['crop_calendar_id'],
-																value: [calendar_id]
-															},
-															order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
-														};
-														console.log(calendar_id);
-														var crop_calendar_query = { status: ['In-Progress', 'Active'] , where : {key : "calendar_id", val : calendar_id}}
+														// console.log(calendar_id);
+														var crop_calendar_query = { status: ['In-Progress', 'Active','Completed'] , where : {key : ["calendar_id"], val : [calendar_id]}}
 
-														cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calednar_details){
+														cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calendar_details){
 															if(err)
 																throw err;
 															else{
+																if(calendar_id != null){
+																	var expected_harvest = crop_calendar_details[0].sowing_date;
+																	crop_calendar_details[0].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'mm DD, YYYY');
+																	var calendar_details = crop_calendar_details[0];
+																	calendar_details["expected_harvest"] = new Date(expected_harvest);
+																	calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[0].maturity_days);
+																	calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
+																	html_data["crop_calendar_details"] = calendar_details;
+																}
 																
-																var expected_harvest = crop_calednar_details[0].sowing_date;
-																crop_calednar_details[0].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calednar_details[0].land_prep_date)), 'mm DD, YYYY');
-																var calendar_details = crop_calednar_details[0];
-																expected_harvest 
-																calendar_details["expected_harvest"] = new Date(expected_harvest);
-																calendar_details.expected_harvest.setDate(expected_harvest.getDate() + crop_calednar_details[0].maturity_days);
-																calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
 
 															}
 
+															var wo_query = {
+																where: {
+																	key: ['crop_calendar_id'],
+																	value: [calendar_id]
+																},
+																order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+															};
 															workOrderModel.getWorkOrders(wo_query, function(err, workorders){
 																if(err)
 																	 throw err;
@@ -334,7 +336,7 @@ exports.getFarmDetails = function(req, res) {
 																}
 																// console.log("WORKORDERS");
 																// console.log(workorders);
-																html_data["crop_calendar_details"] = calendar_details;
+																
 																html_data["workorders"] = workorders;
 																html_data["queries"] = queries;
 																html_data["statements"] = statements;

@@ -190,8 +190,11 @@ $(document).ready(function(){
                 $("#review_farm").text($("#farm").find(":selected").text());
 
                 for(i = 1; i < parseInt(count); i++){
-                    $("#buttons").before('<div class="row review_row" style="top : 5px; bottom: 5px;"><div class="col-4 col-sm-4 col-md-4"><div class=""><div class="dropdown"><label class="form-label" id="review_type' + i +'">' + $("#item_type" + i).val() +'</label></div></div></div><div class="col-4 col-sm-4 col-md-4"><div class=""><div class="dropdown"><label class="form-label" id="review_item' + i +'">' + $("#item" + i).find(":selected").text() +'</label></div></div></div><div class="col-4 col-sm-4 col-md-4"><div class=""><div style="display: flex; flex-flow: row;"><label class="form-label" id="review_amount' + i +'">' + $("#item_amt" + i).val() +'</label><span style="margin-left: 10px;">' + $("#item_unit" + i).text() +'</span></div></div></div></div>');
+                    if($("#item"+i).length > 0)
+                        $("#buttons").before('<div class="row review_row" style="top : 5px; bottom: 5px;"><div class="col-4 col-sm-4 col-md-4"><div class=""><div class="dropdown"><label class="form-label" id="review_type' + i +'">' + $("#item_type" + i).val() +'</label></div></div></div><div class="col-4 col-sm-4 col-md-4"><div class=""><div class="dropdown"><label class="form-label" id="review_item' + i +'">' + $("#item" + i).find(":selected").text() +'</label></div></div></div><div class="col-4 col-sm-4 col-md-4"><div class=""><div style="display: flex; flex-flow: row;"><label class="form-label" id="review_amount' + i +'">' + $("#item_amt" + i).val() +'</label><span style="margin-left: 10px;">' + $("#item_unit" + i).text() +'</span></div></div></div></div>');
                 }
+                if($("#item_desc").val() != null)
+                    $("#buttons").before('<div class="form-row review_row" style="padding-top : 15px;"><div class="col-1 col-sm-1 col-md-1" style="padding : 5px;">NOTE</div><div class="col-10 col-sm-10 col-md-10" style="padding: 5px;" >' + $("#item_desc").val() + '</div></div>');
             }
             else{
                 alert("Complete missing fields");
@@ -223,11 +226,11 @@ function isComplete(count){
     }
     
     for(x = 1; x < parseInt(count); x++){
-        if($("#item"+x).val() == null){
+        if($("#item"+x).val() == null && $("#item"+x).length > 0){
             status = false;
             $("#item"+x).css("border-color", "red");
         }
-        if($("#item_amt"+x).val() <= 0){
+        if($("#item_amt"+x).val() <= 0 && $("#item_amt"+x).length > 0){
             status = false;
             $("#item_amt"+x).css("border-color", "red");
         }
@@ -297,3 +300,27 @@ $(document).on("change",'.purchase_item_type', function(){
         $("#purchase_step").toggle("show");
      }
 });
+
+
+$(document).on("submit", "#update_purchase_form", function(event){
+            if($("#update_purchase_btn").val() == "Processing"){
+                a = true;
+
+                console.log($("#purchase_price").val());
+                if($("#purchase_price").val() == ""){
+                    a = false;
+                    $("#purchase_price").css("border-color", "red");
+                }
+                if($("#amount").val() <= 0 || $("#amount").val() == null){
+                    a = false;
+                    $("#amount").css("border-color", "red");
+                }
+
+                if(!a){
+                    event.preventDefault();
+                    alert( "Complete details." );
+                }
+            }
+            
+});
+
