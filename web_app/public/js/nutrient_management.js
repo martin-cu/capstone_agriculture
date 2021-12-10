@@ -1023,10 +1023,10 @@ $(document).ready(function() {
 		});
 	}
 	else if (type == 'Soil Detailed') {
-		console.log('Getting data for farm: '+id);
+		console.log('Getting data for farm: '+id+' Crop Plan: '+calendar);
 		console.log(area);
 		jQuery.ajaxSetup({async: false });
-		$.get('/filter_nutrient_mgt', { farm_name: farm_name, type: 'Fertilizer', filter: id }, function(details) {
+		$.get('/filter_nutrient_mgt', { farm_name: farm_name, calendar_id: calendar, type: 'Fertilizer', filter: id }, function(details) {
 			appendDetails(details);
 			calendar_id = details.calendar_id;
 			console.log('Calendar id: '+calendar_id);

@@ -185,39 +185,48 @@ exports.createWorkOrder = function(req, res) {
 		notes: req.body.notes
 	};
 
-	workOrderModel.createWorkOrder(query, function(err, result) {
+	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err,calendars) {
 		if (err)
 			throw err;
 		else {
-			var resource_type = null;
+			var selected_calendar = calendars.filter(e => e.calendar_id == req.body.crop_calendar_id)[0];
 
-			if (query.type == 'Pesticide Application') {
-				resource_type = 'Pesticide';
-			}
-			else if (query.type == 'Fertilizer Application') {
-				resource_type = 'Fertilizer'
-			}
-			else if (query.type == 'Sow Seed') {
-				resource_type = 'Seed;'
-			}
+			query['stage'] = selected_calendar.stage;
+			workOrderModel.createWorkOrder(query, function(err, result) {
+				if (err)
+					throw err;
+				else {
+					var resource_type = null;
 
-			if (resource_type != null) {
-				var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
-						, req.body[''+resource_type+'_qty'], result.insertId);
+					if (query.type == 'Pesticide Application') {
+						resource_type = 'Pesticide';
+					}
+					else if (query.type == 'Fertilizer Application') {
+						resource_type = 'Fertilizer'
+					}
+					else if (query.type == 'Sow Seed') {
+						resource_type = 'Seed;'
+					}
 
-				workOrderModel.createWorkOrderResources(query_arr, function(err, resource_result) {
-					if (err)
-						throw err;
+					if (resource_type != null) {
+						var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
+								, req.body[''+resource_type+'_qty'], result.insertId);
+
+						workOrderModel.createWorkOrderResources(query_arr, function(err, resource_result) {
+							if (err)
+								throw err;
+							else {
+								res.redirect('/farms/work_order&id='+result.insertId);
+							}
+						});
+					}
 					else {
 						res.redirect('/farms/work_order&id='+result.insertId);
 					}
-				});
-			}
-			else {
-				res.redirect('/farms/work_order&id='+result.insertId);
-			}
+				}
+			})
 		}
-	})
+	});
 }
 
 exports.ajaxCreateWorkOrder = function(req, res) {

@@ -117,7 +117,7 @@ router.get('/pest_and_disease/diagnose_detailed_disease', environmentController.
 
 //Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);
-router.get('/nutrient_management/:farm_name', environmentController.detailedNutrientManagement);
+router.get('/nutrient_management/:farm_name/:calendar_id', environmentController.detailedNutrientManagement);
 router.post('/nutrient_management/add_record', environmentController.addSoilRecord);
 
 //SMS Management (Update later)

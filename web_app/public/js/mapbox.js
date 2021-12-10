@@ -12,8 +12,7 @@ function update_color_meter(){
 
 function getFarmDetails(obj) {
 	var query = obj;
-	console.log('!!!')
-	console.log(obj);
+
 	$.get('/filter_farm_details', query, function(details) {
 		console.log(details);
 		$('#monitor_land_type').html(details.details[0].land_type);
@@ -272,7 +271,7 @@ $(document).ready(function() {
 			}
 			var query = farms[0].farm_name;
 
-			getFarmDetails({ farm_id: viewed_farm_id, calendar_id : viewed_farm_id});
+			//getFarmDetails({ farm_id: viewed_farm_id, calendar_id : viewed_farm_id});
 			getGeoData(query);
 		});
 
@@ -378,7 +377,7 @@ $(document).ready(function() {
 			//To be removed
 			var query = viewed_farm_name;
 			console.log(query);
-			getFarmDetails({ farm_id: viewed_farm_id ,  calendar_id : viewed_farm_id});
+			//getFarmDetails({ farm_id: viewed_farm_id ,  calendar_id : viewed_farm_id});
 			getGeoData(query);
 
 			//Y2 Add Farm Monitoring Ajax

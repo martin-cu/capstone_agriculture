@@ -661,7 +661,7 @@ function recommendFertilizerPlan(obj, materials) {
 }
 
 exports.ajaxGetDetailedNutrientMgt = function(req, res) {
-	var query = { farm_name: req.query.farm_name };
+	var query = { farm_name: req.query.farm_name, calendar_id: req.query.calendar_id };
 
 	var html_data = {};
 	nutrientModel.getSoilRecord(query, function(err, result) {
@@ -690,9 +690,10 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 				        				result[0].p_lvl = p_lvl;
 				        				result[0].k_lvl = k_lvl;
 									}
+									//console.log(crop_calendar);
 		        					result = dataformatter.processNPKValues(result, result.farm_area, applied)
 						            result = recommendFertilizerPlan(result, materials);
-						            result['calendar_id'] = crop_calendar[0].calendar_id;
+						            result['calendar_id'] = crop_calendar.calendar_id;
 									res.send(result);
 		        				}
 		        			});     	
@@ -707,8 +708,7 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 
 
 exports.detailedNutrientManagement = function(req, res) {
-	var query = { farm_name: req.params.farm_name };
-
+	var query = { farm_name: req.params.farm_name, calendar_id: req.params.calendar_id };
 	var html_data = {};
 	nutrientModel.getSoilRecord(query, function(err, result) {
 		if (err) {
@@ -841,8 +841,8 @@ exports.ajaxGetResources = function(req,res){
 	var farm_id = req.query.farm_id;
 	var type = req.query.type;
 
-	console.log(farm_id);
-	console.log(type);
+	// console.log(farm_id);
+	// console.log(type);
 	var blanks = [];
 	materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : type}, function(err, materials){
 		if(err)
