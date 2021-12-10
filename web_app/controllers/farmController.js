@@ -3,6 +3,7 @@ const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
 const materialModel = require('../models/materialModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
+const cropCalendarModel = require('../models/cropCalendarModel.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
@@ -284,6 +285,7 @@ exports.getFarmDetails = function(req, res) {
 
 														//ADD CROP CYCLE DETAILS (WORK ORDERS)
 														var calendar_id = req.query.calendar_id;
+
 														var wo_query = {
 															where: {
 																key: ['crop_calendar_id'],
@@ -291,25 +293,58 @@ exports.getFarmDetails = function(req, res) {
 															},
 															order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
 														};
-														workOrderModel.getWorkOrders(wo_query, function(err, workorders){
+														console.log(calendar_id);
+														var crop_calendar_query = { status: ['In-Progress', 'Active'] , where : {key : ["calendar_id"], val : [calendar_id]}}
+
+														cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calednar_details){
 															if(err)
-																 throw err;
+																throw err;
 															else{
+																
+																var expected_harvest = crop_calednar_details[0].sowing_date;
+																crop_calednar_details[0].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calednar_details[0].land_prep_date)), 'mm DD, YYYY');
+																var calendar_details = crop_calednar_details[0];
+																expected_harvest 
+																calendar_details["expected_harvest"] = new Date(expected_harvest);
+																calendar_details.expected_harvest.setDate(expected_harvest.getDate() + crop_calednar_details[0].maturity_days);
+																calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
 
 															}
-															console.log("WORKORDERS");
-															console.log(workorders);
 
-															html_data["workorders"] = workorders;
-															html_data["queries"] = queries;
-															html_data["statements"] = statements;
-															html_data["probability"] = possible_pests;
-															html_data["main"] = forecast_body[0].main;
-															console.log('********************');
-															//console.log(html_data);
-															res.send(html_data);
+															workOrderModel.getWorkOrders(wo_query, function(err, workorders){
+																if(err)
+																	 throw err;
+																else{
+																	for(i = 0; i < workorders.length; i++){
+																		if(workorders[i].type == "Land Preparation")
+																			workorders[i]["stage"] = "Land Preparation";
+																		else if(workorders[i].type == "Sow Seed")
+																			workorders[i]["stage"] = "Sowing";
+																		else if(workorders[i].type == "Harvest")
+																			workorders[i]["stage"] = "Harvest";
+																		else
+																			workorders[i]["stage"] = "Vegetation";
+	
+																		dataformatter.formatDate(dataformatter.unixtoDate(workorders[i].date_completed), 'mm DD, YYYY');
+																		workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'mm DD, YYYY');
+																		workorders[i].date_start = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_start)), 'mm DD, YYYY');
+																		workorders[i].date_due = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_due)), 'mm DD, YYYY');
+																		workorders[i].date_created = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_created)), 'mm DD, YYYY');
+																	}
+																}
+																// console.log("WORKORDERS");
+																// console.log(workorders);
+																html_data["crop_calendar_details"] = calendar_details;
+																html_data["workorders"] = workorders;
+																html_data["queries"] = queries;
+																html_data["statements"] = statements;
+																html_data["probability"] = possible_pests;
+																html_data["main"] = forecast_body[0].main;
+																console.log('********************');
+																//console.log(html_data);
+																res.send(html_data);
+															});
 														});
-
 													});
 												});
 											}

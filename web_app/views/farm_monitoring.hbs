@@ -539,9 +539,6 @@
                                         </div>
                                         <div class="col-xl-1">
                                             <select class="form-control  " id="crop_calendar_list" name="" form="" style="width: 200px;">
-                                                <option value="Seed">Crop Calendar 1</option>
-                                                <option value="Pesticide">Crop Calendar 2</option>
-                                                <option value="Fertilizer">Crop Calendar 3</option>
                                             </select>
                                         </div>
                                     </div>
@@ -551,48 +548,34 @@
                                     <form id="main-form" class="multisteps-form__form" style="margin-top: 10px;">
                                         <div id="single-form-next" class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn">
                                             <h3 class="text-center multisteps-form__title">Land Preparation</h3>
-                                            <div class="scrollmenu" id="" style="justify-content: center; ">
-                                                    <div class="card-body card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350" style="width : 500px; padding : 5px;">
-                                                            
-                                                            <div class="row" style="height: 40px; margin-top : 0px;">
-                                                                <div class="col card-title">
-                                                                    <h4 class="card-title">TYPE</h4>
-                                                                </div>
-                                                                <div class="col">
-                                                                    Pending
-                                                                </div>
-                                                            </div>
-                                                            <div class="row" style="height: 30px;">
-                                                                <div class="col">
-                                                                    desc desc desc desc desc desc desc desc desc 
-                                                                </div>
-                                                            </div>
-                                                            <div class="row" style="height: 30px;">
-                                                                <div class="col">
-                                                                    START DATE
-                                                                </div>
-                                                                <div class="col">
-                                                                    COMPLETE DATE
-                                                                </div>
-                                                            </div>
-                                                            <div class="row" style="height: 30px;">
-                                                                <div class="col">
-                                                                    2021-12-02
-                                                                </div>
-                                                                <div class="col">
-                                                                    2021-12-02
-                                                                </div>
-                                                            </div>
-                                                            <div class="row" style="height: 30px;">
-                                                                <div class="col">
-                                                                    NOTES
-                                                                </div>
-                                                                <div class="col">
-                                                                    Pending
-                                                                </div>
-                                                            </div>
+                                            
+                                            <div id="form-content-3" class="multisteps-form__content">
+                                                <div class="scrollmenu" style="">
+                                                    <table class="table" style="width: 30%;">
+                                                        <thead>
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Calendar Name</span><span class="calendar_info calendar_name" style="border-style: none;"></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Seed</span><span class="calendar_info calendar_seed" style="border-style: none;" >Rain Fed</span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Planting Method</span><span class="calendar_info calendar_planting" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Water Method</span><span class="calendar_info calendar_water" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Start Date</span><span class="calendar_info calendar_start" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Expected Harvest</span><span class="calendar_info calendar_harvest" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="scrollmenu calendar-wos" id="landprep-wo" style="">
+                                                        
                                                     </div>
+                                                </div>    
                                             </div>
+                                                
                                             {{!-- <table class="table">
                                                 <thead>
                                                     <tr>
@@ -620,67 +603,152 @@
                                         </div>
                                         <div id="single-form-next-prev-3" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
                                             <h3 class="text-center multisteps-form__title">Sowing</h3>
-                                            <div id="form-content-4" class="multisteps-form__content">
-                                                <div id="input-grp-double-4" class="form-row mt-4">
-                                                    <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
-                                                    <div class="col-12 col-sm-6 mt-4 mt-sm-0"><input class="form-control multisteps-form__input" type="text" placeholder="Last name "></div>
-                                                </div>
-                                                <div id="input-grp-single-4" class="form-row mt-4">
-                                                    <div class="col-12"><input class="form-control multisteps-form__input" type="text" placeholder="House"></div>
-                                                </div>
+                                            <div id="form-content-3" class="multisteps-form__content">
+                                                <div class="scrollmenu" style="">
+                                                    <table class="table" style="width: 30%;">
+                                                        <thead>
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Calendar Name</span><span class="calendar_info calendar_name" style="border-style: none;"></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Seed</span><span class="calendar_info calendar_seed" style="border-style: none;" >Rain Fed</span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Planting Method</span><span class="calendar_info calendar_planting" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Water Method</span><span class="calendar_info calendar_water" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Start Date</span><span class="calendar_info calendar_start" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Expected Harvest</span><span class="calendar_info calendar_harvest" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="scrollmenu calendar-wos" id="sowing-wo" style="">
+                                                        
+                                                    </div>
+                                                </div>  
                                                 <div id="next-prev-buttons-3" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev-2" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
                                             <h3 class="text-center multisteps-form__title">Vegetation</h3>
                                             <div id="form-content-3" class="multisteps-form__content">
-                                                <div id="input-grp-double-3" class="form-row mt-4">
-                                                    <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
-                                                    <div class="col-12 col-sm-6 mt-4 mt-sm-0"><input class="form-control multisteps-form__input" type="text" placeholder="Last name "></div>
-                                                </div>
-                                                <div id="input-grp-single-3" class="form-row mt-4">
-                                                    <div class="col-12"><input class="form-control multisteps-form__input" type="text" placeholder="House"></div>
-                                                </div>
+                                                <div class="scrollmenu" style="">
+                                                    <table class="table" style="width: 30%;">
+                                                        <thead>
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Calendar Name</span><span class="calendar_info calendar_name" style="border-style: none;"></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Seed</span><span class="calendar_info calendar_seed" style="border-style: none;" >Rain Fed</span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Planting Method</span><span class="calendar_info calendar_planting" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Water Method</span><span class="calendar_info calendar_water" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Start Date</span><span class="calendar_info calendar_start" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Expected Harvest</span><span class="calendar_info calendar_harvest" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="scrollmenu calendar-wos" id="vegetation-wo" style="">
+                                                        
+                                                    </div>
+                                                </div>  
                                                 <div id="next-prev-buttons-2" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev-1" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
                                             <h3 class="text-center multisteps-form__title">Reproduction</h3>
                                             <div id="form-content-2" class="multisteps-form__content">
-                                                <div id="input-grp-double-2" class="form-row mt-4">
-                                                    <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
-                                                    <div class="col-12 col-sm-6 mt-4 mt-sm-0"><input class="form-control multisteps-form__input" type="text" placeholder="Last name "></div>
-                                                </div>
-                                                <div id="input-grp-single-2" class="form-row mt-4">
-                                                    <div class="col-12"><input class="form-control multisteps-form__input" type="text" placeholder="House"></div>
-                                                </div>
+                                                <div class="scrollmenu" style="">
+                                                    <table class="table" style="width: 30%;">
+                                                        <thead>
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Calendar Name</span><span class="calendar_info calendar_name" style="border-style: none;"></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Seed</span><span class="calendar_info calendar_seed" style="border-style: none;" >Rain Fed</span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Planting Method</span><span class="calendar_info calendar_planting" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Water Method</span><span class="calendar_info calendar_water" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Start Date</span><span class="calendar_info calendar_start" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Expected Harvest</span><span class="calendar_info calendar_harvest" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="scrollmenu calendar-wos" id="reproduction-wo" style="">
+                                                        
+                                                    </div>
+                                                </div> 
                                                 <div id="next-prev-buttons-1" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev-4" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
                                             <h3 class="text-center multisteps-form__title">Ripening</h3>
                                             <div id="form-content-5" class="multisteps-form__content">
-                                                <div id="input-grp-double-5" class="form-row mt-4">
-                                                    <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
-                                                    <div class="col-12 col-sm-6 mt-4 mt-sm-0"><input class="form-control multisteps-form__input" type="text" placeholder="Last name "></div>
-                                                </div>
-                                                <div id="input-grp-single-5" class="form-row mt-4">
-                                                    <div class="col-12"><input class="form-control multisteps-form__input" type="text" placeholder="House"></div>
-                                                </div>
+                                                <div class="scrollmenu" style="">
+                                                    <table class="table" style="width: 30%;">
+                                                        <thead>
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Calendar Name</span><span class="calendar_info calendar_name" style="border-style: none;"></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Seed</span><span class="calendar_info calendar_seed" style="border-style: none;" >Rain Fed</span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Planting Method</span><span class="calendar_info calendar_planting" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Water Method</span><span class="calendar_info calendar_water" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Start Date</span><span class="calendar_info calendar_start" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Expected Harvest</span><span class="calendar_info calendar_harvest" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="scrollmenu calendar-wos" id="ripening-wo" style="">
+                                                        
+                                                    </div>
+                                                </div> 
                                                 <div id="next-prev-buttons-4" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
                                         <div id="single-form-next-prev" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
                                             <h3 class="text-center multisteps-form__title">Harvest</h3>
                                             <div id="form-content-1" class="multisteps-form__content">
-                                                <div id="input-grp-double-1" class="form-row mt-4">
-                                                    <div class="col-12 col-sm-6"><input class="form-control multisteps-form__input" type="text" placeholder="First name "></div>
-                                                    <div class="col-12 col-sm-6 mt-4 mt-sm-0"><input class="form-control multisteps-form__input" type="text" placeholder="Last name "></div>
-                                                </div>
-                                                <div id="input-grp-single-1" class="form-row mt-4">
-                                                    <div class="col-12"><input class="form-control multisteps-form__input" type="text" placeholder="House"></div>
-                                                </div>
-                                                <div id="next-prev-buttons" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
+                                                <div class="scrollmenu" style="">
+                                                    <table class="table" style="width: 30%;">
+                                                        <thead>
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Calendar Name</span><span class="calendar_info calendar_name" style="border-style: none;"></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Seed</span><span class="calendar_info calendar_seed" style="border-style: none;" >Rain Fed</span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Planting Method</span><span class="calendar_info calendar_planting" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Water Method</span><span class="calendar_info calendar_water" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                            <tr style="border-style: none;">
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Start Date</span><span class="calendar_info calendar_start" style="border-style: none;" ></span></td>
+                                                                <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Expected Harvest</span><span class="calendar_info calendar_harvest" style="border-style: none;" ></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="scrollmenu calendar-wos" id="harvest-wo" style="">
+                                                        
+                                                    </div>
+                                                </div> 
+                                                <div id="next-prev-buttons" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button></div>
                                             </div>
                                         </div>
                                     </form>

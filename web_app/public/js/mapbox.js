@@ -56,7 +56,8 @@ function getFarmDetails(obj) {
 		$.get("/get_crop_plans", { status: ['Active', 'In-Progress'], where : {key : "farm_name", val : details.details[0].farm_name}}, function(result){
 			$("#crop_calendar_list").empty();
 			for(i = 0; i < result.length; i++)
-				$("#crop_calendar_list").append('<option value="' + result[i].calendar_id + '">' + result[i].crop_plan + '</option>');
+				if(result[i].crop_plan != null)
+					$("#crop_calendar_list").append('<option value="' + result[i].calendar_id + '">' + result[i].crop_plan + '</option>');
 		});
 	});
 }
@@ -311,7 +312,12 @@ $(document).ready(function() {
 				$("#farm_desc").text(farm_details.details[0].farm_desc);
 				$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 	
-	
+				$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
+				$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
+				$(".calendar_planting").text(farm_details.crop_calendar_details.method);
+				$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
+				$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
+				$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
 				
 				$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
 					
@@ -355,7 +361,18 @@ $(document).ready(function() {
 
 				for(i = 0; i < farm_details.workorders.length; i++){
 					$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
+					var tag_id = "#";
+					if(farm_details.workorders[i].stage == "Land Preparation")
+						tag_id = tag_id + "landprep-wo";
+					else if(farm_details.workorders[i].stage == "Sowing")
+						tag_id = tag_id + "sowing-wo";
+					else if(farm_details.workorders[i].stage == "Vegetation")
+						tag_id = tag_id + "vegetation-wo";
+					else if(farm_details.workorders[i].stage == "Harvest")
+						tag_id = tag_id + "harvest-wo";
+					$(tag_id).append('<div class="card-body card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
 				}
+				
 				update_color_meter();
 			});
 		});

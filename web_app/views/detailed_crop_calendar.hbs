@@ -384,14 +384,14 @@ div.card-body h6, div.card-body p {
                                                     <table class="table table tablesorter" id="ipi-table">
                                                         <thead class="thead-dark" style="max-height: 0px;">
                                                             <tr>
-                                                                <th style="border-color: #dee2e6">Farm</th>
-                                                                <th style="border-color: #dee2e6">Name</th>
-                                                                <th style="border-color: #dee2e6">Material type</th>
-                                                                <th style="border-color: #dee2e6">Amount</th>
-                                                                <th style="border-color: #dee2e6">Unit</th>
-                                                                <th style="border-color: #dee2e6">Request date</th>
-                                                                <th style="border-color: #dee2e6">Date purchased</th>
                                                                 <th style="border-color: #dee2e6">Status</th>
+                                                                <th style="border-color: #dee2e6">Farm</th>
+                                                                <th style="border-color: #dee2e6">Type</th>
+                                                                <th style="border-color: #dee2e6">Name</th>
+                                                                <th style="border-color: #dee2e6">Unit</th>
+                                                                <th style="border-color: #dee2e6">Date</th>
+                                                                <th style="border-color: #dee2e6">WO ID</th>
+                                                                <th style="border-color: #dee2e6">Notes</th>
                                                                 <th style="border-color: #dee2e6"></th>
                                                             </tr>
                                                         </thead>
@@ -405,7 +405,7 @@ div.card-body h6, div.card-body p {
                                                                 <td>hello</td>
                                                                 <td>hello</td>
                                                                 <td>hello</td>
-                                                                <td>hello</td>
+                                                                <td>hello hello hello hello hello hello hello hello</td>
                                                                 <td style="text-align: center"> 
                                                                         <div class="dropdown no-arrow">
                                                                             <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -428,7 +428,7 @@ div.card-body h6, div.card-body p {
                                                                 <td>hello</td>
                                                                 <td>hello</td>
                                                                 <td>hello</td>
-                                                                <td>hello</td>
+                                                                <td>hello hello hello hello hello hello hello hello</td>
                                                                 <td style="text-align: center"> 
                                                                         <div class="dropdown no-arrow">
                                                                             <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -451,7 +451,7 @@ div.card-body h6, div.card-body p {
                                                                 <td>hello</td>
                                                                 <td>hello</td>
                                                                 <td>hello</td>
-                                                                <td>hello</td>
+                                                                <td>hello hello hello hello hello hello hello hello</td>
                                                                 <td style="text-align: center"> 
                                                                         <div class="dropdown no-arrow">
                                                                             <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -467,17 +467,15 @@ div.card-body h6, div.card-body p {
                                                                 </td>   
                                                             </tr>
                                                              {{!-- End of Delete later --}}
-
-                                                                {{#each purchases}}
-                                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
+                                                                {{#each wo_list}}
+                                                                <tr role="row">
+                                                                        <td>{{this.status}}</td>
                                                                         <td>{{this.farm_name}}</td>
-                                                                        <td>{{this.item_name}}</td>
-                                                                        <td>{{this.item_type}}</td>
-                                                                        <td>{{this.amount}}</td>
-                                                                        <td>{{this.units}}</td>
-                                                                        <td>{{this.request_date}}</td>
-                                                                        <td>{{this.date_purchased}}</td>
-                                                                        <td>{{this.purchase_status}}</td>
+                                                                        <td>{{this.type}}</td>
+                                                                        <td>{{this.crop_plan}}</td>
+                                                                        <td>{{this.date_created}}</td>
+                                                                        <td><a href="/farms/work_order&id={{this.work_order_id}}">{{this.work_order_id}}</a></td>
+                                                                        <td>{{this.notes}}</td>
                                                                         <td style="text-align: center"> 
                                                                         <div class="dropdown no-arrow">
                                                                             <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
@@ -490,7 +488,7 @@ div.card-body h6, div.card-body p {
                                                                                 <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
                                                                             </div>
                                                                         </div>
-                                                                        </td>     
+                                                                        </td> 
                                                                     </tr>
                                                                 {{/each}}
                                                             </tr>
