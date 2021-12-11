@@ -94,7 +94,7 @@
             </div>
             {{!-- Start User Profile Section --}}
 
-            <div class="nav-item dropdown no-arrow" style="margin-top: 10px;">
+            <div class="nav-item dropdown no-arrow" style="margin-top: 10px;" id="userNav">
                 <button type="button" class="btn btn-primary dropdown-toggle" aria-expanded="false" data-toggle="dropdown" type="button"
                 style="background-color: white; border-radius: 20px; color: #584c33; border-color: white; height: 50px; margin-top: 5px" id="userNav">
                         <img src="../../images/guest.png" width="35px" height="35px" id="user">
@@ -139,7 +139,7 @@
 <script>
 
 // this function fixes the double-click bug of dropdowns
-$(".nav-item").on("click", ".dropdown-toggle", function(e) { 
+$("#userNav").on("click", ".dropdown-toggle", function(e) { 
     e.preventDefault();
     $(this).parent().addClass("show");
     $(this).attr("aria-expanded", "true");
