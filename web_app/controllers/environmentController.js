@@ -1192,6 +1192,12 @@ exports.getPestDiseaseDetails = function(req, res){
 	var html_data = {};
 	var type = req.query.type;
 	var id = req.query.id;
+	var tab = req.query.tab;
+	var tab_name;
+	if(tab == null)
+		tab_name = "monitor_farms"
+	else if(tab == "PestandDisease")
+		tab_name = "pest_and_disease_discover";
 
 
 	if(type == "Pest"){
@@ -1224,7 +1230,7 @@ exports.getPestDiseaseDetails = function(req, res){
 										html_data["symptoms"] = symptoms;
 										html_data['type'] = "Pest";
 										// html_data["factors"] = factors;
-										js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+										js.init_session(html_data, 'role', 'name', 'username', tab_name);
 										res.render('pest_disease_details', html_data);
 									}
 								}
@@ -1314,7 +1320,50 @@ exports.getDiagnoses = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
-	res.render('pest_and_disease_diagnoses', html_data);
+
+	pestdiseaseModel.getDiagnosis(null, null, function(err, diagnoses){
+		if(err)
+			throw err;
+		else{
+			var i;
+			for(i =0; i < diagnoses.length; i++){
+				diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
+				diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_solved)), 'mm DD, YYYY');
+			}
+			
+
+			pestdiseaseModel.getDiagnosis(null, "Pest", function(err, pest_diagnoses){
+				if(err)
+					throw err;
+				else{
+					var i;
+					for(i =0; i < pest_diagnoses.length; i++){
+						pest_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
+						pest_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_solved)), 'mm DD, YYYY');
+					}
+					
+					pestdiseaseModel.getDiagnosis(null, "Disease", function(err, disease_diagnoses){
+						if(err)
+							throw err;
+						else{
+							var i;
+							for(i =0; i < disease_diagnoses.length; i++){
+								disease_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
+								disease_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_solved)), 'mm DD, YYYY');
+							}
+							html_data["pest_diagnoses"] = pest_diagnoses;
+							html_data["disease_diagnoses"] = disease_diagnoses;
+							html_data["diagnoses"] = diagnoses;
+							res.render('pest_and_disease_diagnoses', html_data);
+						}
+					});
+				}
+			});
+		}
+	});
+
+
+	
 }
 
 exports.getAddDiagnosis = function(req, res) {
@@ -1360,3 +1409,32 @@ exports.getDetailedDisease = function(req, res) {
 }
 
 
+
+exports.getPestandDiseaseDiscover = function(req,res){
+	var html_data = {};
+	html_data["title"] = "Discover";
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_discover');
+
+	pestdiseaseModel.getAllPests(function(err, pests){
+		if(err)
+			throw err;
+		else{
+			var i;
+			for(i = 0; i < pests.length; i++)
+				pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'mm DD, YYYY');
+			html_data["pests"] = pests;
+		}
+		pestdiseaseModel.getAllDiseases(function(err, diseases){
+			if(err)
+				throw err;
+				else{
+					var i;
+					for(i = 0; i < diseases.length; i++)
+					diseases[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diseases[i].last_diagnosed)), 'mm DD, YYYY');
+					html_data["diseases"] = diseases;
+				}
+			res.render('pest_disease_discover', html_data);
+		});
+	});
+	
+}

@@ -10,7 +10,7 @@ function update_color_meter(){
     });
 }
 $(document).ready(function(){
-
+    
     $(".probability_value").each(function(){
         var value = $(this).text();
         var val = 214 - (parseInt(value) * 2);
@@ -86,4 +86,7 @@ $(document).ready(function(){
             
         });
     });
+
+
+
 });

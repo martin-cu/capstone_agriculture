@@ -289,100 +289,38 @@
                                     <table class="table table tablesorter" id="diagnosesTable">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>Diagnosis ID</th>
+                                                <th>Diagnosis</th>
                                                 <th>Type</th>
                                                 <th>Date Diagnosed</th>
                                                 <th>Farm Affected</th>
-                                                {{!-- <th>cost per unit</th> --}}
-                                                <th></th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="materials_table">
-                                                {{#each purchases}}
-                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
-                                                        <td>{{this.farm_name}}</td>
-                                                        <td>{{this.item_name}}</td>
-                                                        <td>{{this.item_type}}</td>
-                                                        <td>{{this.amount}}</td>
-                                                        <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
-                                                    </tr>
-                                                {{/each}}
-                                            </tr>
+                                        <tbody id="diagnoses_table">
+                                            {{#each diagnoses}}
+                                                <tr>
+                                                    <td>{{this.name}}</td>
+                                                    <td>{{this.type}}</td>
+                                                    <td>{{this.date_diagnosed}}</td>
+                                                    <td>{{this.farm_name}}</td>
+                                                    <td class="{{this.status}} flex-container" style="display: flex; flex-flow: horizontal;"><div style="width: 80%;"><span >{{this.status}}</span></div>
+                                                        <div class="dropdown no-arrow" style="width : 50px;">
+                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                <a class="dropdown-item notSidebar" href="#" >&nbsp;View Details</a>
+                                                                {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {{/each}}
                                         </tbody>
                                     </table>
                                 </div> 
-                                    
-                                <div class="table-responsive" style="margin-top: 20px; height: 420px">
-                                <table class="table" id="diagnosesTable">
-                                    <thead style="color: rgb(255,255,255);">
-                                        <tr style="background: #212529;">
-                                            <th>Diagnosis ID</th>
-                                            <th>Type</th>
-                                            <th>Date Diagnosed</th>
-                                            <th>Farm Affected</th>
-                                            <th>Infestation Level</th>
-                                            <th>Status</th>
-                                            <th></th>
-                                        </tr>
-
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td>DG-01</td>
-                                            <td>Type</td>
-                                            <td>dd/mm/yyyy</td>
-                                            <td>Farm Name</td>
-                                            <td>Level #</td>
-                                            <td>Status</td>
-                                            <td> 
-                            
-                                                <div class="dropdown no-arrow">
-                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location="/pest_and_disease/diagnose_detailed_diagnosis"'>&nbsp;View Details</a>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
-                                                    </div>
-                                                </div>
-                                                 
-                                            </td>                                        
-                                        </tr>
-
-                                        <tr>
-                                            <td>DG-02</td>
-                                            <td>Type</td>
-                                            <td>dd/mm/yyyy</td>
-                                            <td>Farm Name</td>
-                                            <td>Level #</td>
-                                            <td>Status</td>
-                                            <td> 
-                                                
-                                            {{!-- <button type="submit" class="btn btn-primary btn-sm" id="more"><i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i></button> --}}
-                                            
-                                                <div class="dropdown no-arrow">
-                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location="/pest_and_disease/diagnose_detailed_diagnosis"'>&nbsp;View Details</a>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-
-                                </table>
-                                
-                                </div>
-
                                 </div>
                                 {{!-- END OF TAB 1 --}}
 
@@ -481,31 +419,43 @@
                                                         <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest<br></h6>
                                                         </div>
 
-                                                        <div class="card-body" style="height: 239.97px;">
 
-                                                        <div class="table-responsive" style="border-style: none;">
-                                                            <table class="table">
-                                                            <thead>
-                                                                {{!-- <tr></tr> --}}
-                                                            </thead>
-
-                                                            <tbody>
-                                                                <tr style="border-style: none;">
-                                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
-                                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest Name<br></span><span class="d-xxl-flex justify-content-xxl-start">Pest Name<br></span></td>
-                                                                </tr>
-
-                                                                <tr style="border-style: none;">
-                                                                <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
-                                                                </tr>
-                                                            </tbody>
+                                                        <div style="height: 420px">
+                                                            <table class="table table tablesorter" id="diagnosesTable">
+                                                                <thead class="thead-dark">
+                                                                    <tr>
+                                                                        <th>Diagnosis ID</th>
+                                                                        <th>Date Diagnosed</th>
+                                                                        <th>Farm Affected</th>
+                                                                        <th>Status</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="pest_diagnoses_table">
+                                                                    {{#each pest_diagnoses}}
+                                                                        <tr>
+                                                                            <td>{{this.name}}</td>
+                                                                            <td>{{this.date_diagnosed}}</td>
+                                                                            <td>{{this.farm_name}}</td>
+                                                                            <td class="{{this.status}} flex-container" style="display: flex; flex-flow: horizontal;"><div style="width: 80%;"><span >{{this.status}}</span></div>
+                                                                                <div class="dropdown no-arrow" style="width : 50px;">
+                                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                                    </button>
+                                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                        <a class="dropdown-item notSidebar" href="#" >&nbsp;View Details</a>
+                                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                        <div class="dropdown-divider"></div>
+                                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    {{/each}}
+                                                                </tbody>
                                                             </table>
-
-                                                        </div>
-                                                                            
-                                                        </div>
+                                                        </div>                    
                                                     </div>
-                                                    </div>
+                                                </div>
                                                 {{!-- END OF PEST/DISEASE INFORMATION CARD --}}
 
 
@@ -586,6 +536,41 @@
 
                                 {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_pest"'>Add Pest</button> --}}
                                 <div style="height: 420px">
+                                    <table class="table table tablesorter" id="diagnosesTable">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Diagnosis ID</th>
+                                                <th>Date Diagnosed</th>
+                                                <th>Farm Affected</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pest_diagnoses_table">
+                                            {{#each pest_diagnoses}}
+                                                <tr>
+                                                    <td>{{this.name}}</td>
+                                                    <td>{{this.date_diagnosed}}</td>
+                                                    <td>{{this.farm_name}}</td>
+                                                    <td class="{{this.status}} flex-container" style="display: flex; flex-flow: horizontal;"><div style="width: 80%;"><span >{{this.status}}</span></div>
+                                                        <div class="dropdown no-arrow" style="width : 50px;">
+                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                <a class="dropdown-item notSidebar" href="#" >&nbsp;View Details</a>
+                                                                {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                </tr>
+                                            {{/each}}
+                                        </tbody>
+                                    </table>
+                                </div>  
+                                {{!-- <div style="height: 420px">
                                     <table class="table table tablesorter" id="pestsTable" style="margin-top: 20px;">
                                         <thead class="thead-dark">
                                             <tr>
@@ -598,7 +583,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                {{!-- {{#each purchases}}
+                                                {{#each purchases}}
                                                     <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
                                                         <td>{{this.farm_name}}</td>
                                                         <td>{{this.item_name}}</td>
@@ -606,7 +591,7 @@
                                                         <td>{{this.amount}}</td>
                                                         <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
                                                     </tr>
-                                                {{/each}} --}}
+                                                {{/each}}
                                             <tr>
                                                 <td>P-01</td>
                                                 <td>Pest Name</td>
@@ -620,7 +605,7 @@
                                                             <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
                                                         </button>
                                                         <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                            <a class="dropdown-item notSidebar" href="#" onclick='window.location="/pest_and_disease/diagnose_detailed_pest"'>&nbsp;View Details</a>
+                                                            <a class="dropdown-item notSidebar" href="#" onclick='/pest_and_disease/diagnose_detailed_pest"'>&nbsp;View Details</a>
                                                             <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
                                                             <div class="dropdown-divider"></div>
                                                             <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
@@ -631,7 +616,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div> 
+                                </div>  --}}
 
                                 {{!-- <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="pestsTable">
@@ -905,54 +890,41 @@
 
                                 {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_disease"'>Add Disease</button> --}}
                                     <div style="height: 420px">
-                                    <table class="table table tablesorter" id="diseasesTable" style="margin-top: 20px;">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Disease ID</th>
-                                                <th>Name</th>
-                                                <th>Total Cases</th>
-                                                <th>Active Cases</th>
-                                                <th>Resolved Cases</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                {{!-- {{#each purchases}}
-                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
-                                                        <td>{{this.farm_name}}</td>
-                                                        <td>{{this.item_name}}</td>
-                                                        <td>{{this.item_type}}</td>
-                                                        <td>{{this.amount}}</td>
-                                                        <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
-                                                    </tr>
-                                                {{/each}} --}}
-
-                                            <tr>
-                                                <td>DS-01</td>
-                                                <td>Pest Name</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                                <td>0</td>
-                                                <td> 
-                                
-                                                    <div class="dropdown no-arrow">
-                                                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                            <a class="dropdown-item notSidebar" href="#" onclick='window.location="/pest_and_disease/diagnose_detailed_disease"'>&nbsp;View Details</a>
-                                                            <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </td>                                        
-                                            </tr>
-                                         
-                                        </tbody>
-                                    </table>
-                                </div> 
+                                                            <table class="table table tablesorter" id="diagnosesTable">
+                                                                <thead class="thead-dark">
+                                                                    <tr>
+                                                                        <th>Diagnosis ID</th>
+                                                                        <th>Type</th>
+                                                                        <th>Date Diagnosed</th>
+                                                                        <th>Farm Affected</th>
+                                                                        <th>Status</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="disease_diagnoses_table">
+                                                                    {{#each disease_diagnoses}}
+                                                                        <tr>
+                                                                            <td>{{this.name}}</td>
+                                                                            <td>{{this.type}}</td>
+                                                                            <td>{{this.date_diagnosed}}</td>
+                                                                            <td>{{this.farm_name}}</td>
+                                                                            <td class="{{this.status}} flex-container" style="display: flex; flex-flow: horizontal;"><div style="width: 80%;"><span >{{this.status}}</span></div>
+                                                                                <div class="dropdown no-arrow" style="width : 50px;">
+                                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                                    </button>
+                                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                        <a class="dropdown-item notSidebar" href="#" >&nbsp;View Details</a>
+                                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                        <div class="dropdown-divider"></div>
+                                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    {{/each}}
+                                                                </tbody>
+                                                            </table>
+                                                        </div> 
 
                                 {{!-- <div class="table-responsive" style="margin-top: 20px; height: 420px">
                                 <table class="table" id="diseasesTable">
@@ -1032,7 +1004,7 @@
                     </div>
                 </div>
             </div>
-    </div>
+</div>
 
 <script>
 

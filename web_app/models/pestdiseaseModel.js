@@ -74,7 +74,7 @@ exports.getLast = function(next){
 
 //PESTS
 exports.getAllPests = function(next){
-	var sql = "SELECT * FROM pest_table;";
+	var sql = "SELECT dt.*, d.date_diagnosed as last_diagnosed FROM pest_table dt INNER JOIN diagnosis d ON d.pd_id = dt.pest_id WHERE type = 'Pest';";
 	mysql.query(sql, next); return(sql);
 }
 
@@ -131,7 +131,7 @@ exports.addPest = function(pest, next){
 
 //disease
 exports.getAllDiseases = function(next){
-	var sql = "SELECT * FROM disease_table;";
+	var sql = "SELECT dt.*, d.date_diagnosed as last_diagnosed FROM disease_table dt INNER JOIN diagnosis d ON d.pd_id = dt.disease_id WHERE type = 'Disease'";
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1084,24 +1084,27 @@ exports.getPDProbabilityPercentage = function(weather, season, fertilizer, stage
 
 exports.getDiagnosis = function(farm_id, type, next){
 	var sql = "";
-	var pest_diagnosis = 'SELECT d.*, pt.pest_name as name, pt.pest_desc as description FROM diagnosis d INNER JOIN pest_table pt ON pt.pest_id = d.pd_id WHERE type = "Pest"';
-	var disease_diagnosis = 'SELECT d.*, pt.disease_name as name, pt.disease_desc as description FROM diagnosis d INNER JOIN disease_table pt ON pt.disease_id = d.pd_id WHERE type = "Disease"';
+	var pest_diagnosis = 'SELECT d.*, pt.pest_name as name, pt.pest_desc as description, cct.crop_plan, ft.farm_name FROM diagnosis d INNER JOIN pest_table pt ON pt.pest_id = d.pd_id  INNER JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Pest"';
+	var disease_diagnosis = 'SELECT d.*, pt.disease_name as name, pt.disease_desc as description, cct.crop_plan, ft.farm_name FROM diagnosis d INNER JOIN disease_table pt ON pt.disease_id = d.pd_id INNER JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Disease"';
 
 	if(farm_id == null){
 		
 	}
 	else{
-		pest_diagnosis = pest_diagnosis + " && ? ";
-		pest_diagnosis = mysql.format(pest_diagnosis, farm_id);
-		disease_diagnosis = disease_diagnosis + " && ? ";
-		disease_diagnosis = mysql.format(disease_diagnosis, farm_id);
+		pest_diagnosis = pest_diagnosis + " && d.farm_id = ? ";
+		pest_diagnosis = mysql.format(pest_diagnosis, farm_id.farm_id);
+		disease_diagnosis = disease_diagnosis + " && d.farm_id = ? ";
+		disease_diagnosis = mysql.format(disease_diagnosis, farm_id.farm_id);
 	}
 
 	if(type == null){
 		sql = pest_diagnosis + " UNION " + disease_diagnosis;
 	}
-
-	// console.log(sql);
+	else if(type == "Pest")
+		sql = pest_diagnosis;
+	else if(type == "Disease")
+		sql = disease_diagnosis
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
