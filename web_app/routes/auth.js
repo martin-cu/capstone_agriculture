@@ -108,6 +108,7 @@ router.post('/addDisease', environmentController.addDisease);
 //diagnose tab
 router.get('/pest_and_disease/discover', environmentController.getPestandDiseaseDiscover);
 router.get('/pest_and_disease/diagnose', environmentController.getDiagnoses);
+router.post('/pest_and_disease/diagnose', environmentController.addDiagnosis);
 router.get('/pest_and_disease/diagnose_add_diagnosis', environmentController.getAddDiagnosis);
 router.get('/pest_and_disease/diagnose_add_pest', environmentController.getAddPest);
 router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAddDisease);
@@ -115,6 +116,9 @@ router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAd
 router.get('/pest_and_disease/diagnose_detailed_diagnosis', environmentController.getDetailedDiagnosis);
 router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedPest);
 router.get('/pest_and_disease/diagnose_detailed_disease', environmentController.getDetailedDisease);
+	//ajax
+router.get('/ajaxGetPestandDisease', environmentController.ajaxGetPD);
+
 
 //Nutrient Management
 router.get('/nutrient_management', environmentController.getNurientManagement);

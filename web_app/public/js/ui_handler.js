@@ -65,7 +65,18 @@ function validatePolygon() {
 
 $(document).ready(function() {
 	$('.prev_step, .next_step').on('click', function() {
-		processModalStep($(this).parent().attr('id'), $(this).val());
+		if($(this).attr("id") == "add_diagnosis_btn1"){
+			var today = new Date();
+			if(!$("#date_diagnosed").val() || $("#date_diagnosed").val() > (today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate())){
+				alert("Enter proper date");
+			}
+			else{
+				processModalStep($(this).parent().attr('id'), $(this).val());
+			}
+		}
+		else{
+			processModalStep($(this).parent().attr('id'), $(this).val());
+		}
 	});
 	$('[data-dismiss="modal"]').on('click', function() {
 		if($("#update_purchase_btn").val() == "Pending"){

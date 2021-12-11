@@ -10,7 +10,7 @@ function update_color_meter(){
     });
 }
 $(document).ready(function(){
-    
+
     $(".probability_value").each(function(){
         var value = $(this).text();
         var val = 214 - (parseInt(value) * 2);
@@ -87,6 +87,16 @@ $(document).ready(function(){
         });
     });
 
-
+    $("#diagnosis_type").on("change", function(){
+        
+        var type = $(this).val();
+        $("#pd_list").empty();
+        $.get("/ajaxGetPestandDisease", {type : type}, function(pd_list){
+            var i; 
+            for(i = 0; i < pd_list.length; i++){
+                $("#pd_list").append('<option value="' + pd_list[i].pd_id +'">' + pd_list[i].pd_name +'</option>');
+            }
+        });
+    });
 
 });

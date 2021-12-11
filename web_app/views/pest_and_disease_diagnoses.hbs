@@ -61,7 +61,7 @@
                                             
                                         <div class="card-body" style="color: #332c1f;">
                                             {{!-- START FORM --}}
-              	                            <form autocomplete="off" method="post" action="" id="add_diagnosis_form">
+              	                            <form autocomplete="off" method="post" id="add_diagnosis_form" name="add_diagnosis_form">
                     
                                             {{!-- STEP 1 --}}
                                             <div class="tab">
@@ -72,16 +72,18 @@
                                                     <div class="row">
 
                                                         <div class="col">
-                                                        <label for="diagnosis_ID">Diagnosis ID <span style="color: #CA4E0C;">*</span></label>
-                                                            <input type="text" class="form-control" id="diagnosis_ID" name="diagnosis_ID" value="DG-xx" disabled>
+                                                            <label for="type">Farm Affected <span style="color: #CA4E0C;">*</span></label>
+                                                                    <select class="form-select" id="farm_id" name="farm_id" form="add_diagnosis_form">
+                                                                        {{#each farms}}
+                                                                            <option value="{{this.farm_id}}">{{this.farm_name}}</option>
+                                                                        {{/each}}
+                                                                    </select>
 
                                                         </div>
 
                                                         <div class="col">
-                                                            <label for="type">Farm Affected <span style="color: #CA4E0C;">*</span></label>
-                                                            <select class="form-select" id="farm_affected" name="farm_affected">
-                                                                
-                                                            </select>
+                                                                <label for="date_diagnosed">Date Diagnosed <span style="color: #CA4E0C;">*</span></label>
+                                                                <input type="date" class="form-control" id="date_diagnosed" name="date_diagnosed" form="add_diagnosis_form">
                                                         </div>     
 
                                                         </div>
@@ -92,7 +94,7 @@
 
                                                         <div class="col">
                                                         <label for="type">Type <span style="color: #CA4E0C;">*</span></label>
-                                                            <select class="form-select" id="type" name="type">
+                                                            <select class="form-select" id="diagnosis_type" name="type" form="add_diagnosis_form">
                                                             <option value="Pest">Pest</option>
                                                             <option value="Disease">Disease</option>
                                                         </select>
@@ -101,10 +103,12 @@
 
                                                         <div class="col">
                                                         <label for="name">Pest/Disease Name <span style="color: #CA4E0C;">*</span></label>
-                                                            <select class="form-select" id="name" name="name">
-                                                
-                                                        </select>
-
+                                                            <select class="form-select" id="pd_list" name="pd_id" form="add_diagnosis_form">
+                                                                {{#each pest_list}}
+                                                                    <option value="{{this.pd_id}}">{{this.pd_name}}</option>
+                                                                {{/each}}
+                                                            </select>
+                                                        
                                                         </div>
 
                                                         </div>
@@ -114,25 +118,19 @@
                                                     
                                                     <div class="row">
 
-                                                        <div class="col">
-                                                        <label for="date_diagnosed">Date Diagnosed <span style="color: #CA4E0C;">*</span></label>
-                                                        <input type="date" class="form-control" id="date_diagnosed" name="date_diagnosed">
+                                                    <div class="col">
 
-                                                        </div>
+                                                    </div>
 
                                                     <div class="col">
-                                                            <label for="type">Diagnosed By <span style="color: #CA4E0C;">*</span></label>
-                                                            <select class="form-select" id="diagnosed_by" name="diagnosed_by">
-                                                                
-                                                            </select>
-                                                        </div>  
+                                                    </div>  
 
                                                     </div>
                                                     
                                                     </div>
-
+                                        
                                     {{!-- DAMAGE ASSESSMENT --}}
-                                    <h6 style="font-weight: bold; margin-top: 40px">Damage Assessment</h6>
+                                    {{!-- <h6 style="font-weight: bold; margin-top: 40px">Damage Assessment</h6>
 
                                     <div class="form-group" style="margin-left: 5px;">
                                         
@@ -149,7 +147,7 @@
                                             </div>
 
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                             
                                     {{!-- END OF DAMAGE ASSESSMENT --}}
@@ -162,7 +160,7 @@
                                             {{!-- STEP 2 --}}
                                             <div class="tab">
                                                 <div class="hide modal_body_content" id="body_step2">
-                                                    <h5 for="" style="font-weight: bold;  padding-bottom: 5px; padding-top: 10px">Step 2: View Pesticide Application Plan</h5>
+                                                    <h5 for="" style="font-weight: bold;  padding-bottom: 5px; padding-top: 10px">STEP 2 NOT YET WORKING</h5>
 
                                                     {{!-- START CARDS --}}
                                                     <div class="row" style="margin-top: 20px">
@@ -249,7 +247,7 @@
                                             </div>
                                             {{!-- END OF STEP 2 --}}
 
-                                            </form>
+                                            
                                             {{!-- END FORM --}}
 
                                             <!-- Circles which indicates the steps of the form: -->
@@ -261,16 +259,16 @@
                                             <div class="modal-footer">
                                                 <div class="modal_footer_content" id="_step1">
                                                     <button type="button" class="btn round btn-secondary" onclick='window.location="/pest_and_disease/diagnose"'>Cancel</button>
-                                                    <button type="button" class="btn round btn-primary next_step" value="_step2" onclick="nextPrev(1)">Next</button>
+                                                    <button type="button" class="btn round btn-primary next_step" id="add_diagnosis_btn1" value="_step2" onclick="nextPrev(1)">Next</button>
                                                 </div>
 
                                                 <div class="hide modal_footer_content" id="_step2">
                                                     <button type="button" class="btn round btn-secondary prev_step" value="_step1" onclick="nextPrev(-1)">Back</button>
-                                                    <button type="button" class="btn round btn-primary" form="add_diagnosis_form">Create Diagnosis</button>
+                                                    <button class="btn round btn-primary" type="submit" id="add_diagnosis_btn2" form="add_diagnosis_form">Create Diagnosis2</button>
                                                 </div>
 
                                             </div>
-
+                                        </form>
 
                                         </div>
 
@@ -522,7 +520,7 @@
 
                                     <div class="hide modal_footer_content" id="_pstep2">
                                         <button type="button" class="btn round btn-secondary prev_step" value="_pstep1" onclick="nextPrev2(-1)">Back</button>
-                                        <button type="submit" class="btn round btn-primary" form="add_pest_form">Create Pest</button>
+                                        {{!-- <button type="submit" class="btn round btn-primary" form="add_pest_form">Create Pest</button> --}}
                                     </div>
 
                                     </div>
@@ -873,7 +871,7 @@
 
                                     <div class="hide modal_footer_content" id="_dstep2">
                                         <button type="button" class="btn round btn-secondary prev_step" value="_dstep1" onclick="nextPrev3(-1)">Back</button>
-                                        <button type="submit" class="btn round btn-primary" form="add_disease_form">Create Disease</button>
+                                        {{!-- <button type="submit" class="btn round btn-primary" form="add_disease_form">Create Disease</button> --}}
                                     </div>
 
                                     </div>
@@ -1029,27 +1027,32 @@ function showTab(n) {
 }
 
 function nextPrev(n) {
-  // This function will figure out which tab to display
-  var x = document.getElementsByClassName("tab");
+    var today = new Date();
+    if(n == 1 && (document.getElementById("date_diagnosed").value > (today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()) || !document.getElementById("date_diagnosed").value)){
+    }
+    else{
+             // This function will figure out which tab to display
+            var x = document.getElementsByClassName("tab");
 
-  // Exit the function if any field in the current tab is invalid:
-  if (!dataValidation(currentTab+2)) return false;
-  // Hide the current tab:
- // x[currentTab].style.display = "none";
+            // Exit the function if any field in the current tab is invalid:
+            if (!dataValidation(currentTab+2)) return false;
+            // Hide the current tab:
+            // x[currentTab].style.display = "none";
 
-document.getElementsByClassName("step")[currentTab].className += " finish";
+            document.getElementsByClassName("step")[currentTab].className += " finish";
 
-  // Increase or decrease the current tab by 1:
-  currentTab = currentTab + n;
+            // Increase or decrease the current tab by 1:
+            currentTab = currentTab + n;
 
-  // if you have reached the end of the form...
-  if (currentTab >= x.length) {
-    // ... the form gets submitted:
-    document.getElementById("create_farm_form").submit();
-    return false;
-  }
-  // Otherwise, display the correct tab:
-  showTab(currentTab);
+            // if you have reached the end of the form...
+            if (currentTab >= x.length) {
+                // ... the form gets submitted:
+                document.getElementById("create_farm_form").submit();
+                return false;
+            }
+            // Otherwise, display the correct tab:
+            showTab(currentTab);
+    }
 }
 
 

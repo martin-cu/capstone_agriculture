@@ -74,7 +74,7 @@ exports.getLast = function(next){
 
 //PESTS
 exports.getAllPests = function(next){
-	var sql = "SELECT dt.*, d.date_diagnosed as last_diagnosed FROM pest_table dt INNER JOIN diagnosis d ON d.pd_id = dt.pest_id WHERE type = 'Pest';";
+	var sql = "SELECT * FROM pest_table;";
 	mysql.query(sql, next); return(sql);
 }
 
@@ -123,7 +123,21 @@ exports.addPest = function(pest, next){
 
 
 
+exports.getPestDiseaseList = function(type, next){
+	var sql_pest = "SELECT a.pest_id as pd_id, a.pest_name as pd_name, a.pest_desc as pd_desc,  a.scientific_name, MAX(a.last_diagnosed) as last_diagnosed FROM (SELECT *, null as last_diagnosed FROM pest_table UNION SELECT dt.*, d.date_diagnosed as last_diagnosed FROM pest_table dt INNER JOIN diagnosis d ON d.pd_id = dt.pest_id WHERE type = 'Pest') a GROUP BY pest_id";
+	var sql_disease = "SELECT a.disease_id as pd_id, a.disease_name as pd_name, a.disease_desc as pd_desc, a.scientific_name, MAX(a.last_diagnosed) as last_diagnosed FROM (SELECT *, null as last_diagnosed FROM disease_table UNION SELECT dt.*, d.date_diagnosed as last_diagnosed FROM disease_table dt INNER JOIN diagnosis d ON d.pd_id = dt.disease_id WHERE type = 'disease') a GROUP BY disease_id;";
 
+	if(type == "Pest"){
+		mysql.query(sql_pest, next); return(sql_pest);
+	}
+	else if(type == "Disease"){
+		mysql.query(sql_disease, next); return(sql_disease);
+	}
+	else{
+		var sql = sql_pest + " UNION " + sql_disease;
+		mysql.query(sql, next); return(sql);
+	}
+}
 
 
 
@@ -131,7 +145,7 @@ exports.addPest = function(pest, next){
 
 //disease
 exports.getAllDiseases = function(next){
-	var sql = "SELECT dt.*, d.date_diagnosed as last_diagnosed FROM disease_table dt INNER JOIN diagnosis d ON d.pd_id = dt.disease_id WHERE type = 'Disease'";
+	var sql = "SELECT * FROM disease_table;";
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1104,7 +1118,7 @@ exports.getDiagnosis = function(farm_id, type, next){
 		sql = pest_diagnosis;
 	else if(type == "Disease")
 		sql = disease_diagnosis
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1136,4 +1150,11 @@ exports.getPDDetails = function(type, pd_id, detail_type, next){
 	}
 	
 	
+}
+
+exports.addDiagnosis = function(diagnosis, next){
+	var sql = "INSERT INTO diagnosis SET ?";
+	sql = mysql.format(sql, diagnosis);
+	console.log(sql);
+	mysql.query(sql, next); return(sql);
 }
