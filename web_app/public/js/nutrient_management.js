@@ -713,7 +713,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 	}
 
 	$.get('/get_work_orders', query, function(work_order_list) {
-
+		console.log(work_order_list);
 		var land_prep = work_order_list.filter(ele => ele.type == 'Land Preparation')[0];
 		var sowing = work_order_list.filter(ele => ele.type == 'Sow Seed')[0];
 
@@ -727,7 +727,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 			var obj;
 			var temp_d;
 			console.log(method);
-
+			console.log(crop_calendar);
 			if (method == 'Transplanting') {
 				temp_d = land_prep.date_completed == null || land_prep.date_completed == undefined ? land_prep.date_due : land_prep.date_completed;
 				target_date = new Date(temp_d);
@@ -1043,7 +1043,7 @@ $(document).ready(function() {
 					}
 					$.get('/get_work_orders', query, function(work_order_list) {
 						appendFertilizerHistory(work_order_list.filter(ele => ele.type == 'Fertilizer Application'));
-
+						console.log(list);
 						var recommendation = processInventory(materials, details.recommendation, list);
 						appendInventory(recommendation);
 						

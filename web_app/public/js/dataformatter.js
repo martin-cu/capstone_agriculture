@@ -89,6 +89,10 @@ function objectMerger(arr1, arr2, arr1_param, arr2_param, id) {
 	return objArr;
 }
 
+exports.dateDiff = function(d1, d2) {
+	return d1.getDate() - d2.getDate();
+}
+
 exports.smoothHourlyData = function(arr, hours) {
 	var result = [];
 	for (var i = 0; i < hours.length; i++) {

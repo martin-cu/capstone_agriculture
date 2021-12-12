@@ -64,7 +64,7 @@ exports.getMaterials = function(type, filter, next){
 		}
 		sql = table;
 	}
-
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -136,7 +136,7 @@ exports.getAllMaterials = function(type, filter, next) {
 		}
 	}
 
-
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -151,6 +151,7 @@ exports.readResourcesUsed = function(type, data, next) {
 	else if (type == 'Pesticide') {
 
 	}
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

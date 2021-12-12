@@ -24,6 +24,13 @@ router.get('/create_wo_test', (req, res) => {
 router.get('/get_farm_list', farmController.ajaxGetFarmList);
 router.post('/create_crop_plan', cropCalendarController.ajaxCreateCropPlan);
 router.get('/get_crop_plans', cropCalendarController.ajaxGetCropPlans);
+router.get('/get_active_calendar', cropCalendarController.ajaxGetCurrentCropCalendar);
+
+//Ajax nutrient mgt
+router.get('/get_nutrient_plan_details', environmentController.ajaxGetNutrientPlan);
+router.get('/get_nutrient_plan_items', environmentController.ajaxGetNutrientPlanItems);
+router.post('/create_nutrient_plan', environmentController.ajaxCreateNutrientPlan);
+router.post('/create_nutrient_item', environmentController.ajaxCreateNutrientItem);
 
 router.get('/farm_monitor_test', farmController.getMonitorFarms);
 router.get('/filter_farm_details', farmController.getFarmDetails);

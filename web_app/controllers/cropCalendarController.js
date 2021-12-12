@@ -62,6 +62,17 @@ exports.getCropCalendarTab = function(req, res) {
 	});
 }
 
+exports.ajaxGetCurrentCropCalendar = function(req, res) {
+	var query = { farm_id: req.query.farm_id };
+	cropCalendarModel.getCurrentCropCalendar(query, function(err, calendar) {
+		if (err)
+			throw err;
+		else {
+			res.send(calendar);
+		}
+	});
+};
+
 exports.ajaxCreateCropPlan = function(req, res) {
 	console.log(req.body);
 	var query = {

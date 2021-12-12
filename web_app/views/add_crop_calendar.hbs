@@ -228,6 +228,7 @@ li > span {
                                 <label for="seed_id">Seed</label>
 				                <select class="form-select" id="seed_id" name="seed_id">
 				                </select>
+                                <input type="hidden" name="seed_maturity_days" id="seed_maturity_days">
                             </div>
 
                             <div class="col">
@@ -375,16 +376,25 @@ li > span {
                                                             </thead>
                                                             <tbody>
                                                                 <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Fertilizer<br></span> <span class="d-xxl-flex justify-content-xxl-start">Fertilizer Name<br></span></td>
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Fertilizer Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty lb/ha<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Planted<br></span> <span class="d-xxl-flex justify-content-xxl-start" id="seed_name"><br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method<br></span><span class="d-xxl-flex justify-content-xxl-start" id="method_detail"><br></span></td>
                                                                 </tr>
-                                                                <tr style="border-style: none;">
+                                                               <!--  <tr style="border-style: none;">
                                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
                                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
-                                                                </tr>
+                                                                </tr> -->
+                                                                <!-- <tr style="border-style: none;">
+                                                                    <table>
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </tr> -->
                                                                 <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Expected Yield<br></span><span class="d-xxl-flex justify-content-xxl-start">60 cavans/ha<br></span></td>
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Forecasted Yield<br></span><span class="d-xxl-flex justify-content-xxl-start">40 cavans/ha<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Expected Yield<br></span><span class="d-xxl-flex justify-content-xxl-start">todo<br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Forecasted Yield<br></span><span class="d-xxl-flex justify-content-xxl-start">todo<br></span></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -397,50 +407,17 @@ li > span {
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="table-responsive">
-                                                        <table class="table">
+                                                        <table class="table" id="fertilizer_recommendation_table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th></th>
-                                                                    <th style="text-align: right;">Required (-)</th>
-                                                                    <th style="text-align: right;">Added (+)</th>
-                                                                    <th style="text-align: right;">Total</th>
-                                                                    <th style="text-align: right;">Avg/Year</th>
-                                                                    <th style="text-align: right;">Nutrient Deviation</th>
+                                                                    <th style="text-align: left;">Target Application Date</th>
+                                                                    <th style="text-align: left;">Fertilizer</th>
+                                                                    <th style="text-align: left;">Description</th>
+                                                                    <th style="text-align: left;">Amount</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td>N:</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>P2O5 (mg/100g):<br></td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>K2O (mg/100g):<br></td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>S:</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                    <td style="text-align: right;">0</td>
-                                                                </tr>
+
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -457,11 +434,15 @@ li > span {
                                                 <div class="card-body">
                                                     <ul class="list-group">
                                                         <li class="list-group-item"><span>Soil Texture</span><span class="float-end">Light Soil</span></li>
-                                                        <li class="list-group-item"><span>P205 (mg/100)</span><span class="float-end">0.00</span></li>
-                                                        <li class="list-group-item"><span>K2O (mg/100)</span><span class="float-end">0.00</span></li>
-                                                        <li class="list-group-item"><span>Soil Moisture (%)</span><span class="float-end">0.00%</span></li>
-                                                        <li class="list-group-item"><span>pH in KCl</span><span class="float-end">0.00</span></li>
-                                                        <li class="list-group-item"><span>pH in Ca</span><span class="float-end">0.00</span></li>
+                                                        <li class="list-group-item"><span>pH Lvl</span><span class="float-end" id="ph_lvl"></span></li>
+                                                        <li class="list-group-item"><span>N (mg/100)</span><span class="float-end" id="n_val"></span></li>
+                                                        <li class="list-group-item"><span>P205 (mg/100)</span><span class="float-end" id="p_val"></span></li>
+                                                        <li class="list-group-item"><span>K2O (mg/100)</span><span class="float-end" id="k_val"></span></li>
+                                                        <li class="list-group-item"><span>Last Soil Test Taken</span>
+                                                            <div class="d-flex flex-column float-end">
+                                                                <span class="float-end" id="soil_test_date"></span><span class="text-muted" style="font-size: 10px;" id="default_soil">(Using Default Values)</span>
+                                                            </div>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -471,10 +452,9 @@ li > span {
                                                 </div>
                                                 <div class="card-body">
                                                     <ul class="list-group">
-                                                        <li class="list-group-item"><span>N</span><span class="float-end">0</span></li>
-                                                        <li class="list-group-item"><span>P205 (mg/100)</span><span class="float-end">0</span></li>
-                                                        <li class="list-group-item"><span>K2O (mg/100)</span><span class="float-end">0</span></li>
-                                                        <li class="list-group-item"><span>S</span><span class="float-end">0</span></li>
+                                                        <li class="list-group-item"><span>N</span><span class="float-end" id="n_lvl"></span></li>
+                                                        <li class="list-group-item"><span>P205 (mg/100)</span><span class="float-end"  id="p_lvl"></span></li>
+                                                        <li class="list-group-item"><span>K2O (mg/100)</span><span class="float-end" id="k_lvl"></span></li>
                                                     </ul>
                                                 </div>
                                             </div>

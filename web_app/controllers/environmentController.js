@@ -640,7 +640,7 @@ function recommendFertilizerPlan(obj, materials) {
 			price: materials[i].price
 		};
 	}
-
+	console.log(variables);
 	model = {
 		optimize: '',
 		opType: 'min',
@@ -660,14 +660,68 @@ function recommendFertilizerPlan(obj, materials) {
 	return obj;
 }
 
+exports.ajaxCreateNutrientPlan = function(req, res) {
+	var query = req.body;
+	nutrientModel.createNutrientPlan(query, function(err, plan_record) {
+		if (err)
+			throw err;
+		else {
+			res.send(plan_record);
+		}
+	});
+}
+
+exports.ajaxGetNutrientPlan = function(req, res) {
+	var query = req.query;
+	nutrientModel.getNutrientPlanDetails(query, function(err, plan) {
+		if (err)
+			throw err;
+		else {
+			res.send(plan);
+		}
+	});
+}
+
+exports.ajaxCreateNutrientItem = function(req, res) {
+	var query = req.body;
+	nutrientModel.createNutrientItem(query, function(err, plan_record) {
+		if (err)
+			throw err;
+		else {
+			res.send(plan_record);
+		}
+	});
+}
+
+exports.ajaxGetNutrientPlanItems = function(req, res) {
+	var query = { };
+	query['frp.calendar_id'] = req.query.calendar_id;
+
+	nutrientModel.getNutrientPlanItems(query, function(err, items) {
+		if (err)
+			throw err;
+		else {
+			res.send(items);
+		}
+	});
+}
+
 exports.ajaxGetDetailedNutrientMgt = function(req, res) {
-	var query = { farm_name: req.query.farm_name, calendar_id: req.query.calendar_id };
+	var query = {};
+
+	if (req.query.farm_name == null && req.query.farm_name == undefined) {
+		query['farm_id'] = req.query.farm_id;
+	}
+	else if (req.query.farm_id == null && req.query.farm_id == undefined) {
+		query['farm_name'] = req.query.farm_name;
+	}
 
 	var html_data = {};
 	nutrientModel.getSoilRecord(query, function(err, result) {
 		if (err)
 			throw err;
 		else {
+			result[0]['default_soil'] = false;
 			materialModel.getMaterials(req.query.type, req.query.filter, function(err, materials) {
 		        if (err)
 		            throw err;
@@ -682,15 +736,18 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 		        				if (err)
 		        					throw err;
 		        				else {
-		        					if (result[0].soil_quality_id == null) {
+		        					var result_date_diff = dataformatter.dateDiff(new Date(result[0].date_taken), new Date())
+		        					
+		        					if (result[0].soil_quality_id == null || result_date_diff > 364) {
 				        				//Serves as default soil data if soil test has never been done
 				        				var ph_lvl = 'N/A', n_lvl = 7.75, p_lvl = 4.0, k_lvl = 0;
 				        				result[0].pH_lvl = ph_lvl;
 				        				result[0].n_lvl = n_lvl;
 				        				result[0].p_lvl = p_lvl;
 				        				result[0].k_lvl = k_lvl;
+				        				result[0]['default_soil'] = true;
 									}
-									//console.log(crop_calendar);
+									console.log(materials);
 		        					result = dataformatter.processNPKValues(result, result.farm_area, applied)
 						            result = recommendFertilizerPlan(result, materials);
 						            result['calendar_id'] = crop_calendar.calendar_id;
@@ -708,7 +765,7 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 
 
 exports.detailedNutrientManagement = function(req, res) {
-	var query = { farm_name: req.params.farm_name, calendar_id: req.params.calendar_id };
+	var query = { farm_name: req.params.farm_name };
 	var html_data = {};
 	nutrientModel.getSoilRecord(query, function(err, result) {
 		if (err) {
@@ -729,6 +786,7 @@ exports.detailedNutrientManagement = function(req, res) {
 					}
         			html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
 					html_data['detailed_data'] = dataformatter.processNPKValues(result, result.farm_area, applied);
+					html_data['detailed_data']['calendar_id'] = req.params.calendar_id;
 					console.log(html_data.detailed_data);
 					res.render('nutrient_mgt_detailed', html_data);
         		}
