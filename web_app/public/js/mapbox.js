@@ -56,7 +56,7 @@ function getFarmDetails(obj) {
 		$.get("/get_crop_plans", { status: ['Active', 'In-Progress',"Completed"], where : {key : "farm_name", val : details.details[0].farm_name}}, function(result){
 			$("#crop_calendar_list").empty();
 			for(i = 0; i < result.length; i++)
-				if(result[i].crop_plan != null)
+				if(result[i].crop_plan != null && result[i].farm_name == details.details[0].farm_name)
 					$("#crop_calendar_list").append('<option value="' + result[i].calendar_id + '">' + result[i].crop_plan + '</option>');
 		});
 	});
@@ -402,7 +402,6 @@ $(document).ready(function() {
 			//UPDATE FARM DETAILS
 			$(".table-details").empty();
 			$.get('/agroapi/polygon/readAll', {}, function(polygons) {
-				alert("polygon");
 				var center = [];
 				for (var i = 0; i < polygons.length; i++) {
 					if (viewed_farm_name == polygons[i].name) {
@@ -420,7 +419,6 @@ $(document).ready(function() {
 					$("#farm_desc").text(farm_details.details[0].farm_desc);
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 					
-					alert(farm_details.crop_calendar_details.crop_plan);
 					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
 					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
 					$(".calendar_planting").text(farm_details.crop_calendar_details.method);

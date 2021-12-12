@@ -51,6 +51,8 @@ exports.init_session = function(obj, role, name, username, tab) {
 		obj['monitor_farms_tab'] = true;
 		
 	// Pest and Disease Diagnose Tab
+	else if (tab === 'pest_and_disease_discover') 
+		obj['pest_and_disease_discover'] = true;
 	else if (tab === 'pest_and_disease_diagnoses') 
 		obj['pest_and_disease_diagnoses'] = true;
 	else if (tab === 'pest_and_disease_add_diagnosis') 

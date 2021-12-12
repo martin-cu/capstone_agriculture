@@ -1250,6 +1250,12 @@ exports.getPestDiseaseDetails = function(req, res){
 	var html_data = {};
 	var type = req.query.type;
 	var id = req.query.id;
+	var tab = req.query.tab;
+	var tab_name;
+	if(tab == null)
+		tab_name = "monitor_farms"
+	else if(tab == "PestandDisease")
+		tab_name = "pest_and_disease_discover";
 
 
 	if(type == "Pest"){
@@ -1282,7 +1288,7 @@ exports.getPestDiseaseDetails = function(req, res){
 										html_data["symptoms"] = symptoms;
 										html_data['type'] = "Pest";
 										// html_data["factors"] = factors;
-										js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+										js.init_session(html_data, 'role', 'name', 'username', tab_name);
 										res.render('pest_disease_details', html_data);
 									}
 								}
@@ -1328,7 +1334,6 @@ exports.getFarmSoilData = function(req,res){
 	console.log("AJAX GET SOIL DETIALS");
 
 	var query = { farm_name: req.query.farm_name };
-	console.log(req.params.farm_name);
 
 	nutrientModel.getSoilRecord(query, function(err, result) {
 		if (err) {
@@ -1373,7 +1378,67 @@ exports.getDiagnoses = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
-	res.render('pest_and_disease_diagnoses', html_data);
+
+	pestdiseaseModel.getDiagnosis(null, null, function(err, diagnoses){
+		if(err)
+			throw err;
+		else{
+			var i;
+			for(i =0; i < diagnoses.length; i++){
+				diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
+				diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_solved)), 'mm DD, YYYY');
+			}
+			
+
+			pestdiseaseModel.getDiagnosis(null, "Pest", function(err, pest_diagnoses){
+				if(err)
+					throw err;
+				else{
+					var i;
+					for(i =0; i < pest_diagnoses.length; i++){
+						pest_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
+						pest_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_solved)), 'mm DD, YYYY');
+					}
+					
+					pestdiseaseModel.getDiagnosis(null, "Disease", function(err, disease_diagnoses){
+						if(err)
+							throw err;
+						else{
+							var i;
+							for(i =0; i < disease_diagnoses.length; i++){
+								disease_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
+								disease_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_solved)), 'mm DD, YYYY');
+							}
+
+							farmModel.getAllFarms(function(err, farms){
+								if(err)
+									throw err;
+								else{
+
+								}
+								pestdiseaseModel.getPestDiseaseList("Pest", function(err, pd_list){
+									if(err)
+										throw err;
+									else{
+
+									}
+									html_data["pest_list"] = pd_list;
+									html_data["pest_diagnoses"] = pest_diagnoses;
+									html_data["disease_diagnoses"] = disease_diagnoses;
+									html_data["diagnoses"] = diagnoses;
+									html_data["farms"] = farms;
+									res.render('pest_and_disease_diagnoses', html_data);
+								});
+							});
+						}
+					});
+				}
+			});
+		}
+	});
+
+
+	
 }
 
 exports.getAddDiagnosis = function(req, res) {
@@ -1419,3 +1484,97 @@ exports.getDetailedDisease = function(req, res) {
 }
 
 
+
+exports.getPestandDiseaseDiscover = function(req,res){
+	var html_data = {};
+	html_data["title"] = "Discover";
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_discover');
+
+	pestdiseaseModel.getPestDiseaseList("Pest", function(err, pests){
+		if(err)
+			throw err;
+		else{
+			var i;
+			for(i = 0; i < pests.length; i++){
+				if(pests[i].last_diagnosed != null)
+				pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'mm DD, YYYY');
+			}
+			html_data["pests"] = pests;
+		}
+		pestdiseaseModel.getPestDiseaseList("Disease", function(err, diseases){
+			if(err)
+				throw err;
+				else{
+					var i;
+					for(i = 0; i < diseases.length; i++){
+						if(diseases[i].last_diagnosed != null)
+						diseases[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diseases[i].last_diagnosed)), 'mm DD, YYYY');
+					}
+					html_data["diseases"] = diseases;
+				}
+			res.render('pest_disease_discover', html_data);
+		});
+	});
+	
+}
+
+exports.ajaxGetPD = function(req, res){
+	var type = req.query.type;
+	pestdiseaseModel.getPestDiseaseList(type, function(err, pd_list){
+		res.send(pd_list);
+	});
+	
+}
+
+
+exports.addDiagnosis = function(req,res){
+	var diagnosis = {
+		type : req.body.type,
+		farm_id : req.body.farm_id,
+		pd_id : req.body.pd_id,
+		date_diagnosed : req.body.date_diagnosed
+	}
+	var query = { where: { key: 'farm_id', value: diagnosis.farm_id } };
+
+	farmModel.getFarmData(query, function(err, farm_data){
+		if(err)
+			throw err;
+		else{
+			var farm_name = farm_data[0].farm_name;
+		}
+		var crop_calendar_query = { status: ['In-Progress', 'Active'] , where : {key : "farm_name", val : farm_name}}
+		cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calendar){
+			if(err)
+				throw err;
+			else{
+				diagnosis["calendar_id"] = crop_calendar[0].calendar_id;
+			}
+
+
+
+			pestdiseaseModel.getDiagnosis({farm_id :diagnosis.farm_id},diagnosis.type, function(err, diagnoses){
+				if(err)
+					throw err;
+				else{
+					var add = true;
+					var i;
+					for(i = 0; i < diagnoses.length; i++){
+						if(diagnoses[i].status == "Present" && diagnosis.pd_id == diagnoses[i].pd_id){
+							console.log("DO NOT ADD. ALREADY PRESENT");
+							add = false;
+						}
+					}
+					//INSERT
+					if(add)	
+						pestdiseaseModel.addDiagnosis(diagnosis, function(err, result){
+							if(err)
+								throw err;
+						});
+					res.redirect("/pest_and_disease/diagnose");
+				}
+			});
+		});
+	});
+	
+	
+}
