@@ -363,16 +363,17 @@ function consolidateFRItems(wo_arr, frp_id) {
 
 		for (var i = 0; i < checkboxes.length; i++) {
 			selected = $($(rows)[checkboxes[i]]).children().filter('input:hidden');
-
+			var str = $(selected[4]).prop('value');
+			str = str.replace(' bags', '');
 			wo_obj  = {
 				fr_plan_id: frp_id,
 				target_application_date: $(selected[0]).prop('value'),
 				fertilizer_id: $(selected[1]).prop('value'),
 				nutrient: $(selected[2]).prop('value'),
 				description: $(selected[3]).prop('value'),
-				amount: $(selected[4]).prop('value').replace(/[^0-9]/g, ''),
+				amount: str,
 				isCreated: checkbox_state[i],
-				wo_id: 1,
+				wo_id: null,
 			};
 
 			wo_arr.push(wo_obj);

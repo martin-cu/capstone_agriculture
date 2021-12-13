@@ -494,7 +494,7 @@ function calculateDeficientN(reqs, applied) {
 	return N;
 }
 
-function normalizeSchedule(arr, origin, material_list) {
+function normalizeSchedule(arr, origin, material_list, isChecked) {
 	var row_obj = {};
 	var cont_arr = [];
 
@@ -532,7 +532,7 @@ function normalizeSchedule(arr, origin, material_list) {
 				row_obj.fertilizer.nutrient = nutrient;
 				row_obj.description.val = (unique_arr[y].desc);
 				row_obj.amount.val = (unique_arr[y].amount);
-				row_obj.checkbox.val = true;
+				row_obj.checkbox.val = isChecked;
 
 				// if (unique_arr.length > 1 && y != 0) {
 				// 	delete row_obj.date;
@@ -743,57 +743,140 @@ function dateDiff(d1, d2) {
 	return d1.getDate() - d2.getDate();
 }
 
+function processFRItems(arr, frp_id) {
+	var wo_arr = [];
+	var wo_obj = {};
+
+	for (var i = 0; i < arr.length; i++) {
+		arr[i].amount.val = arr[i].amount.val.replace(' bags', '')
+		wo_obj  = {
+			fr_plan_id: frp_id,
+			target_application_date: arr[i].date.val,
+			fertilizer_id: arr[i].fertilizer.id_val,
+			nutrient: arr[i].fertilizer.nutrient,
+			description: arr[i].description.val,
+			amount: arr[i].amount.val,
+			isCreated: arr[i].checkbox.val,
+			wo_id: null,
+		};
+
+		wo_arr.push(wo_obj);
+	}
+
+	return wo_arr;
+}
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        /* next line works with strings and numbers, 
+         * and you may want to customize it to your needs
+         */
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+function reduceDynamicFRItems(arr, db_arr) {
+	arr.sort(dynamicSort('amount'));
+	db_arr.sort(dynamicSort('amount'));
+
+	for(var i = 0; i < arr.length; i++) {
+        for (var x = 0; x < db_arr.length; x++) {
+        	if (arr[i].description == db_arr[x].description && arr[i].amount == db_arr[x].amount) {
+        		arr.splice(i, 1);
+        		i--;
+        		if (i < 0)
+        			i = 0;
+        	}
+        }
+    }
+
+	return arr;
+}
+
 $(document).ready(function() {
 
 	jQuery.ajaxSetup({async: false });
 	var farm_name = '';
 
-	$.get('/get_farm_list', {  }, function(farm_list) {
-		for (var i = 0; i < farm_list.length; i++) {
-			$.get('/get_active_calendar', { farm_id: farm_list[i].farm_id }, function(calendar) {
-				if (calendar.length != 0) {
-					$.get('/get_nutrient_plan_details', { calendar_id: calendar[0].calendar_id}, function(plan) {
+	setInterval(function() {
+		$.get('/get_farm_list', {  }, function(farm_list) {
+			for (var i = 0; i < farm_list.length; i++) {
+				$.get('/get_active_calendar', { farm_id: farm_list[i].farm_id }, function(calendar) {
+					if (calendar.length != 0) {
+						$.get('/get_nutrient_plan_details', { calendar_id: calendar[0].calendar_id}, function(plan) {
+							if (dateDiff(new Date(), new Date(plan[0].last_updated)) >= 7) {
+								var detailed_nutrient_query = {
+									farm_name: farm_list[i].farm_name,
+									calendar_id: calendar[0].calendar_id,
+									type: 'Fertilizer',
+									filter: farm_list[i].farm_id
+								};
 
-						if (dateDiff(new Date(), new Date(plan[0].last_updated)) >= 7) {
-							console.log(plan[0]);
+								//*********** Update fertilizer recommendation items START ***********//
 
-							//*********** Update fertilizer recommendation items START ***********//
+								$.get('/filter_nutrient_mgt', detailed_nutrient_query, function(details) {
+									
+									$.get('/get_crop_plans', { status: ['Active','In-Progress'], where: { key: 'calendar_id', val: calendar[0].calendar_id } }, function(curr_calendar) {
 
-							$.get('/filter_nutrient_mgt', { farm_name: farm_name, calendar_id: calendar, type: 'Fertilizer', filter: id }, function(details) {
-								calendar_id = details.calendar_id;
-								console.log('Calendar id: '+calendar_id);
-								$.get('/getAll_materials', { type: 'Fertilizer', filter: id }, function(materials) {
-									material_list = materials;
-									$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: id }, function(list) {
-										
-										var query = {
-											where: {
-												key: ['farm_id'],
-												value: [id]
-											},
-											order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
-										}
-										$.get('/get_work_orders', query, function(work_order_list) {
-											appendFertilizerHistory(work_order_list.filter(ele => ele.type == 'Fertilizer Application'));
+										$.get('/getAll_materials', { type: 'Fertilizer', filter: farm_list[i].farm_id }, function(materials) {
+											material_list = materials;
+											$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: farm_list[i].farm_id }, function(list) {
+												
+												var query = {
+													where: {
+														key: ['farm_id'],
+														value: [farm_list[i].farm_id]
+													},
+													order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+												}
+												$.get('/get_work_orders', query, function(work_order_list) {
+													var schedule_arr = createSchedule(materials, details.recommendation, list, farm_list[i].farm_id, calculateDeficientN(details, list), details, curr_calendar[0], work_order_list);
+													var recommendation_list = [];
+													
+													schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, false);
+													schedule_arr = schedule_arr.filter(e => e.fertilizer.nutrient == 'N');
 
-											var recommendation = processInventory(materials, details.recommendation, list);
-											appendInventory(recommendation);
-											
-											createSchedule(materials, details.recommendation, list, id, calculateDeficientN(details, list), details);
+													var fr_db_items = processFRItems(schedule_arr, plan[0].fr_plan_id);
+													
+													$.get('/get_nutrient_plan_items', { frp_id: plan[0].fr_plan_id }, function(fr_items) {
+														var db_arr = reduceDynamicFRItems(fr_db_items, fr_items);
+														
+														$.post('/update_nutrient_plan', { update: { last_updated: formatDate(new Date(), 'YYYY-MM-DD') }, filter: { fr_plan_id: plan[0].fr_plan_id } }, function(update_status) {
+															console.log(update_status);
+														});
+
+														for (var i = 0; i < db_arr.length; i++) {
+															$.post('/create_nutrient_item', db_arr[i], function(nutrient_item) {
+																if (i == db_arr.length - 1) {
+																	console.log('Updated fr_items for frp_id: '+plan[0].fr_plan_id);
+																}
+															});
+														}
+													});
+														
+												});
+													
+											});
 										});
-											
 									});
+										
 								});
-							});
 
-							//*********** Update fertilizer recommendation items END ***********//
-						}
+								//*********** Update fertilizer recommendation items END ***********//
+							}
 
-					});
-				}
-			});
-		}
-	});
+						});
+					}
+				});
+			}
+		});
+	}, 600000);
 
 	if (view == 'add_crop_calendar') {
 
@@ -838,7 +921,7 @@ $(document).ready(function() {
 							var schedule_arr = createSchedule(materials, nutrient_details.recommendation, list, $('#farm_id').val(), calculateDeficientN(nutrient_details, list), nutrient_details, crop_calendar, work_order_list);
 							var recommendation_list = [];
 							
-							schedule_arr = normalizeSchedule(schedule_arr, 'js', materials);
+							schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, true);
 							//console.log(schedule_arr);
 							appendScheduleTable(schedule_arr, '#fertilizer_recommendation_table');
 						});

@@ -660,6 +660,19 @@ function recommendFertilizerPlan(obj, materials) {
 	return obj;
 }
 
+exports.ajaxUpdateNutrientPlan = function(req, res) {
+	var update = req.body.update;
+	var filter = req.body.filter;
+	nutrientModel.updateNutrientPlan(update, filter, function(err, plan_record) {
+		if (err)
+			throw err;
+		else {
+			res.send(plan_record);
+		}
+	});
+}
+
+
 exports.ajaxCreateNutrientPlan = function(req, res) {
 	var query = req.body;
 	nutrientModel.createNutrientPlan(query, function(err, plan_record) {
@@ -695,7 +708,11 @@ exports.ajaxCreateNutrientItem = function(req, res) {
 
 exports.ajaxGetNutrientPlanItems = function(req, res) {
 	var query = { };
-	query['frp.calendar_id'] = req.query.calendar_id;
+	if (req.query.hasOwnProperty('calendar_id'))
+		query['frp.calendar_id'] = req.query.calendar_id;
+	else if (req.query.hasOwnProperty('frp_id')) {
+		query['fr_plan_id'] = req.query.frp_id;
+	}
 
 	nutrientModel.getNutrientPlanItems(query, function(err, items) {
 		if (err)

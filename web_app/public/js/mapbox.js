@@ -256,7 +256,7 @@ $(document).ready(function() {
 		var viewed_farm_id;
 		var viewed_farm_name;
 		jQuery.ajaxSetup({async: false });
-
+		var active_calendar;
 
 		$.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
 			console.log(farms);
@@ -303,6 +303,7 @@ $(document).ready(function() {
 
 			//Get Crop calendar id
 			var calendar_id = $("#crop_calendar_list").val();
+			active_calendar = $("#crop_calendar_list").val();
 			console.log("CALENDAR ID");
 			console.log(calendar_id);
 			$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
@@ -327,7 +328,7 @@ $(document).ready(function() {
 					$("#p_lvl").text(soil_data.p_val);
 					$("#k_lvl").text(soil_data.k_val);
 	
-					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name);
+					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name)+'/'+active_calendar;
 				});
 	
 				var i;
@@ -380,7 +381,10 @@ $(document).ready(function() {
 
 
 
-
+		$('#detailed_cont').on('change', '#crop_calendar_list', function() {
+			console.log('!!');
+			active_calendar = $("#crop_calendar_list").val();
+		});
 
 
 
@@ -463,6 +467,8 @@ $(document).ready(function() {
 						$("#n_lvl").text(soil_data.n_val);
 						$("#p_lvl").text(soil_data.p_val);
 						$("#k_lvl").text(soil_data.k_val);
+
+						$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name)+'/'+active_calendar;
 					});
 
 					$("#landprep-wo, #sowing-wo, #vegetation-wo, #harvest-wo, #reproduction-wo, #ripening-wo").empty();
@@ -514,8 +520,4 @@ $(document).ready(function() {
 
 	}	
 
-});
-
-$(document).on("change", "#crop_calendar_list", function(){
-	//UPDATE FARM CROP CYCLE DETAILS
 });

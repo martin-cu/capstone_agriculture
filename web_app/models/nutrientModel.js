@@ -21,6 +21,13 @@ exports.getSoilRecord = function(data, next) {
 	mysql.query(sql, next);
 };
 
+exports.updateNutrientPlan = function(update, filter, next) {
+	var sql = "update fertilizer_recommendation_plan set ? where ?";
+	sql = mysql.format(sql, update);
+	sql = mysql.format(sql, filter);
+	mysql.query(sql, next);
+}
+
 exports.createNutrientPlan = function(data, next) {
 	var sql = "insert into fertilizer_recommendation_plan set ?";
 	sql = mysql.format(sql, data);
@@ -39,8 +46,8 @@ exports.createNutrientItem = function(data, next) {
 		sql = sql.replace("'false'", true);
 	}
 
-	while (sql.includes("'null'")) {
-		sql = sql.replace("'null'", null);
+	while (sql.includes("`wo_id` = ''")) {
+		sql = sql.replace("`wo_id` = ''", '`wo_id` = '+null);
 	}
 	//console.log(sql);
 	mysql.query(sql, next);
