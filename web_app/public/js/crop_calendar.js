@@ -372,7 +372,7 @@ function consolidateFRItems(wo_arr, frp_id) {
 				description: $(selected[3]).prop('value'),
 				amount: $(selected[4]).prop('value').replace(/[^0-9]/g, ''),
 				isCreated: checkbox_state[i],
-				wo_id: null
+				wo_id: 1,
 			};
 
 			wo_arr.push(wo_obj);

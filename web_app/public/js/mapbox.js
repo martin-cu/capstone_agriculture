@@ -22,36 +22,36 @@ function getFarmDetails(obj) {
 		query['status'] = 'Active';
 		query['position'] = 'Farm Manager'
 
-		$.get('/filter_farmers', query, function(farmers) {
-			$('#monitor_farm_mngr').html(farmers[0].last_name+', '+farmers[0].first_name);
-		});
+		// $.get('/filter_farmers', query, function(farmers) {
+		// 	$('#monitor_farm_mngr').html(farmers[0].last_name+', '+farmers[0].first_name);
+		// });
 
-		query['position'] = 'Farmer'
+		// query['position'] = 'Farmer'
 
-		$.get('/filter_farmers', query, function(farmers) {
-			//console.log(farmers);
-			var tr, td, append = false;
-			for (var i = 0; i < farmers.length; i++) {
-				if (i % 3 == 0) {
-					tr = '<tr>'
-				}
+		// $.get('/filter_farmers', query, function(farmers) {
+		// 	//console.log(farmers);
+		// 	var tr, td, append = false;
+		// 	for (var i = 0; i < farmers.length; i++) {
+		// 		if (i % 3 == 0) {
+		// 			tr = '<tr>'
+		// 		}
 
-				td = '<td>'+farmers[i].last_name+', '+farmers[i].first_name+'</td>';
-				tr += td;
+		// 		td = '<td>'+farmers[i].last_name+', '+farmers[i].first_name+'</td>';
+		// 		tr += td;
 					
-				if (i == farmers.length-1) {
-					append = true;
-				}
+		// 		if (i == farmers.length-1) {
+		// 			append = true;
+		// 		}
 
-				if (append) {
-					tr += '</tr>';
+		// 		if (append) {
+		// 			tr += '</tr>';
 
-					$('#monitor_farmers_table').append(tr);
-					append = false;
-				}
-			}
+		// 			$('#monitor_farmers_table').append(tr);
+		// 			append = false;
+		// 		}
+		// 	}
 
-		});
+		// });
 
 		$.get("/get_crop_plans", { status: ['Active', 'In-Progress',"Completed"], where : {key : "farm_name", val : details.details[0].farm_name}}, function(result){
 			$("#crop_calendar_list").empty();
