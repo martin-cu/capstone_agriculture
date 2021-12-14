@@ -233,17 +233,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="">
-                                        <label>Digest</label>
-                                        <div>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -289,6 +278,35 @@
                                     <h6 class="fw-bold m-0" style="color: #FFFFFF;">Optimal Recommendation<br></h6>
                                 </div>
                                 <div class="card-body">
+                                    <div class="mb-3">
+                                        <label>Summary</label>
+                                        <div class="">
+                                            {{detailed_data.summary}}
+                                        </div>
+
+                                        <label class="mt-2">Nutrient Guidelines</label>
+                                        <div class="">
+                                            <ul class="list-group">
+                                                <li class="list-group-item"><span>Nitrogen</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>Nitrogen is responsible for promoting plant growth and improving grain yield and grain quality.</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>It is the most limiting element in most soils with high mobility in the soil decomposing faster than the other nutrients.</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>Recommended calculations follows a split-pattern approach in accordance with the crop growth stage as well as the NDVI.</span><span class="float-end" id=""></span></li>
+                                            </ul>
+
+                                            <ul class="list-group">
+                                                <li class="list-group-item"><span>Phosphorous</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>Phosphorous is essential for root development.</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>Often deficient in degraded lowland soils and sandy soils.</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>Best applied before transplanting or 10 days after direct seeding. Apply all P required in one batch.</span><span class="float-end" id=""></span></li>
+                                            </ul>
+
+                                            <ul class="list-group">
+                                                <li class="list-group-item"><span>Potassium</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>Potassium is essential for root growth and enhances crop resistance to pests and diseases.</span><span class="float-end" id=""></span></li>
+                                                <li class="list-group-item"><span>Timing of application is based on the K requirement. At more than 30kg/ha, it is best to split the application between the Basal and Early Panicle stages of crop growth. Else, apply all before transplanting or 10 days after direct seeding.</span><span class="float-end" id=""></span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                     <table class="table" id="schedule_table">
                                         <tr>
                                             <th>Application Date</th>

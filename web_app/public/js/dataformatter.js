@@ -1,7 +1,8 @@
-exports.processNPKValues = function(obj, area, applied) {
+exports.processNPKValues = function(obj, area, applied, msg) {
 	obj = obj[0];
 	var keys = ['n_lvl', 'p_lvl', 'k_lvl'];
 	var new_keys = ['n_val', 'p_val', 'k_val'];
+	var nutrient_lbls = ['N:', 'P205:', 'K20:'];
 	var index;
 	var val;
 	var obj_result = {
@@ -10,8 +11,10 @@ exports.processNPKValues = function(obj, area, applied) {
 		Adequate: [3.75, 1.0, 4.75],
 		Surplus: [0, 0, 0]
 	};
+	var count_applied = 0;
+	var conversion = 30.5151727; // oz / 100 sq ft to kg/ha
 	var count_deficiencies = 0;
-
+	
 	for (var i = 0; i < keys.length; i++) {
 			switch(keys[i]) {
 			case 'n_lvl':
@@ -42,7 +45,19 @@ exports.processNPKValues = function(obj, area, applied) {
 		}
 
 		obj[new_keys[i]] = val;
-		obj[keys[i]] = Math.round(obj[keys[i]]*30.5151727 * 100) / 100;
+
+		obj[keys[i]] = Math.round(obj[keys[i]]*conversion * area * 100) / 100;
+
+		if (i == 0) {
+			msg += 'The nutrient requirements at the start of the crop calendar are as follows - '; 
+		}
+		msg += nutrient_lbls[i]+' '+obj[keys[i]];
+		if (i != keys.length -1) {
+			msg += ', ';
+		}
+		else {
+			msg += '. ';
+		}
 	}
 
 	for (var i = 0; i < applied.length; i++) {
@@ -50,6 +65,7 @@ exports.processNPKValues = function(obj, area, applied) {
 			obj.p_lvl -= applied[i].P * applied[i].resources_used;
 			obj.k_lvl -= applied[i].K * applied[i].resources_used;
 			obj.n_lvl -= applied[i].N * applied[i].resources_used;
+			count_applied++;
 		}
 	}
 
@@ -57,8 +73,30 @@ exports.processNPKValues = function(obj, area, applied) {
 		obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;
 
 		obj[keys[i]] = obj[keys[i]] < 0 ? 0 : obj[keys[i]];
+
+		if (count_applied != 0) {
+			if (i == 0) {
+				msg += 'A total of '+count_applied+' fertilizer applications have been completed to this date which reduced the nutrient requirements to - ';
+			}
+			else {
+
+			}
+			msg += nutrient_lbls[i]+' '+obj[keys[i]];
+
+			if (i != keys.length -1) {
+				msg += ', ';
+			}
+			else {
+				msg += '. ';
+			}
+		}
 	}
+
+	console.log(obj);
+
 	obj['deficiencies'] = count_deficiencies+' out of 3';
+
+	obj['summary'] = msg;
 
 	return obj;
 }
