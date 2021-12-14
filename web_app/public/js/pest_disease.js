@@ -11,6 +11,151 @@ function update_color_meter(){
 }
 $(document).ready(function(){
 
+    $(".add-pd-btn").on("click", function(){
+        var cur_id = $(this).attr("id");
+        if(cur_id == "step1"){
+            //check if complete
+            var step1 = true;
+            if($("#pd_name").val().length == 0)
+                step1 = false;
+            if($("#pd_scientific").val().length == 0)
+                step1 = false;
+            if($("#pd_desc").val().length == 0)
+                step1 = false;
+            if(step1){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step1_add").toggle("hide");
+                $("#step2_add").toggle("show")
+                $("#step1_status").addClass("finish");
+                $("#step2_status").addClass("active");
+            }
+            else{
+                alert("please complete details");
+            }
+            
+        }
+        else if(cur_id == "step2"){
+            //check if complete
+            if($(".symptom-checkbox:checkbox:checked").length > 0){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step2_add").toggle("hide");
+                $("#step3_add").toggle("show")
+                $("#step2_status").addClass("finish");
+                $("#step3_status").addClass("active");
+            }
+            else{
+                alert("please select symptoms");
+            }
+        }
+        else if(cur_id == "step3"){
+            //check if complete
+            if($(".factor-checkbox:checkbox:checked").length > 0){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step3_add").toggle("hide");
+                $("#step4_add").toggle("show")
+                $("#step3_status").addClass("finish");
+                $("#step4_status").addClass("active");
+            }
+            else{
+                alert("please select factors");
+
+            }
+        }
+        else if(cur_id == "step4"){
+            //check if complete
+            if($(".prevention-checkbox:checkbox:checked").length > 0){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step4_add").toggle("hide");
+                $("#step5_add").toggle("show")
+                $("#step4_status").addClass("finish");
+                $("#step5_status").addClass("active");
+            }
+            else{
+                alert("please select preventions");
+
+            }
+        }
+        else if(cur_id == "step5"){
+            //check if complete
+            if($(".solution-checkbox:checkbox:checked").length > 0){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step5_add").toggle("hide");
+                $("#step6_add").toggle("show")
+                $("#step5_status").addClass("finish");
+                $("#step6_status").addClass("active");
+            }
+            else{
+                alert("please select solutions");
+
+            }
+        }
+    });
+
+    $(".back-btn").on("click", function(){
+        var cur_id = $(this).attr("id");
+        if(cur_id == "step6_back"){
+            if(true){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step6_add").toggle("hide");
+                $("#step5_add").toggle("show")
+                $("#step6_status").addClass("finish");
+                $("#step5_status").addClass("active");
+            }
+            else{
+            }
+            
+        }
+        else if(cur_id == "step2_back"){
+            //check if complete
+            if(true){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step2_add").toggle("hide");
+                $("#step1_add").toggle("show")
+                $("#step2_status").addClass("finish");
+                $("#step1_status").addClass("active");
+            }
+            else{
+            }
+        }
+        else if(cur_id == "step3_back"){
+            //check if complete
+            if(true){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step3_add").toggle("hide");
+                $("#step2_add").toggle("show")
+                $("#step3_status").addClass("finish");
+                $("#step2_status").addClass("active");
+            }
+            else{
+            }
+        }
+        else if(cur_id == "step4_back"){
+            //check if complete
+            if(true){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step4_add").toggle("hide");
+                $("#step3_add").toggle("show")
+                $("#step4_status").addClass("finish");
+                $("#step3_status").addClass("active");
+            }
+            else{
+            }
+        }
+        else if(cur_id == "step5_back"){
+            //check if complete
+            if(true){
+                // $("#step1_add").prop("hidden", !this.checked);
+                $("#step5_add").toggle("hide");
+                $("#step4_add").toggle("show")
+                $("#step5_status").addClass("finish");
+                $("#step4_status").addClass("active");
+            }
+            else{
+            }
+        }
+    });
+
+
     $(".probability_value").each(function(){
         var value = $(this).text();
         var val = 214 - (parseInt(value) * 2);

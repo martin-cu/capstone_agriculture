@@ -1,3 +1,8 @@
+
+$(document).on("click", ".farm_li", function(){
+	alert("dfs");
+	$('.loader').css('visibility', 'hidden'); //to show
+});
 function update_color_meter(){
     $(".probability_value").each(function(){
         var value = $(this).text().slice(0,-1);
@@ -229,7 +234,6 @@ function addPolygon(map, options) {
 			}
 		});
 	});
-	$(".loader").toggle("hide");
 	return map;
 }
 
@@ -244,7 +248,8 @@ function loadGeoMap(options) {
     else if (type == 'Weather') {
     	addPolygon(map, options);
     }
-	    
+	
+	$('.loader').css('visibility', 'hidden'); //to show
 }
 
 $(document).ready(function() {
@@ -253,6 +258,11 @@ $(document).ready(function() {
 	console.log(view);
 
 	if (view == 'farm_monitoring') {
+		//Loading Icon
+		$('.loader').css('visibility', 'visible'); //to show
+
+
+
 		var viewed_farm_id;
 		var viewed_farm_name;
 		jQuery.ajaxSetup({async: false });
@@ -303,7 +313,7 @@ $(document).ready(function() {
 
 			//Get Crop calendar id
 			var calendar_id = $("#crop_calendar_list").val();
-			active_calendar = $("#crop_calendar_list").val();
+			var active_calendar = $("#crop_calendar_list").val();
 			console.log("CALENDAR ID");
 			console.log(calendar_id);
 			$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
@@ -315,6 +325,7 @@ $(document).ready(function() {
 				$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 	
 				$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
+				$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
 				$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
 				$(".calendar_planting").text(farm_details.crop_calendar_details.method);
 				$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
@@ -376,6 +387,12 @@ $(document).ready(function() {
 				}
 				
 				update_color_meter();
+
+				
+				
+
+				
+
 			});
 		});
 
@@ -387,9 +404,10 @@ $(document).ready(function() {
 		});
 
 
-
+		
 		//ONCLICK
 		$('#monitor_farm_list').on('click', '.farm_li', function() {
+			
 
 			viewed_farm_id = $(this).attr('data');
 			viewed_farm_name = $($(this).children()[0]).html();
@@ -424,11 +442,14 @@ $(document).ready(function() {
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 					
 					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
+					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
 					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
 					$(".calendar_planting").text(farm_details.crop_calendar_details.method);
 					$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
 					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
 					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
+
+					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+calendar_id);
 					
 					var i;
 					//UPDATE ROUSEOURCES
@@ -485,12 +506,13 @@ $(document).ready(function() {
 							tag_id = tag_id + "harvest-wo";
 						$(tag_id).append('<div class="card-body card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
 					}
+
+					
 				});
 			});
 			
 			
 		
-
 			
 		});
 
