@@ -109,7 +109,15 @@
                                             <tbody>
                                                 <tr style="border-style: none;">
                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm</span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.farm_name}}</span></td>
-                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method<br></span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.method}}<br></span></td>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Crop Plan<br></span><span class="d-xxl-flex justify-content-xxl-start">{{calendar_details.crop_plan}}<br></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Planted</span><span class="d-xxl-flex justify-content-xxl-start">{{calendar_details.seed_name}}</span></td>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">{{calendar_details.seed_rate}} kg/ha<br></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method</span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.method}}</span></td>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;"><br></span><span class="d-xxl-flex justify-content-xxl-start"><br></span></td>
                                                 </tr>
                                                 <tr style="border-style: none;">
                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Nutrient Deviations (-)<br></span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.deficiencies}}<br></span></td>
@@ -184,23 +192,56 @@
                                                     <th>Applied</th>
                                                     <th>Deficiency</th>
                                                 </tr>
+
+                                                {{#each inventory}}
+                                                <tr>
+                                                    <td>{{this.fertilizer}}</td>
+                                                    <td>{{this.qty}}</td>
+                                                    <td>{{this.recommendation}}</td>
+                                                    <td>{{this.applied}}</td>
+                                                    <td>{{this.deficiency}}</td>
+                                                </tr>
+                                                {{/each}}
+
                                             </table>
                                         </div>
                                     </div>
 
                                     <div class="my-3">
-                                        <label>Fertilizer Application History</label>
+                                        <label>Fertilizer Application</label>
                                         <div class="table-responsive">
                                             <table class="table" id="fertilizer_history">
                                                 <tr>
-                                                    <th>Date Applied</th>
+                                                    <th>Target Date</th>
                                                     <th>Fertilizer</th>
                                                     <th>Description</th>
                                                     <th>Amount</th>
                                                     <th>Status</th>
                                                 </tr>
 
+                                                {{#each wo_list}}
+                                                <tr>
+                                                    <td>{{this.date_due}}</td>
+                                                    <td>{{this.fertilizer_name}}</td>
+                                                    <td>{{this.notes}}</td>
+                                                    <td>{{this.qty}} bags</td>
+                                                    <td>{{this.status}}</td>
+                                                </tr>
+                                                {{/each}}
+
                                             </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="">
+                                        <label>Digest</label>
+                                        <div>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                                         </div>
                                     </div>
                                 </div>
@@ -218,6 +259,12 @@
                                         <li class="list-group-item"><span>N</span><span class="float-end" id="n_lvl">{{detailed_data.n_val}}</span></li>
                                         <li class="list-group-item"><span>P205</span><span class="float-end" id="p_lvl">{{detailed_data.p_val}}</span></li>
                                         <li class="list-group-item"><span>K20</span><span class="float-end" id="k_lvl">{{detailed_data.k_val}}</span></li>
+                                        <li class="list-group-item"><span>Last Soil Test Taken</span>
+                                            <span class="float-end" id=""></span>
+                                            <div class="d-flex flex-column">
+                                                <span></span>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -250,9 +297,37 @@
                                             <th>Amount</th>
                                             <th></th>
                                         </tr>
+
+                                        {{#each fr_items}}
+                                        <tr class="fr_item" name="fr_item">
+                                            <td>
+                                                {{this.target_application_date}}
+                                            </td>
+                                            <input type="hidden" name="target_date" value="{{this.target_application_date}}">
+                                            <td>
+                                                {{this.fertilizer_name}}
+                                                
+                                            </td>
+                                            <input type="hidden" name="fertilizer_id" value="{{this.fertilizer_id}}">
+                                            <td>
+                                                {{this.description}}
+                                                
+                                            </td>
+                                            <input type="hidden" name="fertilizer_id" value="{{this.description}}">
+                                            <td>
+                                                {{this.amount}} bags
+                                                
+                                            </td>
+                                            <input type="hidden" name="fertilizer_id" value="{{this.amount}}">
+                                            <td>
+                                                <input type="checkbox" class="form-check-input" name="fr_item" value="{{@index}}" {{#if this.isCreated}}disabled{{/if}}>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+
                                     </table>
 
-                                    <button class="btn btn-primary float-right hide mb-3" type="button" id="generate_wo">Submit</button>
+                                    <button class="btn btn-primary float-right hide mb-3" type="button" id="generate_wo">Create Work Order</button>
                                 </div>
                             </div>
                         </div>
@@ -264,12 +339,12 @@
 </div>
 
 <script type="text/javascript">
-    var type = 'Soil Detailed';
-    var id = {{detailed_data.farm_id}};
-    var calendar = {{detailed_data.calendar_id}};
+    var view = 'Soil Detailed';
+    var farm_id = {{detailed_data.farm_id}};
+    var calendar_id = {{detailed_data.calendar_id}};
     var area = {{detailed_data.farm_area}};
     var farm_name = '{{detailed_data.farm_name}}';
     var results;
 </script>
 
-<script src="../../js/nutrient_management.js"></script>
+<!-- <script src="../../js/nutrient_management.js"></script> -->

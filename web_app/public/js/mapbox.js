@@ -327,8 +327,8 @@ $(document).ready(function() {
 					$("#n_lvl").text(soil_data.n_val);
 					$("#p_lvl").text(soil_data.p_val);
 					$("#k_lvl").text(soil_data.k_val);
-	
-					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name)+'/'+active_calendar;
+					
+					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+active_calendar);
 				});
 	
 				var i;
@@ -467,8 +467,8 @@ $(document).ready(function() {
 						$("#n_lvl").text(soil_data.n_val);
 						$("#p_lvl").text(soil_data.p_val);
 						$("#k_lvl").text(soil_data.k_val);
-
-						$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name)+'/'+active_calendar;
+						
+						$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+active_calendar);
 					});
 
 					$("#landprep-wo, #sowing-wo, #vegetation-wo, #harvest-wo, #reproduction-wo, #ripening-wo").empty();

@@ -58,6 +58,13 @@ exports.getResourceDetails = function(query, type, next) {
 	mysql.query(sql, next);
 }
 
+exports.getGroupedWO = function(type, filter, next) {
+	var sql = "select wot.*, wrt.item_id, ft.fertilizer_name, wrt.qty from work_order_table wot join wo_resources_table wrt using (work_order_id) join fertilizer_table ft on wrt.item_id = ft.fertilizer_id where wot.crop_calendar_id = ? and wot.type = ?";
+	sql = mysql.format(sql, filter);
+	sql = mysql.format(sql, type);
+	mysql.query(sql, next);
+}
+
 exports.getWorkOrders = function(query, next) {
 	var sql = 'select crop_plan, work_order_table.*, case when notes is null then "N/A" else notes end as wo_notes , farm_table.farm_name, farm_table.farm_id from work_order_table join crop_calendar_table on crop_calendar_id = calendar_id join farm_table using (farm_id) ';
 	if (JSON.stringify(query) != '{ }') {

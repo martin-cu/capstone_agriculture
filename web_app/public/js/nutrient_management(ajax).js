@@ -695,14 +695,14 @@ function appendScheduleTable(schedule_arr, target) {
 	}
 }
 
-function consolidateUniqueWO(arr, calendar_id, material_list) {
+function consolidateUniqueWO(arr) {
 	const unique = [...new Map(arr.map(ele =>
 	  [ele.date, ele])).values()];
 	var unique_ele;
 	var wo_obj;
 	var wo_arr = [];
 	var adjusted_date;
-	console.log(arr);
+
 	for (var i = 0; i < unique.length; i++) {
 		adjusted_date = new Date(unique[i].date);
 		adjusted_date = adjusted_date.setDate(adjusted_date.getDate() + 3);
@@ -722,11 +722,9 @@ function consolidateUniqueWO(arr, calendar_id, material_list) {
 				wo_obj.notes += ' and ';
 			}
 			wo_obj.notes += unique_ele[y].desc
-			wo_obj.resources.name.push(unique_ele[y].fertilizer);
-			wo_obj.resources.qty.push(unique_ele[y].amount.replace(' bags', ''));
+			wo_obj.resources.ids.push(unique_ele[y].fertilizer);
+			wo_obj.resources.qty.push(unique_ele[y].amount);
 
-			var f_id = material_list.filter(ele => ele.fertilizer_name == unique_ele[y].fertilizer)[0].fertilizer_id;
-			wo_obj.resources.ids.push(f_id);
 		}
 		wo_obj.notes += ' (Recommendation)';
 		wo_arr.push(wo_obj);
@@ -800,8 +798,8 @@ function reduceDynamicFRItems(arr, db_arr) {
 }
 
 $(document).ready(function() {
-
 	jQuery.ajaxSetup({async: false });
+
 	var farm_name = '';
 
 	setInterval(function() {
@@ -880,10 +878,6 @@ $(document).ready(function() {
 
 	if (view == 'add_crop_calendar') {
 
-		$('#farm_id').on('change', function() {
-
-		});
-
 		$('.next_step').on('click', function() {
 			if (currentTab == 2) {
 				//Create fertilizer recommendation schedule
@@ -928,6 +922,56 @@ $(document).ready(function() {
 					});
 				});
 
+			}
+		});
+	}
+	else if (view == 'Soil Detailed') {
+		var wo_arr = [];
+
+		$('#schedule_table').on('click', '.form-check-input', function() {
+			var checkboxes = [];
+			$("input:checkbox[name='fr_item']:checked").each(function() {
+			   checkboxes.push($($(this)).val());
+			});
+			wo_arr = [];
+			if (checkboxes.length != 0) {
+				var index = [];
+				var rows = $('#schedule_table .fr_item');
+
+				var selected;
+				var wo_obj;
+				var adjusted_date;
+				$('#generate_wo').removeClass('hide');
+
+				for (var i = 0; i < checkboxes.length; i++) {
+					selected = $($(rows)[checkboxes[i]]).children().filter('input:hidden');
+
+					wo_obj  = {
+						date: $(selected[0]).prop('value'),
+						fertilizer: $(selected[1]).prop('value'),
+						desc: $(selected[2]).prop('value'),
+						amount: $(selected[3]).prop('value')
+					};
+
+					wo_arr.push(wo_obj);
+				}
+			}
+			else {
+				$('#generate_wo').addClass('hide');
+			}
+		});
+
+		$('#generate_wo').on('click', function() {
+			var data = consolidateUniqueWO(wo_arr);
+
+			for (var i = 0; i < data.length; i++) {
+				console.log(data[i]);
+				$.post('/upload_wo', data[i], function(result) {
+					if (i == data.length - 1) {
+						console.log(result);
+						window.location = result;
+					}
+				});
 			}
 		});
 	}

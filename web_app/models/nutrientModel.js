@@ -60,7 +60,7 @@ exports.getNutrientPlanDetails = function(data, next) {
 }
 
 exports.getNutrientPlanItems = function(data, next) {
-	var sql = "select frp.calendar_id, frp.last_updated, fri.* from fertilizer_recommendation_items fri join fertilizer_recommendation_plan frp using (fr_plan_id) where ?";
+	var sql = "select ft.fertilizer_name, frp.calendar_id, frp.last_updated, fri.* from fertilizer_recommendation_items fri join fertilizer_table ft using (fertilizer_id) join fertilizer_recommendation_plan frp using (fr_plan_id) where ? order by target_application_date asc";
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 }
