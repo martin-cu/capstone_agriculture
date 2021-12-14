@@ -115,6 +115,7 @@ router.post('/addDisease', environmentController.addDisease);
 
 //diagnose tab
 router.get('/pest_and_disease/discover', environmentController.getPestandDiseaseDiscover);
+router.post('/pest_and_disease/discover', environmentController.addNewPD);
 router.get('/pest_and_disease/diagnose', environmentController.getDiagnoses);
 router.post('/pest_and_disease/diagnose', environmentController.addDiagnosis);
 router.get('/pest_and_disease/diagnose_add_diagnosis', environmentController.getAddDiagnosis);

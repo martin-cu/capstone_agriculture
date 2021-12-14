@@ -457,23 +457,41 @@ exports.addPurchase = function(req,res){
     var farm_id = req.body.farm;
 
     var i;
-    for(i = 0; i < req.body.item.length; i++){
-        var purchase = {
-            purchase_status : "Processing",
-            requested_by : 1,
-            farm_id : farm_id,
-            item_type : req.body.item[i].type,
-            item_desc : req.body.item_desc,
-            item_id : req.body.item[i].item,
-            amount : req.body.item[i].amount,
-            request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+
+    materialModel.getAllPurchases(null, {status : "Pending"}, function(err, purchases){
+        if(err)
+            throw err;
+        else{
+            
+
+            for(i = 0; i < req.body.item.length; i++){
+                var purchase = {
+                    purchase_status : "Processing",
+                    requested_by : 1,
+                    farm_id : farm_id,
+                    item_type : req.body.item[i].type,
+                    item_desc : req.body.item_desc,
+                    item_id : req.body.item[i].item,
+                    amount : req.body.item[i].amount,
+                    request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+                }
+
+                var cont = true;
+                for(x = 0; x < purchases.length; x++){
+                    if(farm_id == purchases[x].farm_id && purchase.item_type == purchases[x].item_type && purchase.item_id == purchases[x].item_id)
+                        cont = false;
+                }
+                if(cont)
+                    materialModel.addPurchase(purchase, function(err, add){
+                        if(err)
+                            console.log(err);
+                    });
+                console.log("Add purchase");
+            }
         }
-        materialModel.addPurchase(purchase, function(err, add){
-            if(err)
-                console.log(err);
-        });
-        console.log("Add purchase");
-    }
+        
+    });
+    
         
     res.redirect("orders");
     // var purchase = {

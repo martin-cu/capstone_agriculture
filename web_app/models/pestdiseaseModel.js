@@ -62,6 +62,27 @@ exports.addPestDiseaseSymptom = function(type, id, symptom, next){
 	mysql.query(sql, next); return(sql);
 }
 
+
+exports.addPestDiseaseSolution = function(type, id, solution, next){
+	var sql = "INSERT INTO ";
+	var table;
+	var variable;
+	if(type == "Pest"){
+		table = "solution_pest";
+		variable = "pest_id";
+	}
+	else if(type == "Disease"){
+		table = "solution_disease";
+		variable = "disease_id";
+	}
+
+	sql = sql + table + " set solution_id = ?, " + variable + "= ?";
+	sql = mysql.format(sql, solution);
+	sql = mysql.format(sql, id);
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
 exports.getLastInserted = function(type, next){
 	if(type == "Pest")
 		mysql.query("SELECT LAST_INSERT_ID() as last FROM pest_table;", next);
@@ -109,8 +130,9 @@ exports.getPestSolutions = function(pest_id, next){
 }
 
 exports.getPestPreventions = function(pest_id, next){
-	var sql = 'SELECT st.prevention_name as detail_name, st.prevention_desc as detail_desc FROM pest_table p INNER JOIN prevention_pest sp ON sp.pest_id = p.pest_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
+	var sql = 'SELECT st.prevention_name as detail_name, st.prevention_desc as detail_desc FROM pest_table p INNER JOIN prevention_pest sp ON sp.pest_id = p.pest_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE p.pest_id = ?'
 	sql = mysql.format(sql, pest_id);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -179,7 +201,7 @@ exports.getDiseaseSolutions = function(disease_id, next){
 }
 
 exports.getDiseasePreventions = function(disease_id, next){
-	var sql = 'SELECT *, st.prevention_name as detail_name, st.prevention_desc as detail_desc FROM disease_table p INNER JOIN prevention_disease sp ON sp.disease_id = p.disease_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE ?'
+	var sql = 'SELECT *, st.prevention_name as detail_name, st.prevention_desc as detail_desc FROM disease_table p INNER JOIN prevention_disease sp ON sp.disease_id = p.disease_id INNER JOIN prevention_table st ON st.prevention_id = sp.prevention_id WHERE p.disease_id = ?'
 	sql = mysql.format(sql, disease_id);
 	mysql.query(sql, next); return(sql);
 }
@@ -194,6 +216,12 @@ exports.addDisease = function(disease, next){
 
 
 //PEST AND DISEASE MANAGEMENT
+exports.addNewPD = function(type, next){
+
+};
+
+
+
 exports.getPestsBasedWeather = function(weather, next){
 	var sql = "SELECT * FROM (SELECT p.pest_id, p.pest_name, wt.max_temp, wt.min_temp, wt.weather, wt.humidity, wt.precipitation, wt.soil_moisture FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id) a WHERE ";
 	
