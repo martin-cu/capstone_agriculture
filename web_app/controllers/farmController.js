@@ -296,37 +296,65 @@ exports.getFarmDetails = function(req, res) {
 																
 
 															}
-
+															console.log(crop_calendar_details);
+															var land_prep = crop_calendar_details[0].land_prep_date;
+															var sowing = crop_calendar_details[0].sowing_date;
+															var ripening = new Date(expected_harvest);
+															ripening.setDate(ripening.getDate() + crop_calendar_details[0].maturity_days - 30);
+															var reproductive = new Date(ripening);
+															reproductive.setDate(reproductive.getDate() - 35);
+															var vegetation = crop_calendar_details[0].sow_date_completed;
+															var harvest = calendar_details.expected_harvest;
+															console.log(land_prep);
+															console.log(sowing);
+															console.log(harvest);
+															console.log(reproductive);
+															console.log(vegetation);
 															var wo_query = {
 																where: {
 																	key: ['crop_calendar_id'],
 																	value: [calendar_id]
 																},
-																order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+																order: ['work_order_table.date_start ASC']
 															};
 															workOrderModel.getWorkOrders(wo_query, function(err, workorders){
 																if(err)
 																	 throw err;
 																else{
+																	var current = true;
 																	for(i = 0; i < workorders.length; i++){
-																		if(workorders[i].type == "Land Preparation")
+																		if(workorders[i].date_completed == null && current){
+																			current = false;
+																			workorders[i]["current"] = "current_wo";
+																			console.log("THISSSSSSS");
+																			console.log(workorders[i]);
+																		}
+
+																		if(workorders[i].type == "Land Preparation" || (workorders[i].date_start > land_prep && workorders[i].date_start < sowing))
 																			workorders[i]["stage"] = "Land Preparation";
-																		else if(workorders[i].type == "Sow Seed")
+																		else if(workorders[i].type == "Sow Seed" || (workorders[i].date_start > sowing && workorders[i].date_start < vegetation))
 																			workorders[i]["stage"] = "Sowing";
-																		else if(workorders[i].type == "Harvest")
+																		else if(workorders[i].type == "Harvest" || workorders[i].date_start > harvest)
 																			workorders[i]["stage"] = "Harvest";
-																		else
+																		else if(workorders[i].date_start > vegetation && workorders[i].date_start < reproductive)
 																			workorders[i]["stage"] = "Vegetation";
-	
+																		else if(workorders[i].date_start > reproductive && workorders[i].date_start < ripening)
+																			workorders[i]["stage"] = "Reproductive";
+																		else if(workorders[i].date_start > vegetation && workorders[i].date_start < reproductive)
+																			workorders[i]["stage"] = "Ripening";
+
 																		dataformatter.formatDate(dataformatter.unixtoDate(workorders[i].date_completed), 'mm DD, YYYY');
-																		workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'mm DD, YYYY');
+																		if(workorders[i].date_completed == null)
+																			workorders[i].date_completed = "Not yet completed";
+																		else
+																			workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'mm DD, YYYY');
 																		workorders[i].date_start = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_start)), 'mm DD, YYYY');
 																		workorders[i].date_due = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_due)), 'mm DD, YYYY');
 																		workorders[i].date_created = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_created)), 'mm DD, YYYY');
 																	}
 																}
 																// console.log("WORKORDERS");
-																// console.log(workorders);
+																console.log(workorders);
 																
 																html_data["workorders"] = workorders;
 																html_data["queries"] = queries;
