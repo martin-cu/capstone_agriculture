@@ -86,6 +86,7 @@ exports.deleteNutrientItems = function(query, next) {
 exports.getNutrientPlanDetails = function(data, next) {
 	var sql = "select * from fertilizer_recommendation_plan where ? order by last_updated desc, fr_plan_id desc";
 	sql = mysql.format(sql, data);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

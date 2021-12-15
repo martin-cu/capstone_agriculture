@@ -436,6 +436,7 @@ $(document).ready(function() {
 				//GET DETAILS OF NEW FARM
 
 				var calendar_id = $("#crop_calendar_list").val();
+				active_calendar = $("#crop_calendar_list").val();
 				$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
 					$("#farm_id").text(farm_details.details[0].farm_id);
 					$("#farm_name").text(farm_details.details[0].farm_name);

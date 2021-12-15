@@ -831,7 +831,6 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 				        				result[0].p_lvl = p_lvl;
 				        				result[0].k_lvl = k_lvl;
 				        				result[0]['default_soil'] = true;
-				        				result[0].farm_area = 1;
 									}
 									console.log(result);
 		        					result = dataformatter.processNPKValues(result, result[0].farm_area, applied)
@@ -905,7 +904,12 @@ exports.detailedNutrientManagement = function(req, res) {
 					throw err;
 				}
 				else {
-					console.log(result);
+					if (result.length != 0) {
+						result[0]['default_soil'] = false;
+					}
+					else {
+						result = [{}];
+					}
 					farmModel.getAllFarms(function(err, farm_list) {
 						if (err)
 							throw err;
@@ -915,13 +919,14 @@ exports.detailedNutrientManagement = function(req, res) {
 				        		if (err)
 				        			throw err;
 				        		else {
-				        			if (result[0].soil_quality_id == null) {
+				        			if (result.length == 0 || result[0].soil_quality_id == null) {
 				        				//Serves as default soil data if soil test has never been done
 				        				var ph_lvl = 'N/A', n_lvl = 7.75, p_lvl = 4.0, k_lvl = 8.75;
 				        				result[0].pH_lvl = ph_lvl;
 				        				result[0].n_lvl = n_lvl;
 				        				result[0].p_lvl = p_lvl;
 				        				result[0].k_lvl = k_lvl;
+				        				result[0]['default_soil'] = true;
 
 				        				summary += 'Default soil nutrient data is used in the calculations as there are no applicable soil test records. ';
 									}
@@ -932,6 +937,7 @@ exports.detailedNutrientManagement = function(req, res) {
 										if (err)
 											throw err;
 										else {
+											console.log(frp);
 											nutrientModel.getNutrientPlanItems({ fr_plan_id: frp[0].fr_plan_id }, function(err, fr_items) {
 												if (err)
 													throw err;
