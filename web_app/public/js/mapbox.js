@@ -1,6 +1,5 @@
 
 $(document).on("click", ".farm_li", function(){
-	alert("dfs");
 	$('.loader').css('visibility', 'hidden'); //to show
 });
 function update_color_meter(){
@@ -383,7 +382,11 @@ $(document).ready(function() {
 						tag_id = tag_id + "vegetation-wo";
 					else if(farm_details.workorders[i].stage == "Harvest")
 						tag_id = tag_id + "harvest-wo";
-					$(tag_id).append('<div class="card-body card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+					else if(farm_details.workorders[i].stage == "Reproductive")
+						tag_id = tag_id + "reproduction-wo";
+					else if(farm_details.workorders[i].stage == "Ripening")
+						tag_id = tag_id + "ripening-wo";
+					$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
 				}
 				
 				update_color_meter();
@@ -504,8 +507,14 @@ $(document).ready(function() {
 							tag_id = tag_id + "vegetation-wo";
 						else if(farm_details.workorders[i].stage == "Harvest")
 							tag_id = tag_id + "harvest-wo";
-						$(tag_id).append('<div class="card-body card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
-					}
+						else if(farm_details.workorders[i].stage == "Reproductive")
+							tag_id = tag_id + "reproduction-wo";
+						else if(farm_details.workorders[i].stage == "Ripening")
+							tag_id = tag_id + "ripening-wo";
+						
+						$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+						
+						}
 
 					
 				});

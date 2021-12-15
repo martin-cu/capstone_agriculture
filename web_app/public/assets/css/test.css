@@ -366,6 +366,11 @@ a.dropdown-item.notSidebar:hover {
     width: 800px;
 }
 
+#dashboard-map {
+    height: 600px;
+    width: auto;
+}
+
 .mgl-map {
       height: 100%;
       width: 100%;
