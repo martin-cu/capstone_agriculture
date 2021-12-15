@@ -410,3 +410,7 @@ div.scrollmenu {
 .current_wo{
 	background-color: rgb(255, 248, 222);
 }
+
+.Present {
+	color: red;
+}

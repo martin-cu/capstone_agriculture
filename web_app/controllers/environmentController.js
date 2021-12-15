@@ -1055,9 +1055,18 @@ exports.getFarmPestDiseases = function(req, res){
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
 	
-	var farm_id = {
-		farm_id : 1
+	if(req.query.farm_id != null){
+		var farm_id = {
+			farm_id : req.query.farm_id
+		};
 	}
+	else{
+		var farm_id = {
+			farm_id : 1
+		};
+	}
+		
+		
 	var lat = 13.073091;
 	var lon = 121.388563;
 	new Date(Date.now());
@@ -1197,6 +1206,9 @@ exports.getFarmPestDiseases = function(req, res){
 								if(err)
 									throw err;
 								else{
+									var i;
+									for(i = 0; i < diagnosis.length; i++)
+										diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
 									html_data["diagnosis"] = diagnosis;
 									html_data["statements"] = statements;
 									html_data["probability"] = possible_pests;
@@ -1543,12 +1555,22 @@ exports.getDiagnoses = function(req, res) {
 									else{
 
 									}
-									html_data["pest_list"] = pd_list;
-									html_data["pest_diagnoses"] = pest_diagnoses;
-									html_data["disease_diagnoses"] = disease_diagnoses;
-									html_data["diagnoses"] = diagnoses;
-									html_data["farms"] = farms;
-									res.render('pest_and_disease_diagnoses', html_data);
+
+									pestdiseaseModel.getAllSymptoms(function(err, symptoms){
+										if(err)
+											throw err;
+										else{
+											// console.log(symptoms);
+										}
+										console.log(pest_diagnoses);
+										html_data["symptom"] = symptoms;
+										html_data["pest_list"] = pd_list;
+										html_data["pest_diagnoses"] = pest_diagnoses;
+										html_data["disease_diagnoses"] = disease_diagnoses;
+										html_data["diagnoses"] = diagnoses;
+										html_data["farms"] = farms;
+										res.render('pest_and_disease_diagnoses', html_data);
+									});
 								});
 							});
 						}
@@ -1562,6 +1584,40 @@ exports.getDiagnoses = function(req, res) {
 	
 }
 
+
+exports.getDiagnosisDetails = function(req, res){
+	var html_data = {};
+	html_data["title"] = "Diagnose";
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
+	var id = req.query.id;
+	pestdiseaseModel.getDiagnosisDetails(id, function(err, diagnosis_details){
+		if(err)
+			throw err;
+		else{
+			console.log(diagnosis_details);
+			if(diagnosis_details[0].date_solved == null)
+				diagnosis_details[0].date_solved = "Not yet resolved";
+			else
+				diagnosis_details[0].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_solved)), 'mm DD, YYYY');
+					
+			diagnosis_details[0].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_diagnosed)), 'mm DD, YYYY');
+			html_data["details"] = diagnosis_details[0];
+			
+		}
+
+		//Get Symptoms
+		pestdiseaseModel.getDiagnosisSymptoms(html_data.details.diagnosis_id, function(err, symptoms){
+			if(err)
+				throw err;
+			else{
+				html_data["symptoms"] = symptoms;
+			}
+			res.render('pest_disease_diagnose_details', html_data);
+		});
+	});
+
+
+}
 exports.getAddDiagnosis = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
@@ -1776,19 +1832,29 @@ exports.addDiagnosis = function(req,res){
 		date_diagnosed : req.body.date_diagnosed
 	}
 	var query = { where: { key: 'farm_id', value: diagnosis.farm_id } };
-
+	var symptoms = req.body.symptom;
 	farmModel.getFarmData(query, function(err, farm_data){
 		if(err)
 			throw err;
 		else{
 			var farm_name = farm_data[0].farm_name;
 		}
-		var crop_calendar_query = { status: ['In-Progress', 'Active'] , where : {key : "farm_name", val : farm_name}}
+		var crop_calendar_query = { status: ['In-Progress', 'Active',"Completed"] , where : {key : "farm_name", val : farm_name}}
 		cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calendar){
 			if(err)
 				throw err;
 			else{
-				diagnosis["calendar_id"] = crop_calendar[0].calendar_id;
+				var i, lastest;
+				latest = 0;
+				for(i =0; i < crop_calendar.length; i++){
+					if(crop_calendar[i].last_prep_date > crop_calendar[latest].last_prep_date)
+						latest  = i;
+					// if(crop_calendar[i].farm_name == farm_name)
+					// 	diagnosis["calendar_id"] = crop_calendar[i].calendar_id;
+				}
+				console.log(latest);
+				diagnosis["calendar_id"] = crop_calendar[latest].calendar_id;
+					
 			}
 
 
@@ -1800,18 +1866,44 @@ exports.addDiagnosis = function(req,res){
 					var add = true;
 					var i;
 					for(i = 0; i < diagnoses.length; i++){
+						
 						if(diagnoses[i].status == "Present" && diagnosis.pd_id == diagnoses[i].pd_id){
 							console.log("DO NOT ADD. ALREADY PRESENT");
+							console.log(diagnosis.pd_id);
+							console.log(diagnoses[i].pd_id);
 							add = false;
+							break;
 						}
 					}
 					//INSERT
-					if(add)	
+					if(add)	{
 						pestdiseaseModel.addDiagnosis(diagnosis, function(err, result){
 							if(err)
 								throw err;
+							else{
+								console.log("ADDED");
+							}
+							//GET LAST INSERTED
+							pestdiseaseModel.getLastInserted("Diagnosis", function(err, last){
+								if(err)
+									throw err;
+								else{
+
+								}
+								//ADD ALL TO DIAGNOSIS_SYMPTOMS
+								var x;
+								for(x = 0; x < symptoms.length; x++){
+									pestdiseaseModel.addDiagnosisSymptom(last[0].last, symptoms[x], function(err, success){});
+								}
+								res.redirect("/pest_and_disease/diagnose_details?id=" + last[0].last);
+							});
+							
 						});
-					res.redirect("/pest_and_disease/diagnose");
+					}
+					else{
+						res.redirect("/pest_and_disease/diagnose");
+					}
+					
 				}
 			});
 		});

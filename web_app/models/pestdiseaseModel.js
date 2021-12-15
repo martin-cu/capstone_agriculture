@@ -86,6 +86,8 @@ exports.addPestDiseaseSolution = function(type, id, solution, next){
 exports.getLastInserted = function(type, next){
 	if(type == "Pest")
 		mysql.query("SELECT LAST_INSERT_ID() as last FROM pest_table;", next);
+	else if(type == "Diagnosis")
+		mysql.query("SELECT LAST_INSERT_ID() as last FROM diagnosis;", next);
 	else
 		mysql.query("SELECT LAST_INSERT_ID() as last FROM disease_table;", next);
 }
@@ -161,6 +163,15 @@ exports.getPestDiseaseList = function(type, next){
 	}
 }
 
+
+exports.addDiagnosisSymptom = function(diagnosis_id, symptom_id, next ){
+	var sql = "INSERT INTO diagnosis_symptom SET diagnosis_id = ?, symptom_id = ?";
+	sql = mysql.format(sql, diagnosis_id);
+	sql = mysql.format(sql, symptom_id);
+
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
 
 
 
@@ -1124,6 +1135,17 @@ exports.getPDProbabilityPercentage = function(weather, season, fertilizer, stage
 	mysql.query(sql, next); return(sql);
 }
 
+exports.getDiagnosisDetails = function(diagnosis_id, next){
+	var sql = "";
+	var pest_diagnosis = 'SELECT * FROM (SELECT d.*, pt.pest_name as name, pt.pest_desc as description, cct.crop_plan, ft.farm_name FROM diagnosis d INNER JOIN pest_table pt ON pt.pest_id = d.pd_id  INNER JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Pest" ';
+	var disease_diagnosis = ' SELECT d.*, pt.disease_name as name, pt.disease_desc as description, cct.crop_plan, ft.farm_name FROM diagnosis d INNER JOIN disease_table pt ON pt.disease_id = d.pd_id INNER JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Disease") a';
+	sql = pest_diagnosis + " UNION " + disease_diagnosis + " WHERE diagnosis_id = ?;";
+	sql = mysql.format(sql, diagnosis_id);
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+
 exports.getDiagnosis = function(farm_id, type, next){
 	var sql = "";
 	var pest_diagnosis = 'SELECT d.*, pt.pest_name as name, pt.pest_desc as description, cct.crop_plan, ft.farm_name FROM diagnosis d INNER JOIN pest_table pt ON pt.pest_id = d.pd_id  INNER JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Pest"';
@@ -1146,7 +1168,7 @@ exports.getDiagnosis = function(farm_id, type, next){
 		sql = pest_diagnosis;
 	else if(type == "Disease")
 		sql = disease_diagnosis
-	// console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1183,6 +1205,13 @@ exports.getPDDetails = function(type, pd_id, detail_type, next){
 exports.addDiagnosis = function(diagnosis, next){
 	var sql = "INSERT INTO diagnosis SET ?";
 	sql = mysql.format(sql, diagnosis);
-	console.log(sql);
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+exports.getDiagnosisSymptoms = function(diagnosis_id, next){
+	var sql = "SELECT d.*, st.symptom_id, st.symptom_name, st.symptom_desc FROM diagnosis d INNER JOIN diagnosis_symptom ds ON d.diagnosis_id = ds.diagnosis_id INNER JOIN symptoms_table st ON st.symptom_id = ds.symptom_id WHERE d.diagnosis_id = ?";
+	sql = mysql.format(sql, diagnosis_id);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }

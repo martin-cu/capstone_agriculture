@@ -1,6 +1,6 @@
 <div class="container-fluid">
                     <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Pests and Diseases</h3>
-                    <div class="row" style="padding: 0px 12px;">
+                    {{!-- <div class="row" style="padding: 0px 12px;">
                         <div class="col-xxl-7">
                             <div class="table-responsive" style="border-style: none;">
                                 <table class="table">
@@ -44,7 +44,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row" style="padding: 0px 12px;">
                         <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Possible Diagnosis</strong></label>
                             <div class="card">
@@ -118,7 +118,8 @@
                                     {{#each diagnosis}}
                                         <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px;">
                                             <div class="card-body">
-                                                <div style="border-style: none;"><span class="align-items-xxl-start">{{this.name}}</span><span class="float-end align-items-xxl-start">{{this.type}}</span><span class="d-flex d-xxl-flex justify-content-xxl-end align-items-xxl-start">{{this.value}}</span></div>
+                                                <div style="border-style: none;"><span class="align-items-xxl-start">{{this.name}}</span><span class="float-end align-items-xxl-start">{{this.type}}</span></div>
+                                                <div style="border-style: none;"><span class="align-items-xxl-start"></span><span class="float-end align-items-xxl-start">{{this.date_diagnosed}}</span></div>
                                             </div>
                                         </div>
                                     {{/each}}
