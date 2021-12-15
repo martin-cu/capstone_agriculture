@@ -151,7 +151,7 @@ exports.readResourcesUsed = function(type, data, next) {
 	else if (type == 'Pesticide') {
 
 	}
-	console.log(sql);
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 

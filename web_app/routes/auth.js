@@ -32,6 +32,11 @@ router.get('/get_nutrient_plan_items', environmentController.ajaxGetNutrientPlan
 router.post('/create_nutrient_plan', environmentController.ajaxCreateNutrientPlan);
 router.post('/create_nutrient_item', environmentController.ajaxCreateNutrientItem);
 router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
+router.post('/prepareFRPlan', environmentController.prepareFRPlan);
+
+router.get('/get_soil_records', environmentController.ajaxGetSoilRecord);
+router.post('/update_soil_records', environmentController.ajaxUpdateSoilRecord);
+router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
 
 router.get('/farm_monitor_test', farmController.getMonitorFarms);
 router.get('/filter_farm_details', farmController.getFarmDetails);

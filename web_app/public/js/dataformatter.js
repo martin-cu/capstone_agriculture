@@ -9,12 +9,13 @@ exports.processNPKValues = function(obj, area, applied, msg) {
 		Depleted: [14.0, 8.25, 13.5],
 		Deficient: [7.75, 4.0, 8.75],
 		Adequate: [3.75, 1.0, 4.75],
+		Sufficient: [3.75, 1.0, 4.75],
 		Surplus: [0, 0, 0]
 	};
 	var count_applied = 0;
 	var conversion = 30.5151727; // oz / 100 sq ft to kg/ha
 	var count_deficiencies = 0;
-	
+
 	for (var i = 0; i < keys.length; i++) {
 			switch(keys[i]) {
 			case 'n_lvl':
@@ -40,14 +41,17 @@ exports.processNPKValues = function(obj, area, applied, msg) {
 		else if (obj_result['Adequate'][index] == obj[keys[i]]) {
 			val = 'Adequate';
 		}
+		else if (obj_result['Sufficient'][index] == obj[keys[i]]) {
+			val = 'Sufficient';
+		}
 		else if (obj_result['Surplus'][index] == obj[keys[i]]) {
 			val = 'Surplus';
 		}
 
 		obj[new_keys[i]] = val;
-
+		console.log(obj[keys[i]]);
 		obj[keys[i]] = Math.round(obj[keys[i]]*conversion * area * 100) / 100;
-
+		console.log(obj[keys[i]]);
 		if (i == 0) {
 			msg += 'The nutrient requirements at the start of the crop calendar are as follows - '; 
 		}
@@ -92,7 +96,7 @@ exports.processNPKValues = function(obj, area, applied, msg) {
 		}
 	}
 
-	console.log(obj);
+	//console.log(obj);
 
 	obj['deficiencies'] = count_deficiencies+' out of 3';
 
