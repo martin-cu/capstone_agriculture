@@ -40,21 +40,21 @@ exports.test_globe2 = function(req,res){
 //SMS Pages
 exports.getSubscriptions = function(req, res) {
 	var html_data = {};
-  html_data["title"] = "Subscriptions";
+  html_data["title"] = "SMS Management > Subscriptions";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_subscriptions');
 	res.render('sms_subscriptions', html_data);
 }
 
 exports.getAddSubscription = function(req, res) {
 	var html_data = {};
-  html_data["title"] = "Subscriptions";
+  html_data["title"] = "SMS Management > Subscriptions";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_add_subscription');
 	res.render('add_subscription', html_data);
 }
 
 exports.getMessages = function(req, res) {
 	var html_data = {};
-  html_data["title"] = "Messages";
+  html_data["title"] = "SMS Management > Messages";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_messages');
 	res.render('sms_messages', html_data);
 }
