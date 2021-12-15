@@ -10,7 +10,7 @@ const map = new mapboxgl.Map({
     style: 'mapbox://styles/mapbox/satellite-v9', // style URL
     center: [121.3856, 13.07316], // starting position [lng, lat]
     zoom: 15.5 // starting zoom
-    });
+});
 
 map.on('load', function() {
         map.resize(); 
@@ -59,11 +59,13 @@ function updateArea(e) {
 		for (var y = 0; y < coordinate_arr[i].length; y++) {
 			string += (Math.round(coordinate_arr[i][y] * 1000) / 1000).toString();
 			coordinate_arr[i][y] = parseFloat(coordinate_arr[i][y]);
-			if (i == 0)
+			if (y == 0)
 				string += ', ';
 		}
 		string += ' ]\n'
 	}
+
+	//alert(string);
 
 	$('#show-coords').html(string);
 	$('#coordinate_lbl').removeClass('hide');

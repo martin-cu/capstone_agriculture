@@ -601,7 +601,8 @@ exports.addSoilRecord = function(req, res) {
 		p_lvl: req.body.p_lvl,
 		k_lvl: req.body.k_lvl,
 		n_lvl: req.body.n_lvl,
-		date_taken: req.body.date_taken
+		date_taken: req.body.date_taken,
+		calendar_id: req.body.calendar_id
 	 };
 	 var farm_query = {
 	 	where: { key: 't1.farm_id', value: req.body.farm_id },
@@ -632,7 +633,7 @@ function recommendFertilizerPlan(obj, materials) {
 		P: { min: obj.p_lvl },
 		K: { min: obj.k_lvl },
 	};
-	console.log(obj);
+	//console.log(obj);
 	var temp_obj = {};
 	var variables = {};
 	for (var i = 0; i < materials.length; i++) {
@@ -708,6 +709,16 @@ exports.ajaxCreateNutrientItem = function(req, res) {
 	});
 }
 
+exports.ajaxUpdateSoilRecord = function(req, res) {
+	nutrientModel.updateSoilRecord(req.body.update, req.body.filter, function(err, plan_record) {
+		if (err)
+			throw err;
+		else {
+			res.send(plan_record);
+		}
+	});
+}
+
 exports.ajaxGetNutrientPlanItems = function(req, res) {
 	var query = { };
 	if (req.query.hasOwnProperty('calendar_id'))
@@ -715,12 +726,61 @@ exports.ajaxGetNutrientPlanItems = function(req, res) {
 	else if (req.query.hasOwnProperty('frp_id')) {
 		query['fr_plan_id'] = req.query.frp_id;
 	}
+	else if (req.query.hasOwnProperty('farm_id')) {
+		query['farm_id'] = req.query.farm_id;
+	}
 
 	nutrientModel.getNutrientPlanItems(query, function(err, items) {
 		if (err)
 			throw err;
 		else {
 			res.send(items);
+		}
+	});
+}
+
+exports.ajaxGetSoilRecord = function(req, res) {
+	var query = { farm_id: req.query.farm_id };
+
+	nutrientModel.getSoilRecord(query, function(err, soil_record) {
+		if (err)
+			throw err;
+		else {
+			res.send(soil_record);
+		}
+	});
+}
+
+exports.prepareFRPlan = function(req, res) {
+	var query = { farm_id: req.body.farm_id };
+
+	nutrientModel.getMostActiveFRPlan(query, function(err, active_plan) {
+		if (err)
+			throw err;
+		else {
+			if (active_plan.length != 0) {
+				nutrientModel.deleteNutrientItems({ fr_plan_id: active_plan[0].fr_plan_id }, function(deleted_items) {
+					if (err)
+						throw err;
+					else {
+						res.send(deleted_items);
+					}
+				});
+			}
+			else {
+				var create_plan = {
+					calendar_id: null,
+					last_updated: dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
+					farm_id: req.body.farm_id
+				}
+				nutrientModel.createNutrientPlan(create_plan, function(new_fr_plan) {
+					if (err)
+						throw err;
+					else {
+						res.send(new_fr_plan);
+					}
+				});
+			}
 		}
 	});
 }
@@ -740,7 +800,12 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			result[0]['default_soil'] = false;
+			if (result.length != 0) {
+				result[0]['default_soil'] = false;
+			}
+			else {
+				result = [{}];
+			}
 			materialModel.getMaterials(req.query.type, req.query.filter, function(err, materials) {
 		        if (err)
 		            throw err;
@@ -755,18 +820,19 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 		        				if (err)
 		        					throw err;
 		        				else {
-		        					var result_date_diff = dataformatter.dateDiff(new Date(result[0].date_taken), new Date())
+		        					if (result.length != 0)
+		        						var result_date_diff = dataformatter.dateDiff(new Date(result[0].date_taken), new Date())
 		        					
-		        					if (result[0].soil_quality_id == null || result_date_diff > 364) {
+		        					if (result.length == 0 || result[0].soil_quality_id == null || result_date_diff > 364) {
 				        				//Serves as default soil data if soil test has never been done
-				        				var ph_lvl = 'N/A', n_lvl = 7.75, p_lvl = 4.0, k_lvl = 0;
+				        				var ph_lvl = 'N/A', n_lvl = 7.75, p_lvl = 4.0, k_lvl = 8.75;
 				        				result[0].pH_lvl = ph_lvl;
 				        				result[0].n_lvl = n_lvl;
 				        				result[0].p_lvl = p_lvl;
 				        				result[0].k_lvl = k_lvl;
 				        				result[0]['default_soil'] = true;
 									}
-
+									console.log(result);
 		        					result = dataformatter.processNPKValues(result, result[0].farm_area, applied)
 						            result['recommendation'] = recommendFertilizerPlan(result, materials);
 						            result['calendar_id'] = crop_calendar.calendar_id;
@@ -838,6 +904,12 @@ exports.detailedNutrientManagement = function(req, res) {
 					throw err;
 				}
 				else {
+					if (result.length != 0) {
+						result[0]['default_soil'] = false;
+					}
+					else {
+						result = [{}];
+					}
 					farmModel.getAllFarms(function(err, farm_list) {
 						if (err)
 							throw err;
@@ -847,13 +919,14 @@ exports.detailedNutrientManagement = function(req, res) {
 				        		if (err)
 				        			throw err;
 				        		else {
-				        			if (result[0].soil_quality_id == null) {
+				        			if (result.length == 0 || result[0].soil_quality_id == null) {
 				        				//Serves as default soil data if soil test has never been done
 				        				var ph_lvl = 'N/A', n_lvl = 7.75, p_lvl = 4.0, k_lvl = 8.75;
 				        				result[0].pH_lvl = ph_lvl;
 				        				result[0].n_lvl = n_lvl;
 				        				result[0].p_lvl = p_lvl;
 				        				result[0].k_lvl = k_lvl;
+				        				result[0]['default_soil'] = true;
 
 				        				summary += 'Default soil nutrient data is used in the calculations as there are no applicable soil test records. ';
 									}
@@ -864,6 +937,7 @@ exports.detailedNutrientManagement = function(req, res) {
 										if (err)
 											throw err;
 										else {
+											console.log(frp);
 											nutrientModel.getNutrientPlanItems({ fr_plan_id: frp[0].fr_plan_id }, function(err, fr_items) {
 												if (err)
 													throw err;
@@ -885,8 +959,8 @@ exports.detailedNutrientManagement = function(req, res) {
 																	}
 																	
 																	if (result)
-																	console.log(fr_items);
-																	console.log(result);
+																	// console.log(fr_items);
+																	// console.log(result);
 																	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
 																	html_data['detailed_data'] = dataformatter.processNPKValues(result, result[0].farm_area, applied, summary);
 
