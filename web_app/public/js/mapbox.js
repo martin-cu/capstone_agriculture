@@ -315,6 +315,11 @@ $(document).ready(function() {
 			var active_calendar = $("#crop_calendar_list").val();
 			console.log("CALENDAR ID");
 			console.log(calendar_id);
+			$(".calendar_based").removeAttr('hidden');
+			if($("#crop_calendar_list").children('option').length == 0){
+				$(".calendar_based").prop("hidden", !this.checked);
+			}
+
 			$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
 				$("#farm_id").text(farm_details.details[0].farm_id);
 				$("#farm_name").text(farm_details.details[0].farm_name);
@@ -388,7 +393,7 @@ $(document).ready(function() {
 						tag_id = tag_id + "reproduction-wo";
 					else if(farm_details.workorders[i].stage == "Ripening")
 						tag_id = tag_id + "ripening-wo";
-					$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+					$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h5 class="card-title">' + farm_details.workorders[i].type +'</h5></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
 				}
 				
 				update_color_meter();
@@ -406,39 +411,12 @@ $(document).ready(function() {
 		$('#detailed_cont').on('change', '#crop_calendar_list', function() {
 			console.log('!!');
 			active_calendar = $("#crop_calendar_list").val();
-		});
-
-
-		
-		//ONCLICK
-		$('#monitor_farm_list').on('click', '.farm_li', function() {
-			
-
-			viewed_farm_id = $(this).attr('data');
-			viewed_farm_name = $($(this).children()[0]).html();
-
-			$('#monitor_farmers_table').empty();
-
-			//To be removed
-			var query = viewed_farm_name;
-			console.log(query);
-			getFarmDetails({ farm_id: viewed_farm_id ,  calendar_id : viewed_farm_id});
-			getGeoData(query);
-
-			//Y2 Add Farm Monitoring Ajax
-			//UPDATE FARM DETAILS
-			$(".table-details").empty();
-			$.get('/agroapi/polygon/readAll', {}, function(polygons) {
-				var center = [];
-				for (var i = 0; i < polygons.length; i++) {
-					if (viewed_farm_name == polygons[i].name) {
-						center = polygons[i].center;
-					}
-				}
-				//GET DETAILS OF NEW FARM
-
-				var calendar_id = $("#crop_calendar_list").val();
+			var calendar_id = $("#crop_calendar_list").val();
 				active_calendar = $("#crop_calendar_list").val();
+				$(".calendar_based").removeAttr('hidden');
+				if($("#crop_calendar_list").children('option').length == 0){
+					$(".calendar_based").prop("hidden", !this.checked);
+				}
 				$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
 					$("#farm_id").text(farm_details.details[0].farm_id);
 					$("#farm_name").text(farm_details.details[0].farm_name);
@@ -517,7 +495,128 @@ $(document).ready(function() {
 						else if(farm_details.workorders[i].stage == "Ripening")
 							tag_id = tag_id + "ripening-wo";
 						
-						$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h4 class="card-title">' + farm_details.workorders[i].type +'</h4></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+						$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h5 class="card-title">' + farm_details.workorders[i].type +'</h5></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+						
+						}
+
+					
+				});
+		});
+
+
+		
+		//ONCLICK
+		$('#monitor_farm_list').on('click', '.farm_li', function() {
+			
+
+			viewed_farm_id = $(this).attr('data');
+			viewed_farm_name = $($(this).children()[0]).html();
+
+			$('#monitor_farmers_table').empty();
+
+			//To be removed
+			var query = viewed_farm_name;
+			console.log(query);
+			getFarmDetails({ farm_id: viewed_farm_id ,  calendar_id : viewed_farm_id});
+			getGeoData(query);
+
+			//Y2 Add Farm Monitoring Ajax
+			//UPDATE FARM DETAILS
+			$(".table-details").empty();
+			$.get('/agroapi/polygon/readAll', {}, function(polygons) {
+				var center = [];
+				for (var i = 0; i < polygons.length; i++) {
+					if (viewed_farm_name == polygons[i].name) {
+						center = polygons[i].center;
+					}
+				}
+				//GET DETAILS OF NEW FARM
+
+				var calendar_id = $("#crop_calendar_list").val();
+				active_calendar = $("#crop_calendar_list").val();
+				$(".calendar_based").removeAttr('hidden');
+				if($("#crop_calendar_list").children('option').length == 0){
+					$(".calendar_based").prop("hidden", !this.checked);
+				}
+				$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
+					$("#farm_id").text(farm_details.details[0].farm_id);
+					$("#farm_name").text(farm_details.details[0].farm_name);
+					$("#farm_type").text(farm_details.details[0].land_type);
+					$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
+					$("#farm_desc").text(farm_details.details[0].farm_desc);
+					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
+					
+					$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+
+					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
+					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
+					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
+					$(".calendar_planting").text(farm_details.crop_calendar_details.method);
+					$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
+					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
+					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
+
+					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+calendar_id);
+					
+					var i;
+					//UPDATE ROUSEOURCES
+					for(i = 0; i < 5; i++){
+						if(farm_details.seed[i].item_name == null)
+							$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"> <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						else
+							$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.seed[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.seed[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					}
+					for(i = 0; i < 5; i++){
+						if(farm_details.fertilizer[i].item_name == null)
+							$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						else
+							$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.fertilizer[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.fertilizer[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					}
+					for(i = 0; i < 5; i++){
+						if(farm_details.pesticide[i].item_name == null)
+							$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						else
+							$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					}
+					//UPDATE PEST AND DISEASE CARD
+					for(i = 0; i < 3; i++){
+						if(farm_details.probability[i].pd_name == null)
+							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
+						else
+							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
+						
+
+					}
+					update_color_meter();
+
+					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
+				
+						$("#ph_lvl").text(soil_data.pH_lvl);
+						$("#n_lvl").text(soil_data.n_val);
+						$("#p_lvl").text(soil_data.p_val);
+						$("#k_lvl").text(soil_data.k_val);
+						
+						$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+active_calendar);
+					});
+
+					$("#landprep-wo, #sowing-wo, #vegetation-wo, #harvest-wo, #reproduction-wo, #ripening-wo").empty();
+					for(i = 0; i < farm_details.workorders.length; i++){
+						$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
+						var tag_id = "#";
+						if(farm_details.workorders[i].stage == "Land Preparation")
+							tag_id = tag_id + "landprep-wo";
+						else if(farm_details.workorders[i].stage == "Sowing")
+							tag_id = tag_id + "sowing-wo";
+						else if(farm_details.workorders[i].stage == "Vegetation")
+							tag_id = tag_id + "vegetation-wo";
+						else if(farm_details.workorders[i].stage == "Harvest")
+							tag_id = tag_id + "harvest-wo";
+						else if(farm_details.workorders[i].stage == "Reproductive")
+							tag_id = tag_id + "reproduction-wo";
+						else if(farm_details.workorders[i].stage == "Ripening")
+							tag_id = tag_id + "ripening-wo";
+						
+						$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h5 class="card-title">' + farm_details.workorders[i].type +'</h5></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].desc +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
 						
 						}
 

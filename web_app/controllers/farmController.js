@@ -342,6 +342,9 @@ exports.getFarmDetails = function(req, res) {
 																			workorders[i]["stage"] = "Reproductive";
 																		else if(workorders[i].date_start > vegetation && workorders[i].date_start < reproductive)
 																			workorders[i]["stage"] = "Ripening";
+																		else{
+																			workorders[i]["stage"] = "Vegetation";
+																		}
 
 																		dataformatter.formatDate(dataformatter.unixtoDate(workorders[i].date_completed), 'mm DD, YYYY');
 																		if(workorders[i].date_completed == null)

@@ -108,7 +108,7 @@ body {
 }
 
 .dropdown-item, .dropdown-lbl, .dropdown-lbl i, .dropdown-lbl span {
-	background: #667529 !important;
+	background: #667529 ;
 	color: rgba(255,255,255,.5);
 	font-size: 16px;
 }
@@ -118,6 +118,7 @@ body {
 	border-style: none;
 	color: rgb(255,255,255);
 }
+
 
 .dropdown-lbl {
 
