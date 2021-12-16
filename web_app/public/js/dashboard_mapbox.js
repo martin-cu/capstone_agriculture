@@ -26,9 +26,6 @@ $(document).ready(function() {
             // Ideally, it should be the same once (delete functionalities are added next time?)
         $.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
 			
-			viewed_farm_id = farms[0].farm_id;
-			viewed_farm_name = farms[0].farm_name;
-        
         // Start getting list of polygons
         $.get('/agroapi/polygon/readAll', {}, function(polygons) {
 
@@ -40,17 +37,25 @@ $(document).ready(function() {
                 };
 
                 // Loop through polygons and push coordinates to the array of features (One feature object per farm)
-                for (var k = 0; k < polygons.length; k++) {
-            
-                    coordinates.push(polygons[k].geo_json.geometry.coordinates[0]);
+                for (var i = 0; i < farms.length; i++) {
+                for (var j = 0; j < polygons.length; j++) {
+
+                    if (polygons[j].name == farms[i].farm_name) {
+               
+                    coordinates.push(polygons[j].geo_json.geometry.coordinates[0]);
                     
                     geojson.features.push({ "type": "Feature","geometry": {"type": "Polygon","coordinates": coordinates},"properties": null });
-                        
+                    //alert(coordinates);
+                    
                     // Empty coordinates array at the end of the loop to filter coordinates per farm and feature on every push
                     coordinates = [];
+                    
+                }
                         
-                    }               
-                   //alert( geojson.features);
+                }     
+            
+                }
+                   //alert(geojson.features);
 
     });
 
