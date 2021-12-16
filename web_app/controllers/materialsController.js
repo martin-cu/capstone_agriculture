@@ -391,7 +391,7 @@ exports.getInventory = function(req, res){
                         }
                         html_data["farms"] = farms;
                         html_data["low_stocks"] = low_stocks;
-                        console.log(html_data.farms);
+                        console.log(low_stocks);
                         res.render("inventory", html_data);
                     });
                    
@@ -577,22 +577,40 @@ exports.updatePurchase = function(req, res){
             if(err)
                 throw err;
             else{
-
+                
                 materialModel.getFarmMaterialsSpecific({farm_id : purchase_id[0].farm_id}, {item_type : purchase_id[0].item_type}, function(err, farm_materials){
                     if(err)
                         throw err;
                     else{
-                        var i, farm_mat_id;
+                        var i, farm_mat_id = null;
                         for(i = 0; i < farm_materials.length; i++){
                             if(purchase_id[0].item_id == farm_materials[i].item_id){
                                 farm_mat_id = farm_materials[i].farm_mat_id;
                                 break;
                             }
                         }
-                        materialModel.addFarmMaterials(amount.amount, farm_mat_id, function(err, result){
-                            if(err)
-                                console.log(err);
-                        });
+                        console.log("farm_mat_id");
+                        console.log(farm_mat_id);
+                        if(farm_mat_id == null){
+                            //create new farm_material
+                            var material = {
+                                farm_id : purchase_id[0].farm_id, 
+                                item_id : purchase_id[0].item_id,
+                                item_type: purchase_id[0].item_type,
+                                current_amount : purchase_id[0].amount
+                            }
+                            materialModel.addNewFarmMaterial(material, function(err, resss){
+                                if(err)
+                                    console.log(err);
+                            });
+                        }
+                        else{
+                            materialModel.addFarmMaterials(amount.amount, farm_mat_id, function(err, result){
+                                if(err)
+                                    console.log(err);
+                            });
+                        }
+                        
                     }
                 });
             }

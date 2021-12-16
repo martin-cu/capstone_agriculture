@@ -233,6 +233,13 @@ exports.addFarmMaterials = function(amount, farm_mat_id, next){
 	mysql.query(sql, next);
 }
 
+
+exports.addNewFarmMaterial = function(material, next){
+	var sql = "INSERT INTO farm_materials SET ?";
+	sql = mysql.format(sql, material);
+	mysql.query(sql, next);
+}
+
 exports.getFarmMaterials = function(farm_id, next){
 	var sql = 'SELECT fm.*, st.seed_name as item_name, st.seed_desc as item_desc,units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN seed_table st ON fm.item_type = "Seed" && fm.item_id = st.seed_id UNION SELECT fm.*, pt.pesticide_name as item_name, pt.pesticide_desc as item_desc, units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN pesticide_table pt ON fm.item_type = "Pesticide" && fm.item_id = pt.pesticide_id UNION SELECT fm.*, fr.fertilizer_name as item_name, fr.fertilizer_desc as item_desc, units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN fertilizer_table fr ON fm.item_type = "Fertilizer" && fm.item_id = fr.fertilizer_id;';
 	var farm = " WHERE ft.farm_id = ?;";
@@ -246,14 +253,24 @@ exports.getFarmMaterials = function(farm_id, next){
 }
 
 exports.getLowStocks = function(farm_id, next){
-	var sql = 'SELECT fm.*, st.seed_name as item_name, st.seed_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN seed_table st ON fm.item_type = "Seed" && fm.item_id = st.seed_id UNION SELECT fm.*, pt.pesticide_name as item_name, pt.pesticide_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN pesticide_table pt ON fm.item_type = "Pesticide" && fm.item_id = pt.pesticide_id UNION SELECT fm.*, fr.fertilizer_name as item_name, fr.fertilizer_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN fertilizer_table fr ON fm.item_type = "Fertilizer" && fm.item_id = fr.fertilizer_id;';
-	var farm = " WHERE fm.current_amount < 50 && ft.farm_id = ?;";
-
+	var farm = " && ft.farm_id = ?;";
+	var sql_1 = 'SELECT fm.*, st.seed_name as item_name, st.seed_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN seed_table st ON fm.item_type = "Seed" && fm.item_id = st.seed_id WHERE fm.current_amount < 50 ';
 	if(farm_id != null){
-		sql = sql + farm;
-		sql = mysql.format(sql, farm_id);
+		sql_1 = sql_1 + farm;
+		sql_1 = mysql.format(sql_1, farm_id);
 	}
-	// console.log(sql);
+	var sql_2 = 'SELECT fm.*, pt.pesticide_name as item_name, pt.pesticide_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN pesticide_table pt ON fm.item_type = "Pesticide" && fm.item_id = pt.pesticide_id WHERE fm.current_amount < 50 ';
+	if(farm_id != null){
+		sql_2 = sql_2 + farm;
+		sql_2 = mysql.format(sql_2, farm_id);
+	}
+	var sql_3 = 'SELECT fm.*, fr.fertilizer_name as item_name, fr.fertilizer_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN fertilizer_table fr ON fm.item_type = "Fertilizer" && fm.item_id = fr.fertilizer_id WHERE fm.current_amount < 50 ';
+	if(farm_id != null){
+		sql_3 = sql_3 + farm;
+		sql_3 = mysql.format(sql_3, farm_id);
+	}
+	var sql = sql_1 + " UNION " + sql_2 + " UNION " + sql_3;
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
