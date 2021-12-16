@@ -390,7 +390,6 @@ div.scrollmenu {
 
   .calendar-wos{
 	width: 100%; padding : 10px; 
-	flex-direction: row-reverse;
 	justify-content: left; 
   }
 
