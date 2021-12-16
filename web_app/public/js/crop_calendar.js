@@ -384,6 +384,33 @@ function consolidateFRItems(wo_arr, frp_id) {
 	return wo_arr;
 }
 
+function processFRtoDB(arr, item_list, calendar_id) {
+	item_list = item_list.filter(e => e.isCreated == true);
+
+	var obj = { };
+	var start_date;
+	var due_date;
+	for (var i = 0; i < item_list.length; i++) {
+		start_date = new Date(item_list[i].target_application_date);
+		due_date = new Date(start_date.setDate(start_date.getDate() + 7));
+
+		obj = {
+			wo_type: 'Fertilizer Application',
+			crop_calendar_id: calendar_id,
+			start_date: item_list[i].target_application_date,
+			due_date: due_date,
+			notes: item_list[i].description,
+			resources: {
+				ids: [item_list[i].fertilizer_id],
+				qty: [Math.round(item_list[i].amount * 100) / 100]
+			}
+		}
+		arr.push(obj);
+	}
+
+	return arr;
+}
+
 $(document).ready(function() {
 	jQuery.ajaxSetup({async: false });
 
@@ -424,6 +451,7 @@ $(document).ready(function() {
 			var wo_data = [];
 			var wo_obj;
 			var fr_items;
+			var wo_fr_items = [];
 			var fr_plan_id;
 			// Check if FR Plan already exists!
 			$.get('/get_nutrient_plan_details', { farm_id: form_data.farm_id }, function(fr_plans) {
@@ -451,13 +479,6 @@ $(document).ready(function() {
 					});
 				} 
 			});
-
-			//Todo FK with work_order_id for generated fr_items
-			for (var i = 0; i < fr_items.length; i++) {
-				$.post('/create_nutrient_item', fr_items[i], function(nutrient_item) {
-					//console.log(nutrient_item);
-				});
-			}
 
 			// Generate work orders
 			wo_obj = {
@@ -494,9 +515,28 @@ $(document).ready(function() {
 
 			for (var i = 0; i < wo_data.length; i++) {
 				$.post('/upload_wo', wo_data[i], function(wo) {
-					if (i == wo_data.length - 1) {
-						window.location.href = '/crop_calendar';
+							
+				});
+			}
+
+			//Todo create work order for FR items
+				// Insert FK with work_order_id for generated fr_items
+			wo_fr_items = processFRtoDB([], fr_items, crop_plan.insertId);
+			console.log(wo_fr_items);
+			console.log(fr_items);
+			for (var i = 0; i < fr_items.length; i++) {
+				for (var x = 0; x < wo_fr_items.length; x++) {
+					if (wo_fr_items[x].notes == fr_items[i].description) {
+						$.post('/upload_wo', wo_fr_items[x], function(wo) {
+							wo = wo.replace('/farms/work_order&id=', '');
+							fr_items[i].wo_id = wo;
+						});
 					}
+				}
+				$.post('/create_nutrient_item', fr_items[i], function(nutrient_item) {
+						if (i == fr_items.length - 1) {
+							window.location.href = '/crop_calendar';
+						}
 				});
 			}
 
