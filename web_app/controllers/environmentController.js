@@ -1669,8 +1669,10 @@ exports.getDiagnosisDetails = function(req, res){
 			throw err;
 		else{
 			console.log(diagnosis_details);
-			if(diagnosis_details[0].date_solved == null)
+			if(diagnosis_details[0].date_solved == null){
 				diagnosis_details[0].date_solved = "Not yet resolved";
+				diagnosis_details[0]["solved"] = true;
+			}
 			else
 				diagnosis_details[0].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_solved)), 'mm DD, YYYY');
 					
@@ -1686,12 +1688,30 @@ exports.getDiagnosisDetails = function(req, res){
 			else{
 				html_data["symptoms"] = symptoms;
 			}
+			html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
 			res.render('pest_disease_diagnose_details', html_data);
 		});
 	});
 
 
 }
+
+
+exports.updateDiagnosis = function(req,res){
+	var solve_date = req.body.date_solved;
+	var id = req.body.id;
+
+	pestdiseaseModel.updateDiagnosis({diagnosis_id : id}, solve_date, function(err, result){
+		if(err)
+			throw err;
+		else{
+			console.log("Update success!");
+		}
+	});
+
+	res.redirect("/pest_and_disease/diagnose_details?id=" + id);
+}
+
 exports.getAddDiagnosis = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";

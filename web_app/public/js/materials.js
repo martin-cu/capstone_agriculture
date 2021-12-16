@@ -3,6 +3,8 @@ function clearList(){
 }
 
 $(document).ready(function(){
+
+
     jQuery.ajaxSetup({async: false });
     if($("#purchase_status").text() != "Purchased"){
         $("#update_purchase_btn").toggle("show");

@@ -127,6 +127,7 @@ router.get('/pest_and_disease/diagnose_add_diagnosis', environmentController.get
 router.get('/pest_and_disease/diagnose_add_pest', environmentController.getAddPest);
 router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAddDisease);
 router.get('/pest_and_disease/diagnose_details', environmentController.getDiagnosisDetails);
+router.post('/pest_and_disease/diagnose_details', environmentController.updateDiagnosis);
 
 router.get('/pest_and_disease/diagnose_detailed_diagnosis', environmentController.getDetailedDiagnosis);
 router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.getDetailedPest);
