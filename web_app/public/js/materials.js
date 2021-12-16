@@ -279,7 +279,11 @@ $(document).on("change",'.purchase_item_type', function(){
     var type = $(this).val();
     var select = "item" + id.charAt(id.length - 1);
     // alert(select);
-
+    if(type == "Seed")
+        $("#item_unit" + id.charAt(id.length - 1)).text("grams");
+    else{
+        $("#item_unit" + id.charAt(id.length - 1)).text("Bags");
+    }
     $(".material_" + select).remove();
     $.get("/ajaxGetMaterials", {type : type}, function(result){
         var i;
