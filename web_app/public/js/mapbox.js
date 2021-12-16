@@ -160,7 +160,7 @@ function toggleStatistics() {
 function createMap(token, options) {
 	var map = new mapboxgl.Map({
         container: 'monitor_map',
-        zoom: 13.2,
+        zoom: 15,
         center: options.center,
         style: 'mapbox://styles/mapbox/satellite-v9',
         transition: {
