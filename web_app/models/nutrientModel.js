@@ -73,7 +73,7 @@ exports.createNutrientItem = function(data, next) {
 exports.getMostActiveFRPlan = function(query, next) {
 	var sql = "select * from ( select fr_plan_id, calendar_id, last_updated, farm_id, max(status) as status from ( select max(fr_plan_id) as fr_plan_id, max(calendar_id) as calendar_id, last_updated, (select farm_id from crop_calendar_table where calendar_id = frp.calendar_id) as farm_id, null as status from fertilizer_recommendation_plan frp group by farm_id union select null, calendar_id, null, farm_id, status from crop_calendar_table ) as t where ? group by t.calendar_id ) as t1 where fr_plan_id is not null "
 	sql = mysql.format(sql, query);
-	console.log(sql);
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -86,7 +86,7 @@ exports.deleteNutrientItems = function(query, next) {
 exports.getNutrientPlanDetails = function(data, next) {
 	var sql = "select * from fertilizer_recommendation_plan where ? order by last_updated desc, fr_plan_id desc";
 	sql = mysql.format(sql, data);
-	console.log(sql);
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 

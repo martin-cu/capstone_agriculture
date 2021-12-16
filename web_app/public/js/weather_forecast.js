@@ -375,7 +375,7 @@ function normalizeForDB(result, hour) {
 $(document).ready(function() {
 	var d1 = new Date(Date.now());
 	var d2 = new Date(Date.now());
-	d2.setDate(d2.getDate() - 10);
+	d2.setDate(d2.getDate() - 60);
 	var refresh_on = 0;
 	var loaded = false;
 
@@ -383,29 +383,29 @@ $(document).ready(function() {
 		var hour = new Date();
 		hour = hour.getHours();
 
-		////console.log(hour+' - '+refresh_on);
+		//console.log(hour+' - '+refresh_on);
 
 		/************  Weather Forecast to DB Start *************/
 		$.get('/get_weather_forecast', {}, function(forecast_result) {
-
+			//console.log(formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD'));
 			if (forecast_result == 0) {
-				console.log('Generating weather forecast...');
 				refresh_on = hour + 1;
 				$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
 					let query = normalizeForDB(result, hour);
 
 					$.post('/upload_weather_forecast', query, function(upload_result) {
-						//console.log('DB upload success');
+						console.log('DB upload success');
 
 						loaded = false;
 					});
 				});	
 			}
-			else if (hour == refresh_on && hour != forecast_result[0].time_uploaded) {
+			else if (hour == refresh_on && hour != forecast_result[0].time_uploaded || 
+				formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD') != formatDate(new Date(), 'YYYY-MM-DD')) {
 				console.log(new Date()+' : Deleting DB records...');
 				$.get('/clear_weather_forecast', {}, function(status) {
 
-					console.log('Generating weather forecast...');
+					//console.log('Generating weather forecast...');
 					refresh_on = hour + 1;
 					$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
 						let query = normalizeForDB(result, hour);
@@ -449,5 +449,10 @@ $(document).ready(function() {
 
 
 	}, 600000);
+
+
+	if (view == 'add_crop_calendar') {
+
+	}
 
 });

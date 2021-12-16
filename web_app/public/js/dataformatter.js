@@ -49,9 +49,9 @@ exports.processNPKValues = function(obj, area, applied, msg) {
 		}
 
 		obj[new_keys[i]] = val;
-		console.log(obj[keys[i]]);
+		//console.log(obj[keys[i]]);
 		obj[keys[i]] = Math.round(obj[keys[i]]*conversion * area * 100) / 100;
-		console.log(obj[keys[i]]);
+		//console.log(obj[keys[i]]);
 		if (i == 0) {
 			msg += 'The nutrient requirements at the start of the crop calendar are as follows - '; 
 		}
