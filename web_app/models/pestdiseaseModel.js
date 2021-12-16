@@ -173,7 +173,14 @@ exports.addDiagnosisSymptom = function(diagnosis_id, symptom_id, next ){
 	mysql.query(sql, next); return(sql);
 }
 
+exports.updateDiagnosis = function(diagnosis_id, solve_date, next){
+	var sql = "UPDATE diagnosis set date_solved = ?, status = 'Solved' WHERE ?";
+	sql = mysql.format(sql, solve_date);
+	sql = mysql.format(sql, diagnosis_id);
 
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
 
 
 //disease

@@ -245,3 +245,16 @@ $(document).ready(function(){
     });
 
 });
+
+
+$(document).on("submit", "#resolve_form", function(event){
+    // alert($("#date_solved").val())
+    // if($("#date_solved").val() > dateDiff.){
+    //     a = true;
+    //     if(!a){
+    //         event.preventDefault();
+    //         alert( "Add date." );
+    //     }
+    // }
+    
+});

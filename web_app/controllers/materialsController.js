@@ -299,6 +299,8 @@ exports.getOrders = function(req, res){
                             
                             var i;
                             for(i = 0; i < pending.length; i++){
+                                if(pending[i].purchase_price == null)
+                                    pending[i].purchase_price = "0.00";
                                 console.log("TYPE: " + typeof(pending[i].request_date) + pending[i].request_date);
                                 pending[i].request_date = dataformatter.formatDate(pending[i].request_date, 'mm DD, YYYY');
                             }
@@ -310,6 +312,8 @@ exports.getOrders = function(req, res){
                                 throw err;
                             else{
                                 for(i = 0; i < processing.length; i++){
+                                    if(processing[i].purchase_price == null)
+                                        processing[i].purchase_price = "0.00";
                                     if(processing[i].request_date != null)
                                     processing[i].request_date = dataformatter.formatDate(processing[i].request_date, 'mm DD, YYYY');
                                 }
@@ -378,9 +382,19 @@ exports.getInventory = function(req, res){
                         }
                         // html_data["materials"] = materials;
                     }
-                    html_data["farms"] = farms;
-                    console.log(html_data.farms);
-                    res.render("inventory", html_data);
+
+                    materialModel.getLowStocks(null, function(err, low_stocks){
+                        if(err)
+                            throw err;
+                        else{
+
+                        }
+                        html_data["farms"] = farms;
+                        html_data["low_stocks"] = low_stocks;
+                        console.log(html_data.farms);
+                        res.render("inventory", html_data);
+                    });
+                   
                 });
     
             });

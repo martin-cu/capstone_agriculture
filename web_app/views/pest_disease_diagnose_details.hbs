@@ -9,6 +9,8 @@
                 <div class="row"><div class="col-xxl-5" style="margin : 10px; padding: 0px;">{{details.description}}</div></div>
                 <div class="row"><div class="col-xxl-2" style="margin : 10px; padding: 0px;">Farm: <i class="" style="font-weight : 800">{{details.farm_name}}</i></div><div class="col-xxl-3" style="margin : 10px; padding: 0px;">Crop Calendar: <i class="" style="font-weight : 800">{{details.crop_plan}}</i></div></div>
                 <div class="row"><div class="col-xxl-2" style="margin : 10px; padding: 0px;">Date Diagnosed: <i class="" style="font-weight : 800">{{details.date_diagnosed}}</i></div><div class="col-xxl-3" style="margin : 10px; padding: 0px;">Date Resolved: <i class="" style="font-weight : 800">{{details.date_solved}}</i></div></div>
+                {{#if details.solved}}<div class="row"><div class="col-xxl-12" style="margin : 10px; padding: 0px;"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; margin-right:20px; " data-toggle="modal" data-target="#resolveModal">Resolve</a></div></div>{{/if}}
+                
             </div>
         </div>
         {{!-- <div class="col">
@@ -134,3 +136,38 @@
     
 </div>
                 
+<div class="modal fade" id="resolveModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+            <div class="modal-header" ><h4 class="modal-title">Resolve Pest/Disease</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        <div class="modal-body">
+            <div class="card-body" id="step1_add" >
+                <form id="resolve_form" action="/pest_and_disease/diagnose_details" method="post">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="username"><strong>Resolved Date</strong><br /></label></div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3"><input class="form-control" type="date" placeholder="" id="date_solved" name="date_solved" form="resolve_form" value="{{cur_date}}"/><input class="form-control" type="text" placeholder="" id="id" name="id" form="resolve_form" value="{{details.diagnosis_id}}" hidden/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                    <div class="mb-3"><center><button type="submit" class="btn btn-primary btn-sm add-material-btn" style="margin-top : 20px;" form="resolve_form">Resolve</button></center></div>
+                
+            </div>
+
+        </div>
+ 
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+</div>

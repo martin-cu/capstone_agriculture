@@ -245,6 +245,18 @@ exports.getFarmMaterials = function(farm_id, next){
 	mysql.query(sql, next);
 }
 
+exports.getLowStocks = function(farm_id, next){
+	var sql = 'SELECT fm.*, st.seed_name as item_name, st.seed_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN seed_table st ON fm.item_type = "Seed" && fm.item_id = st.seed_id UNION SELECT fm.*, pt.pesticide_name as item_name, pt.pesticide_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN pesticide_table pt ON fm.item_type = "Pesticide" && fm.item_id = pt.pesticide_id UNION SELECT fm.*, fr.fertilizer_name as item_name, fr.fertilizer_desc as item_desc, units, ft.farm_name FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN fertilizer_table fr ON fm.item_type = "Fertilizer" && fm.item_id = fr.fertilizer_id;';
+	var farm = " WHERE fm.current_amount < 50 && ft.farm_id = ?;";
+
+	if(farm_id != null){
+		sql = sql + farm;
+		sql = mysql.format(sql, farm_id);
+	}
+	// console.log(sql);
+	mysql.query(sql, next);
+}
+
 exports.getFarmMaterialsSpecific = function(farm_id, item_type, next){
 	var sql;
 	if(item_type.item_type == "Seed")
@@ -333,9 +345,9 @@ exports.getPurchasesPerFarm = function(type, farm_id, status, next){
 }
 
 exports.getAllPurchases = function(type, status, next){
-	var fertilizer = 'SELECT pt.*, ft.farm_name as farm_name, st.fertilizer_name AS item_name, st.fertilizer_desc AS description FROM purchase_table pt INNER JOIN fertilizer_table st ON pt.item_id = st.fertilizer_id && item_type = "Fertilizer" INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ';
-	var seed = "SELECT pt.*,ft.farm_name as farm_name, st.seed_name AS item_name, st.seed_desc AS description FROM purchase_table pt INNER JOIN seed_table st ON pt.item_id = st.seed_id && item_type = 'Seed' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
-	var pesticide = "SELECT pt.*, ft.farm_name as farm_name, st.pesticide_name AS item_name, st.pesticide_desc AS description FROM purchase_table pt INNER JOIN pesticide_table st ON pt.item_id = st.pesticide_id && item_type = 'Pesticide' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
+	var fertilizer = 'SELECT pt.*, ft.farm_name as farm_name, st.fertilizer_name AS item_name, st.fertilizer_desc AS description, st.units FROM purchase_table pt INNER JOIN fertilizer_table st ON pt.item_id = st.fertilizer_id && item_type = "Fertilizer" INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ';
+	var seed = "SELECT pt.*,ft.farm_name as farm_name, st.seed_name AS item_name, st.seed_desc AS description, st.units FROM purchase_table pt INNER JOIN seed_table st ON pt.item_id = st.seed_id && item_type = 'Seed' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
+	var pesticide = "SELECT pt.*, ft.farm_name as farm_name, st.pesticide_name AS item_name, st.pesticide_desc AS description, st.units FROM purchase_table pt INNER JOIN pesticide_table st ON pt.item_id = st.pesticide_id && item_type = 'Pesticide' INNER JOIN farm_table ft ON ft.farm_id = pt.farm_id ";
 	var sql;
 	if(type == null){
 		sql = fertilizer + " UNION " + seed + " UNION " + pesticide;
