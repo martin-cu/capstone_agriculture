@@ -13,6 +13,8 @@ const map = new mapboxgl.Map({
     }
 });
 
+map.addControl(new mapboxgl.FullscreenControl());
+
 // SHOW POLYGONS FROM AGRO API
 $(document).ready(function() {
 
@@ -44,7 +46,17 @@ $(document).ready(function() {
                
                     coordinates.push(polygons[j].geo_json.geometry.coordinates[0]);
                     
-                    geojson.features.push({ "type": "Feature","geometry": {"type": "Polygon","coordinates": coordinates},"properties": null });
+                    geojson.features.push   ({ "type": "Feature",
+                                            "geometry": {
+                                                "type": "Polygon","coordinates": coordinates
+                                            },
+                                            'properties': {
+                                                'name': 'polygon' + j,
+                                                'description':
+                                                '<strong>Make it Mount Pleasant</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+                                                },
+                                            
+                                            });
                     //alert(coordinates);
                     
                     // Empty coordinates array at the end of the loop to filter coordinates per farm and feature on every push
@@ -76,8 +88,8 @@ $(document).ready(function() {
     },
     });
 
-     map.addLayer({
-        'id': 'polygonfill',
+    map.addLayer({
+        'id': 'polygon',
         'type': 'fill',
         'source': 'polygon', // reference the data source
         "layout": {
@@ -89,8 +101,8 @@ $(document).ready(function() {
         }
         });
 
-        //Add a black outline around the polygon.
-        map.addLayer({
+    //Add a black outline around the polygon.
+    map.addLayer({
         'id': 'outline',
         'type': 'line',
         'source': 'polygon',
@@ -101,6 +113,25 @@ $(document).ready(function() {
         'line-color': '#663399',
         'line-width': 2,
         }
+        });
+
+    // When a click event occurs on a feature in the places layer, open a popup at the
+    // location of the feature, with description HTML from its properties.
+    map.on('click', 'polygon', (e) => {
+        new mapboxgl.Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(e.features[0].properties.description)
+        .addTo(map);
+    });
+        
+    // Change the cursor to a pointer when the mouse is over the places layer.
+    map.on('mouseenter', 'polygon', () => {
+        map.getCanvas().style.cursor = 'pointer';
+        });
+        
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'polygon', () => {
+        map.getCanvas().style.cursor = '';
         });
 
     });
