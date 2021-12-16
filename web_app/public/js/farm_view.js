@@ -79,7 +79,8 @@ function loadAjaxEmployees() {
 
 $(document).ready(function() {
 	$.get('/get_employees', { position: 'Farm Manager' }, function(result) {
-		if (result.success) {
+		result = result.employee_list.filter(e => e.num_assignments == 0);
+		if (result.length != 0) {
 
 			var emp = result.employee_list;
 			for (var i = 0; i < emp.length; i++) {
@@ -91,7 +92,7 @@ $(document).ready(function() {
 
 		}
 		else {
-
+			$('#farm_mngr_cont').prop('disabled', true);
 		}
 	});
 	$('#queueFarmers').on('click', function() {

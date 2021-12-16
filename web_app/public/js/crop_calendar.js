@@ -519,11 +519,10 @@ $(document).ready(function() {
 				});
 			}
 
-			//Todo create work order for FR items
+			//Create work order for FR items
 				// Insert FK with work_order_id for generated fr_items
 			wo_fr_items = processFRtoDB([], fr_items, crop_plan.insertId);
-			console.log(wo_fr_items);
-			console.log(fr_items);
+
 			for (var i = 0; i < fr_items.length; i++) {
 				for (var x = 0; x < wo_fr_items.length; x++) {
 					if (wo_fr_items[x].notes == fr_items[i].description) {

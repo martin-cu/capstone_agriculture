@@ -971,6 +971,9 @@ $(document).ready(function() {
 	}
 	else if (view == 'Soil Detailed') {
 		// Soil Test Form
+
+		$('#date_taken').val(formatDate(new Date(), 'YYYY-MM-DD'));
+
 		$.get('/get_farm_list', {  }, function(result) {
 			farm_list = result;
 			for (var i = 0; i < result.length; i++) {
