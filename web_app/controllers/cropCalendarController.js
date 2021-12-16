@@ -55,6 +55,13 @@ exports.getCropCalendarTab = function(req, res) {
 					html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
 					html_data['calendar_list'] = list_obj;
 					
+					var list_obj_keys = ['land_prep', 'sowing', 'vegetation', 'reproductive', 'ripening', 'harvesting'];
+					for (var i = 0; i < list_obj_keys.length; i++) {
+						for (var x = 0; x < list_obj[list_obj_keys[i]].length; x++) {
+							list_obj[list_obj_keys[i]][x].wo_list = list_obj[list_obj_keys[i]][x].wo_list.splice(0, 3);
+						}
+					}
+
 					res.render('crop_calendar_tab', html_data);
 				}
 			});

@@ -465,7 +465,7 @@ $(document).ready(function() {
 					fr_items = consolidateFRItems(wo_arr, fr_plans[0].fr_plan_id);
 				}
 				else {
-					$.post('/create_nutrient_plan', { calendar_id: crop_plan.insertId, last_updated: formatDate(new Date(), 'YYYY-MM-DD') }, function(nutrient_plan) {
+					$.post('/create_nutrient_plan', { farm_id: form_data.farm_id ,calendar_id: crop_plan.insertId, last_updated: formatDate(new Date(), 'YYYY-MM-DD') }, function(nutrient_plan) {
 						fr_items = consolidateFRItems(wo_arr, nutrient_plan.insertId);
 					});
 				}

@@ -82,7 +82,7 @@ $(document).ready(function() {
 		result = result.employee_list.filter(e => e.num_assignments == 0);
 		if (result.length != 0) {
 
-			var emp = result.employee_list;
+			var emp = result;
 			for (var i = 0; i < emp.length; i++) {
 				// $('#farm_mngr_cont').append(createCheckbox(div, inp, 
 				// 	{ prop: ['inner_HTML'], val: [emp[i].last_name+', '+emp[i].first_name] }));
