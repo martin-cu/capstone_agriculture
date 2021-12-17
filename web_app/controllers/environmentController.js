@@ -970,7 +970,8 @@ exports.detailedNutrientManagement = function(req, res) {
 																	html_data['wo_list'] = wo_list;
 																	html_data['inventory'] = processInventory(material_list, html_data.recommendation, applied);
 																	html_data['calendar_details'] = calendar_details[0];
-																	//console.log(result);
+																	html_data['farm_id'] = farm_id;
+																	console.log(html_data);
 																	res.render('nutrient_mgt_detailed', html_data);
 																}
 															});

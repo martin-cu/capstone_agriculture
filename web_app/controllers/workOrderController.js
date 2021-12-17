@@ -160,6 +160,7 @@ exports.getDetailedWO = function(req, res) {
 								html_data['resources'] = resource_details;
 								html_data['resources']['title'] = type+'s:';
 								html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
+	
 								res.render('detailed_work_order', html_data);
 							}
 						});

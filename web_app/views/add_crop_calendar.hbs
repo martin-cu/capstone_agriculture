@@ -232,7 +232,7 @@ li > span {
                             </div>
 
                             <div class="col">
-                               <label for="seed_rate">Seed Rate (lb/ha) </label>
+                               <label for="seed_rate">Seed Rate (kg/ha) </label>
 			                    <input type="text" class="form-control" id="seed_rate" name="seed_rate" placeholder="Qty">
                                 <label class="text-muted ml-2" id="seed_qty"></label>
                                 <input type="hidden" name="num_seed_bags" id="num_seed_bags" value="">
@@ -366,18 +366,23 @@ li > span {
                                 <div class="col-lg-7 col-xxl-8">
                                             <div class="card shadow mb-4">
                                                 <div class="card-header mini py-3" style="background: #212529;height: auto;">
-                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Generated Fertilizer Plan<br></h6>
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Optimization Variables<br></h6>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="table-responsive" style="border-style: none;">
                                                         <table class="table">
-                                                            <thead>
-                                                                {{!-- <tr></tr> --}}
-                                                            </thead>
                                                             <tbody>
                                                                 <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Planted<br></span> <span class="d-xxl-flex justify-content-xxl-start" id="seed_name"><br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm Area<br></span> <span class="d-xxl-flex justify-content-xxl-start" id="farm_area_cont"><br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;"><br></span><span class="d-xxl-flex justify-content-xxl-start" id=""><br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none;">
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Type<br></span> <span class="d-xxl-flex justify-content-xxl-start" id="seed_name"><br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Rate<br></span><span class="d-xxl-flex justify-content-xxl-start" id="seed_rate_cont"><br></span></td>
+                                                                </tr>
+                                                                <tr style="border-style: none;">
                                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method<br></span><span class="d-xxl-flex justify-content-xxl-start" id="method_detail"><br></span></td>
+                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;"><br></span><span class="d-xxl-flex justify-content-xxl-start" id=""><br></span></td>
                                                                 </tr>
                                                                <!--  <tr style="border-style: none;">
                                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
@@ -403,7 +408,7 @@ li > span {
                                             </div>
                                             <div class="card shadow mb-4">
                                                 <div class="card-header mini py-3" style="background: #212529;height: auto;">
-                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Nutrient Calculations (kg/ha)<br></h6>
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Fertilizer Recommendation Plan<br></h6>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="table-responsive">
@@ -448,7 +453,7 @@ li > span {
                                             </div>
                                             <div class="card shadow mb-4">
                                                 <div class="card-header mini py-3" style="background: #212529;height: auto;">
-                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Soil Nutrient Requirements (kg/ha)<br></h6>
+                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Total Soil Nutrient Requirements<br></h6>
                                                 </div>
                                                 <div class="card-body">
                                                     <ul class="list-group">

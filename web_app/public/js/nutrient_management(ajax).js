@@ -417,7 +417,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 	else if (method == 'Direct Seeding') {
 		temp_d = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
 		target_date = new Date(temp_d);
-		target_date = target_date.getDate() + 12;
+		target_date = target_date.setDate(target_date.getDate() + 12);
 	}
 
 	var temp_date = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
@@ -976,8 +976,17 @@ $(document).ready(function() {
 
 		$.get('/get_farm_list', {  }, function(result) {
 			farm_list = result;
+			var extra;
 			for (var i = 0; i < result.length; i++) {
-				$('#farm_id').append("<option value='"+result[i].farm_id+"'>"+result[i].farm_name+"</option>");
+				console.log(farm_id);
+
+				if (result[i].farm_id == farm_id) {
+					extra = 'selected';
+					$('#farm_id').append("<option value='"+result[i].farm_id+"'"+extra+">"+result[i].farm_name+"</option>");
+				}	
+				// else {
+				// 	extra = 'disabled';
+				// }
 			}
 		});
 

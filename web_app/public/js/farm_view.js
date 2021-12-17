@@ -83,11 +83,16 @@ $(document).ready(function() {
 		if (result.length != 0) {
 
 			var emp = result;
-			for (var i = 0; i < emp.length; i++) {
-				// $('#farm_mngr_cont').append(createCheckbox(div, inp, 
-				// 	{ prop: ['inner_HTML'], val: [emp[i].last_name+', '+emp[i].first_name] }));
-				// inp.val = inp.val.slice(0, -1);
-				$('#farm_mngr_cont').append('<option value="'+emp[i].employee_id+'">'+emp[i].last_name+', '+emp[i].first_name+'</option>');
+			if (emp.length == 0) {
+				$('#farm_mngr_error').removeClass('hide');
+			}
+			else {
+				for (var i = 0; i < emp.length; i++) {
+					// $('#farm_mngr_cont').append(createCheckbox(div, inp, 
+					// 	{ prop: ['inner_HTML'], val: [emp[i].last_name+', '+emp[i].first_name] }));
+					// inp.val = inp.val.slice(0, -1);
+					$('#farm_mngr_cont').append('<option value="'+emp[i].employee_id+'">'+emp[i].last_name+', '+emp[i].first_name+'</option>');
+				}
 			}
 
 		}

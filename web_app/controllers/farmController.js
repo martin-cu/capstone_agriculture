@@ -485,7 +485,7 @@ exports.singleFarmDetails = function(req, res) {
 exports.createFarmRecord = function(req, res) {
 	var query = {
 		farm_name: req.body.farm_name,
-		farm_desc: req.body.farm_desc == '' ? req.body.farm_desc : null,
+		farm_desc: req.body.farm_desc == '' ? null : req.body.farm_desc,
 		farm_area: req.body.polygon_area,
 		land_type: req.body.land_type,
 	};

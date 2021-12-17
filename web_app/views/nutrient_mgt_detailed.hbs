@@ -100,25 +100,26 @@
                         <div class="col-lg-7 col-xxl-8">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3" style="background: #332C1F;height: auto;">
-                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Optimization Requirements<br></h6>
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Optimization Variables<br></h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive" style="border-style: none;">
                                         <table class="table">
-                                            <thead>
-                                                <tr></tr>
-                                            </thead>
                                             <tbody>
                                                 <tr style="border-style: none;">
                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm</span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.farm_name}}</span></td>
                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Crop Plan<br></span><span class="d-xxl-flex justify-content-xxl-start">{{calendar_details.crop_plan}}<br></span></td>
                                                 </tr>
                                                 <tr>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm Area</span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.farm_area}} ha</span></td>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;"><br></span><span class="d-xxl-flex justify-content-xxl-start"><br></span></td>
+                                                </tr>
+                                                <tr>
                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Planted</span><span class="d-xxl-flex justify-content-xxl-start">{{calendar_details.seed_name}}</span></td>
                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">{{calendar_details.seed_rate}} kg/ha<br></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method</span><span class="d-xxl-flex justify-content-xxl-start">{{detailed_data.method}}</span></td>
+                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method</span><span class="d-xxl-flex justify-content-xxl-start">{{calendar_details.method}}</span></td>
                                                     <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;"><br></span><span class="d-xxl-flex justify-content-xxl-start"><br></span></td>
                                                 </tr>
                                                 <tr style="border-style: none;">
@@ -139,7 +140,7 @@
                             </div>
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3" style="background: #332C1F;height: auto;">
-                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Nutrient Calculations (kg/ha)<br></h6>
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Nutrient Calculations <br></h6>
                                 </div>
                                 <div class="card-body">
                                     <!-- <div class="table-responsive">
@@ -209,32 +210,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="my-3">
-                                        <label>Fertilizer Application</label>
-                                        <div class="table-responsive">
-                                            <table class="table" id="fertilizer_history">
-                                                <tr>
-                                                    <th>Target Date</th>
-                                                    <th>Fertilizer</th>
-                                                    <th>Description</th>
-                                                    <th>Amount</th>
-                                                    <th>Status</th>
-                                                </tr>
-
-                                                {{#each wo_list}}
-                                                <tr>
-                                                    <td>{{this.date_due}}</td>
-                                                    <td>{{this.fertilizer_name}}</td>
-                                                    <td>{{this.notes}}</td>
-                                                    <td>{{this.qty}} bags</td>
-                                                    <td>{{this.status}}</td>
-                                                </tr>
-                                                {{/each}}
-
-                                            </table>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -261,7 +236,7 @@
                             </div>
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3" style="background: #332C1F;height: auto;">
-                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Soil Nutrient Requirements (kg/ha)<br></h6>
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Total Soil Nutrient Requirements<br></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group">
@@ -352,6 +327,41 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-lg-7 col-xxl-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3" style="background: #939C1F;height: auto;">
+                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Fertilizer Application Records<br></h6>
+                                </div>
+                                <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table" id="fertilizer_history">
+                                                <tr>
+                                                    <th>Target Date</th>
+                                                    <th>Fertilizer</th>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                </tr>
+
+                                                {{#each wo_list}}
+                                                <tr>
+                                                    <td>{{this.date_due}}</td>
+                                                    <td>{{this.fertilizer_name}}</td>
+                                                    <td>{{this.notes}}</td>
+                                                    <td>{{this.qty}} bags</td>
+                                                    <td>{{this.status}}</td>
+                                                </tr>
+                                                {{/each}}
+
+                                            </table>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -360,7 +370,7 @@
 
 <script type="text/javascript">
     var view = 'Soil Detailed';
-    var farm_id = {{detailed_data.farm_id}};
+    var farm_id = {{farm_id}};
     var calendar_id = {{detailed_data.calendar_id}};
     var area = {{detailed_data.farm_area}};
     var farm_name = '{{detailed_data.farm_name}}';
