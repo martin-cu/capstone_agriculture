@@ -1949,6 +1949,7 @@ exports.addDiagnosis = function(req,res){
 				}
 				console.log(latest);
 				diagnosis["calendar_id"] = crop_calendar[latest].calendar_id;
+				diagnosis["stage_discovered"] = crop_calendar[latest].stage;
 					
 			}
 
