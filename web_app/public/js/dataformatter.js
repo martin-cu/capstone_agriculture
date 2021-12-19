@@ -311,8 +311,8 @@ function filterHoursToday(hour_arr, curr_hour) {
 }
 
 function findStartIndex(filtered_arr, arr) {
-	console.log(filtered_arr);
-	console.log(arr);
+	// console.log(filtered_arr);
+	// console.log(arr);
 	var index = 0;
 	for (var i = 0; i < arr.length; i++) {
 		if (filtered_arr[filtered_arr.length-1] == arr[i]) {
@@ -355,7 +355,7 @@ exports.mapAndFormatForecastResult = function(data, hours) {
 	var temp_start_index = 0;
 	var isDone = false;
 	var nextDay = false;
-	console.log(filtered_hours);
+	//console.log(filtered_hours);
 	hours = sortHours(hours);
 
 	// Embed date and time
@@ -469,7 +469,7 @@ exports.arrayToObject = function(arr, keys) {
 
 exports.kelvinToCelsius = function(obj, type) {
 	var keys = [];
-	console.log(obj);
+	//console.log(obj);
 	if (type == 'Weather') {
 		keys = ['feels_like', 'temp', 'temp_max', 'temp_min'];
 	}
@@ -543,15 +543,15 @@ exports.prepareData = function(arr, size) {
 			
 		// }
 		json_obj['dt'].push(formatDate(arr[i].dt, 'YYYY-MM-DD : HH:m'));
-			json_obj['min_temp'].push(arr[i].main.temp_min);
-			json_obj['max_temp'].push(arr[i].main.temp_max);
-			json_obj['humidity'].push(arr[i].main.humidity);
-			json_obj['pressure'].push(arr[i].main.pressure);
-			json_obj['rainfall'].push(typeof arr[i].rain == 'undefined' || arr[i].rain == null ? 0 : 
-				typeof arr[i].rain['3h'] == 'undefined' ? arr[i].rain['1h'] : arr[i].rain['3h']);
-			json_obj['main'].push(arr[i].weather[0].main);
-			json_obj['desc'].push(arr[i].weather[0].description);
-			json_obj['id'].push(arr[i].weather[0].id);
+		json_obj['min_temp'].push(arr[i].main.temp_min);
+		json_obj['max_temp'].push(arr[i].main.temp_max);
+		json_obj['humidity'].push(arr[i].main.humidity);
+		json_obj['pressure'].push(arr[i].main.pressure);
+		json_obj['rainfall'].push(typeof arr[i].rain == 'undefined' || arr[i].rain == null ? 0 : 
+			typeof arr[i].rain['3h'] == 'undefined' ? arr[i].rain['1h'] : arr[i].rain['3h']);
+		json_obj['main'].push(arr[i].weather[0].main);
+		json_obj['desc'].push(arr[i].weather[0].description);
+		json_obj['id'].push(arr[i].weather[0].id);
 			
 	}
 	
@@ -566,7 +566,7 @@ exports.prepareData = function(arr, size) {
 		for (var k = 0; k < keys.length; k++) {
 			json_obj[keys[k]][y] = json_obj[keys[k]][y] == NaN ? json_obj[keys[k]][y] : 0;
 			temp_arr.push(json_obj[keys[k]][y]);
-			console.log(json_obj[keys[k]][y]);
+			//console.log(json_obj[keys[k]][y]);
 		}
 		result_arr.data_arr.push(temp_arr);
 		temp_arr = [];

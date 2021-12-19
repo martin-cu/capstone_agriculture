@@ -65,24 +65,28 @@ function processIcons(desc) {
 	}
 	else {
 		console.log('Unknown desc please add in js file!');
-		console.log(desc);
+		//console.log(desc);
 	}
 	return icon;
 }
 
 function createForecastCards(data) {
-	var th, h2, h4, h6, div, i, small1, small2;
+	var th, h2, h4, h6, div, i, small1, small2, div_cont;
 
-	th = document.createElement('th');
+	th = document.createElement('td');
 	th.setAttribute('style', 'border-style: none;');
 
+	div_cont = document.createElement('div');
+	div_cont.setAttribute('class', 'forecast_card');
+	div_cont.setAttribute('value', data.date);
+
 	h2 = document.createElement('div');
-	h2.setAttribute('class', 'justify-content-xl-center text-muted');
+	h2.setAttribute('class', 'justify-content-xl-center text-muted text-center');
 	h2.setAttribute('style', 'color: #332C1F;font-size: 12px;');
 	h2.innerHTML = data.day;
 
 	h4 = document.createElement('div');
-	h4.setAttribute('class', 'justify-content-xl-center');
+	h4.setAttribute('class', 'justify-content-xl-center text-center');
 	h4.setAttribute('style', 'color: #332C1F;font-size: 12px;');
 	h4.innerHTML = data.date;
 
@@ -112,48 +116,84 @@ function createForecastCards(data) {
 	div.appendChild(small1);
 	div.appendChild(small2);
 
-	th.appendChild(h2);
-	th.appendChild(h4);
-	th.appendChild(h6);
-	th.appendChild(div);
+	div_cont.appendChild(h2);
+	div_cont.appendChild(h4);
+	div_cont.appendChild(h6);
+	div_cont.appendChild(div);
+	th.appendChild(div_cont);
 
 	return th;
 }
 
-function appendForecastCards(arr) {
+function processDailyDetails(arr) {
+	var obj = {
+		day: '',
+		date: '',
+		icon: '',
+		min_temp: '',
+		max_temp: '',
+		pressure: '',
+		humidity: '',
+		rainfall: '',
+	}
+	const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+	var date;
+
+	for (var i = 0; i < arr.length; i++) {
+		if (i == 0) {
+			date = new Date(arr[i].date);
+			obj.day = weekday[date.getDay()];
+			obj.date = formatDate(date, 'YYYY-MM-DD');
+			obj.min_temp = arr[i].min_temp;
+			obj.max_temp = arr[i].max_temp;
+			obj.icon = processIcons(arr[i].desc);
+			obj.pressure = arr[i].pressure;
+			obj.humidity = arr[i].humidity;
+			obj.rainfall = arr[i].rainfall;
+		}
+		else {
+			if (arr[i].min_temp > obj.min_temp) {
+				obj.min_temp = arr[i].min_temp;
+			}
+
+			if (arr[i].max_temp > obj.max_temp) {
+				obj.max_temp = arr[i].max_temp;
+			}
+		}
+	}
+
+	return obj;
+}
+
+function appendForecastCards(arr, keys) {
 	var table = $('#weather_table');
 	var tr;
 	tr = document.createElement('tr');
 
 	for (var i = 0; i < 14; i++) {
-		tr.appendChild(createForecastCards(arr[i]));
+		tr.appendChild(createForecastCards(processDailyDetails(arr[keys[i]])));
 	}
 
 	table.append(tr);
 }
 
-function switchWeek(week, event) {
-	var inner = $('#carousel_inner').children();
+function switchWeek(week) {
+	var index;
+	$('.week_switch').removeClass('active');
+	$('.forecast_card').parent().removeClass('hide');
 
-	$(inner[0]).toggleClass('hide');
-	$(inner[1]).toggleClass('hide');
+	if (week) {
+		index = 0;
+		$($('.week_switch')[1]).addClass('active');
+	}
+	else {
+		index = 7;
+		$($('.week_switch')[0]).addClass('active');
+	}
 
-	$(event).toggleClass('active');
-	
-	if (!week)
-		$(event).next().toggleClass('active');
-	else
-		$(event).prev().toggleClass('active');
-}
-
-function appendForecastDetails(data) {
-	$('#icon_detail').html(data.icon);
-	$('#temp_detail').html(data.max_temp);
-	$('#precipitation_detail').html(data.data[0].pressure);
-	$('#humidity_detail').html(data.data[0].humidity);
-	$('#rainfall_detail').html(data.data[0].rainfall);
-	$('#weather_day_detail').html(data.date);
-	$('#weather_desc_detail').html('');
+	for (var i = index; i < index+7; i++) {
+		$($($('.forecast_card')[i]).parent()[0]).addClass('hide');
+	}
 }
 
 function appendRecommendation(obj) {
@@ -174,7 +214,7 @@ function generateRecommendation(arr) {
 	var chain = false, good_chain = false;
 	var push = false, good_push = false;
 
-
+	console.log(arr);
 	for (var i = 0; i < arr.length; i++) {
 		var count = arr[i].data.filter(data => data.desc == 'light rain').length;
 		//console.log(arr[i].date+' - '+count);
@@ -372,6 +412,96 @@ function normalizeForDB(result, hour) {
 	return {data:cont_arr};
 }
 
+function normalizeToJSON(arr) {
+	const unique = [...new Map(arr.map(item =>
+	  [item['date'], item.date])).values()];
+
+	var obj = { data: [], keys: [] };
+
+	for (var i = 0; i < unique.length; i++) {
+		obj.data[formatDate(new Date(unique[i]), 'YYYY-MM-DD')] = arr.filter(e => e.date == unique[i]);
+		obj.keys.push(formatDate(new Date(unique[i]), 'YYYY-MM-DD'));
+	}
+
+	return obj;
+}
+
+function processChartData(arr) {
+	var data = { labels: [], datasets: [] };
+	var dataset_obj = { data: [], fill: true,
+   borderColor: "#bae755", borderWidth: 1, backgroundColor: "#FFFACD",
+   pointBackgroundColor: "#FFA500",
+   pointBorderColor: "#FFA500", pointRadius: 5 };
+	for (var i = 0; i < arr.length; i++) {
+		data.labels.push(arr[i].time.replace(':00', ''));
+		dataset_obj['data'].push(Math.round(arr[i].max_temp));
+	}
+	data.datasets.push(dataset_obj);
+
+	return data;
+}
+
+function appendDailyDetails(data) {
+	var i;
+	i = document.createElement('i');
+	i.setAttribute('class', data.icon);
+
+	$('#icon_detail').html(i);
+	$('#temp_detail').html(data.max_temp);
+	$('#precipitation_detail').html(data.pressure);
+	$('#humidity_detail').html(data.humidity);
+	$('#rainfall_detail').html(data.rainfall);
+	$('#weather_day_detail').html(data.date);
+	$('#weather_desc_detail').html(data.day);
+}
+
+function setChartOptions(options) {
+	var opts = {
+		type: 'line',
+		options: {
+			title: {
+				display: false
+			},
+			plugins: {
+				legend: {
+					display: false
+				}
+			},
+			scales: {
+				y: {
+					ticks: {
+						display: true
+					},
+					grid: {
+						display: false
+					}
+				},
+				x: {
+					grid: {
+						display: false
+					}
+				}
+
+			}
+		}
+	}
+
+	opts['data'] = options.data;
+	var min = Math.min(...opts.data.datasets[0].data), max = Math.max(...opts.data.datasets[0].data);
+	min -= 0.5;
+	max += 0.1;
+
+	opts.options.scales.y['suggestedMin'] = min;
+	opts.options.scales.y['max'] = max;
+
+	return opts;
+}
+
+function styleSelectedCard(index) {
+	$('.forecast_card').removeClass('selected');
+	$($('.forecast_card')[index]).addClass('selected');
+}
+
 $(document).ready(function() {
 	var d1 = new Date(Date.now());
 	var d2 = new Date(Date.now());
@@ -452,7 +582,64 @@ $(document).ready(function() {
 
 
 	if (view == 'add_crop_calendar') {
+		jQuery.ajaxSetup({async: false });
+		var hour = new Date();
+		hour = hour.getHours();
+		var forecast_records = null;
+		var day;
 
+		$.get('/get_weather_forecast', {}, function(forecast_result) {
+			if (forecast_result.length != 0) {
+				forecast_records = normalizeToJSON(forecast_result);
+				day = formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD');
+
+				// Append clickable daily weather cards
+				appendForecastCards(forecast_records.data, forecast_records.keys);
+				appendDailyDetails(processDailyDetails(forecast_records.data[day]));
+				styleSelectedCard(0);
+				switchWeek(0);
+				generateRecommendation(forecast_records);
+			}
+		});
+		if (forecast_records != null) {
+			var options = { data: processChartData(forecast_records.data[day]) }
+			options = setChartOptions(options);
+
+			var ctx = document.getElementById('weather_chart').getContext('2d');
+
+			var weather_chart = new Chart(ctx, options);
+
+			// Change viewed active daily detail
+			$('#weather_table').on('click', '.forecast_card', function() {
+				styleSelectedCard($('.forecast_card').index(this));
+				appendDailyDetails(processDailyDetails(forecast_records.data[$(this).attr('value')]));
+
+				var options = { data: processChartData(forecast_records.data[$(this).attr('value')]) }
+				options = setChartOptions(options);
+				var ctx = document.getElementById('weather_chart').getContext('2d');
+
+				weather_chart.destroy();
+				weather_chart = new Chart(ctx, options);
+			});
+
+			// Change week
+			$('.week_switch').on('click', function() {
+				var index = $('.week_switch').index(this);
+				var card = index == 0 ? 0 : 7;
+				var day = $($('.forecast_card')[card]).attr('value');
+				switchWeek(index);
+
+				styleSelectedCard(card);
+				appendDailyDetails(processDailyDetails(forecast_records.data[day]));
+
+				var options = { data: processChartData(forecast_records.data[day]) }
+				options = setChartOptions(options);
+				var ctx = document.getElementById('weather_chart').getContext('2d');
+
+				weather_chart.destroy();
+				weather_chart = new Chart(ctx, options);
+			});
+		}
 	}
 
 });

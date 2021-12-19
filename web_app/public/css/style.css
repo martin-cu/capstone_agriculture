@@ -144,18 +144,29 @@ body {
 
 .forecast_cont {
 	min-height:  150px;
-	width:  722px;
 }
 
 .forecast_card {
-	background-color: white;
+	background-color: white !important;
 	border-radius:  5px;
 	margin:  8px;
 }
 
+.weather_chart {
+	max-height: 180px;
+}
+
+.weather_table_cont {
+
+}
+
 .forecast_card:hover {
-	background-color: gainsboro;
+	background-color: gainsboro !important;
 	cursor: pointer;
+}
+
+.forecast_card.selected {
+	border:  3.5px solid #FFA500 !important;
 }
 
 .autocomplete {

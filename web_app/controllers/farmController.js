@@ -773,13 +773,13 @@ exports.getForecastWeather = function(req, res) {
 		        	throw err;
 		        else {
 		        	var hour_arr = [];
-					//console.log(forecast_body);
+
 		        	for (var i = 0; i < forecast_body.length; i++) {
 		        		forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
 		        		hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
 		        	}
 		        		// console.log(url);
-        				// console.log(forecast_url);
+        				//console.log(forecast_url);
 		        	//***** Get unique hour timestamps from forecast and filter data
 		        	hour_arr = [...new Map(hour_arr.map(item =>
 	  					[item, item])).values()];
@@ -792,7 +792,7 @@ exports.getForecastWeather = function(req, res) {
 		        	var result = analyzer.weatherForecast14D
 		        	(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
 		        	var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
-		        	
+
 		        	result.forecast = 
 		        	dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
 

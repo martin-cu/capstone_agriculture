@@ -116,36 +116,17 @@ li > span {
 
                             </div>
 
-
-                            <h6 style="font-weight: bold;"><!-- 14-Day Weather Forecast and  -->Land Preparation Dates</h6>
-
-                            <div class="form-group" style="margin-left: 5px;">
-                              <div class="row">
-
-                                <div class="col">
-                                    <label for="land_prep_date_start">From Date <span style="color: #CA4E0C;">*</span></label>
-    		                        <input type="date" class="form-control" id="land_prep_date_start" name="land_prep_date_start">
-                                </div>
-
-                                <div class="col">
-                                    <label for="land_prep_date_end">To Date <span style="color: #CA4E0C;">*</span></label>
-                                    <input type="date" class="form-control" id="land_prep_date_end" name="land_prep_date_end" value="">
-                                </div>
-
-                                </div>
-                            </div>
-
             {{!-- WEATHER FORECAST --}}
             <h6 style="font-weight: bold; padding-bottom: 10px; margin-top: 40px">14-Day Weather Forecast</h6>
 
-            <label for="forecast_filer">Weather Forecast Filter Date</label>
-		    <input type="date" class="form-control" id="forecast_filter" name="forecast_filter" style="width: 450px">
+            <!-- <label for="forecast_filer">Weather Forecast Filter Date</label>
+		    <input type="date" class="form-control" id="forecast_filter" name="forecast_filter" style="width: 450px"> -->
 
             <div class="forecast_cont" id="weather_forecast" style="margin: 0px auto">
 
             
 
-			<div class="mx-4 bg-secondary forecast_body" style="margin-top: 20px">
+			<div class="bg-secondary forecast_body" style="margin-top: 20px">
 				<div class="d-flex w-100 px-3 py-2" style="min-height: 50px; background-color: #212529; color: white">
 					<div class="" id="icon_detail" style="font-size: 40px;">
 						icon
@@ -158,7 +139,7 @@ li > span {
 					</div>
 					<div class="" style="font-size: 12px;">
 						<div>
-							<span>Precipitation: </span>
+							<span>Pressure: </span>
 							<span id="precipitation_detail">a</span>
 						</div>
 						<div>
@@ -172,43 +153,62 @@ li > span {
 					</div>
 					<div class="ml-auto d-flex flex-column float-right">
 						<span>Soccoro, Oriental Mindoro</span>
-						<span id="weather_day_detail"></span>
-						<span id="weather_desc_detail"></span>
+						<span id="weather_day_detail" class="float-right text-right"></span>
+						<span id="weather_desc_detail" class="float-right text-right"></span>
 					</div>
 				</div>
 
-				<div id="" class="" data-touch="false" data-interval="false" data-ride="carousel" style="height: 100px; background-color: #212529; color: white">
-				  <div class="carousel-inner" id="carousel_inner">
+				<div id="" class="d-flex flex-column" data-touch="false" data-interval="false" data-ride="carousel" style="min-height: 200px; background-color: #212529; color: white">
+				  <canvas class="my-2 weather_chart" id="weather_chart"></canvas>
+                  <div class="carousel-inner weather_table_cont" id="carousel_inner" style="min-height: 150px;">
+                    <table  id="weather_table" class="table">
+                        
+                    </table>
+
+                    <ol class="carousel-indicators" id="page">
+                        <li class="week_switch" class="active"></li>
+                        <li class="week_switch"></li>
+                    </ol>
 
 				  </div>
 				</div>
 			</div>
-
-			<ol class="carousel-indicators hide" id="page">
-			    <li onclick="switchWeek(0, this)" class="active"></li>
-			    <li onclick="switchWeek(1, this)"></li>
-			</ol>
 
 			</div>
             {{!-- END OF WEATHER FORECAST --}}
 
             
             <div class="form-group" style="background-color: #EEEEEE; padding: 20px; margin-top: 20px; border-radius: 10px;  outline: 1px solid #e3e6f0;">  
+                <div class="d-flex mt-2">
+    			    <label for="" style="font-weight: bold; padding-bottom: 10px">Weather Outlook</label>
+    			    <div class="mx-2 font-weight-bold" id="weather_outlook">
+    			      
+    			    </div>
+    			</div>
 
-            <div class="d-flex mt-2">
-			    <label for="" style="font-weight: bold; padding-bottom: 10px">Weather Outlook</label>
-			    <div class="mx-2 font-weight-bold" id="weather_outlook">
-			      
-			    </div>
-			</div>
+    			<div class="form-group row d-flex flex-column">
+    			    <label for="" style="font-weight: bold; padding-bottom: 10px">Summary</label>
+    			    <div class="mx-3" id="weather_summary">
+    			      
+    			    </div>
+    			</div>
+            </div>
 
-			<div class="form-group row d-flex flex-column">
-			    <label for="" style="font-weight: bold; padding-bottom: 10px">Summary</label>
-			    <div class="mx-3" id="weather_summary">
-			      
-			    </div>
-			</div>
+            <h6 style="font-weight: bold;">Land Preparation Dates</h6>
+            <div class="form-group" style="margin-left: 5px;">
+              <div class="row">
 
+                <div class="col">
+                    <label for="land_prep_date_start">From Date <span style="color: #CA4E0C;">*</span></label>
+                    <input type="date" class="form-control" id="land_prep_date_start" name="land_prep_date_start">
+                </div>
+
+                <div class="col">
+                    <label for="land_prep_date_end">To Date <span style="color: #CA4E0C;">*</span></label>
+                    <input type="date" class="form-control" id="land_prep_date_end" name="land_prep_date_end" value="">
+                </div>
+
+                </div>
             </div>
 
 
@@ -318,15 +318,15 @@ li > span {
 					<div class="" style="font-size: 12px;">
 						<div>
 							<span>Precipitation: </span>
-							<span id="precipitation_detail">a</span>
+							<span id="precipitation_detail"></span>
 						</div>
 						<div>
 							<span>Humidity: </span>
-							<span id="humidity_detail">a</span>
+							<span id="humidity_detail"></span>
 						</div>
 						<div>
 							<span>Rainfall: </span>
-							<span id="rainfall_detail">a</span>
+							<span id="rainfall_detail"></span>
 						</div>
 					</div>
 					<div class="ml-auto d-flex flex-column float-right">
