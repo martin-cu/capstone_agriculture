@@ -422,6 +422,10 @@ div.scrollmenu {
 	background-color: rgb(255, 248, 222);
 }
 
+.past_wo{
+	background-color: rgb(213, 255, 213);
+}
+
 .Present {
 	color: red;
 }

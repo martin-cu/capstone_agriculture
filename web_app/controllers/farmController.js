@@ -285,11 +285,11 @@ exports.getFarmDetails = function(req, res) {
 																throw err;
 															else{
 																if(calendar_id != null){
-																	var expected_harvest = crop_calendar_details[0].sowing_date;
+																	var expected_vegetation = crop_calendar_details[0].sowing_date;
 																	crop_calendar_details[0].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'mm DD, YYYY');
 																	var calendar_details = crop_calendar_details[0];
-																	calendar_details["expected_harvest"] = new Date(expected_harvest);
-																	calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[0].maturity_days);
+																	calendar_details["expected_harvest"] = new Date(expected_vegetation);
+																	calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[0].maturity_days + 65);
 																	calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
 																	html_data["crop_calendar_details"] = calendar_details;
 																}
@@ -299,10 +299,9 @@ exports.getFarmDetails = function(req, res) {
 															console.log(crop_calendar_details);
 															var land_prep = crop_calendar_details[0].land_prep_date;
 															var sowing = crop_calendar_details[0].sowing_date;
-															var ripening = new Date(expected_harvest);
-															ripening.setDate(ripening.getDate() + crop_calendar_details[0].maturity_days - 30);
-															var reproductive = new Date(ripening);
-															reproductive.setDate(reproductive.getDate() - 35);
+															var ripening = new Date(expected_vegetation);
+															ripening.setDate(ripening.getDate() + crop_calendar_details[0].maturity_days + 35);
+															var reproductive = new Date(expected_vegetation);
 															var vegetation = crop_calendar_details[0].sow_date_completed;
 															var harvest = calendar_details.expected_harvest;
 															console.log(land_prep);
@@ -323,12 +322,12 @@ exports.getFarmDetails = function(req, res) {
 																else{
 																	var current = true;
 																	for(i = 0; i < workorders.length; i++){
-																		if(workorders[i].date_completed == null && current){
-																			current = false;
+																		if(workorders[i].date_completed == null){
 																			workorders[i]["current"] = "current_wo";
-																			console.log("THISSSSSSS");
-																			console.log(workorders[i]);
 																		}
+																		else
+																			workorders[i]["current"] = "past_wo";
+
 
 																		if(workorders[i].type == "Land Preparation" || (workorders[i].date_start > land_prep && workorders[i].date_start < sowing))
 																			workorders[i]["stage"] = "Land Preparation";
@@ -357,7 +356,7 @@ exports.getFarmDetails = function(req, res) {
 																	}
 																}
 																// console.log("WORKORDERS");
-																console.log(workorders);
+																// console.log(workorders);
 																
 																html_data["workorders"] = workorders;
 																html_data["queries"] = queries;
