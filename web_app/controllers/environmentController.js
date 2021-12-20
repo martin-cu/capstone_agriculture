@@ -1637,7 +1637,7 @@ exports.getDiagnoses = function(req, res) {
 										else{
 											// console.log(symptoms);
 										}
-										console.log(pest_diagnoses);
+										// console.log(pest_diagnoses);
 										html_data["symptom"] = symptoms;
 										html_data["pest_list"] = pd_list;
 										html_data["pest_diagnoses"] = pest_diagnoses;
@@ -1920,6 +1920,11 @@ exports.ajaxGetPD = function(req, res){
 
 
 exports.addDiagnosis = function(req,res){
+	var workorders = [];
+	var i;
+	for(i = 0; i < req.body.solution.length; i++)
+		workorders.push(req.body.solution[i].split("|"));
+		
 	var diagnosis = {
 		type : req.body.type,
 		farm_id : req.body.farm_id,
@@ -1941,15 +1946,30 @@ exports.addDiagnosis = function(req,res){
 			else{
 				var i, lastest;
 				latest = 0;
+				// console.log(crop_calendar);  //FIX HERE
 				for(i =0; i < crop_calendar.length; i++){
-					if(crop_calendar[i].last_prep_date > crop_calendar[latest].last_prep_date)
+					console.log(crop_calendar[i].farm_name + " - " + farm_name);
+					console.log(crop_calendar[i].last_prep_date + " - " + crop_calendar[latest].last_prep_date);
+					if(crop_calendar[i].farm_name == farm_name){
 						latest  = i;
+						if(crop_calendar[i].land_prep_date > crop_calendar[latest].land_prep_date)
+							latest  = i;
+					}
+						
 					// if(crop_calendar[i].farm_name == farm_name)
 					// 	diagnosis["calendar_id"] = crop_calendar[i].calendar_id;
 				}
 				console.log(latest);
-				diagnosis["calendar_id"] = crop_calendar[latest].calendar_id;
-				diagnosis["stage_discovered"] = crop_calendar[latest].stage;
+				console.log(crop_calendar[latest].calendar_id);
+				if(farm_name != crop_calendar[latest].farm_name){
+					diagnosis["calendar_id"] = null;
+					diagnosis["stage_diagnosed"] = null;
+				}
+				else{
+					diagnosis["calendar_id"] = crop_calendar[latest].calendar_id;
+					diagnosis["stage_diagnosed"] = crop_calendar[latest].stage;
+				}
+				
 					
 			}
 
@@ -1991,6 +2011,25 @@ exports.addDiagnosis = function(req,res){
 								for(x = 0; x < symptoms.length; x++){
 									pestdiseaseModel.addDiagnosisSymptom(last[0].last, symptoms[x], function(err, success){});
 								}
+								
+								//Create new WorkOrders
+								var today = new Date();
+								today.setDate(today.getDate() + 7);	
+								console.log(workorders[0][1]);
+								for(i = 0;i < workorders.length; i++){
+
+									var temp_wo = {
+										type : workorders[i][1],
+										notes : workorders[i][2],
+										date_created : new Date(),
+										date_start : new Date(workorders[i][0]),
+										date_due : today,
+										crop_calendar_id : diagnosis.calendar_id
+									}
+								}
+								workOrderModel.createWorkOrder(temp_wo, function(err, success){});
+								//Create new PD_Recommendation
+								//pestdiseaseModel.addNewPDRecommendation()
 								res.redirect("/pest_and_disease/diagnose_details?id=" + last[0].last);
 							});
 							
@@ -2006,4 +2045,58 @@ exports.addDiagnosis = function(req,res){
 	});
 	
 	
+}
+
+
+exports.getRecommendationDiagnosis = function(req,res){
+	console.log(req.query);
+	var farm_id = req.query.farm_id;
+	var type = req.query.type;
+	var id = req.query.pd_id;
+	var recommended_solutions = [];
+	
+	if(type == "Pest"){
+		pestdiseaseModel.getPestSolutions(id, function(err, solutions){
+			if(err)
+				throw err;
+			else{
+				console.log(solutions);
+				var i;
+				for(i = 0; i < solutions.length; i++){
+					var solution = {
+						date_words : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
+						date : dataformatter.formatDate(new Date(), 'MM-DD-YYYY'),
+						type : solutions[i].detail_name,
+						desc : solutions[i].detail_desc
+					}
+
+					//add to recommendation
+					recommended_solutions.push(solution);
+				}
+				res.send(recommended_solutions);
+			}
+		});
+	}
+	else if("Disease"){
+		pestdiseaseModel.getDiseaseSolutions(id, function(err, solutions){
+			if(err)
+				throw err;
+			else{
+				console.log(solutions);
+				var i;
+				for(i = 0; i < solutions.length; i++){
+					var solution = {
+						date : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
+						type : solutions[i].solution_name,
+						desc : solutions[i].solution_desc
+					}
+					recommended_solutions.push(solution);
+				}
+				res.send(recommended_solutions);
+
+			}
+		});
+	}
+
+
 }

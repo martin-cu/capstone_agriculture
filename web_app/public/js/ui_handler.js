@@ -64,6 +64,7 @@ function validatePolygon() {
 }
 
 $(document).ready(function() {
+
 	$('.prev_step, .next_step').on('click', function() {
 		if($(this).attr("id") == "add_diagnosis_btn1"){
 			var today = new Date();
@@ -71,7 +72,14 @@ $(document).ready(function() {
 				alert("Enter proper date");
 			}
 			else{
+				//GENERATE RECOMMENDATION
+				$.get('/generateRecommendationDiagnosis',{farm_name : $("#farm_id option:selected").text(), type : $("#diagnosis_type").val(), pd_id : $("#pd_list").val()}, function(result){
+					var i;
+					for(i = 0; i < result.length; i++)
+						$("#recommended_solutions").append('<div class="row"><div class="col-lg-3"><label class="form-check-label font-weight-bold" for="formCheck-2" >' + result[i].date_words + '</label></div><div class="col-lg-3"><label class="form-check-label font-weight-bold" for="formCheck-2" >' + result[i].type + '</label></div><div class="col-lg-5"><label class="form-check-label font-weight-bold" for="formCheck-2" style="max-width: 200px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">' + result[i].desc + '</label></div><div class="col-lg-1"><input name="solution[' + i + ']" id="" class="form-check-input symptom-checkbox" type="checkbox" value="' + result[i].date + '|' + result[i].type + '|' + result[i].desc + '" form="add_diagnosis_form"></div></div>');
+				});
 				processModalStep($(this).parent().attr('id'), $(this).val());
+				
 			}
 		}
 		else{

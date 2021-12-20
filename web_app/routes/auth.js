@@ -115,6 +115,7 @@ router.get('/update_pd_details/:type/:id/:detail_type', environmentController.up
 router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbability); //ajax
 router.post('/addPest', environmentController.addPest);
 router.post('/addDisease', environmentController.addDisease);
+router.get('/generateRecommendationDiagnosis', environmentController.getRecommendationDiagnosis);
 //Temporary Pest and Disease (Update later)
 
 
