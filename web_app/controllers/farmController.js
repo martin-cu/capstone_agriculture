@@ -381,6 +381,17 @@ exports.getFarmDetails = function(req, res) {
 	});
 }
 
+exports.getFarmDetailsDashboard = function(req, res) {
+
+	farmModel.filteredFarmDetails({farm_id : req.query.farm_id}, function(err, details) {
+		if (err)
+			throw err;
+		else {
+			res.send(details);
+		}
+	});
+}
+
 exports.getMonitorFarms = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');

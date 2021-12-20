@@ -82,8 +82,9 @@ router.get('/materials', materialController.getMaterials);
 //Farms Tab
 router.get("/farm_resources", environmentController.getFarmResources);
 router.get("/farm_pestdisease", environmentController.getFarmPestDiseases);
-	//ajax
+//ajax
 router.get("/ajax_farm_details", farmController.getFarmDetails);
+router.get("/ajax_farm_detailsDashboard", farmController.getFarmDetailsDashboard);
 router.get("/ajaxGetSoilData", environmentController.getFarmSoilData);
 
 //Crop Calendar

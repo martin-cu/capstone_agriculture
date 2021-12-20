@@ -120,27 +120,42 @@ $(document).ready(function() {
                 for (var i = 0; i < farms.length; i++) {
                 for (var j = 0; j < polygons.length; j++) {
 
-                    if (polygons[j].name == farms[i].farm_name) {
-               
-                    coordinates.push(polygons[j].geo_json.geometry.coordinates[0]);
                     
+                    if (polygons[j].name == farms[i].farm_name) {        
+                    
+                    // Get other farm details
+                    $.get("/ajax_farm_detailsDashboard", {farm_id : farms[i].farm_id}, function(farm_details){
+
+                    for (var k = 0; k < farm_details.length; k++) {
+
+                    var farm_manager = farm_details[k].first_name + " " + farm_details[k].last_name;
+
+                    coordinates.push(polygons[j].geo_json.geometry.coordinates[0]);
+                 
                     geojson.features.push   ({ "type": "Feature",
                                             "geometry": {
                                                 "type": "Polygon","coordinates": coordinates
                                             },
                                             'properties': {
-                                                'name': 'polygon' + j,
-                                                'description':
-                                                '<strong>Make it Mount Pleasant</strong><p><a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank" title="Opens in a new window">Make it Mount Pleasant</a> is a handmade and vintage market and afternoon of live entertainment and kids activities. 12:00-6:00 p.m.</p>',
+                                                'name': '<strong>' + farms[i].farm_name + "</strong>", //alternative html text
+                                                'description': 
+                                                '<strong style="color: #939C1F; font-size: 16px">' + farms[i].farm_name+ '</strong><br>'
+                                                    + '<strong> Area Size: </strong>' + farms[i].farm_area + 'ha<br>'
+                                                    + '<strong> Land Type: </strong>' + farms[i].land_type + '<br>'
+                                                    + '<strong> Farm Manager: </strong>' + farm_manager,
                                                 },
                                             
                                             });
-                    //alert(coordinates);
-                    
+
                     // Empty coordinates array at the end of the loop to filter coordinates per farm and feature on every push
                     coordinates = [];
+                }
+
+                });
+                // END OF GET FARM DETAILS AJAX
                     
                 }
+               
                         
                 }     
             
