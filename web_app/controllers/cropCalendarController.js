@@ -185,7 +185,6 @@ exports.getDetailedCropCalendar = function(req, res) {
 			var fertilizer_query = {}
 			fertilizer_query['frp.calendar_id'] = req.query.id;
 			nutrientModel.getNutrientPlanItemsCompleted(fertilizer_query, function(err, fertilizers){
-				console.log(fertilizers);
 				if(err)
 					throw err;
 				else{
@@ -196,13 +195,31 @@ exports.getDetailedCropCalendar = function(req, res) {
 							fertilizers[i].date_completed = "Not yet completed"
 						fertilizers[i].target_application_date = dataformatter.formatDate(new Date(fertilizers[i].target_application_date), 'mm DD, YYYY');
 					}
-						
-						
 				}
-				html_data["workorders"] = wos;
-				html_data["fertilizer_wos"] = fertilizers;
-				html_data["crop_plan_details"] = crop_calendar[0];
-				res.render('detailed_crop_calendar', html_data); 
+
+				var query = { farm_name: crop_calendar[0].farm_name };
+
+				nutrientModel.getSoilRecord(query, function(err, soil_record) {
+					if (err)
+						throw err;
+					else {
+						console.log(soil_record);
+						
+						if(soil_record[0].pH_lvl == null)
+							soil_record[0].pH_lvl = "N/A";
+						if(soil_record[0].p_lvl == null)
+							soil_record[0].p_lvl = "N/AA";
+						if(soil_record[0].k_lvl == null)
+							soil_record[0].k_lvl = "N/AA";
+						if(soil_record[0].n_lvl == null)
+							soil_record[0].n_lvl = "N/A";
+					}
+					html_data["workorders"] = wos;
+					html_data["soil_record"] = soil_record[0];
+					html_data["fertilizer_wos"] = fertilizers;
+					html_data["crop_plan_details"] = crop_calendar[0];
+					res.render('detailed_crop_calendar', html_data); 
+				});
 			});
 		});
 		
