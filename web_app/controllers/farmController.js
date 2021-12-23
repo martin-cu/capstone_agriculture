@@ -67,7 +67,7 @@ exports.getFarmDetails = function(req, res) {
 			throw err;
 		else {
 			html_data["details"] = details;
-			//console.log(details);
+			////console.log(details);
 		}
 
 		materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Seed"}, function(err, seeds){
@@ -123,8 +123,8 @@ exports.getFarmDetails = function(req, res) {
 									html_data["pesticide"] = pesticides;
 								}
 								
-								//console.log(req.query.center);
-								//console.log("CENTER");
+								////console.log(req.query.center);
+								////console.log("CENTER");
 								var center = req.query.center;
 								if(center == null){
 									var lat = 13.073091;
@@ -152,7 +152,7 @@ exports.getFarmDetails = function(req, res) {
 									if (err)
 										throw err;
 									else {
-										// console.log(body);
+										// //console.log(body);
 										for (var i = 0; i < body.length; i++) {
 											body[i].dt = dataformatter.unixtoDate(body[i].dt);
 										}
@@ -170,7 +170,7 @@ exports.getFarmDetails = function(req, res) {
 													forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
 													hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
 												}
-												// console.log(forecast_body);
+												// //console.log(forecast_body);
 												
 												//***** Get unique hour timestamps from forecast and filter data
 												hour_arr = [...new Map(hour_arr.map(item =>
@@ -187,11 +187,11 @@ exports.getFarmDetails = function(req, res) {
 							
 												forecast = dataformatter.mapAndFormatForecastResult(result, hour_arr);
 												
-												// console.log(forecast[0]);
+												// //console.log(forecast[0]);
 												var daily_ctr = 0;
 												var dmin_temp = 0, dmax_temp = 0, dhumidity = 0, dpressure = 0, drainfall = 0;
 												for(var i = 0; i < forecast.length; i++){
-													// console.log(forecast[i]);
+													// //console.log(forecast[i]);
 			
 													var ctr = 0;
 													var min_temp = 0, max_temp = 0, humidity = 0, pressure = 0, rainfall = 0;
@@ -232,138 +232,154 @@ exports.getFarmDetails = function(req, res) {
 													precipitation : drainfall / daily_ctr
 												}
 												
-												// console.log(weather);
+												// //console.log(weather);
 			
 			
 												var season = {
 													season_temp : 35,
 													season_humidity : 65
 												}
-			
-												var stage = {
-													stage_name : "Reproductive"
+												var cc_query = {
+													status: ['In-Progress', 'Active', "Completed"]
 												}
-			
-												pestdiseaseModel.getPDProbabilityPercentage(weather, season, null, stage,function(err, possible_pests){
-													if(err){
+												cropCalendarModel.getCropCalendars(cc_query, function(err, stage){
+													if(err)
 														throw err;
-													}else{
-														var statements = new Array();
-														for(i = 0; i < possible_pests.length; i++){
-															stmt = possible_pests[i].pest_name + " - May occur due to ";
-															if(possible_pests[i].weather_id != null)
-																stmt = stmt + possible_pests[i].weather + " weather, ";
-															if(possible_pests[i].season_id != null)
-																stmt = stmt + possible_pests[i].season_name + " season ";
-															if(possible_pests[i].stage_id != null)
-																stmt = stmt + possible_pests[i].t_stage_name + " stage ";
-															statements.push({ statement : stmt});
-														}
-			
-														for(x =0; x < possible_pests.length; x++){
-															if(x >= 3)
-																possible_pests.pop(x);
-														}
-														//console.log(possible_pests);
+													else{
+														var i, index;
+														for(i = 0; i < stage.length; i++)
+															if(stage[i].calendar_id == req.query.calendar_id){
+																index = i;
+																break;
+															}
+														console.log(stage[index]);
+														var stage = {
+															stage_name : stage[0].stage
+														}	
 													}
-													farmModel.getFarmerQueries(farm_id, null, function(err, queries){
-														if(err)
+													pestdiseaseModel.getPDProbabilityPercentage(weather, season, null, stage,function(err, possible_pests){
+														if(err){
 															throw err;
-														else{
-															
+														}else{
+															var statements = new Array();
+															for(i = 0; i < possible_pests.length; i++){
+																stmt = possible_pests[i].pest_name + " - May occur due to ";
+																if(possible_pests[i].weather_id != null)
+																	stmt = stmt + possible_pests[i].weather + " weather, ";
+																if(possible_pests[i].season_id != null)
+																	stmt = stmt + possible_pests[i].season_name + " season ";
+																if(possible_pests[i].stage_id != null)
+																	stmt = stmt + possible_pests[i].t_stage_name + " stage ";
+																statements.push({ statement : stmt});
+															}
+				
+															for(x =0; x < possible_pests.length; x++){
+																if(x >= 3)
+																	possible_pests.pop(x);
+															}
 														}
-
-
-														//ADD CROP CYCLE DETAILS (WORK ORDERS)
-														var calendar_id = req.query.calendar_id;
-
-														// console.log(calendar_id);
-														var crop_calendar_query = { status: ['In-Progress', 'Active','Completed'] , where : {key : "calendar_id", val : calendar_id}}
-														console.log("---------------------");
-														cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calendar_details){
+														farmModel.getFarmerQueries(farm_id, null, function(err, queries){
 															if(err)
 																throw err;
 															else{
-																if(calendar_id != null){
-																	var expected_vegetation = crop_calendar_details[0].sowing_date;
-																	crop_calendar_details[0].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'mm DD, YYYY');
-																	var calendar_details = crop_calendar_details[0];
-																	calendar_details["expected_harvest"] = new Date(expected_vegetation);
-																	calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[0].maturity_days + 65);
-																	calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
-																	html_data["crop_calendar_details"] = calendar_details;
-																}
 																
-
 															}
-															console.log(crop_calendar_details);
-															var land_prep = crop_calendar_details[0].land_prep_date;
-															var sowing = crop_calendar_details[0].sowing_date;
-															var ripening = new Date(expected_vegetation);
-															ripening.setDate(ripening.getDate() + crop_calendar_details[0].maturity_days + 35);
-															var reproductive = new Date(expected_vegetation);
-															var vegetation = crop_calendar_details[0].sow_date_completed;
-															var harvest = calendar_details.expected_harvest;
-															console.log(land_prep);
-															console.log(sowing);
-															console.log(harvest);
-															console.log(reproductive);
-															console.log(vegetation);
-															var wo_query = {
-																where: {
-																	key: ['crop_calendar_id'],
-																	value: [calendar_id]
-																},
-																order: ['work_order_table.date_start ASC']
-															};
-															workOrderModel.getWorkOrders(wo_query, function(err, workorders){
+	
+	
+															//ADD CROP CYCLE DETAILS (WORK ORDERS)
+															var calendar_id = req.query.calendar_id;
+	
+															var crop_calendar_query = { status: ['In-Progress', 'Active','Completed'] , where : {key : "calendar_id", val : calendar_id}}
+															//console.log("---------------------");
+															cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calendar_details){
 																if(err)
-																	 throw err;
+																	throw err;
 																else{
-																	var current = true;
-																	for(i = 0; i < workorders.length; i++){
-																		if(workorders[i].date_completed == null){
-																			workorders[i]["current"] = "current_wo";
-																		}
-																		else
-																			workorders[i]["current"] = "past_wo";
-
-
-																		if(workorders[i].type == "Land Preparation" || (workorders[i].date_start > land_prep && workorders[i].date_start < sowing))
-																			workorders[i]["stage"] = "Land Preparation";
-																		else if(workorders[i].type == "Sow Seed" || (workorders[i].date_start > sowing && workorders[i].date_start < vegetation))
-																			workorders[i]["stage"] = "Sowing";
-																		else if(workorders[i].type == "Harvest" || workorders[i].date_start > harvest)
-																			workorders[i]["stage"] = "Harvest";
-																		else if(workorders[i].date_start > vegetation && workorders[i].date_start < reproductive)
-																			workorders[i]["stage"] = "Vegetation";
-																		else if(workorders[i].date_start > reproductive && workorders[i].date_start < ripening)
-																			workorders[i]["stage"] = "Reproductive";
-																		else if(workorders[i].date_start > vegetation && workorders[i].date_start < reproductive)
-																			workorders[i]["stage"] = "Ripening";
-																		else{
-																			workorders[i]["stage"] = "Vegetation";
+																	var calendar_index = 0;
+																	if(calendar_id == null)
+																		calendar_index = 0;
+																	else{
+																		for(i = 0; i < crop_calendar_details.length; i++){
+																			if(crop_calendar_details[i].calendar_id == calendar_id){
+																				calendar_index = i;
+																				break;
+																			}
 																		}
 
-																		dataformatter.formatDate(dataformatter.unixtoDate(workorders[i].date_completed), 'mm DD, YYYY');
-																		if(workorders[i].date_completed == null)
-																			workorders[i].date_completed = "Not yet completed";
-																		else
-																			workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'mm DD, YYYY');
-																		workorders[i].date_start = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_start)), 'mm DD, YYYY');
-																		workorders[i].date_due = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_due)), 'mm DD, YYYY');
-																		workorders[i].date_created = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_created)), 'mm DD, YYYY');
+																		var expected_vegetation = crop_calendar_details[calendar_index].sowing_date;
+																		crop_calendar_details[calendar_index].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'mm DD, YYYY');
+																		var calendar_details = crop_calendar_details[calendar_index];
+																		calendar_details["expected_harvest"] = new Date(expected_vegetation);
+																		calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[calendar_index].maturity_days + 65);
+																		calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
+																		html_data["crop_calendar_details"] = calendar_details;
 																	}
+	
 																}
-																// console.log("WORKORDERS");
-																// console.log(workorders);
-																
-																html_data["workorders"] = workorders;
-																html_data["queries"] = queries;
-																html_data["statements"] = statements;
-																html_data["probability"] = possible_pests;
-																html_data["main"] = forecast_body[0].main;
-																res.send(html_data);
+																//console.log(crop_calendar_details);
+																var land_prep = calendar_details.land_prep_date;
+																var sowing = calendar_details.sowing_date;
+																var ripening = new Date(expected_vegetation);
+																ripening.setDate(ripening.getDate() + calendar_details.maturity_days + 35);
+																var reproductive = new Date(expected_vegetation);
+																var vegetation = calendar_details.sow_date_completed;
+																var harvest = calendar_details.expected_harvest;
+																var wo_query = {
+																	where: {
+																		key: ['crop_calendar_id'],
+																		value: [calendar_id]
+																	},
+																	order: ['work_order_table.date_start ASC']
+																};
+																workOrderModel.getWorkOrders(wo_query, function(err, workorders){
+																	if(err)
+																		 throw err;
+																	else{
+																		var current = true;
+																		for(i = 0; i < workorders.length; i++){
+																			if(workorders[i].date_completed == null){
+																				workorders[i]["current"] = "current_wo";
+																			}
+																			else
+																				workorders[i]["current"] = "past_wo";
+	
+	
+																			if(workorders[i].type == "Land Preparation" || (workorders[i].date_start > land_prep && workorders[i].date_start < sowing))
+																				workorders[i]["stage"] = "Land Preparation";
+																			else if(workorders[i].type == "Sow Seed" || (workorders[i].date_start > sowing && workorders[i].date_start < vegetation))
+																				workorders[i]["stage"] = "Sowing";
+																			else if(workorders[i].type == "Harvest" || workorders[i].date_start > harvest)
+																				workorders[i]["stage"] = "Harvest";
+																			else if(workorders[i].date_start > vegetation && workorders[i].date_start < reproductive)
+																				workorders[i]["stage"] = "Vegetation";
+																			else if(workorders[i].date_start > reproductive && workorders[i].date_start < ripening)
+																				workorders[i]["stage"] = "Reproductive";
+																			else if(workorders[i].date_start > vegetation && workorders[i].date_start < reproductive)
+																				workorders[i]["stage"] = "Ripening";
+																			else{
+																				workorders[i]["stage"] = "Vegetation";
+																			}
+	
+																			dataformatter.formatDate(dataformatter.unixtoDate(workorders[i].date_completed), 'mm DD, YYYY');
+																			if(workorders[i].date_completed == null)
+																				workorders[i].date_completed = "Not yet completed";
+																			else
+																				workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'mm DD, YYYY');
+																			workorders[i].date_start = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_start)), 'mm DD, YYYY');
+																			workorders[i].date_due = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_due)), 'mm DD, YYYY');
+																			workorders[i].date_created = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_created)), 'mm DD, YYYY');
+																		}
+																	}
+																	// //console.log("WORKORDERS");
+																	// //console.log(workorders);
+																	
+																	html_data["workorders"] = workorders;
+																	html_data["queries"] = queries;
+																	html_data["statements"] = statements;
+																	html_data["probability"] = possible_pests;
+																	html_data["main"] = forecast_body[0].main;
+																	res.send(html_data);
+																});
 															});
 														});
 													});
@@ -405,7 +421,7 @@ exports.assignFarmers = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			console.log(result);
+			//console.log(result);
 			res.send({ success: true });
 		}
 	});
@@ -469,7 +485,7 @@ exports.getGeoMap = function(req, res) {
 						}
 						else {
 							var html_data = { farm_data: dataformatter.aggregateFarmData(farm_data, plot_data, employee_data)};
-							//console.log(html_data);
+							////console.log(html_data);
 							res.render('home', {});
 						}
 					})
@@ -486,7 +502,7 @@ exports.singleFarmDetails = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			//console.log(result);
+			////console.log(result);
 			res.send({ farm_list: result });
 		}
 	});
@@ -544,7 +560,7 @@ exports.getHistoricalNDVI = function(req, res) {
 			
 			var ndvi_data = analyzer.analyzeHistoricalNDVI(JSON.parse(body));
 
-			//console.log(ndvi_data.stats);
+			////console.log(ndvi_data.stats);
 
 			res.render('home', {});
 		}
@@ -582,7 +598,7 @@ exports.getSatelliteImageryData = function(req, res) {
         	}
 			//var result = body[body.length-1];
 			//result.dt = dataformatter.unixtoDate(result.dt);
-			//console.log(body);
+			////console.log(body);
 			res.send(body);
 		}
 	})
@@ -777,7 +793,7 @@ exports.getForecastWeather = function(req, res) {
         	//***** Call Agro API for succeeding 5 day forecast
 
         	var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
-        	// console.log(forecast_url);
+        	// //console.log(forecast_url);
 		    request(forecast_url, { json: true }, function(err, forecast_response, forecast_body) {
 		        if (err)
 		        	throw err;
@@ -788,8 +804,8 @@ exports.getForecastWeather = function(req, res) {
 		        		forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
 		        		hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
 		        	}
-		        		// console.log(url);
-        				//console.log(forecast_url);
+		        		// //console.log(url);
+        				////console.log(forecast_url);
 		        	//***** Get unique hour timestamps from forecast and filter data
 		        	hour_arr = [...new Map(hour_arr.map(item =>
 	  					[item, item])).values()];
@@ -797,7 +813,7 @@ exports.getForecastWeather = function(req, res) {
 		        	body = dataformatter.smoothHourlyData(body, hour_arr);
 		        	forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
 
-		        	//console.log(forecast_body);
+		        	////console.log(forecast_body);
 		        	//***** Build on Agro API and use ANN to forecast remaining 9 days
 		        	var result = analyzer.weatherForecast14D
 		        	(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
@@ -861,7 +877,7 @@ exports.getPolygonInfo = function(req, res){
         if (err)
         	throw err;
         else {
-        	console.log(body);
+        	//console.log(body);
 
         	res.render('home', {});
         }
@@ -874,7 +890,7 @@ exports.getAllPolygons = function(req, res){
         if (err)
         	throw err;
         else {
-        	//console.log(body);
+        	////console.log(body);
 
         	res.send(body);
         }
@@ -904,7 +920,7 @@ exports.updatePolygonName = function(req, res){
         if (err)
         	throw err;
         else {
-        	console.log(body);
+        	//console.log(body);
 
         	res.render('home', {});
         }

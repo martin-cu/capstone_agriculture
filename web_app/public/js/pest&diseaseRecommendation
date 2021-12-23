@@ -1,0 +1,7 @@
+$(document).ready(function() {
+	console.log('Pest and disease recommendation');
+
+	setInterval(function() {
+		
+	}, 600000);
+})
