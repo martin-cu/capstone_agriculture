@@ -71,8 +71,10 @@ router.post('/upload_wo', workOrderController.ajaxCreateWorkOrder);
 //       })
 // });
 
-router.get('/', farmController.getDashboard);
-router.get('/home', farmController.getDashboard);
+//router.get('/', farmController.getDashboard);
+//router.get('/home', farmController.getDashboard);
+
+router.get('/', workOrderController.getWorkOrdersDashboard); 
 
 router.get('/farms', workOrderController.getWorkOrdersPage); 
 router.get('/farms/add', farmController.getAddFarm);
@@ -86,6 +88,8 @@ router.get("/farm_pestdisease", environmentController.getFarmPestDiseases);
 router.get("/ajax_farm_details", farmController.getFarmDetails);
 router.get("/ajax_farm_detailsDashboard", farmController.getFarmDetailsDashboard);
 router.get("/ajaxGetSoilData", environmentController.getFarmSoilData);
+
+router.get("/ajaxGetWorkOrders", workOrderController.ajaxGetWorkOrders);
 
 //Crop Calendar
 router.get('/crop_calendar', cropCalendarController.getCropCalendarTab);
