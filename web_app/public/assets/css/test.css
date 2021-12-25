@@ -378,7 +378,8 @@ a.dropdown-item.notSidebar:hover {
 
 .mapboxgl-popup {
     max-width: 400px;
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font: 12px/20px;
+    color: #332C1F;
 }
 
 /* END OF MAPBOX */

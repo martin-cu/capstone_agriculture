@@ -2,6 +2,7 @@ const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
+const nutrientModel = require('../models/nutrientModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
 var request = require('request');
 
@@ -114,7 +115,7 @@ exports.ajaxGetCropPlans = function(req, res) {
 	  							[plan.crop_plan, plan])).values()];
 			}
 			
-
+			console.log(plans);
 			res.send(plans);
 		}
 	});
@@ -143,5 +144,86 @@ exports.getDetailedCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Crop Calendar";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'detailed_crop_calendar');
-	res.render('detailed_crop_calendar', html_data); 
+	
+	var query = { status: ['In-Progress', 'Active', 'Completed']};
+	cropCalendarModel.getCropCalendarByID(query, req.query.id, function(err, crop_calendar){
+		if(err)
+			throw err;
+		else{
+			crop_calendar[0].land_prep_date = dataformatter.formatDate(new Date(crop_calendar[0].land_prep_date), 'mm DD, YYYY');
+			crop_calendar[0].sowing_date = dataformatter.formatDate(new Date(crop_calendar[0].sowing_date), 'mm DD, YYYY');
+			crop_calendar[0].harvest_date = dataformatter.formatDate(new Date(crop_calendar[0].harvest_date), 'mm DD, YYYY');
+
+		}
+
+		for (const [key, value] of Object.entries(crop_calendar[0])){
+			// console.log(key, value);
+			if(value == null)
+				crop_calendar[0][key] = "N/A";
+		}
+		// console.log(crop_calendar);
+
+		var wo_query = {
+			where : { key : ["calendar_id"], value : [req.query.id]}
+		}
+		workOrderModel.getWorkOrders(wo_query, function(err, wos){
+			if(err)
+				throw err;
+			else{
+				var i;
+				for(i = 0; i < wos.length; i++){
+					wos[i].date_start = dataformatter.formatDate(new Date(wos[i].date_start), 'mm DD, YYYY');
+					if(wos[i].date_completed != null)
+						wos[i].date_completed = dataformatter.formatDate(new Date(wos[i].date_completed), 'mm DD, YYYY');
+					else
+						wos[i].date_completed = "Not yet completed"
+					
+				}
+				
+			}
+
+			var fertilizer_query = {}
+			fertilizer_query['frp.calendar_id'] = req.query.id;
+			nutrientModel.getNutrientPlanItemsCompleted(fertilizer_query, function(err, fertilizers){
+				if(err)
+					throw err;
+				else{
+					for(i = 0; i < fertilizers.length; i++){
+						if(fertilizers[i].date_completed != null)
+							fertilizers[i].date_completed = dataformatter.formatDate(new Date(fertilizers[i].date_completed), 'mm DD, YYYY');
+						else
+							fertilizers[i].date_completed = "Not yet completed"
+						fertilizers[i].target_application_date = dataformatter.formatDate(new Date(fertilizers[i].target_application_date), 'mm DD, YYYY');
+					}
+				}
+
+				var query = { farm_name: crop_calendar[0].farm_name };
+
+				nutrientModel.getSoilRecord(query, function(err, soil_record) {
+					if (err)
+						throw err;
+					else {
+						console.log(soil_record);
+						
+						if(soil_record[0].pH_lvl == null)
+							soil_record[0].pH_lvl = "N/A";
+						if(soil_record[0].p_lvl == null)
+							soil_record[0].p_lvl = "N/AA";
+						if(soil_record[0].k_lvl == null)
+							soil_record[0].k_lvl = "N/AA";
+						if(soil_record[0].n_lvl == null)
+							soil_record[0].n_lvl = "N/A";
+					}
+					html_data["workorders"] = wos;
+					html_data["soil_record"] = soil_record[0];
+					html_data["fertilizer_wos"] = fertilizers;
+					html_data["crop_plan_details"] = crop_calendar[0];
+					res.render('detailed_crop_calendar', html_data); 
+				});
+			});
+		});
+		
+	});
+	
+	
 }

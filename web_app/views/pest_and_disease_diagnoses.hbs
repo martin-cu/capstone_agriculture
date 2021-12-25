@@ -198,32 +198,23 @@
                                                                     <div class="card-header mini py-3">
                                                                         <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan Information<br></h6>
                                                                     </div>
-                                                                <div class="card-body">
-                                                                    <div class="table-responsive" style="border-style: none;">
-                                                                        <table class="table">
-                                                                            <thead>
-                                                                            {{!-- <tr></tr> --}}
-                                                                            </thead>
-                                                                        <tbody>
-                                                                            <tr style="border-style: none;">
-                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
-                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
-                                                                            </tr>
-
-                                                                            <tr style="border-style: none;">
-                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
-                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
-                                                                            </tr>
-
-                                                                            <tr style="border-style: none;">
-                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
-                                                                            <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
-                                                                            </tr>
-                                                                        </tbody>
-
-                                                                        </table>
-                                                                    </div>
+                                                                    <div class="card-body" id="recommended_solutions" style="height: 239.97px; overflow-y:scroll; overflow-x : hidden">
                                                                     
+                                                                        {{!-- {{#each symptom}}
+                                                                            <div class="row">
+                                                                                <div class="col-lg-11">
+                                                                                    <label class="form-check-label font-weight-bold" for="formCheck-2" >date</label>
+                                                                                </div>
+                                                                                <div class="col-lg-11">
+                                                                                    <label class="form-check-label font-weight-bold" for="formCheck-2" >wo type</label>
+                                                                                </div>
+                                                                                <div class="col-lg-1">
+                                                                                    <input name="symptom[{{@index}}]" id="" class="form-check-input symptom-checkbox" type="checkbox" value="{{this.symptom_id}}" form="add_diagnosis_form">
+                                                                                </div>
+                                                                            </div>
+                                                                        {{/each}} --}}
+                                                                    
+                                                                                        
                                                                     </div>
 
                                                                 </div>

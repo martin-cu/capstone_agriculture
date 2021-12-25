@@ -71,8 +71,10 @@ router.post('/upload_wo', workOrderController.ajaxCreateWorkOrder);
 //       })
 // });
 
-router.get('/', farmController.getDashboard);
-router.get('/home', farmController.getDashboard);
+//router.get('/', farmController.getDashboard);
+//router.get('/home', farmController.getDashboard);
+
+router.get('/', workOrderController.getWorkOrdersDashboard); 
 
 router.get('/farms', workOrderController.getWorkOrdersPage); 
 router.get('/farms/add', farmController.getAddFarm);
@@ -82,9 +84,12 @@ router.get('/materials', materialController.getMaterials);
 //Farms Tab
 router.get("/farm_resources", environmentController.getFarmResources);
 router.get("/farm_pestdisease", environmentController.getFarmPestDiseases);
-	//ajax
+//ajax
 router.get("/ajax_farm_details", farmController.getFarmDetails);
+router.get("/ajax_farm_detailsDashboard", farmController.getFarmDetailsDashboard);
 router.get("/ajaxGetSoilData", environmentController.getFarmSoilData);
+
+router.get("/ajaxGetWorkOrders", workOrderController.ajaxGetWorkOrders);
 
 //Crop Calendar
 router.get('/crop_calendar', cropCalendarController.getCropCalendarTab);
@@ -115,6 +120,8 @@ router.get('/update_pd_details/:type/:id/:detail_type', environmentController.up
 router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbability); //ajax
 router.post('/addPest', environmentController.addPest);
 router.post('/addDisease', environmentController.addDisease);
+router.get('/generateRecommendationDiagnosis', environmentController.getRecommendationDiagnosis);
+router.get('/getPossiblePD', environmentController.getPDProbability);
 //Temporary Pest and Disease (Update later)
 
 

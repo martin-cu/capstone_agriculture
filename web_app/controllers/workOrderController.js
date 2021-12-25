@@ -312,6 +312,66 @@ exports.getWorkOrdersPage = function(req, res) {
 	});
 }
 
+exports.getWorkOrdersDashboard = function(req, res) {
+
+	var upcoming = [];
+	var completed = [];
+	var html_data;
+	var query = {
+        order: ['work_order_table.status ASC', 'work_order_table.date_due asc']
+    }
+	workOrderModel.getWorkOrders(query, function(err, list) {
+		if (err)
+			throw err;
+		else {
+			for (var i = 0; i < list.length; i++) {
+
+				if (list[i].status == 'Pending') {
+				list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+				list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+				list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+
+				upcoming.push(list[i]);
+				}
+
+				else if (list[i].status == 'Completed') {
+					list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+					list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+					list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+	
+					completed.push(list[i]);
+					}
+			}
+
+			html_data = { upcomingWoList: upcoming, completedWoList: completed };
+
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+
+			res.render('home', html_data);
+		}
+	});
+
+	// workOrderModel.getWorkOrders(query, function(err, list2) {
+	// 	if (err)
+	// 		throw err;
+	// 	else {
+	// 		for (var i = 0; i < list2.length; i++) {
+
+	// 			if (list2[i].status == 'Completed') {
+	// 			list2[i].date_created = dataformatter.formatDate(new Date(list2[i].date_created), 'YYYY-MM-DD');
+	// 			list2[i].date_due = dataformatter.formatDate(new Date(list2[i].date_due), 'YYYY-MM-DD');
+	// 			list2[i].notes = list2[i].notes == null ? 'N/A' : list2[i].notes;
+	// 			}
+	// 		}
+
+	// 		var html_data = { CompletedWoList: list2 };
+	// 		html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+
+	// 		res.render('home', html_data);
+	// 	}
+	// });
+}
+
 exports.ajaxEditStatus = function(req, res) {
 	var query = { status: 'In-Progress' };
 

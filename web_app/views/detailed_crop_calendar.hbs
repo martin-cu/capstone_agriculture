@@ -93,7 +93,7 @@ div.card-body h6, div.card-body p {
                     </div>
 
                     <div class="col" style="margin-right: 650px; padding-top: 15px">
-                        <h6>PALAY 2021 </h6>
+                        <h6>{{crop_plan_details.crop_plan}}</h6>
             
                     </div>
 
@@ -131,12 +131,12 @@ div.card-body h6, div.card-body p {
                                                             </thead>
                                                             <tbody>
                                                                 <tr style="border-style: none; height: 90px;">
-                                                                    <td style="border-style: none; padding-left: 50px; padding-right: 120px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Name<br></span> <span class="d-xxl-flex justify-content-xxl-start">PALAY 2021<br></span></td>
-                                                                    <td style="border-style: none; padding-left: 50px;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm<br></span><span class="d-xxl-flex justify-content-xxl-start">Farm Name<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 50px; padding-right: 120px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Name<br></span> <span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.crop_plan}}<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 50px;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Farm<br></span><span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.farm_name}}<br></span></td>
                                                                 </tr>
                                                                 <tr style="border-style: none;">
-                                                                    <td style="border-style: none; padding-left: 50px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Land Preparation Date<br></span><span class="d-xxl-flex justify-content-xxl-start">dd/mm/yyyy<br></span></td>
-                                                                    <td style="border-style: none; padding-left: 50px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Current Stage<br></span><span class="d-xxl-flex justify-content-xxl-start">Land Preparation<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 50px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Land Preparation Date<br></span><span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.land_prep_date}}<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 50px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Current Stage<br></span><span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.stage}}<br></span></td>
                                                                 </tr>
                                           
                                                             </tbody>
@@ -159,28 +159,28 @@ div.card-body h6, div.card-body p {
                                                     <div class="col">
                                                     <label for="ph_lvl" style="font-weight: bold;">pH Lvl</label>
                                                     <div id="ph_lvl">
-                                                    N/A
+                                                    {{soil_record.pH_lvl}}
                                                     </div>
                                                     </div>
 
                                                     <div class="col">
                                                     <label for="n_lvl" style="font-weight: bold;">N</label>
                                                     <div id="n_lvl">
-                                                    N/A
+                                                    {{soil_record.n_lvl}}
                                                     </div>
                                                     </div>
 
                                                     <div class="col">
                                                     <label for="p_lvl" style="font-weight: bold;">P</label>
                                                     <div id="p_lvl">
-                                                    N/A
+                                                    {{soil_record.p_lvl}}
                                                     </div>
                                                     </div>
 
                                                     <div class="col">
                                                     <label for="k_lvl" style="font-weight: bold;">K</label>
                                                     <div id="k_lvl">
-                                                    N/A
+                                                    {{soil_record.k_lvl}}
                                                     </div>
                                                     </div>
 
@@ -238,17 +238,17 @@ div.card-body h6, div.card-body p {
                                                             </thead>
                                                             <tbody>
                                                                 <tr style="border-style: none; height: 90px;">
-                                                                    <td style="border-style: none; padding-left: 30px; padding-right: 260px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed<br></span> <span class="d-xxl-flex justify-content-xxl-start">Seed Name<br></span></td>
-                                                                    <td style="border-style: none; padding-left: 30px;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Rate (kg/ha)<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px; padding-right: 260px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed<br></span> <span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.seed_name}}<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Seed Rate (kg/ha)<br></span><span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.seed_rate}}<br></span></td>
                                                                 </tr>
                                                                 <tr style="border-style: none; height: 90px">
-                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method<br></span><span class="d-xxl-flex justify-content-xxl-start">Planting Method Name<br></span></td>
-                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Dates<br></span><span class="d-xxl-flex justify-content-xxl-start">dd/mm/yyyy to dd/mm/yyyy<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Method<br></span><span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.method}}<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Planting Date<br></span><span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.sowing_date}}<br></span></td>
                                                                 </tr>
 
                                                                 <tr style="border-style: none;">
-                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Harvest Dates<br></span><span class="d-xxl-flex justify-content-xxl-start">dd/mm/yyyy to dd/mm/yyyy<br></span></td>
-                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Expected Yield (cavans/ha)<br></span><span class="d-xxl-flex justify-content-xxl-start">0 cavans/ha<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Harvest Date<br></span><span class="d-xxl-flex justify-content-xxl-start">{{crop_plan_details.harvest_date}}<br></span></td>
+                                                                    <td style="border-style: none; padding-left: 30px"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Expected Yield (cavans/ha)<br></span><span class="d-xxl-flex justify-content-xxl-start">-<br></span></td>
                                                                 </tr>
                                           
                                                             </tbody>
@@ -274,12 +274,21 @@ div.card-body h6, div.card-body p {
                                                             <div class="table-responsive">
                                                                 <table class="table" id="fertilizer_history">
                                                                     <tr>
-                                                                        <th>Date Applied</th>
+                                                                        <th>Target Date</th>
+                                                                        <th>Date Completed</th>
                                                                         <th>Fertilizer</th>
-                                                                        <th>Description</th>
                                                                         <th>Amount</th>
                                                                         <th>Status</th>
                                                                     </tr>
+                                                                    {{#each fertilizer_wos}}
+                                                                    <tr>
+                                                                        <td>{{this.target_application_date}}</td>
+                                                                        <td>{{this.date_completed}}</td>
+                                                                        <td>{{this.fertilizer_name}}</td>
+                                                                        <td>{{this.amount}}</td>
+                                                                        <td>{{this.status}}</td>
+                                                                    </tr>
+                                                                    {{/each}}
 
                                                                 </table>
                                                             </div>
@@ -414,18 +423,39 @@ div.card-body h6, div.card-body p {
                                                         <thead class="thead-dark" style="max-height: 0px;">
                                                             <tr>
                                                                 <th style="border-color: #dee2e6">Status</th>
-                                                                <th style="border-color: #dee2e6">Farm</th>
                                                                 <th style="border-color: #dee2e6">Type</th>
-                                                                <th style="border-color: #dee2e6">Name</th>
-                                                                <th style="border-color: #dee2e6">Unit</th>
-                                                                <th style="border-color: #dee2e6">Date</th>
+                                                                <th style="border-color: #dee2e6">Date Start</th>
+                                                                <th style="border-color: #dee2e6">Date Completed</th>
                                                                 <th style="border-color: #dee2e6">WO ID</th>
                                                                 <th style="border-color: #dee2e6">Notes</th>
                                                                 <th style="border-color: #dee2e6"></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="materials_table">
-                                                            {{!-- Delete later --}}
+                                                            {{#each workorders}}
+                                                                <tr>
+                                                                    <td>{{this.status}}</td>
+                                                                    <td>{{this.type}}</td>
+                                                                    <td>{{this.date_start}}</td>
+                                                                    <td>{{this.date_completed}}</td>
+                                                                    <td>{{this.work_order_id}}</td>
+                                                                    <td>{{this.notes}}</td>
+                                                                    <td style="text-align: center"> 
+                                                                            <div class="dropdown no-arrow">
+                                                                                <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                    <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                                </button>
+                                                                                <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                    <a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}" >&nbsp;View Details</a>
+                                                                                    {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                    <div class="dropdown-divider"></div>
+                                                                                    <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                                                </div>
+                                                                            </div>
+                                                                    </td>   
+                                                                </tr>
+                                                            {{/each}}
+                                                            {{!-- Delete later
                                                             <tr>
                                                                 <td>hello</td>
                                                                 <td>hello</td>
@@ -494,7 +524,7 @@ div.card-body h6, div.card-body p {
                                                                             </div>
                                                                         </div>
                                                                 </td>   
-                                                            </tr>
+                                                            </tr> --}}
                                                              {{!-- End of Delete later --}}
                                                                 {{#each wo_list}}
                                                                 <tr role="row">

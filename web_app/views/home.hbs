@@ -86,17 +86,34 @@
                                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
                                     <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Recent Activity</h6>
                                 </div>
-                                <div class="card-body">
-                                   <ul class="list-group">
+                                <div class="card-body" style="max-width: 425px; max-height: 340px; overflow-y: auto;" id="recentActivity">
+                                   <ul class="list-group" style="width: 100%;">
+                                        {{#each completedWoList}}
                                         <li class="list-group-item">
-                                            <div><span style="font-weight: bold;">LA Farm (API Paid)</span><span> has completed Land Preparation </span></div><span style="font-size: 14px;">December 16, 2021</span>
+                                            <div>
+                                            <span style="font-weight: bold;">{{this.farm_name}}</span>
+                                            <span> has completed {{this.type}} </span>
+                                            <span>
+                                                    <div class="dropdown no-arrow" style="display:inline-block; float: right">
+                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                <a class="dropdown-item notSidebar"href="/farms/work_order&id={{this.work_order_id}}">View Details</a>
+                                                                {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                            </div>
+                                                        </div>
+                                            </span>
+                                            
+                                            </div>
+                                            <span style="font-size: 14px;">{{this.date_due}}</span>
+                                            <span>
+                                                     
+                                            </span>
                                         </li>
-                                        <li class="list-group-item">
-                                            <div><span style="font-weight: bold;">North Eastern Farm</span><span> has completed Sowing Stage</span></div><span style="font-size: 14px;">December 16, 2021</span>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <div><span style="font-weight: bold;">LA Farm (API Paid)</span><span> has completed Pesticide Application </span></div><span style="font-size: 14px;">December 16, 2021</span>
-                                        </li>
+                                          {{/each}}
                                     </ul>
                                 </div>
                             </div>
@@ -121,18 +138,31 @@
                                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;padding: 16px 20px;height: auto;">
                                     <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Upcoming Work Orders</h6>
                                 </div>
-                                <div class="card-body">
-                                   <ul class="list-group">
+                                <div class="card-body" style="max-width: 425px; max-height: 340px; overflow-y: auto;">
+                                    <ul class="list-group" style="width: 100%;">
+                                    {{#each upcomingWoList}}
                                     <li class="list-group-item">
-                                        <div><span>Fertilizer Application for </span><span style="font-weight: bold;">LA Farm (API Paid)</span></div><span style="font-size: 14px;">December 16, 2021</span>
+                                        <div>
+                                        <span>{{this.type}} for </span>
+                                        <span style="font-weight: bold;">{{this.farm_name}}</span>
+                                        <span>
+                                                    <div class="dropdown no-arrow" style="display:inline-block; float: right">
+                                                            <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                <a class="dropdown-item notSidebar"href="/farms/work_order&id={{this.work_order_id}}">View Details</a>
+                                                                {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                <div class="dropdown-divider"></div>
+                                                                <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                            </div>
+                                                        </div>
+                                            </span>
+                                        </div>
+                                        <span style="font-size: 14px;">{{this.date_due}}</span>
                                     </li>
-                                    <li class="list-group-item">
-                                        <div><span>Pesticide Application for </span><span style="font-weight: bold;">LA Farm (API Paid)</span></div><span style="font-size: 14px;">December 16, 2021</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div><span>Transplanting for </span><span style="font-weight: bold;">Northeastern Farm</span></div><span style="font-size: 14px;">December 16, 2021</span>
-                                    </li>
-                                </ul>
+                                    {{/each}}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -143,6 +173,14 @@
 
 <script>
     var view = "home";
+
+// Automatically scroll to bottom of div (for message history)
+var element = document.getElementById("recentActivity");
+element.scrollTop = element.scrollHeight;
+
+function updateScroll(){
+    element.scrollTop = element.scrollHeight;
+}
     
 
 </script>
