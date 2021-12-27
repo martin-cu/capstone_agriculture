@@ -3,6 +3,7 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const workOrderModel = require('../models/workOrderModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
+const harvestModel = require('../models/harvestModel.js');
 var request = require('request');
 
 function consolidateResources(type, ids, qty, wo_id) {
@@ -114,9 +115,19 @@ exports.getDetailedWO = function(req, res) {
 								if (err)
 									throw err;
 								else {
-									html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
-									html_data['harvest_details'] = crop_calendar.harvest_yield == null ? 'N/A' : crop_calendar.harvest_yield;
-									res.render('detailed_work_order', html_data);
+									harvestModel.readHarvestDetail({ cct_id: details.crop_calendar_id }, function(err, details) {
+										if (err)
+											throw err;
+										else {
+											console.log(details);
+											if (details.length == 0) 
+												details.push({});
+											html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
+											html_data['harvest_details'] = details;
+											res.render('detailed_work_order', html_data);
+										}
+									});
+											
 								}
 							});	
 						}
@@ -400,6 +411,21 @@ exports.ajaxEditStatus = function(req, res) {
 	});
 }
 
+function processHarvestDetails(sacks, type, stage, id) {
+	var obj = {}
+	var arr = [];
+	for (var i = 0; i < sacks.length; i++) {
+		obj = {
+			sacks_harvested: sacks[i],
+			stage_harvested: stage,
+			type: type[i],
+			cct_id: id
+		}
+		arr.push(obj);
+	}
+	return arr;
+}
+
 exports.editWorkOrder = function(req, res) {
 	var next_stage = null;
 	var query = {
@@ -422,7 +448,7 @@ exports.editWorkOrder = function(req, res) {
 		if (query.type == 'Land Preparation') {
 			next_stage = 'Sow Seed';
 		}
-		else if (query.type == 'Harvest') {
+		else if (req.body.isComplete == 'on') {
 			next_stage = 'End';
 		}
 	}
@@ -516,6 +542,34 @@ exports.editWorkOrder = function(req, res) {
 						})
 					}
 					else {
+						// Insert partial harvests here
+						harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
+							if (err)
+								throw err;
+							else {
+								// Get current stage of crop calendar
+								cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
+								where: { key: 'calendar_id', val: req.body.crop_calendar_id } }, function(err, calendar) {
+									if (err)
+										throw err;
+									else {
+
+										// Process query data here
+										var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
+											req.body.harvest_type, calendar[0].stage, req.body.crop_calendar_id);
+										harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
+											if (err)
+												throw err;
+											else {
+
+
+											}
+										});
+									}
+								});
+							}
+						});
+
 						if (next_stage == 'Sow Seed') {
 							var wo_list_query = {
 								where: {

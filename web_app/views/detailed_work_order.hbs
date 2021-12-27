@@ -121,12 +121,30 @@
 
                             </tr>
                             <tr>
-                                <td style="font-weight: normal;">Sacks Harvested</td>
-                                <td>
-                                    <input type="number" name="sacks_harvested" id="sacks_harvested" value="{{work_order.harvest_yield}}" readonly min="0">
+                                <td colspan="3" id="harvest_details_row">
+                                    {{#each harvest_details}}
+                                    <div class="d-flex">
+                                        <div class="d-flex flex-column">
+                                            <label class="text-center">Sacks Harvested</label>
+                                            <input type="number" name="sacks_harvested" id="sacks_harvested" value="{{this.sacks_harvested}}" readonly min="0">
+                                        </div>
+                                        
+                                        <div class="d-flex flex-column">
+                                            <label class="text-center">Harvest Type</label>
+                                            <select name="harvest_type" class="ml-3" readonly id="harvest_type">
+                                                <option>...</option>
+                                                <option value="Full Harvest" {{#compareTwoValues this.type 'Full Harvest' operator='==='}}selected{{/compareTwoValues}}>Full Harvest</option>
+                                                <option value="Partial Harvest" {{#compareTwoValues this.type 'Partial Harvest' operator='==='}}selected{{/compareTwoValues}}>Partial Harvest</option>
+                                                <option value="Early Harvest" {{#compareTwoValues this.type 'Early Harvest' operator='==='}}selected{{/compareTwoValues}}>Early Harvest</option>
+                                            </select>
+                                        </div> 
+                                    </div>
+                                    {{/each}}
+                                    
                                 </td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    
+                                </td>
                             </tr>
                             {{/if}}
 
@@ -170,7 +188,46 @@
 <script type="text/javascript">
     var resource = '{{resources.lbl.name}}';
     var status_editable = {{status_editable}};
-    var harvest = {{harvest_editable}}
+    var harvest = {{harvest_editable}};
+
+    function addHarvestDetails() {
+        var last = $("[name='harvest_type']").last();
+        var parent = $('#harvest_details_row');
+        var opts = ['...','Full Harvest','Partial Harvest','Early Harvest'];
+        var sack_inp, select_inp, option, div;
+        var sack_attr = {
+            type: 'number',
+            id: 'dummy_id',
+            name: 'sacks_harvested',
+            form: 'edit_wo_form'
+        }
+        var select_attr = {
+            name: 'harvest_type',
+            id: 'dummy_id',
+            form: 'edit_wo_form'
+        }
+
+        var opt_attr = {
+            value: null
+        };
+
+        div = createDOM({ type: 'div', class: '', style: '', html: '' });
+        sack_inp = createDOM({ type: 'input', class: 'mt-2', style: '', html: '', attr: sack_attr });
+        select_inp = createDOM({ type: 'select', class: 'mt-2 ml-3', style: '', html: '', attr: select_attr });
+
+        for (var i = 0; i < opts.length; i++) {
+            if (i != 0)
+                opt_attr.value = opts[i]
+            option = createDOM({ type: 'option', class: '', style: '', html: opts[i], attr: opt_attr });
+            select_inp.appendChild(option);
+        }
+
+        div.appendChild(sack_inp);
+        div.appendChild(select_inp);
+
+        parent.append(div);
+    }
+
     function createDOM(obj) {
         var ele;
 
@@ -188,13 +245,31 @@
         return ele;
     }
 
+    function addHarvestDetailButton(show) {
+        if (show) {
+            var last = $("[name='harvest_type']").last();
+            var parent = $($(last).parent()).parent();
+            var btn = createDOM({ type: 'i', class: 'fas fa-plus-circle ml-3 fa-2x add_details', style: 'margin-top: 35px', html: '' });
+
+            parent.append(btn);
+        }
+        else {
+            $('.add_details').remove();
+            $('#dummy_id[name="sacks_harvested"]').remove();
+            $('#dummy_id[name="harvest_type"]').remove();
+        }
+    }
+
     function toggleEditState(show) {
         var editable = ['#status', '#date_start', '#date_due', '#notes', '#'+resource+'_qty'];
         if (!status_editable)
             editable = editable.filter(ele => ele != '#status');
 
-        if (!harvest)
+        if (!harvest) {
             editable.push('#sacks_harvested');
+            editable.push('#harvest_type');
+            addHarvestDetailButton(show);
+        }
 
         var eles = $(editable.join()).attr('readonly', !show);
 
@@ -227,6 +302,10 @@
     }
 
     $(document).ready(function() {
+
+        $('tr').on('click', '.add_details', function() {
+            addHarvestDetails();
+        });
 
         $('#wo_edit').on('click', function() {
             toggleEditState(true);
