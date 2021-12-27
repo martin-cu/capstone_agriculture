@@ -1229,3 +1229,27 @@ exports.getDiagnosisSymptoms = function(diagnosis_id, next){
 	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
+
+exports.getPDProbability = function(date, type, id, farm_id, next){
+	sql = "SELECT * FROM pd_probabilities WHERE ? && pd_type = ? && pd_id = ? && farm_id = ?";
+	// console.log(date);
+	sql = mysql.format(sql, date);
+	sql = mysql.format(sql, type);
+	sql = mysql.format(sql, id);
+	sql = mysql.format(sql, farm_id);
+	console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+exports.addPDProbability = function(data, next){
+	sql = "INSERT INTO pd_probabilities SET ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next); return(sql);
+};
+
+exports.updatePDProbability = function(probability_id, probability, next){
+	sql = "UPDATE pd_probability set probability = ? WHERE ?";
+	sql = mysql.format(sql, probability);
+	sql = mysql.format(sql, probability_id);
+	mysql.query(sql, next); return(sql);
+}

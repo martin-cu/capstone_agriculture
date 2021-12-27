@@ -2268,3 +2268,45 @@ exports.getPDProbability = function(req, res){
 		}
 	});
 };
+
+
+exports.storePDRecommendation = function(req, res){
+	// console.log(req.query.calendar_id);
+	// console.log(req.query.possibilities);
+	
+	var possibility = req.query.possibilities;
+	var i;
+	date = new Date();
+	date = dataformatter.formatDate(date, 'YYYY-MM-DD');
+	pestdiseaseModel.getPDProbability({date : date},possibility.type, possibility.pd_id, req.query.farm_id, function(err, recommendations){
+		if(err)
+			throw err;
+		else{
+			if(recommendations.length == 0){
+				//create recommendation
+				console.log("create probability");
+				var data = {
+					pd_type : possibility.type,
+					pd_id : possibility.pd_id,
+					probability : possibility.probability,
+					date : date,
+					farm_id : req.query.farm_id,
+					calendar_id : req.query.calendar_id
+				}
+				pestdiseaseModel.addPDProbability(data, function(err, success){
+
+				});
+			}
+			else{
+				console.log("update probability");
+				recommendations[0].probability = recommendations[0].probability + parseInt(possibility.probability);
+				recommendations[0].probability = recommendations[0].probability / 2;
+				//update
+				pestdiseaseModel.updatePDProbability(recommendations[0].probability_id, recommendations[0].probability, function(err, success){
+
+				});
+			}
+		}
+	});
+	res.send("ok");
+};

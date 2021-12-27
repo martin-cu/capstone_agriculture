@@ -12,7 +12,16 @@ $(document).ready(function() {
 						center = polygons[x].center;
 						console.log(plans[i].calendar_id);
 						$.get("/getPossiblePD", {center:center, calendar_id : plans[i].calendar_id}, function(possibilities){
-							alert(plans[i].farm_name);
+							// alert(plans[i].farm_name);
+
+							//Store in recommendated db
+							var y; 
+							for(y = 0; y < possibilities.length; y++){
+								$.get("/storePDRecommendation", {calendar_id : plans[i].calendar_id, possibilities : possibilities[y], farm_id : plans[i].farm_id}, function(recommendation){
+
+								});
+							}
+							
 						});
 					}
 					
@@ -36,7 +45,12 @@ $(document).ready(function() {
 							center = polygons[x].center;
 							console.log(plans[i].calendar_id);
 							$.get("/getPossiblePD", {center:center, calendar_id : plans[i].calendar_id}, function(possibilities){
-								alert(plans[i].farm_name);
+								// alert(plans[i].farm_name);
+
+								//Store in recommendated db
+								$.get("/storePDRecommednation", {calendar_id : plans[i].calendar_id, possibilities : possibilities }, function(recommendation){
+
+								});
 							});
 						}
 						
@@ -46,6 +60,7 @@ $(document).ready(function() {
 			}
 			
 		});
+	
 				
 	}, 100000);
 })

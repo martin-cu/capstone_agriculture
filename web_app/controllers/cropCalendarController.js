@@ -115,7 +115,7 @@ exports.ajaxGetCropPlans = function(req, res) {
 	  							[plan.crop_plan, plan])).values()];
 			}
 			
-			console.log(plans);
+			// console.log(plans);
 			res.send(plans);
 		}
 	});
