@@ -24,12 +24,9 @@ $(document).ready(function() {
 							
 						});
 					}
-					
 				}
-				
 			});
 		}
-		
 	});
 
 	setInterval(function() {
@@ -53,14 +50,9 @@ $(document).ready(function() {
 								});
 							});
 						}
-						
 					}
-					
 				});
 			}
-			
 		});
-	
-				
-	}, 100000);
+	});
 })

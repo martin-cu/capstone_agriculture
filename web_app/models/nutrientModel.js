@@ -27,7 +27,7 @@ exports.getSoilRecord = function(data, next) {
 		temp_sql[1] = temp_sql[1].replace(',',' and ');
 		sql = temp_sql[0]+temp_sql[1];
 	} 
-	console.log(sql);
+	//console.log(sql);
 	mysql.query(sql, next);
 };
 

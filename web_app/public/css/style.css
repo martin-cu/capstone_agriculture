@@ -291,6 +291,9 @@ body {
 	cursor: pointer;
 }
 
+.add_details:hover {
+	cursor: pointer;
+}
 
 tr {
 	height: 40px;
