@@ -1838,6 +1838,10 @@ exports.addNewPD = function(req, res){
 		prevention.push(req.body.prevention[i].id);
 	}
 
+	var factor = [];
+	for(i = 0; i < req.body.factor.length; i++){
+		factor.push(req.body.factor[i].id.split('|'));
+	}
 	if(type == "Pest"){
 		var pd = {
 			pest_name : req.body.pd_name,
@@ -1852,7 +1856,7 @@ exports.addNewPD = function(req, res){
 		pestdiseaseModel.getLastInserted("Pest", function(err, last){
 			var last = last[0].last;
 			//Add symptoms to pest
-			for( i = 0; i < symptoms.length; i ++){
+			for( i = 0; i < symptoms.length; i++){
 				pestdiseaseModel.addPestDiseaseSymptom("Pest", last, symptoms[i], function(err, next){});
 			}
 			//Add new symptom
@@ -1863,12 +1867,16 @@ exports.addNewPD = function(req, res){
 			// 	pestdiseaseModel.addPestDiseaseSymptom("Pest", last, last_insert, function(err, next){});
 			// });
 
-			for( i = 0; i < solutions.length; i ++){
+			for( i = 0; i < solutions.length; i++){
 				pestdiseaseModel.addPestDiseaseSolution("Pest", last, solutions[i], function(err, next){});
 			}
 
-			for( i = 0; i < preventions.length; i ++){
-				pestdiseaseModel.addPestDiseaseSolution("Pest", last, preventions[i], function(err, next){});
+			for( i = 0; i < prevention.length; i++){
+				pestdiseaseModel.addPestDiseasePrevention("Pest", last, prevention[i], function(err, next){});
+			}
+
+			for( i = 0; i < factor.length; i++){
+				pestdiseaseModel.addPestDiseaseFactor(factor[i][1], "Pest", last, factor[i][0], function(err, next){});
 			}
 			res.redirect("/pest_and_disease_details?type=Pest&id=" + last + "&tab=PestandDisease");
 		});
@@ -1899,6 +1907,14 @@ exports.addNewPD = function(req, res){
 
 			for( i = 0; i < solutions.length; i++){
 				pestdiseaseModel.addPestDiseaseSolution("Disease", last, solutions[i], function(err, next){});
+			}
+
+			for( i = 0; i < prevention.length; i++){
+				pestdiseaseModel.addPestDiseaseSolution("Disease", last, prevention[i], function(err, next){});
+			}
+
+			for( i = 0; i < factor.length; i++){
+				pestdiseaseModel.addPestDiseaseFactor(factor[i][1], "Disease", last, factor[i][0], function(err, next){});
 			}
 
 			res.redirect("/pest_and_disease_details?type=Disease&id=" + last + "&tab=PestandDisease");
@@ -2259,7 +2275,7 @@ exports.getPDProbability = function(req, res){
 								}
 							}
 							// console.log(possible_pests);
-							console.log(req.query.calendar_id);
+							// console.log(req.query.calendar_id);
 							res.send(possible_pests);
 						});
 					});
@@ -2284,7 +2300,7 @@ exports.storePDRecommendation = function(req, res){
 		else{
 			if(recommendations.length == 0){
 				//create recommendation
-				console.log("create probability");
+				// console.log("create probability");
 				var data = {
 					pd_type : possibility.type,
 					pd_id : possibility.pd_id,
@@ -2298,7 +2314,7 @@ exports.storePDRecommendation = function(req, res){
 				});
 			}
 			else{
-				console.log("update probability");
+				// console.log("update probability");
 				recommendations[0].probability = recommendations[0].probability + parseInt(possibility.probability);
 				recommendations[0].probability = recommendations[0].probability / 2;
 				//update
@@ -2309,4 +2325,16 @@ exports.storePDRecommendation = function(req, res){
 		}
 	});
 	res.send("ok");
+};
+
+//ajax
+exports.getDiagnosisList = function(req,res){
+
+	console.log(req.query);
+	pestdiseaseModel.getDiagnosis(null, null, function(err, diagnoses){
+		console.log("diagnoses");
+		console.log(diagnoses);
+		res.send(diagnoses);
+	});
+
 };

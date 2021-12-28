@@ -123,6 +123,7 @@ router.post('/addDisease', environmentController.addDisease);
 router.get('/generateRecommendationDiagnosis', environmentController.getRecommendationDiagnosis);
 router.get('/getPossiblePD', environmentController.getPDProbability);
 router.get('/storePDRecommendation', environmentController.storePDRecommendation);
+router.get('/ajaxGetDiagnoses', environmentController.getDiagnosisList);
 //Temporary Pest and Disease (Update later)
 
 

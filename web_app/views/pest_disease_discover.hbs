@@ -214,7 +214,7 @@
                             {{#each factors}}
                                 <div class="row">
                                     <div class="col-xl-12">
-                                        <div class="form-check"><input id="formCheck-2" name="factor[{{@index}}][id]" class="form-check-input factor-checkbox" type="checkbox" value="{{this.factor_id}}" form="new_pd_form"><label class="form-check-label font-weight-bold" for="formCheck-2">{{this.type}}</label> : <label class="form-check-label font-weight-bold" for="formCheck-2">{{this.factor_name}}</label></div>
+                                        <div class="form-check"><input id="formCheck-2" name="factor[{{@index}}][id]" class="form-check-input factor-checkbox" type="checkbox" value="{{this.factor_id}}|{{this.type}}" form="new_pd_form"><label class="form-check-label font-weight-bold" for="formCheck-2">{{this.type}}</label> : <label class="form-check-label font-weight-bold" for="formCheck-2">{{this.factor_name}}</label></div>
                                         <p style="margin-left: 80px;margin-bottom: 10px;">{{this.description}}</p>
                                     </div>
                                 </div>
