@@ -3,7 +3,7 @@ $(function() {
     // Table zoom scaling START
 	var _zoomLevel = 100;
 	var oDiv = document.getElementsByClassName("table table tablesorter");
-	$("#zoom_in-1").click(function(e){
+	$("#zoom_in, #zoom_in-1").click(function(e){
 		for (var i = 0; i < oDiv.length; i++) {
 		_zoomLevel += 10;
 		if (typeof oDiv[i].style.MozTransform == "string")
@@ -13,7 +13,7 @@ $(function() {
 		}
 	});
 
-	$("#zoom_out-1").click(function(e){
+	$("#zoom_out, #zoom_out-1").click(function(e){
 		for (var i = 0; i < oDiv.length; i++) {
 		_zoomLevel -= 10;
 		if (typeof oDiv[i].style.MozTransform == "string")
