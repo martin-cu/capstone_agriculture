@@ -15,6 +15,18 @@ const map = new mapboxgl.Map({
 
 map.addControl(new mapboxgl.FullscreenControl());
 
+// Return number of active farms
+function getNumFarms() {
+    var numFarms = 0;
+    $.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
+        for (var i = 0; i < farms.length; i++) {
+            numFarms++;
+        }
+    });
+
+    return numFarms;
+}
+
 // SHOW POLYGONS FROM AGRO API
 $(document).ready(function() {
 
@@ -22,6 +34,9 @@ $(document).ready(function() {
 		jQuery.ajaxSetup({async: false });
         var geojson;
         var coordinates = [];
+
+        // Get Number of Farms
+        document.getElementById("numFarms").innerHTML = getNumFarms();
 
         // GET FARMS AJAX kept incase pushing of polygons to coordinates array
             // need to be filtered with current list of farms (compared to agro api's list)
