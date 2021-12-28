@@ -2,21 +2,25 @@ $(function() {
     
     // Table zoom scaling START
 	var _zoomLevel = 100;
-	var oDiv = document.getElementsByClassName(".table.table.tablesorter");
-	$("#zoom_in").click(function(e){
+	var oDiv = document.getElementsByClassName("table table tablesorter");
+	$("#zoom_in-1").click(function(e){
+		for (var i = 0; i < oDiv.length; i++) {
 		_zoomLevel += 10;
-		if (typeof oDiv.style.MozTransform == "string")
-			oDiv.style.MozTransform = "scale(" + (_zoomLevel / 100) + ")";
-		else if (typeof oDiv.style.zoom == "string")
-			oDiv.style.zoom = _zoomLevel  + "%";
+		if (typeof oDiv[i].style.MozTransform == "string")
+			oDiv[i].style.MozTransform = "scale(" + (_zoomLevel / 100) + ")";
+		else if (typeof oDiv[i].style.zoom == "string")
+			oDiv[i].style.zoom = _zoomLevel  + "%";
+		}
 	});
 
-	$("#zoom_out").click(function(e){
+	$("#zoom_out-1").click(function(e){
+		for (var i = 0; i < oDiv.length; i++) {
 		_zoomLevel -= 10;
-		if (typeof oDiv.style.MozTransform == "string")
-			oDiv.style.MozTransform = "scale(" + (_zoomLevel / 100) + ")";
-		else if (typeof oDiv.style.zoom == "string")
-			oDiv.style.zoom = _zoomLevel  + "%";
+		if (typeof oDiv[i].style.MozTransform == "string")
+			oDiv[i].style.MozTransform = "scale(" + (_zoomLevel / 100) + ")";
+		else if (typeof oDiv[i].style.zoom == "string")
+			oDiv[i].style.zoom = _zoomLevel  + "%";
+		}
 	});
 	// Table zoom scaling END
 
