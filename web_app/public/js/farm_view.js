@@ -57,12 +57,20 @@ function loadAjaxEmployees() {
 			var emp1 = result1.employee_list;
 			emp1 = seggregateUnassigned(emp1);
 
+			if (emp1.assigned.length == 0) {
+				document.getElementById("assigned_frmr_cont").innerHTML = "No assigned workers available";
+			} 
+
 			for (var i = 0; i < emp1.assigned.length; i++) {
 				inp.val.push(emp1.assigned[i].employee_id);
 				$('#assigned_frmr_cont').append(createCheckbox(div, inp, 
 				{ prop: ['inner_HTML'], val: [emp1.assigned[i].last_name+', '+emp1.assigned[i].first_name] }));
 				inp.val = inp.val.slice(0, -1);
 			}
+
+			if (emp1.unassigned.length == 0) {
+				document.getElementById("unassigned_frmr_cont").innerHTML = "No unassigned workers available";
+			} 
 
 			for (var i = 0; i < emp1.unassigned.length; i++) {
 				inp.val.push(emp1.unassigned[i].employee_id);
@@ -72,7 +80,7 @@ function loadAjaxEmployees() {
 			}
 		}
 		else {
-
+			
 		}
 	});
 }

@@ -31,6 +31,10 @@ div.card-body h6, div.card-body p {
     border-style: none;
 }
 
+.table.table.tablesorter td {
+    background-color: white;
+}
+
 #seedTable, #fertilizerTable, #pesticideTable {
     margin-left: 50px;
     border-radius: 10px;
@@ -418,7 +422,7 @@ div.card-body h6, div.card-body p {
                                             <div class="tab-pane fade" id="work-orders" role="tabpanel" aria-labelledby="work-orders-tab">
                                                 {{!-- Table styles subject to change...made it white 
                                                     cause it looks weird if it has the same color as the parent card div --}}
-                                                <div>
+                                                <div class="card shadow mb-4" style="padding-left: 5px; padding-right: 5px">
                                                     <table class="table table tablesorter" id="ipi-table">
                                                         <thead class="thead-dark" style="max-height: 0px;">
                                                             <tr>

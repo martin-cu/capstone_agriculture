@@ -12,7 +12,10 @@ li > span {
 
 <div class="container-fluid" style="color: #332C1F;">
 
-    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f; position: sticky"></a>&nbsp;{{title}}&nbsp;</h3>
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">{{title}}</h3>
+        <a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
+    </div>
 
     <!-- {{!-- HEADER --}}
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
@@ -93,21 +96,21 @@ li > span {
                                         <div class="col">
                                         <label for="farm_desc" style="font-weight: bold;">Description</label>
 		                                 <div id="farm_desc">
-                                        N/A
+                                        
 		                                </div>
                                         </div>
 
                                         <div class="col">
                                         <label for="land_type" style="font-weight: bold;">Land Type</label>
 		                                <div id="land_type">
-                                        N/A
+                                        
 		                                </div>
                                         </div>
 
                                         <div class="col">
                                         <label for="farm_area" style="font-weight: bold;">Farm Area </label>
                                         <div id="farm_area">
-                                         N/A
+                                         
 		                                </div>
                                         </div>
 
@@ -225,14 +228,14 @@ li > span {
                         <div class="row">
 
                             <div class="col">
-                                <label for="seed_id">Seed</label>
+                                <label for="seed_id">Seed  <span style="color: #CA4E0C;">*</span></label>
 				                <select class="form-select" id="seed_id" name="seed_id">
 				                </select>
                                 <input type="hidden" name="seed_maturity_days" id="seed_maturity_days">
                             </div>
 
                             <div class="col">
-                               <label for="seed_rate">Seed Rate (kg/ha) </label>
+                               <label for="seed_rate">Seed Rate (kg/ha) <span style="color: #CA4E0C;">*</span></label>
 			                    <input type="text" class="form-control" id="seed_rate" name="seed_rate" placeholder="Qty">
                                 <label class="text-muted ml-2" id="seed_qty"></label>
                                 <input type="hidden" name="num_seed_bags" id="num_seed_bags" value="">
@@ -241,7 +244,7 @@ li > span {
                         </div>
                         <div class="row w-50">
                             <div class="col">
-                                <label for="method">Planting Method</label>
+                                <label for="method">Planting Method <span style="color: #CA4E0C;">*</span></label>
                                 <select class="form-select" id="method" name="method">
                                     <option value="Transplanting">Transplanting</option>
                                     <option value="Direct Seeding">Direct Seeding</option>
@@ -619,6 +622,8 @@ function goBack() {
   window.history.back();
 }
 
+// MULTI-STEP FROM INDICATORS
+
 var currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
 
@@ -628,13 +633,14 @@ function showTab(n) {
   x[n].style.display = "block";
 
   //... and run a function that will display the correct step indicator:
-  fixStepIndicator(n)
+  fixStepIndicator(n);
 }
 
 function nextPrev(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
 
+  
   // Exit the function if any field in the current tab is invalid:
   if (!dataValidation(currentTab+2)) return false;
   // Hide the current tab:
@@ -648,11 +654,12 @@ document.getElementsByClassName("step")[currentTab].className += " finish";
   // if you have reached the end of the form...
   if (currentTab >= x.length) {
     // ... the form gets submitted:
-    document.getElementById("create_farm_form").submit();
+    document.getElementById("crop_calendar_form").submit();
     return false;
   }
   // Otherwise, display the correct tab:
   showTab(currentTab);
+
 }
 
 function fixStepIndicator(n) {
@@ -663,6 +670,7 @@ function fixStepIndicator(n) {
   }
   //... and adds the "active" class on the current step:
   x[n].className += " active";
+
 }
 
 </script>

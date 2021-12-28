@@ -5,15 +5,32 @@ function addDays(d1, days) {
 }
 
 function changeFarmDetails(id, farm_list) {
-	var i = 0;
-	while (farm_list[i].farm_id != id) {
-		i++;
+	if (farm_list.length == 0) {
+		$('#farm_desc').html("None");
+		$('#farm_desc').html("None");
+		$('#land_type').html("None");
+		$('#farm_area').html("None");
+		$('#farm_area_cont').html("None");
 	}
-	$('#farm_desc').html(farm_list[i].farm_desc);
-	$('#land_type').html(farm_list[i].land_type);
-	$('#farm_area').html(farm_list[i].farm_area);
 
-	$('#farm_area_cont').html(farm_list[i].farm_area);
+	else {
+		var i = 0;
+		while (farm_list[i].farm_id != id) {
+			i++;
+		}
+
+		if (farm_list[i].farm_desc == null) {
+			$('#farm_desc').html("None");
+		}
+		else {
+			$('#farm_desc').html(farm_list[i].farm_desc);
+		}
+
+		$('#land_type').html(farm_list[i].land_type);
+		$('#farm_area').html(farm_list[i].farm_area);
+
+		$('#farm_area_cont').html(farm_list[i].farm_area);
+	}
 }
 
 function setElementAttributes(ele, obj_arr) {

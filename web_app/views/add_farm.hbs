@@ -52,7 +52,7 @@
                             <h5 for="" style="font-weight: bold; padding-bottom: 20px; padding-top: 10px">Step 1: Add Farm Details</h5>
 
                             <div class="form-group">
-                                <label for="farmName">Name</label>
+                                <label for="farmName">Name <span style="color: #CA4E0C;">*</span></label>
                                 <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name" oninput="this.className = 'form-control'" required>
                             </div>
                            
@@ -60,7 +60,7 @@
                               <div class="row">
 
                                 <div class="col" style="padding-top: 5px;">
-                                <label for="landType">Land Type</label>
+                                <label for="landType">Land Type <span style="color: #CA4E0C;">*</span></label>
                                 <select class="form-select" id="landType" name="land_type" required>
                                     <option value="Lowland" selected>Lowland</option>
                                     <option value="Upland">Upland</option>
@@ -69,7 +69,7 @@
                                 </div>
                                 
                                 <div class="col" style="padding-top: 5px;">
-                                <label for="farmManager">Farm Manager</label>
+                                <label for="farmManager">Farm Manager <span style="color: #CA4E0C;">*</span></label>
                                 <select class="form-select" name="farm_mngr" id="farm_mngr_cont" required>
                                 </select>
                                 <label class="inp-error hide" id="farm_mngr_error">No active farm managers are available for assignment!</label>
@@ -95,7 +95,7 @@
                             </div>
 
                              <div class="form-group">
-                                <label for="geotags" id="geotag_lbl" style="font-weight: bold;">Pin Geotag Coordinates</label>
+                                <label for="geotags" id="geotag_lbl" style="font-weight: bold;">Pin Geotag Coordinates <span style="color: #CA4E0C;">*</span></label>
                                 
                                 {{!-- <div id="floating-panel">
                                     <input id="hide-markers" type="button" value="Hide Markers">
@@ -165,7 +165,7 @@
 
                             <div class="container" id="">
                                 <small id="" class="form-text text-muted">Unassigned workers</small>
-                                <div class="row" id="unassigned_frmr_cont">
+                                <div class="row" id="unassigned_frmr_cont" style="margin-left: 10px;">
                                     
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                             <div class="container" id="">
                                 <small id="" class="form-text text-muted">Assigned workers</small>
                                 <div class="row" id="assigned_frmr_cont">
-                                    
+                            
                                 </div>
                             </div>
                             
