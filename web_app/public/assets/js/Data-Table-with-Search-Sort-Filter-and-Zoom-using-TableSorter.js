@@ -4,17 +4,17 @@ $(function() {
 	var _zoomLevel = 100;
 	var oDiv = document.getElementsByClassName("table table tablesorter");
 	$("#zoom_in, #zoom_in-1").click(function(e){
-		for (var i = 0; i < oDiv.length; i++) {
+		for(var i = 0; i < oDiv.length; i++) {
 		_zoomLevel += 10;
-		if (typeof oDiv[i].style.MozTransform == "string")
+		if (typeof oDiv[i].style.MozTransform == "string") 
 			oDiv[i].style.MozTransform = "scale(" + (_zoomLevel / 100) + ")";
-		else if (typeof oDiv[i].style.zoom == "string")
+		else if (typeof oDiv[i].style.zoom == "string") 
 			oDiv[i].style.zoom = _zoomLevel  + "%";
 		}
 	});
 
 	$("#zoom_out, #zoom_out-1").click(function(e){
-		for (var i = 0; i < oDiv.length; i++) {
+		for(var i = 0; i < oDiv.length; i++) {
 		_zoomLevel -= 10;
 		if (typeof oDiv[i].style.MozTransform == "string")
 			oDiv[i].style.MozTransform = "scale(" + (_zoomLevel / 100) + ")";
@@ -25,7 +25,7 @@ $(function() {
 	// Table zoom scaling END
 
 	// call the tablesorter plugin
-	$(".table.table.tablesorter").tablesorter({
+	$("#ipi-table , #ipi-table1, #diagnosesTable, #pestsTable, #diseasesTable, #activeSubscriptionsTable, #archivedSubscriptionsTable").tablesorter({
 		theme: 'bootstrap',
 
 		// hidden filter input/selects will resize the columns, so try to minimize the change
@@ -165,7 +165,7 @@ $(function() {
 
 	// Clear stored filters - added v2.25.6
 	$('.resetsaved').click(function() {
-		$('.table.table.tablesorter').trigger('filterResetSaved');
+		$('#ipi-table , #ipi-table1, #diagnosesTable, #pestsTable, #diseasesTable, #activeSubscriptionsTable, #archivedSubscriptionsTable').trigger('filterResetSaved');
 
 		// show quick popup to indicate something happened
 		var $message = $('<span class="results"> Reset</span>').insertAfter(this);
