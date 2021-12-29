@@ -252,7 +252,7 @@ exports.getFarmDetails = function(req, res) {
 																index = i;
 																break;
 															}
-														console.log(stage[index]);
+														// console.log(stage[index]);
 														var stage = {
 															stage_name : stage[0].stage
 														}	

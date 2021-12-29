@@ -879,7 +879,7 @@ exports.getPestProbabilityPercentage = function(weather, season, fertilizer, sta
 	var sql2 = ' INNER JOIN (SELECT a.pest_id, a.pest_name, COUNT(a.pest_id) AS factor_count FROM (SELECT p.pest_id, p.pest_name, wt.weather as factor, wt.weather_desc as description, "weather" as type FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id UNION SELECT p.pest_id, p.pest_name, s.season_name as factor, s.season_desc as description, "season" as type FROM pest_table p INNER JOIN season_pest sp ON p.pest_id = sp.pest_id INNER JOIN seasons s ON s.season_id = sp.season_pest UNION SELECT p.pest_id, p.pest_name, s.stage_name as factor, s.stage_desc as description, "stage" as type FROM pest_table p INNER JOIN stages_pest sp ON sp.pest_id = p.pest_id INNER JOIN stages s ON s.stage_id = sp.stages_pest_id UNION SELECT p.pest_id, p.pest_name, ft.farm_type as factor, ft.farm_type_desc as description, "farm type" as type FROM pest_table p INNER JOIN farmtypes_pest ftp ON p.pest_id = ftp.pest_id INNER JOIN farm_types ft ON ft.farm_type_id = ftp.farm_type_id UNION SELECT p.pest_id, p.pest_name, ft.fertilizer_name as factor, ft.fertilizer_desc as description, "fertilizer" as type FROM pest_table p INNER JOIN fertilizer_pest fp ON p.pest_id = fp.pest_id INNER JOIN fertilizer_table ft ON ft.fertilizer_id = ft.fertilizer_id) a GROUP BY pest_id) b ON a.pest_id = b.pest_id GROUP BY a.pest_id ORDER BY probability DESC;';
 
 	sql = sql + sql2;
-	// console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1230,8 +1230,8 @@ exports.getDiagnosisDetails = function(diagnosis_id, next){
 
 exports.getDiagnosis = function(farm_id, type, next){
 	var sql = "";
-	var pest_diagnosis = 'SELECT d.*, pt.pest_name as name, pt.pest_desc as description, cct.crop_plan, ft.farm_name FROM diagnosis d INNER JOIN pest_table pt ON pt.pest_id = d.pd_id  LEFT JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Pest"';
-	var disease_diagnosis = 'SELECT d.*, pt.disease_name as name, pt.disease_desc as description, cct.crop_plan, ft.farm_name FROM diagnosis d INNER JOIN disease_table pt ON pt.disease_id = d.pd_id LEFT JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Disease"';
+	var pest_diagnosis = 'SELECT d.*, pt.pest_name as name, pt.pest_desc as description, cct.crop_plan, ft.farm_name, "Pest" as type FROM diagnosis d INNER JOIN pest_table pt ON pt.pest_id = d.pd_id  LEFT JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Pest"';
+	var disease_diagnosis = 'SELECT d.*, pt.disease_name as name, pt.disease_desc as description, cct.crop_plan, ft.farm_name, "Disease" as type FROM diagnosis d INNER JOIN disease_table pt ON pt.disease_id = d.pd_id LEFT JOIN crop_calendar_table cct ON d.calendar_id = cct.calendar_id INNER JOIN farm_table ft ON ft.farm_id = d.farm_id WHERE type = "Disease"';
 
 	if(farm_id == null){
 		
@@ -1250,8 +1250,8 @@ exports.getDiagnosis = function(farm_id, type, next){
 		sql = pest_diagnosis;
 	else if(type == "Disease")
 		sql = disease_diagnosis
-	console.log("sql");
-	console.log(sql);
+	// console.log("sql");
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1313,6 +1313,7 @@ exports.getPDProbability = function(date, type, id, farm_id, next){
 exports.addPDProbability = function(data, next){
 	sql = "INSERT INTO pd_probabilities SET ?";
 	sql = mysql.format(sql, data);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 };
 
@@ -1322,3 +1323,9 @@ exports.updatePDProbability = function(probability_id, probability, next){
 	sql = mysql.format(sql, probability_id);
 	mysql.query(sql, next); return(sql);
 }
+
+exports.getProbabilities = function(type, id, next){
+	sql = 'SELECT *, AVG(pp.probability), MAX(date) FROM pd_probabilities pp INNER JOIN pest_table pt ON pt.pest_id = pp.pd_id JOIN farm_table using (farm_id) WHERE pp.pd_type = "Pest" GROUP BY pd_id UNION SELECT *, AVG(pp.probability), MAX(date)  FROM pd_probabilities pp INNER JOIN disease_table pt ON pt.disease_id = pp.pd_id  JOIN farm_table using (farm_id) WHERE pp.pd_type = "Disease"  GROUP BY pd_id; ';
+
+	mysql.query(sql, next); return(sql);
+};
