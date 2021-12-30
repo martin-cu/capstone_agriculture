@@ -14,6 +14,33 @@ function parseDecimal(num, decimal) {
 	return parseFloat((num).toFixed(decimal));
 }
 
+// [temp, humidity, pressure, rainfall, seed_type, yield, N, P, K]
+exports.forecastYield = function(dataset, testing) {
+	const net = new brain.brain.recurrent.LSTMTimeStep({
+	  inputSize: 9,
+	  hiddenLayers: [5],
+	  outputSize: 9,
+	});
+	const trainingData = [dataset.data];
+	//console.log(trainingData);
+	net.train(trainingData, { 
+		//log: true 
+	});
+
+	const forecast = net.forecast(testing.data, 1);
+	//console.log(forecast);
+	//console.log(dataset.val);
+	for (var i = 0; i < forecast.length; i++) {
+		for (var x = 0; x < forecast[i].length; x++) {
+			// console.log(dataset.val[x]);
+			// console.log(x);
+			forecast[i][x] = denormalizeData(forecast[i][x], dataset.val[x]);
+		}
+	}
+
+	return forecast;
+}
+
 //!!
 exports.weatherForecast14D = function(dataset, testing, length) {
 	var result_obj;

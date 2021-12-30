@@ -1,0 +1,164 @@
+
+<div class="m-3">
+	<table>
+	{{#each list}}
+	<tr class="bg-primary" style="cursor: pointer">
+		<td class="p-3 text-dark farm_item">{{this.farm_name}}</td>
+	</tr>
+	{{/each}}	
+	</table>
+</div>
+
+<div class="m-3">
+	<canvas class="my-2 ndvi_chart" id="ndvi_chart" style="height: 150px !important; width: 250px !important;"></canvas>
+	
+</div>
+
+
+<script type="text/javascript">
+	var view = '';
+	jQuery.ajaxSetup({async: false });
+
+	function formatDate(date, format) {
+		var year,month,day;
+		const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+		];
+		year = date.getFullYear();
+		month = date.getMonth()+1;
+		day = date.getDate();
+
+		if (format === 'MM/DD/YYYY') {
+			if (month < 10)
+				month = '0'+month;
+			if (day < 10)
+				day = '0'+day;
+			date = month+'/'+day+'/'+year;
+		}
+		else if (format === 'YYYY-MM-DD') {
+			if (month < 10)
+				month = '0'+month;
+			if (day < 10)
+				day = '0'+day;
+			date = year+'-'+month+'-'+day;
+		}
+
+		return date;
+	}
+
+
+	function setChartOptions1(options) {
+		var opts = {
+			type: 'line',
+			options: {
+				title: {
+				},
+				plugins: {
+					legend: {
+					}
+				},
+				scales: {
+					y: {
+						ticks: {
+							display: true
+						},
+						grid: {
+							display: false
+						}
+					},
+					x: {
+						grid: {
+							display: false
+						}
+					}
+
+				}
+			}
+		}
+
+		opts['data'] = options.data;
+		var min = Math.min(...opts.data.datasets[0].data), max = Math.max(...opts.data.datasets[0].data);
+		min -= 0.1;
+		max += 0.1;
+
+		opts.options.scales.y['suggestedMin'] = min;
+		opts.options.scales.y['max'] = max;
+
+		return opts;
+	}
+
+	function processChartData1(arr) {
+		var data = { labels: [], datasets: [] };
+		var dataset_obj = { label: 'Current NDVI', data: [], fill: false,
+		borderColor: "#bae755", borderWidth: 1, backgroundColor: "#FFFACD" };
+		for (var i = 0; i < arr.length; i++) {
+			data.labels.push(arr[i].dt);
+			dataset_obj['data'].push((arr[i].data.max));
+		}
+		data.datasets.push(dataset_obj);
+
+		return data;
+	}
+
+	$('.farm_item').on('click', function() {
+		var farm_name = $(this).html();
+		$.get('/agroapi/polygon/readAll', {}, function(polygons) {
+			var selected = polygons.filter(e => e.name == farm_name)[0];
+
+			$.get('/get_calendar_variables', { farm_name: farm_name }, function(calendar_item) {
+				if (calendar_item != null || calendar_item != undefined) {
+
+					var training_set = [];
+					$.get('/get_nutrient_details', { farm_id: calendar_item[0].farm_id }, function(nutrient_details) {
+
+						for (var i = 0; i < calendar_item.length; i++) {
+
+							$.get('/forecast_yield_farm', { polyid: selected.id, start: formatDate(new Date(calendar_item[i].sowing_date), 'YYYY-MM-DD'), end: formatDate(new Date(calendar_item[i].harvest_date), 'YYYY-MM-DD') }, function(env_variables) {
+								var details = nutrient_details.filter(e => e.calendar_id == calendar_item[i].calendar_id);
+
+								env_variables['seed_id'] = calendar_item[i].seed_planted;
+								env_variables['harvest_yield'] = calendar_item[i].harvest_yield;
+								env_variables['deficient_N'] = details[0].deficient_N;
+								env_variables['deficient_P'] = details[0].deficient_P;
+								env_variables['deficient_K'] = details[0].deficient_K;
+	
+								training_set.push(Object.values(env_variables));
+								if (i == calendar_item.length-1) {
+									var testing_set = training_set;
+									for (var i = 0; i < testing_set.length/2; i++) {
+										testing_set = testing_set.shift();
+									}
+									$.get('/create_yield_forecast', { training: training_set, testing: testing_setz }, function(forecast) {
+										console.log(forecast);
+									});
+								}					
+							});
+						}
+					});				
+				}
+			})
+
+			// $.get('/historical_variables', { polyid: selected.id, start: '2020-01-05', end: '2020-12-28', lat: selected.center[0], lon: selected.center[1], threshold: 60 }, function(results) {
+			// 	console.log(results)
+
+			// 		var options = { data: processChartData1(results.ndvi_history) }
+			// 	options = setChartOptions1(options);
+
+			// 	var ctx = document.getElementById('ndvi_chart').getContext('2d');
+
+			// 	var ndvi_history = new Chart(ctx, options);
+			// });
+			// $.get('/agroapi/ndvi/history', { polyid: selected.id, start: '2021-01-05', end: '2021-12-28' }, function(ndvi_history) {
+
+			// 	console.log(ndvi_history);
+
+				// var options = { data: processChartData1(ndvi_history) }
+				// options = setChartOptions1(options);
+
+				// var ctx = document.getElementById('ndvi_chart').getContext('2d');
+
+				// var ndvi_history = new Chart(ctx, options);
+			// });
+		});
+	});
+</script>

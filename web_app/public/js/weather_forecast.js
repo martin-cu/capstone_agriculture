@@ -218,7 +218,7 @@ function generateRecommendation(arr) {
 		for (var x = 0; x < arr.data.length; x++) {
 			
 		}
-		console.log(arr.data[arr.keys[i]]);
+		//console.log(arr.data[arr.keys[i]]);
 	}
 	// for (var i = 0; i < arr.length; i++) {
 	// 	var count = arr[i].data.filter(data => data.desc == 'light rain').length;

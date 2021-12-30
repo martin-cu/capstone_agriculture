@@ -15,6 +15,17 @@ var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;
 
+exports.forecastYield = function(req, res) {
+	farmModel.getFarmData({ group: 'farm_id' }, function(err, farms) {
+		if (err)
+			throw err;
+		else {
+			console.log(farms);
+			res.render('yield_forecast_test', { list: farms });
+		}
+	});
+}
+
 exports.ajaxGetFarmList = function(req, res) {
 	let where = req.query.where;
 	farmModel.getFarmData({ where: where, group: 'farm_id'}, function(err, farms) {
@@ -530,11 +541,141 @@ exports.createFarmRecord = function(req, res) {
 }
 
 //Environment Variable Queries
+exports.getIncludedCalendars = function(req, res) {
+   cropCalendarModel.getCropCalendars({ status: ['Completed'], where: { key: 'farm_name', val: req.query.farm_name } }, function(err, calendar_list) {
+   		if (err)
+   			throw err;
+   		else {
+   			if (calendar_list.length < 4) {
+   				res.send({ result: null });
+   			}
+   			else {
+   				res.send({ result: calendar_list });
+   			}
+   		}
+   });
+}
 
-//**** NDVI and Satellite Imagery ****//
-exports.getHistoricalNDVI = function(req, res) {
+function normalizeForecastVariables(data) {
+	var obj = {
+		temp: [], humidity: [], pressure: [], rainfall: [], seed_id: [], yield: [], 
+		N: [], P: [], K: []
+	}
+	var normalized_data = { data: [], val: [] };
+	var obj_keys = ['temp', 'humidity', 'pressure', 'rainfall', 'seed_id', 'yield', 'N',
+	'P', 'K'];
+	//console.log(data);
+	for (var i = 0; i < data.length; i++) {
+		for (var x = 0; x < data[i].length; x++) {
+			data[i][x] = parseFloat(data[i][x]);
+
+			switch(x) {
+				case 0:
+				obj.temp.push(data[i][x]);
+				break;
+				case 1:
+				obj.humidity.push(data[i][x]);
+				break;
+				case 2:
+				obj.pressure.push(data[i][x]);
+				break;
+				case 3:
+				obj.rainfall.push(data[i][x]);
+				break;
+				case 4:
+				obj.seed_id.push(data[i][x]);
+				break;
+				case 5:
+				obj.yield.push(data[i][x]);
+				break;
+				case 6:
+				obj.N.push(data[i][x]);
+				break;
+				case 7:
+				obj.P.push(data[i][x]);
+				break;
+				case 8:
+				obj.K.push(data[i][x]);
+				break;
+			}
+		}
+	}
+
+	for (var i = 0; i < obj_keys.length; i++) {
+		obj[obj_keys[i]] = dataformatter.normalizeData(obj[obj_keys[i]]);
+
+		normalized_data.val.push(obj[obj_keys[i]]);
+	}
+
+	var i = 0, x = 0;
+	do {
+		var arr = [];
+		for (var i = 0; i < obj_keys.length; i++) {
+			arr.push(obj[obj_keys[i]].arr[x]);
+		}
+		x++;
+		normalized_data.data.push(arr);
+	}
+	while (x < obj[obj_keys[0]].arr.length);
+
+	return normalized_data;
+}
+
+exports.createYieldForecast = function(req, res) {
+	var training = req.query.training, testing = req.query.testing;
+	console.log(training);
+	console.log('-----------------');
+	console.log(testing);
+	var training_set = normalizeForecastVariables(training);
+	var testing_set = normalizeForecastVariables(testing);
+	// console.log(training_set);
+	// console.log('-------------------');
+	// console.log(testing_set);
+	var forecast = analyzer.forecastYield(training_set, testing_set);
+	console.log(forecast);
+	res.send(forecast);
+}
+
+exports.getYieldVariables = function(req, res) {
 	var polygon_id = req.query.polyid;
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
+	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
+
+	lat = temp_lat;
+	lon = temp_lon;
+
+	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_temperature?polyid='+polygon_id+'&lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
+
+    request(url, { json: true }, function(err, response, body) {
+        if (err)
+        	throw err;
+        else {
+        	var rainfall = 0;
+             body_rainfall = body.filter(e => e.rain != undefined || e.rain != null);
+        	if (body_rainfall.length != 0) {
+        		for (var i = 0; i < body_rainfall.length; i++) {
+	        		rainfall += typeof body_rainfall[i].rain['3h'] == 'undefined' ? body_rainfall[i].rain['1h'] : body_rainfall[i].rain['3h'] 
+	        	}
+	        	rainfall /= body_rainfall.length
+        	}
+	        	
+			var stat_obj = {
+        		avg_temp: body.reduce((total, next) => total + next.main.temp, 0) / body.length,
+	        	avg_humidity: body.reduce((total, next) => total + next.main.humidity, 0) / body.length,
+	        	avg_pressure: body.reduce((total, next) => total + next.main.pressure, 0) / body.length,
+        		avg_rainfall: rainfall
+        	}
+        	res.send(stat_obj);
+        }
+    });
+}
+
+
+exports.queryYieldVariables = function(req, res) {
+	var polygon_id = req.query.polyid;
+	var start_date = dataformatter.dateToUnix(req.query.start), 
+	end_date = dataformatter.dateToUnix(req.query.end);
+	var html_data = {};
 	var obj;
 
 	var data = {
@@ -556,13 +697,108 @@ exports.getHistoricalNDVI = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			obj = body;
-			
-			var ndvi_data = analyzer.analyzeHistoricalNDVI(JSON.parse(body));
+			body = JSON.parse(body);
+			body = body.filter(e => e.cl < 60);
+			for (var i = 0; i < body.length; i++) {
+				body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+				body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+			}
 
-			////console.log(ndvi_data.stats);
+			html_data['ndvi_history'] = body;
 
-			res.render('home', {});
+			var url = 'http://api.agromonitoring.com/agro/1.0/soil/history?start='+start_date+'&end='+end_date+'&polyid='+polygon_id+'&appid='+key;
+
+		    request(url, { json: true }, function(err, response, body) {
+		        if (err)
+		        	throw err;
+		        else {
+
+					for (var i = 0; i < body.length; i++) {
+		        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+		        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+		        	}
+
+		        	html_data['soil_history'] = dataformatter.smoothDailyData(body, 'soil_history');
+
+		        	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
+
+					lat = temp_lat;
+					lon = temp_lon;
+
+					var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_temperature?polyid='+polygon_id+'&lat='+lat+'&lon='+lon+'&threshold='+threshold+'&start='+start_date+'&end='+end_date+'&appid='+key;
+
+				    request(url, { json: true }, function(err, response, body) {
+				        if (err)
+				        	throw err;
+				        else {
+
+							for (var i = 0; i < body.length; i++) {
+				        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+				        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+				        	}
+
+				        	html_data['accumulated_temp'] = dataformatter.smoothDailyData(body, 'accumulated_temp');
+
+						    var url = 'http://api.agromonitoring.com/agro/1.0/uvi/history?polyid='+polygon_id+'&appid='+key+'&start='+start_date+'&end='+end_date;
+
+						    request(url, { json: true }, function(err, response, body) {
+						        if (err)
+						        	throw err;
+						        else {
+
+									for (var i = 0; i < body.length; i++) {
+						        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+						        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+						        	}
+
+						        	html_data['uvi_history'] = dataformatter.smoothDailyData(body, 'uvi_history');;
+
+						        	console.log(html_data);
+									res.send(html_data);
+						        }
+						    });
+				        }
+				    });
+		        }
+		    });
+		}
+	});
+}
+
+//**** NDVI and Satellite Imagery ****//
+exports.getHistoricalNDVI = function(req, res) {
+	var polygon_id = req.query.polyid;
+	var start_date = dataformatter.dateToUnix(req.query.start), 
+	end_date = dataformatter.dateToUnix(req.query.end);
+
+	var obj;
+
+	var data = {
+		polygon_id: polygon_id,
+		start: start_date,
+		end: end_date
+	};
+
+	var options = {
+		url: 'https://api.agromonitoring.com/agro/1.0/ndvi/history?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key,
+		method: 'GET',
+		headers: {
+			'Content-type':'application/json'
+		},
+		body: JSON.stringify(data)
+	};
+
+	request(options, function(err, response, body) {
+		if (err)
+			throw err;
+		else {
+			body = JSON.parse(body);
+			body = body.filter(e => e.cl < 60);
+			for (var i = 0; i < body.length; i++) {
+				body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+			}
+
+			res.send(body);
 		}
 	})
 }
@@ -595,13 +831,14 @@ exports.getSatelliteImageryData = function(req, res) {
 
 			for (var i = 0; i < body.length; i++) {
         		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 			//var result = body[body.length-1];
 			//result.dt = dataformatter.unixtoDate(result.dt);
 			////console.log(body);
 			res.send(body);
 		}
-	})
+	});
 }
 
 //**** Soil Data ****//
@@ -632,11 +869,14 @@ exports.getHistoricalSoilData = function(req, res){
         if (err)
         	throw err;
         else {
-        	for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	body = JSON.parse(body);
+
+			for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	res.render('home', {});
+        	res.send(body);
         }
     });
 }
@@ -658,11 +898,14 @@ exports.getAccumulatedTemperature = function(req, res){
         if (err)
         	throw err;
         else {
-        	for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	body = JSON.parse(body);
+
+			for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	res.render('home', {});
+        	res.send(body);
         }
     });
 }
@@ -681,11 +924,14 @@ exports.getAccumulatedPrecipitation = function(req, res){
         if (err)
         	throw err;
         else {
-        	for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	body = JSON.parse(body);
+
+			for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	res.render('home', {});
+        	res.send(body);
         }
     });
 }
@@ -702,7 +948,7 @@ exports.getCurrentUVI = function(req, res){
 			body.dt = dataformatter.unixtoDate(body.dt);
 
 
-        	res.render('home', {});
+        	res.send(body);
         }
     });
 }
@@ -716,11 +962,14 @@ exports.getHistoricalUVI = function(req, res){
         if (err)
         	throw err;
         else {
-        	for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        	body = JSON.parse(body);
+
+			for (var i = 0; i < body.length; i++) {
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
-        	res.render('home', {});
+        	res.send(body);
         }
     });
 }
@@ -761,8 +1010,10 @@ exports.getHistoricalWeather = function(req, res){
         	throw err;
         else {
         	for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.unixtoDate(body[i].dt);
+        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
         	}
+
 
         	res.send({ result: body, success: true });
         }

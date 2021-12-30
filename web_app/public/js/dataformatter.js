@@ -1,3 +1,62 @@
+exports.smoothDailyData = function(arr, type) {
+	var i = 0;
+	var counter = 1;
+	var temp_obj = arr[0];
+	var temp_arr = []; 
+	if (type == 'soil_history') {
+		do {
+			if (arr[i].dt == arr[i+1].dt) {
+				temp_obj.moisture += arr[i+1].moisture;
+				temp_obj.t0 += arr[i+1].t0;
+				temp_obj.t10 += arr[i+1].t10;
+				counter++;
+			}
+			else {
+				temp_obj.moisture /= counter;
+				temp_obj.t0 /= counter;
+				temp_obj.t10 /= counter;
+
+				counter = 1;
+
+				temp_obj = arr[i];
+				temp_arr.push(temp_obj);
+			}
+			i++;
+		}
+		while (i < arr.length-1);
+	}
+	else if (type == 'accumulated_temp') {
+		do {
+			if (arr[i].dt == arr[i+1].dt) {
+				temp_obj.clouds.all += arr[i+1].clouds.all;
+				temp_obj.main.humidity += arr[i+1].main.humidity;
+				temp_obj.main.pressure += arr[i+1].main.pressure;
+				temp_obj.main.temp += arr[i+1].main.temp;
+				counter++;
+			}
+			else {
+				temp_obj.clouds.all /= counter;
+				temp_obj.main.humidity /= counter;
+				temp_obj.main.pressure /= counter;
+				temp_obj.main.temp /= counter;
+				counter = 1;
+
+				temp_obj = arr[i];
+				temp_arr.push(temp_obj);
+			}
+			i++;
+		}
+		while (i < arr.length-1);
+	}
+	else if (type == 'uvi_history') {
+		// do {
+
+		// }
+		// while (i < arr.length);
+	}
+	return temp_arr;
+}
+
 exports.processNPKValues = function(obj, area, applied, msg) {
 	obj = obj[0];
 	var keys = ['n_lvl', 'p_lvl', 'k_lvl'];
@@ -232,6 +291,44 @@ function partitionData(data, size) {
 	}
 
 	return partition;
+}
+
+exports.normalizeData = function(array) {
+	var i, obj = { min: 0, max: 0, arr: [] };
+	var max = Number.MIN_VALUE;
+	var min = Number.MAX_VALUE;
+	for (i = 0; i < array.length; i++)
+	{
+	   if(array[i]>max)
+	   {
+	       max = array[i];
+	   }
+
+	   if(array[i]<min)
+	   {
+	       min = array[i];
+	   }
+	}
+
+	for (i = 0; i < array.length; i++)
+	{
+	   var norm = (array[i]-min)/(max-min);
+	   array[i] = norm;
+	}
+
+	obj.min = min;
+	obj.max = max;
+	obj.arr = array;
+
+	max = Number.MIN_VALUE;
+	min = Number.MAX_VALUE;
+	for (i = 0; i < array.length; i++) {
+	    if(array[i]>max) {
+	        max = array[i];
+	    }
+	}
+
+	return obj;
 }
 
 function normalizeData(array) {
