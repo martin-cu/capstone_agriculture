@@ -294,7 +294,7 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 		temp_obj = {
 			fertilizer: fertilizer_cont.p_fertilizer.strongest.name,
 			fertilizer_id: fertilizer_cont.p_fertilizer.strongest.id,
-			amount: recommendation[fertilizer_cont.p_fertilizer.strongest.name]+' bags',
+			amount: Math.ceil(recommendation[fertilizer_cont.p_fertilizer.strongest.name])+' bags',
 			desc: obj.P[0].desc,
 			date: obj.P[0].date,
 			nutrient: 'P'
@@ -338,7 +338,7 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 			temp_obj = {
 				fertilizer: fertilizer_cont.k_fertilizer.strongest.name,
 				fertilizer_id: fertilizer_cont.k_fertilizer.strongest.id,
-				amount: Math.round(k_amt / single_f_amt * 100) / 100+' bags',
+				amount: Math.ceil(k_amt / single_f_amt)+' bags',
 				desc: obj.K[i].desc,
 				date: obj.K[i].date,
 				nutrient: 'K'
@@ -358,7 +358,7 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 		temp_obj = {
 			fertilizer: fertilizer_cont.n_fertilizer.strongest.name,
 			fertilizer_id: fertilizer_cont.n_fertilizer.strongest.id,
-			amount: Math.round(n_fertilizer_amt * 100) / 100+' bags',
+			amount: Math.ceil(n_fertilizer_amt)+' bags',
 			desc: obj.N[i].desc+' Nitrogen Application (N)',
 			date: obj.N[i].date,
 			nutrient: 'N'
@@ -720,7 +720,7 @@ function consolidateUniqueWO(arr) {
 			}
 			wo_obj.notes += unique_ele[y].desc
 			wo_obj.resources.ids.push(unique_ele[y].fertilizer);
-			wo_obj.resources.qty.push(unique_ele[y].amount);
+			wo_obj.resources.qty.push(Math.round(unique_ele[y].amount));
 
 		}
 		wo_obj.notes += ' (Recommendation)';

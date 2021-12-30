@@ -29,6 +29,7 @@ router.get('/get_active_calendar', cropCalendarController.ajaxGetCurrentCropCale
 //Ajax nutrient mgt
 router.get('/get_nutrient_plan_details', environmentController.ajaxGetNutrientPlan);
 router.get('/get_nutrient_plan_items', environmentController.ajaxGetNutrientPlanItems);
+router.get('/get_nutrient_details', environmentController.ajaxGetNutrientDetails);
 router.post('/create_nutrient_plan', environmentController.ajaxCreateNutrientPlan);
 router.post('/create_nutrient_item', environmentController.ajaxCreateNutrientItem);
 router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
@@ -173,6 +174,12 @@ router.post('/createFarmRecord', farmController.createFarmRecord);
 router.get('/deleteFarmRecord/:id', farmController.retireFarm);
 
 /*** Agro API Start ***/
+//Combined Environment Variable Query
+router.get('/get_calendar_variables', farmController.getIncludedCalendars);
+router.get('/forecast_yield_farm', farmController.getYieldVariables);
+router.get('/forecast_yield', farmController.forecastYield);
+router.get('/historical_variables', farmController.queryYieldVariables);
+router.get('/create_yield_forecast', farmController.createYieldForecast);
 //NDVI
 router.get('/agroapi/ndvi/history', farmController.getHistoricalNDVI);
 router.get('/agroapi/ndvi/imagery', farmController.getSatelliteImageryData);
@@ -203,7 +210,8 @@ router.post('/assign_farmers', farmController.assignFarmers);
 
 
 
-
+//Martin Testing
+router.get('/forecast_yield', farmController.forecastYield);
 
 
 

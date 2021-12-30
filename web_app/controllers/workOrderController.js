@@ -421,13 +421,18 @@ exports.editWorkOrder = function(req, res) {
 		work_order_id: req.body.wo_id
 	};
 
+	if (!Array.isArray(req.body.sacks_harvested))
+		req.body.sacks_harvested = [req.body.sacks_harvested];
+	if (!Array.isArray(req.body.harvest_type))
+		req.body.harvest_type = [req.body.harvest_type];
+
 	if (query.status == 'Completed') {
 		query['date_completed'] = dataformatter.formatDate(new Date(), 'YYYY-MM-DD');
 
 		if (query.type == 'Land Preparation') {
 			next_stage = 'Sow Seed';
 		}
-		else if (req.body.isComplete == 'on') {
+		else if (query.type == 'Harvest') {
 			next_stage = 'End';
 		}
 	}
@@ -521,34 +526,6 @@ exports.editWorkOrder = function(req, res) {
 						})
 					}
 					else {
-						// Insert partial harvests here
-						harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
-							if (err)
-								throw err;
-							else {
-								// Get current stage of crop calendar
-								cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
-								where: { key: 'calendar_id', val: req.body.crop_calendar_id } }, function(err, calendar) {
-									if (err)
-										throw err;
-									else {
-
-										// Process query data here
-										var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
-											req.body.harvest_type, calendar[0].stage, req.body.crop_calendar_id);
-										harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
-											if (err)
-												throw err;
-											else {
-
-
-											}
-										});
-									}
-								});
-							}
-						});
-
 						if (next_stage == 'Sow Seed') {
 							var wo_list_query = {
 								where: {
@@ -576,19 +553,73 @@ exports.editWorkOrder = function(req, res) {
 							});
 						}
 						else if (next_stage == 'End') {
-							var calendar_query = {
-								harvest_yield: req.body.sacks_harvested,
-								status: 'Completed'
-							};
-							var calendar_filter = {
-								calendar_id: query.crop_calendar_id
-							}
-							cropCalendarModel.updateCropCalendar(calendar_query, calendar_filter, function(err, editCalendar) {
+							// Insert partial harvests here
+							harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
 								if (err)
 									throw err;
 								else {
-									//Ideally redirect to detailed crop calendar view
-									res.redirect('/farms/work_order&id='+filter.work_order_id);
+									// Get current stage of crop calendar
+									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
+									where: { key: 'calendar_id', val: req.body.crop_calendar_id } }, function(err, calendar) {
+											if (err)
+												throw err;
+											else {
+												// Process query data here
+												var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
+													req.body.harvest_type, calendar[0].stage, query.crop_calendar_id);
+												harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
+													if (err)
+														throw err;
+													else {
+														var total_sacks = 0;
+														for (var i = 0; i < req.body.sacks_harvested.length; i++)
+															total_sacks += parseInt(req.body.sacks_harvested[i]);
+														var calendar_query = {
+															harvest_yield: total_sacks,
+															status: 'Completed'
+														};
+														var calendar_filter = {
+															calendar_id: query.crop_calendar_id
+														}
+														cropCalendarModel.updateCropCalendar(calendar_query, calendar_filter, function(err, editCalendar) {
+															if (err)
+																throw err;
+															else {
+																res.redirect('/farms/work_order&id='+filter.work_order_id);
+															}
+														});
+													}
+												});
+											}
+										});
+									}
+								});
+						}
+						else if (query.type == 'Harvest') {
+							// Insert partial harvests here
+							harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
+								if (err)
+									throw err;
+								else {
+									// Get current stage of crop calendar
+									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
+									where: { key: 'calendar_id', val: req.body.crop_calendar_id } }, function(err, calendar) {
+										if (err)
+											throw err;
+										else {
+
+											// Process query data here
+											var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
+												req.body.harvest_type, calendar[0].stage, query.crop_calendar_id);
+											harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
+												if (err)
+													throw err;
+												else {
+													res.redirect('/farms/work_order&id='+filter.work_order_id);
+												}
+											});
+										}
+									});
 								}
 							});
 						}

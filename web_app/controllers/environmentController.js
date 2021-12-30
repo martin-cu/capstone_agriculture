@@ -688,6 +688,17 @@ exports.ajaxCreateNutrientPlan = function(req, res) {
 	});
 }
 
+exports.ajaxGetNutrientDetails = function(req, res) {
+	var query = req.query;
+	nutrientModel.getNutrientDetails(query, function(err, details) {
+		if (err)
+			throw err;
+		else {
+			res.send(details);
+		}
+	});
+}
+
 exports.ajaxGetNutrientPlan = function(req, res) {
 	var query = req.query;
 	nutrientModel.getNutrientPlanDetails(query, function(err, plan) {
