@@ -125,6 +125,9 @@ router.get('/getPossiblePD', environmentController.getPDProbability); //Used in 
 router.get('/storePDRecommendation', environmentController.storePDRecommendation);
 router.get('/ajaxGetDiagnoses', environmentController.getDiagnosisList);
 router.get('/ajaxGetPastProbabilities', environmentController.getProbabilities);
+router.get('/ajaxGetDiagnosisStageFrequency', environmentController.ajaxGetDiagnosisStageFrequency);
+router.get('/getPDPreventions', environmentController.getPreventions);
+
 //Temporary Pest and Disease (Update later)
 
 
