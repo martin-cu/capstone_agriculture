@@ -5,6 +5,10 @@ function processModalStep(origin, selector) {
 		proceed = dataValidation(step);
 	}
 
+	else if (view == 'add_crop_calendar') {
+		proceed = dataValidation(step);
+	}
+
 	if (proceed) {
 		$('#'+origin).toggleClass('hide');
 		$('#body'+origin).toggleClass('hide');
@@ -30,15 +34,26 @@ function dataValidation(step) {
 	$('.inp-error').remove();
 	if (view == 'add_farm') {
 		if (step == 2) {
-			inp = ['farmName'];
+			inp = ['farmName', 'farm_mngr_cont'];
 		}
 		else if (step == 3) {
 			pass = validatePolygon();
 
 			if (!pass) {
-				$('#geotag_lbl').after().append('<label class="inp-error">Please select atleast 3 points</label>');
+				$('#geotag_lbl').after().append('<label class="inp-error">Please select atleast 4 points</label>');
 			}
 		}
+	}
+
+	else if (view == 'add_crop_calendar') {
+		if (step == 2) {
+			inp = ['crop_plan', 'farm_id', 'land_prep_date_start', 'land_prep_date_end'];
+		}
+
+		else if (step == 3) {
+			inp = ['seed_id', 'seed_rate', 'method', 'sowing_date_start', 'sowing_date_end', 'harvest_date_start', 'harvest_date_end'];
+		}
+
 	}
 
 	for (var i = 0; i < inp.length; i++) {
@@ -56,7 +71,7 @@ function dataValidation(step) {
 function validatePolygon() {
 	var pass = false;
 
-	if (coordinate_arr.length >= 3) {
+	if (coordinate_arr.length >= 4) {
 		pass = true;
 	}
 

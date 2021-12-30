@@ -12,7 +12,10 @@ li > span {
 
 <div class="container-fluid" style="color: #332C1F;">
 
-    <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f; position: sticky"></a>&nbsp;{{title}}&nbsp;</h3>
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">{{title}}</h3>
+        <a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
+    </div>
 
     <!-- {{!-- HEADER --}}
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
@@ -93,21 +96,21 @@ li > span {
                                         <div class="col">
                                         <label for="farm_desc" style="font-weight: bold;">Description</label>
 		                                 <div id="farm_desc">
-                                        N/A
+                                        
 		                                </div>
                                         </div>
 
                                         <div class="col">
                                         <label for="land_type" style="font-weight: bold;">Land Type</label>
 		                                <div id="land_type">
-                                        N/A
+                                        
 		                                </div>
                                         </div>
 
                                         <div class="col">
                                         <label for="farm_area" style="font-weight: bold;">Farm Area </label>
                                         <div id="farm_area">
-                                         N/A
+                                         
 		                                </div>
                                         </div>
 
@@ -225,14 +228,14 @@ li > span {
                         <div class="row">
 
                             <div class="col">
-                                <label for="seed_id">Seed</label>
+                                <label for="seed_id">Seed  <span style="color: #CA4E0C;">*</span></label>
 				                <select class="form-select" id="seed_id" name="seed_id">
 				                </select>
                                 <input type="hidden" name="seed_maturity_days" id="seed_maturity_days">
                             </div>
 
                             <div class="col">
-                               <label for="seed_rate">Seed Rate (kg/ha) </label>
+                               <label for="seed_rate">Seed Rate (kg/ha) <span style="color: #CA4E0C;">*</span></label>
 			                    <input type="text" class="form-control" id="seed_rate" name="seed_rate" placeholder="Qty">
                                 <label class="text-muted ml-2" id="seed_qty"></label>
                                 <input type="hidden" name="num_seed_bags" id="num_seed_bags" value="">
@@ -241,7 +244,7 @@ li > span {
                         </div>
                         <div class="row w-50">
                             <div class="col">
-                                <label for="method">Planting Method</label>
+                                <label for="method">Planting Method <span style="color: #CA4E0C;">*</span></label>
                                 <select class="form-select" id="method" name="method">
                                     <option value="Transplanting">Transplanting</option>
                                     <option value="Direct Seeding">Direct Seeding</option>
@@ -482,81 +485,89 @@ li > span {
 
                         {{!-- Maybe the for each handlebar could be used for each detected pest? --}}
                         <div class="row">
+                            <div class="col-lg-5 col-xxl-4">
+                        
+                                <div class="card shadow mb-4">
+                                    <div class="card-header mini py-3" style="background: #212529;">
+                                        <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest 1<br></h6>
+                                    </div>
+                                    <div class="card-body" style="height: 250px;">
 
-                          {{!-- PEST INFORMATION CARD --}}
-                                        <div class="col-lg-5 col-xxl-4">
-                                   
-                                            <div class="card shadow mb-4">
-                                                <div class="card-header mini py-3" style="background: #212529;height: auto;">
-                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest 1<br></h6>
-                                                </div>
-                                                <div class="card-body" style="height: 239.97px;">
-
-                                                        <div class="table-responsive" style="border-style: none;">
-                                                        <table class="table">
-                                                            <thead>
-                                                                {{!-- <tr></tr> --}}
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest Name<br></span><span class="d-xxl-flex justify-content-xxl-start">[Pest Name]<br></span></td>
-                                                                </tr>
-                                                                <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                   
-                                                </div>
-                                            </div>
+                                            <div class="table-responsive" style="border-style: none;">
+                                            <table class="table" style="height : 250px;">
+                                                <thead>
+                                                </thead>
+                                                <tbody>
+                                                    <tr style="border-style: none;">
+                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Name<br></span> <span class="d-xxl-flex justify-content-xxl-start" id="">[Name]<br></span></td>
+                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Type<br></span><span class="d-xxl-flex justify-content-xxl-start" id="">[Pest or Disease]<br></span></td>
+                                                    </tr>
+                                                    <tr style="border-style: none;">
+                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Last Diagnosed<br></span><span class="d-xxl-flex justify-content-xxl-start"  id="">[farm name]<br></span><span class="d-xxl-flex justify-content-xxl-start"  id="">[date]<br></span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                        {{!-- END OF PEST INFORMATION CARD --}}
-
-                                
-                                {{!-- PEST APPLICATION PLAN CARD --}}
-                                <div class="col-lg-7 col-xxl-8">
-
-                                            <div class="card shadow mb-4">
-                                                <div class="card-header mini py-3" style="background: #212529;height: auto;">
-                                                    <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan 1 Information<br></h6>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="table-responsive" style="border-style: none;">
-                                                        <table class="table">
-                                                            <thead>
-                                                                {{!-- <tr></tr> --}}
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
-                                                                </tr>
-                                                                <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
-                                                                </tr>
-                                                                <tr style="border-style: none;">
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
-                                                                    <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        {{!-- END OF PEST APPLICATION PLAN CARD --}}
-
+                                    </div>
                                 </div>
-                                {{!-- END CARDS --}}
+                            </div>
+                            <div class="col-lg-7 col-xxl-8">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header mini py-3" style="background: #212529;height: auto;">
+                                            <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan 1 Information<br></h6>
+                                        </div>
+                                        <div class="card-body table-responsive" style="height : 250px; padding-left : 1.5rem; padding-right : 1.5rem;">
+                                            <table class="table" id="pd_recommendation_table" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align: left; width : 25%">Date</th>
+                                                        <th style="text-align: left; width : 30%">Prevention</th>
+                                                        <th style="text-align: left; width : 40%">Description</th>
+                                                        <th style="text-align: left; width : 5%"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="overflow: auto;">
+                                                    <tr>   
+                                                        <td style="text-align: left;">Date</td>
+                                                        <td style="text-align: left;">Prevention</td>
+                                                        <td style="text-align: left;">Description</td>
+                                                        <td style="text-align: left;"><input type="checkbox" form="" id="" value=""></td>
+                                                    </tr>
+                                                    <tr>   
+                                                        <td style="text-align: left;">Date</td>
+                                                        <td style="text-align: left;">Prevention</td>
+                                                        <td style="text-align: left;">Description</td>
+                                                        <td style="text-align: left;"><input type="checkbox" form="" id="" value=""></td>
+                                                    </tr>
+                                                    <tr>   
+                                                        <td style="text-align: left;">Date</td>
+                                                        <td style="text-align: left;">Prevention</td>
+                                                        <td style="text-align: left;">Description</td>
+                                                        <td style="text-align: left;"><input type="checkbox" form="" id="" value=""></td>
+                                                    </tr>
+                                                    <tr>   
+                                                        <td style="text-align: left;">Date</td>
+                                                        <td style="text-align: left;">Prevention</td>
+                                                        <td style="text-align: left;">Description</td>
+                                                        <td style="text-align: left;"><input type="checkbox" form="" id="" value=""></td>
+                                                    </tr>
+                                                    <tr>   
+                                                        <td style="text-align: left;">Date</td>
+                                                        <td style="text-align: left;">Prevention</td>
+                                                        <td style="text-align: left;">Description</td>
+                                                        <td style="text-align: left;"><input type="checkbox" form="" id="" value=""></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
  
-                        <h6 style="font-weight: bold; margin-bottom: 20px">Recently Detected Diseases</h6>
+                        {{!-- <h6 style="font-weight: bold; margin-bottom: 20px">Recently Detected Diseases</h6> --}}
 
                         {{!-- If none detected --}}
-                        <p>No Detected Diseases Yet</p>
+                        {{!-- <p>No Detected Diseases Yet</p> --}}
 
                         {{!-- Else, add for each row of cards like the one above --}}
                         
@@ -619,6 +630,8 @@ function goBack() {
   window.history.back();
 }
 
+// MULTI-STEP FROM INDICATORS
+
 var currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
 
@@ -628,13 +641,14 @@ function showTab(n) {
   x[n].style.display = "block";
 
   //... and run a function that will display the correct step indicator:
-  fixStepIndicator(n)
+  fixStepIndicator(n);
 }
 
 function nextPrev(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
 
+  
   // Exit the function if any field in the current tab is invalid:
   if (!dataValidation(currentTab+2)) return false;
   // Hide the current tab:
@@ -648,11 +662,12 @@ document.getElementsByClassName("step")[currentTab].className += " finish";
   // if you have reached the end of the form...
   if (currentTab >= x.length) {
     // ... the form gets submitted:
-    document.getElementById("create_farm_form").submit();
+    document.getElementById("crop_calendar_form").submit();
     return false;
   }
   // Otherwise, display the correct tab:
   showTab(currentTab);
+
 }
 
 function fixStepIndicator(n) {

@@ -5,7 +5,7 @@ function update_color_meter(){
         var rgb = "color : rgb(214, " + val + ", 19)";
         $(this).attr("style",rgb);
         if(value != ""){
-            $(this).text(parseInt(value) + " %");
+            $(this).text(value + " %");
         }
     });
 }
@@ -199,11 +199,11 @@ $(document).ready(function(){
         var type = $(this).text();
         //update table
         $("tr.probability").remove();
-        $.get("/PDProbability", {farm_id : 1, type : $(this).text()}, function(result){
+        $.get("/PDProbability", {farm_id : $("#farm_id").val(), type : $(this).text()}, function(result){
             var i = 0;
             for(i = 0; i < result.probability.length; i++){
                 if(result.probability[i].pd_id != null)
-                    $("#probability_table").append('<tr class="probability clickable" onclick=' + "'" + 'location.href="/pest_and_disease_details?type=' + type + '&id=' + result.probability[i].pd_id + '"' + "'" + '><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '</td></tr>');
+                    $("#probability_table").append('<tr class="probability clickable" onclick=' + "'" + 'location.href="/pest_and_disease_details?type=' + type + '&id=' + result.probability[i].pd_id + '"' + "'" + '><a hidden >' + result.probability[i].pd_id +'</a><td>'+ result.probability[i].pd_name +'</td><td>' + result.probability[i].pd_desc + '</td><td class="probability_value">' + result.probability[i].probability + '.0</td></tr>');
                 else
                     $("#probability_table").append('<tr class="probability clickable"><a hidden ></a><td></td><td></td><td class="probability_value"></td></tr>');
             }

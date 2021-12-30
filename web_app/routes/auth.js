@@ -118,11 +118,14 @@ router.get('/pest_and_disease_management', environmentController.getPestDiseaseM
 router.get('/pest_and_disease_management/:type/:name', environmentController.getPestFactors);
 router.get('/pest_and_disease_details', environmentController.getPestDiseaseDetails);
 router.get('/update_pd_details/:type/:id/:detail_type', environmentController.updatePDDetails);
-router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbability); //ajax
+router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbability); //ajax 
 router.post('/addPest', environmentController.addPest);
 router.post('/addDisease', environmentController.addDisease);
 router.get('/generateRecommendationDiagnosis', environmentController.getRecommendationDiagnosis);
-router.get('/getPossiblePD', environmentController.getPDProbability);
+router.get('/getPossiblePD', environmentController.getPDProbability); //Used in storing recommendation
+router.get('/storePDRecommendation', environmentController.storePDRecommendation);
+router.get('/ajaxGetDiagnoses', environmentController.getDiagnosisList);
+router.get('/ajaxGetPastProbabilities', environmentController.getProbabilities);
 //Temporary Pest and Disease (Update later)
 
 

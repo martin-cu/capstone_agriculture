@@ -3,7 +3,7 @@
         <h3 class="text-dark mb-0">Farms &gt; Work Order</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
     </div>
     <div role="tablist" id="accordion-1" style="margin-bottom: 20px;">
-        <div class="card">
+        <div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto">
             <div class="card-header" role="tab" style="background: #939C1F;padding: 16px 20px;height: auto;">
                 <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="font-size: 16px;color: rgb(255,255,255);font-weight: bold;">Create Work Order</a></h5>
             </div>
@@ -86,7 +86,7 @@
         </div>
     </div>
 
-    <div class="card shadow mb-5">
+    <div class="card shadow mb-5" style="max-width: 1150px; margin: 0px auto">
         <div class="card-header py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
             <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Work Order Records</p>
         </div>
@@ -95,35 +95,49 @@
                                 <div class="row table-topper align-items-center">
                                     <div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
                                     <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
-                                        <h6 id="counter-1">Showing: <strong id="rowCount-1">ALL</strong>&nbsp;Row(s)</h6>
+                                        <h6 id="counter-1">Showing: <strong id="rowCount">ALL</strong>&nbsp;Row(s)</h6>
                                     </div>
                                     <div class="col-4 text-right" style="margin: 0px;padding: 5px 10px;"><a href="#" data-toggle="modal" data-target="#tablehelpModal"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;"></i></a></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div>
-                                            <table class="table table tablesorter" id="ipi-table">
+                                        <div style="width: auto;">
+                                            <table class="table table tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
                                                 <thead class="thead-dark">
                                                     <tr style="background: #332C1F;">
-                                                        <th style="">Status</th>
+                                                        <th style="">wo id</th>
                                                         <th style="">FARM</th>
                                                         <th style="">Type</th>
-                                                        <th style="">NAME</th>
+                                                        <th style="">CROP PLAN</th>
                                                         <th style="">Date Due</th>
-                                                        <th style="">wo id</th>
                                                         <th style="">notes</th>
+                                                        <th style="">Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody aria-live="polite" aria-relevant="all">
                                                  {{#each wo_list}}
                                                    <tr role="row">
-                                                        <td>{{this.status}}</td>
+                                                        <td>WO-{{this.work_order_id}}</td>
                                                         <td>{{this.farm_name}}</td>
                                                         <td>{{this.type}}</td>
                                                         <td>{{this.crop_plan}}</td>
                                                         <td>{{this.date_due}}</td>
-                                                        <td><a href="/farms/work_order&id={{this.work_order_id}}">{{this.work_order_id}}</a></td>
-                                                        <td>{{this.notes}}</td>
+                                                        <td style="word-wrap:break-word;">{{this.notes}}</td>
+                                                        <td> {{this.status}} 
+                                                            <span>
+                                                            <div class="dropdown no-arrow" style="display:inline-block; float: right">
+                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                    </button>
+                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                        <a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}">View Details</a>
+                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                                    </div>
+                                                                </div>
+                                                            </span> 
+                                                        </td>
                                                     </tr>
                                                     {{/each}}
                                                 </tbody>
