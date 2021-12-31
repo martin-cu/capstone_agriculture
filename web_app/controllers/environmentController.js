@@ -2366,7 +2366,7 @@ exports.getPDProbability = function(req, res){
 									statements.push({ statement : stmt});
 								}
 							}
-							console.log(possible_pests);
+							// console.log(possible_pests);
 							// console.log(req.query.calendar_id);
 							res.send(possible_pests);
 						});
@@ -2440,3 +2440,48 @@ exports.getProbabilities = function(req,res){
 			res.send(probabilities);
 	});
 };
+
+exports.ajaxGetDiagnosisStageFrequency = function(req,res){
+	pestdiseaseModel.getDiagnosisFrequentStage(function(err, frequency){
+		if(err)
+			throw err;
+		else{
+			res.send(frequency);
+		}
+	});
+}
+
+exports.getPreventions = function(req, res){
+	var type = req.query.type;
+	var id = req.query.id;
+	var possibilities = req.query.possibilities;
+	if(type == "Pest"){
+		pestdiseaseModel.getPestPreventions(id, function(err, preventions){
+			if(err)
+				throw err;
+			else{
+				//Look for optimal date
+				var i;
+				for(i = 0; i < preventions.length; i++){
+					preventions[i]["date"] = "Nov 20, 2021";
+				}
+				res.send(preventions);
+			}
+		});
+	}
+	else if(type == "Disease"){
+		pestdiseaseModel.getDiseasePreventions(id, function(err, preventions){
+			if(err)
+				throw err;
+			else{
+				//Look for optimal date
+				var i;
+				for(i = 0; i < preventions.length; i++){
+					preventions[i]["date"] = "Nov 20, 2021";
+				}
+				res.send(preventions);
+			}
+		});
+	}
+	
+}

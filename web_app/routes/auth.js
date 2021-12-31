@@ -97,6 +97,10 @@ router.get('/crop_calendar', cropCalendarController.getCropCalendarTab);
 router.get('/crop_calendar/add', cropCalendarController.getAddCropCalendar);
 router.get('/crop_calendar/details', cropCalendarController.getDetailedCropCalendar); //fix path later
 
+router.get('/farm_productivity_report', (req, res) => {
+	res.render('farm_productivity_report', {});
+});
+
 //router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later
 
 router.get('/harvest_cycle', farmController.getHarvestCycle);
@@ -126,6 +130,9 @@ router.get('/getPossiblePD', environmentController.getPDProbability); //Used in 
 router.get('/storePDRecommendation', environmentController.storePDRecommendation);
 router.get('/ajaxGetDiagnoses', environmentController.getDiagnosisList);
 router.get('/ajaxGetPastProbabilities', environmentController.getProbabilities);
+router.get('/ajaxGetDiagnosisStageFrequency', environmentController.ajaxGetDiagnosisStageFrequency);
+router.get('/getPDPreventions', environmentController.getPreventions);
+
 //Temporary Pest and Disease (Update later)
 
 
