@@ -2515,9 +2515,25 @@ exports.getPreventions = function(req, res){
 						throw err;
 					else{
 						//Look for optimal date
-						var i;
+						var i, date;
+						if(possibilities.frequent_stage == "Land Preparation")
+							date = dataformatter.formatDate(land_prep, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Sowing")
+							date = dataformatter.formatDate(sowing, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Vegetation")
+							date = dataformatter.formatDate(vegetation, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Reproductive")
+							date = dataformatter.formatDate(reproduction, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Ripening")
+							date = dataformatter.formatDate(ripening, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Harvesting")
+							date = dataformatter.formatDate(harvesting, 'YYYY-MM-DD');
+						else
+							date = dataformatter.formatDate(land_prep, 'YYYY-MM-DD');
+
 						for(i = 0; i < preventions.length; i++){
-							preventions[i]["date"] = "Nov 20, 2021";
+							
+							preventions[i]["date"] = date;
 						}
 						res.send(preventions);
 					}

@@ -1338,5 +1338,3 @@ exports.getDiagnosisFrequentStage = function(next){
 	mysql.query(sql, next); return(sql);
 };
 
-
-exports.get

@@ -632,3 +632,12 @@ exports.editWorkOrder = function(req, res) {
 		}
 	});
 }
+
+
+exports.createWO = function(req, res){
+	console.log(req.body.wo);
+	workOrderModel.createWorkOrder(req.body.wo, function(err, success){
+		res.send("goods");
+	});
+
+}
