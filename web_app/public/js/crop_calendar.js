@@ -544,6 +544,25 @@ $(document).ready(function() {
 				});
 			}
 
+			$(".prevention_wo:checkbox:checked").each(function(){
+				var values = $(this).val().split("|");
+				var temp_date = new Date(values[0]);
+				temp_date.setDate(temp_date.getDate() + 7);
+				var temp_wo = {
+					type : values[1],
+					notes : values[2],
+					date_created : moment(new Date()).format('YYYY-MM-DD'),
+					date_start : moment(values[0]).format('YYYY-MM-DD'),
+					date_due : moment(temp_date).format('YYYY-MM-DD'),
+					crop_calendar_id : crop_plan.insertId
+				}
+				$.post('/create_wo', {wo : temp_wo}, function(wo) {
+					wo = wo.replace('/farms/work_order&id=', '');
+					fr_items[i].wo_id = wo;
+				});
+			});
+
+
 			//Create work order for FR items
 				// Insert FK with work_order_id for generated fr_items
 			wo_fr_items = processFRtoDB([], fr_items, crop_plan.insertId);
@@ -563,7 +582,6 @@ $(document).ready(function() {
 						}
 				});
 			}
-
 		});
 	});
 

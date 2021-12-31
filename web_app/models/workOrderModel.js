@@ -4,7 +4,7 @@ mysql = mysql.connection;
 exports.createWorkOrder = function(query, next) {
 	var sql = "insert into work_order_table set ?;";
 	sql = mysql.format(sql, query);
-	
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

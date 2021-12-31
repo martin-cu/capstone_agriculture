@@ -57,6 +57,7 @@ router.get('/filter_nutrient_mgt', environmentController.ajaxGetDetailedNutrient
 router.get('/get_cycle_resources_used', materialController.ajaxGetResourcesUsed);
 
 router.post('/upload_wo', workOrderController.ajaxCreateWorkOrder);
+router.post('/create_wo', workOrderController.createWO);
 
 // router.get('/getPestDiseasePerFarm', environmentController.ajaxGetPossiblePD);
 
