@@ -2454,34 +2454,75 @@ exports.ajaxGetDiagnosisStageFrequency = function(req,res){
 exports.getPreventions = function(req, res){
 	var type = req.query.type;
 	var id = req.query.id;
-	var possibilities = req.query.possibilities;
-	if(type == "Pest"){
-		pestdiseaseModel.getPestPreventions(id, function(err, preventions){
-			if(err)
-				throw err;
-			else{
-				//Look for optimal date
-				var i;
-				for(i = 0; i < preventions.length; i++){
-					preventions[i]["date"] = "Nov 20, 2021";
-				}
-				res.send(preventions);
-			}
-		});
-	}
-	else if(type == "Disease"){
-		pestdiseaseModel.getDiseasePreventions(id, function(err, preventions){
-			if(err)
-				throw err;
-			else{
-				//Look for optimal date
-				var i;
-				for(i = 0; i < preventions.length; i++){
-					preventions[i]["date"] = "Nov 20, 2021";
-				}
-				res.send(preventions);
-			}
-		});
-	}
 	
+	var seed_id = req.query.seed_id;
+	console.log(req.query.land_prep_date);
+	console.log(req.query.seed_id);
+	var possibilities = req.query.possibilities;
+
+	//Get seed dmaturity days
+	materialModel.getMaterials("Seed", {seed_id : seed_id}, function(err, seed){
+		if(err)
+			throw err;
+		else{
+			console.log(seed);
+
+			var maturity_days = seed[0].maturity_days;
+			var land_prep = new Date(req.query.land_prep_date);
+			var sowing = new Date(req.query.sowing_date);
+			var vegetation = new Date(req.query.vegetation_date);
+			var reproduction = new Date();
+			reproduction.setDate(vegetation.getDate() + maturity_days);
+			var ripening = new Date();
+			ripening.setDate(reproduction.getDate() + 35);
+			var harvesting = new Date();
+			harvesting.setDate(ripening.getDate() + 30);
+
+			//Get 
+			if(type == "Pest"){
+				pestdiseaseModel.getPestPreventions(id, function(err, preventions){
+					if(err)
+						throw err;
+					else{
+						//Look for optimal date
+						var i, date;
+						if(possibilities.frequent_stage == "Land Preparation")
+							date = dataformatter.formatDate(land_prep, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Sowing")
+							date = dataformatter.formatDate(sowing, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Vegetation")
+							date = dataformatter.formatDate(vegetation, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Reproductive")
+							date = dataformatter.formatDate(reproduction, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Ripening")
+							date = dataformatter.formatDate(ripening, 'YYYY-MM-DD');
+						else if(possibilities.frequent_stage == "Harvesting")
+							date = dataformatter.formatDate(harvesting, 'YYYY-MM-DD');
+						else
+							date = dataformatter.formatDate(land_prep, 'YYYY-MM-DD');
+
+						for(i = 0; i < preventions.length; i++){
+							
+							preventions[i]["date"] = date;
+						}
+						res.send(preventions);
+					}
+				});
+			}
+			else if(type == "Disease"){
+				pestdiseaseModel.getDiseasePreventions(id, function(err, preventions){
+					if(err)
+						throw err;
+					else{
+						//Look for optimal date
+						var i;
+						for(i = 0; i < preventions.length; i++){
+							preventions[i]["date"] = "Nov 20, 2021";
+						}
+						res.send(preventions);
+					}
+				});
+			}
+		}
+	});
 }
