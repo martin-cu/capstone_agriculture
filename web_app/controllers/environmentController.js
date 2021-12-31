@@ -2350,26 +2350,27 @@ exports.getPDProbability = function(req, res){
 								stage_name : stage[0].stage
 							}	
 						}
-						pestdiseaseModel.getPDProbabilityPercentage(weather, season, null, stage,function(err, possible_pests){
-							if(err){
-								throw err;
-							}else{
-								var statements = new Array();
-								for(i = 0; i < possible_pests.length; i++){
-									stmt = possible_pests[i].pest_name + " - May occur due to ";
-									if(possible_pests[i].weather_id != null)
-										stmt = stmt + possible_pests[i].weather + " weather, ";
-									if(possible_pests[i].season_id != null)
-										stmt = stmt + possible_pests[i].season_name + " season ";
-									if(possible_pests[i].stage_id != null)
-										stmt = stmt + possible_pests[i].t_stage_name + " stage ";
-									statements.push({ statement : stmt});
-								}
-							}
-							// console.log(possible_pests);
-							// console.log(req.query.calendar_id);
-							res.send(possible_pests);
-						});
+						res.send({});
+						// pestdiseaseModel.getPDProbabilityPercentage(weather, season, null, stage,function(err, possible_pests){
+						// 	if(err){
+						// 		throw err;
+						// 	}else{
+						// 		var statements = new Array();
+						// 		for(i = 0; i < possible_pests.length; i++){
+						// 			stmt = possible_pests[i].pest_name + " - May occur due to ";
+						// 			if(possible_pests[i].weather_id != null)
+						// 				stmt = stmt + possible_pests[i].weather + " weather, ";
+						// 			if(possible_pests[i].season_id != null)
+						// 				stmt = stmt + possible_pests[i].season_name + " season ";
+						// 			if(possible_pests[i].stage_id != null)
+						// 				stmt = stmt + possible_pests[i].t_stage_name + " stage ";
+						// 			statements.push({ statement : stmt});
+						// 		}
+						// 	}
+						// 	// console.log(possible_pests);
+						// 	// console.log(req.query.calendar_id);
+						// 	res.send(possible_pests);
+						// });
 					});
 				}
 			});

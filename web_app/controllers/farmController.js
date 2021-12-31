@@ -20,7 +20,7 @@ exports.forecastYield = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			console.log(farms);
+			//console.log(farms);
 			res.render('yield_forecast_test', { list: farms });
 		}
 	});
@@ -542,18 +542,43 @@ exports.createFarmRecord = function(req, res) {
 
 //Environment Variable Queries
 exports.getIncludedCalendars = function(req, res) {
-   cropCalendarModel.getCropCalendars({ status: ['Completed'], where: { key: 'farm_name', val: req.query.farm_name } }, function(err, calendar_list) {
-   		if (err)
-   			throw err;
-   		else {
-   			if (calendar_list.length < 4) {
-   				res.send({ result: null });
-   			}
-   			else {
-   				res.send({ result: calendar_list });
-   			}
-   		}
-   });
+	cropCalendarModel.getCurrentCropCalendar({ farm_name: req.query.farm_name }, function(err, calendar) {
+		if (err)
+			throw err;
+		else {
+			cropCalendarModel.getCropCalendars({ status: ['Completed'] }, function(err, calendar_list) {
+		   		if (err)
+		   			throw err;
+		   		else {
+		   			if (calendar.length != 0) {
+		   				cropCalendarModel.readCropCalendar({ calendar_id: calendar[0].calendar_id }, function(err, curr_calendar) {
+		   					if (err)
+		   						throw err;
+		   					else {
+		   						calendar_list = calendar_list.filter(e => new Date(e.harvest_date) < curr_calendar[0].harvest_date);
+					   			if (calendar_list.length < 4) {
+					   				res.send({ result: null });
+					   			}
+					   			else {
+					   				res.send({ result: calendar_list, current_calendar: curr_calendar[0] });
+					   			}
+		   					}
+		   				});
+		   			}
+		   			else {
+		   				//console.log(calendar_list);
+			   			if (calendar_list.length < 4) {
+			   				res.send({ result: null });
+			   			}
+			   			else {
+			   				res.send({ result: calendar_list });
+			   			}
+		   			}
+		   		}
+		   });
+		}
+	});
+		   
 }
 
 function normalizeForecastVariables(data) {
@@ -632,7 +657,7 @@ exports.createYieldForecast = function(req, res) {
 	// console.log('-------------------');
 	// console.log(testing_set);
 	var forecast = analyzer.forecastYield(training_set, testing_set);
-	console.log(forecast);
+	//console.log(forecast);
 	res.send(forecast);
 }
 
@@ -645,11 +670,12 @@ exports.getYieldVariables = function(req, res) {
 	lon = temp_lon;
 
 	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?accumulated_temperature?polyid='+polygon_id+'&lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
-
+	//console.log(url);
     request(url, { json: true }, function(err, response, body) {
         if (err)
         	throw err;
         else {
+        	//console.log(body);
         	var rainfall = 0;
              body_rainfall = body.filter(e => e.rain != undefined || e.rain != null);
         	if (body_rainfall.length != 0) {
@@ -753,7 +779,7 @@ exports.queryYieldVariables = function(req, res) {
 
 						        	html_data['uvi_history'] = dataformatter.smoothDailyData(body, 'uvi_history');;
 
-						        	console.log(html_data);
+						        	//console.log(html_data);
 									res.send(html_data);
 						        }
 						    });

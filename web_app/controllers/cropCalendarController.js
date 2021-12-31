@@ -203,7 +203,7 @@ exports.getDetailedCropCalendar = function(req, res) {
 					if (err)
 						throw err;
 					else {
-						console.log(soil_record);
+						//console.log(soil_record);
 						
 						if(soil_record[0].pH_lvl == null)
 							soil_record[0].pH_lvl = "N/A";

@@ -18,7 +18,7 @@ function parseDecimal(num, decimal) {
 exports.forecastYield = function(dataset, testing) {
 	const net = new brain.brain.recurrent.LSTMTimeStep({
 	  inputSize: 9,
-	  hiddenLayers: [5],
+	  hiddenLayers: [9],
 	  outputSize: 9,
 	});
 	const trainingData = [dataset.data];

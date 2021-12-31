@@ -119,7 +119,7 @@ exports.getDetailedWO = function(req, res) {
 										if (err)
 											throw err;
 										else {
-											console.log(details);
+											//console.log(details);
 											if (details.length == 0) 
 												details.push({});
 											html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
