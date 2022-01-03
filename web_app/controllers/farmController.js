@@ -72,13 +72,14 @@ exports.getFarmDetails = function(req, res) {
 	var center = req.query.center;
 	var coordinates = req.query.coordinates;
 	var farm_id = req.query.farm_id;
-
+	var farmtypes = [];
 	farmModel.filteredFarmDetails({farm_id : req.query.farm_id}, function(err, details) {
 		if (err)
 			throw err;
 		else {
 			html_data["details"] = details;
 			////console.log(details);
+			farmtypes.push(details[0].land_type);
 		}
 
 		materialModel.getFarmMaterialsSpecific({farm_id : farm_id}, {item_type : "Seed"}, function(err, seeds){
@@ -264,11 +265,20 @@ exports.getFarmDetails = function(req, res) {
 																break;
 															}
 														// console.log(stage[index]);
-														var stage = {
-															stage_name : stage[0].stage
-														}	
+														if(index == null){
+															var cur_stage = {
+																stage_name : null
+															}	
+														}
+														else{
+															var cur_stage = {
+																stage_name : stage[0].stage
+															}	
+															farmtypes.push(stage[0].method);
+														}
+														
 													}
-													pestdiseaseModel.getPDProbabilityPercentage(weather, season, null, stage,function(err, possible_pests){
+													pestdiseaseModel.getPDProbabilityPercentage(weather, season, farmtypes, cur_stage,function(err, possible_pests){
 														if(err){
 															throw err;
 														}else{
