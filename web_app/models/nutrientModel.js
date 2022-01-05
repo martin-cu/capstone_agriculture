@@ -111,7 +111,7 @@ exports.getNutrientPlanItems = function(data, next) {
 }
 
 exports.getNutrientPlanItemsCompleted = function(data, next) {
-	var sql = "select ft.fertilizer_name, frp.calendar_id, frp.last_updated, fri.*, wot.date_completed, wot.status from fertilizer_recommendation_items fri join fertilizer_table ft using (fertilizer_id) join fertilizer_recommendation_plan frp using (fr_plan_id) left join work_order_table wot ON wot.work_order_id = fri.wo_id where ? order by target_application_date asc";
+	var sql = "select ft.fertilizer_name, frp.calendar_id, frp.last_updated, fri.*, wot.work_order_id, wot.date_completed, wot.status from fertilizer_recommendation_items fri join fertilizer_table ft using (fertilizer_id) join fertilizer_recommendation_plan frp using (fr_plan_id) left join work_order_table wot ON wot.work_order_id = fri.wo_id where ? order by target_application_date asc";
 	sql = mysql.format(sql, data);
 	// console.log(sql);
 	mysql.query(sql, next);

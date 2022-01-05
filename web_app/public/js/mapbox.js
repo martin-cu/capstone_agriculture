@@ -334,7 +334,8 @@ $(document).ready(function() {
 				$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
 				$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
 				$(".calendar_planting").text(farm_details.crop_calendar_details.method);
-				$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
+				$(".calendar_status").text(farm_details.crop_calendar_details.status);
+				$(".calendar_status").addClass(farm_details.crop_calendar_details.status);
 				$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
 				$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
 				
@@ -431,7 +432,8 @@ $(document).ready(function() {
 					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
 					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
 					$(".calendar_planting").text(farm_details.crop_calendar_details.method);
-					$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
+					$(".calendar_status").text(farm_details.crop_calendar_details.status);
+					$(".calendar_status").addClass(farm_details.crop_calendar_details.status);
 					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
 					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
 
@@ -552,7 +554,8 @@ $(document).ready(function() {
 					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
 					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
 					$(".calendar_planting").text(farm_details.crop_calendar_details.method);
-					$(".calendar_water").text(farm_details.crop_calendar_details.planting_method);
+					$(".calendar_status").text(farm_details.crop_calendar_details.status);
+					$(".calendar_status").addClass(farm_details.crop_calendar_details.status);
 					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
 					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
 

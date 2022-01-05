@@ -7,10 +7,14 @@ const workOrderModel = require('../models/workOrderModel.js');
 var request = require('request');
 
 exports.getCropCalendarTab = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
 	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
 		if (err)
 			throw err;
 		else {
+			if(list.length == 0)
+				html_data["empty_plan"] = true;
 			var list_obj = {
 				land_prep: [],
 				sowing: [],
@@ -52,8 +56,7 @@ exports.getCropCalendarTab = function(req, res) {
 						}
 					}
 
-					var html_data = {};
-					html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+					
 					html_data['calendar_list'] = list_obj;
 					
 					var list_obj_keys = ['land_prep', 'sowing', 'vegetation', 'reproductive', 'ripening', 'harvesting'];
@@ -63,7 +66,18 @@ exports.getCropCalendarTab = function(req, res) {
 						}
 					}
 
-					res.render('crop_calendar_tab', html_data);
+					cropCalendarModel.getCropCalendars({ status: ['Completed'] }, function(err, past_calendars){
+						if(err)
+							throw err;
+						else{
+							for(i = 0; i < past_calendars.length; i++){
+								if(past_calendars[i].sowing_date != null)
+									past_calendars[i].sowing_date = dataformatter.formatDate(new Date(past_calendars[i].sowing_date), "mm DD, YYYY")
+							}
+							html_data["past_calendars"] = past_calendars;
+						}
+						res.render('crop_calendar_tab', html_data);
+					});
 				}
 			});
 		}
@@ -166,6 +180,7 @@ exports.getDetailedCropCalendar = function(req, res) {
 		var wo_query = {
 			where : { key : ["calendar_id"], value : [req.query.id]}
 		}
+		var pd_wos = [];
 		workOrderModel.getWorkOrders(wo_query, function(err, wos){
 			if(err)
 				throw err;
@@ -178,6 +193,8 @@ exports.getDetailedCropCalendar = function(req, res) {
 					else
 						wos[i].date_completed = "Not yet completed"
 					
+					if(wos[i].type != "Land Preparation" && wos[i].type != "Sow Seed" && wos[i].type != "Fertilizer Application" && wos[i].type != "Harvest")
+						pd_wos.push(wos[i]);
 				}
 				
 			}
@@ -217,6 +234,7 @@ exports.getDetailedCropCalendar = function(req, res) {
 					html_data["workorders"] = wos;
 					html_data["soil_record"] = soil_record[0];
 					html_data["fertilizer_wos"] = fertilizers;
+					html_data["pd_wos"] = pd_wos;
 					html_data["crop_plan_details"] = crop_calendar[0];
 					res.render('detailed_crop_calendar', html_data); 
 				});
