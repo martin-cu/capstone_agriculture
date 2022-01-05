@@ -5,6 +5,7 @@ const workOrderController = require('../controllers/workOrderController');
 const employeeController = require('../controllers/employeeController');
 const cropCalendarController = require('../controllers/cropCalendarController');
 const environmentController = require('../controllers/environmentController');
+const reportController = require('../controllers/reportController');
 const globe = require('../controllers/sms-mt');
 
 router.get('/login', (req, res) => {
@@ -170,6 +171,9 @@ router.get('/sms/messages', globe.getMessages);
 router.get('/farms/work_order&id=:work_order_id', workOrderController.getDetailedWO);
 router.post('/create_work_order', workOrderController.createWorkOrder);
 router.post('/edit_work_order', workOrderController.editWorkOrder);
+
+//Report
+router.get('/test_report', reportController.getDetailedReport);
 
 /*** Page Navigation End ***/
 

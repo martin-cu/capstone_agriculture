@@ -514,16 +514,27 @@ $(document).ready(function() {
 	var refresh_on = 0;
 	var loaded = false;
 
-	setInterval(function() {
-		var hour = new Date();
-		hour = hour.getHours();
+	// Run this each time a page is loaded
+	$.get('/get_weather_forecast', {}, function(forecast_result) {
+		//console.log(formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD'));
+		if (forecast_result == 0) {
+			refresh_on = hour + 1;
+			$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+				let query = normalizeForDB(result, hour);
 
-		//console.log(hour+' - '+refresh_on);
+				$.post('/upload_weather_forecast', query, function(upload_result) {
+					console.log('DB upload success');
 
-		/************  Weather Forecast to DB Start *************/
-		$.get('/get_weather_forecast', {}, function(forecast_result) {
-			//console.log(formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD'));
-			if (forecast_result == 0) {
+					loaded = false;
+				});
+			});	
+		}
+		else if (hour == refresh_on && hour != forecast_result[0].time_uploaded || 
+			formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD') != formatDate(new Date(), 'YYYY-MM-DD')) {
+			console.log(new Date()+' : Deleting DB records...');
+			$.get('/clear_weather_forecast', {}, function(status) {
+
+				//console.log('Generating weather forecast...');
 				refresh_on = hour + 1;
 				$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
 					let query = normalizeForDB(result, hour);
@@ -534,59 +545,109 @@ $(document).ready(function() {
 						loaded = false;
 					});
 				});	
-			}
-			else if (hour == refresh_on && hour != forecast_result[0].time_uploaded || 
-				formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD') != formatDate(new Date(), 'YYYY-MM-DD')) {
-				console.log(new Date()+' : Deleting DB records...');
-				$.get('/clear_weather_forecast', {}, function(status) {
+			})
+		}
+		else {
+			console.log('Getting weather forecast...');
 
-					//console.log('Generating weather forecast...');
-					refresh_on = hour + 1;
-					$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
-						let query = normalizeForDB(result, hour);
+			refresh_on = forecast_result[0].time_uploaded + 1;
+		}
 
-						$.post('/upload_weather_forecast', query, function(upload_result) {
-							console.log('DB upload success');
+		/************  DB to UI Start *************/
+		//console.log(view+' - '+loaded);
+		// if (view == 'farm_monitoring' && loaded == false) {
 
-							loaded = false;
-						});
-					});	
-				})
-			}
-			else {
-				console.log('Getting weather forecast...');
+		// 	loaded = true;
+		// 	$('#weather_table').empty();
+		// 	appendForecastCards(processForecastDB(forecast_result));
+		// 	//appendForecastDetails(result.forecast[0]);
 
-				refresh_on = forecast_result[0].time_uploaded + 1;
-			}
+		// 	// // Recommendation
+		// 	// generateRecommendation(result.forecast);
 
-			/************  DB to UI Start *************/
-			//console.log(view+' - '+loaded);
-			if (view == 'farm_monitoring' && loaded == false) {
+		// 	// $('.carousel-inner').on('click', '.forecast_card', function() {
+		// 	// 	var card = $('.forecast_card').index(this);
 
-				loaded = true;
-				$('#weather_table').empty();
-				appendForecastCards(processForecastDB(forecast_result));
-				//appendForecastDetails(result.forecast[0]);
+		// 	// 	appendForecastDetails(result.forecast[card]);
+		// 	// });
+		// }
 
-				// // Recommendation
-				// generateRecommendation(result.forecast);
+		/************  DB to UI End *************/
+	});
 
-				// $('.carousel-inner').on('click', '.forecast_card', function() {
-				// 	var card = $('.forecast_card').index(this);
+	// setInterval(function() {
+	// 	var hour = new Date();
+	// 	hour = hour.getHours();
 
-				// 	appendForecastDetails(result.forecast[card]);
-				// });
-			}
+	// 	//console.log(hour+' - '+refresh_on);
 
-			/************  DB to UI End *************/
-		});
-		/************  Weather Forecast to DB End *************/
+	// 	/************  Weather Forecast to DB Start *************/
+	// 	$.get('/get_weather_forecast', {}, function(forecast_result) {
+	// 		//console.log(formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD'));
+	// 		if (forecast_result == 0) {
+	// 			refresh_on = hour + 1;
+	// 			$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+	// 				let query = normalizeForDB(result, hour);
+
+	// 				$.post('/upload_weather_forecast', query, function(upload_result) {
+	// 					console.log('DB upload success');
+
+	// 					loaded = false;
+	// 				});
+	// 			});	
+	// 		}
+	// 		else if (hour == refresh_on && hour != forecast_result[0].time_uploaded || 
+	// 			formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD') != formatDate(new Date(), 'YYYY-MM-DD')) {
+	// 			console.log(new Date()+' : Deleting DB records...');
+	// 			$.get('/clear_weather_forecast', {}, function(status) {
+
+	// 				//console.log('Generating weather forecast...');
+	// 				refresh_on = hour + 1;
+	// 				$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+	// 					let query = normalizeForDB(result, hour);
+
+	// 					$.post('/upload_weather_forecast', query, function(upload_result) {
+	// 						console.log('DB upload success');
+
+	// 						loaded = false;
+	// 					});
+	// 				});	
+	// 			})
+	// 		}
+	// 		else {
+	// 			console.log('Getting weather forecast...');
+
+	// 			refresh_on = forecast_result[0].time_uploaded + 1;
+	// 		}
+
+	// 		/************  DB to UI Start *************/
+	// 		//console.log(view+' - '+loaded);
+	// 		if (view == 'farm_monitoring' && loaded == false) {
+
+	// 			loaded = true;
+	// 			$('#weather_table').empty();
+	// 			appendForecastCards(processForecastDB(forecast_result));
+	// 			//appendForecastDetails(result.forecast[0]);
+
+	// 			// // Recommendation
+	// 			// generateRecommendation(result.forecast);
+
+	// 			// $('.carousel-inner').on('click', '.forecast_card', function() {
+	// 			// 	var card = $('.forecast_card').index(this);
+
+	// 			// 	appendForecastDetails(result.forecast[card]);
+	// 			// });
+	// 		}
+
+	// 		/************  DB to UI End *************/
+	// 	});
+	// 	/************  Weather Forecast to DB End *************/
 
 
-	}, 600000);
+	// }, 600000);
 
 
-	if (view == 'add_crop_calendar') {
+	if (view == 'add_crop_calendar' || view == 'home') {
 		jQuery.ajaxSetup({async: false });
 		var hour = new Date();
 		hour = hour.getHours();

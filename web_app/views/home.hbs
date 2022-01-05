@@ -75,10 +75,59 @@
                                 <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
                                     <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Insert Weather Forecast here</h6>
                                 </div>
-                                <div class="card-body">
+
+                                <div class="bg-secondary forecast_body">
+                                    <div class="d-flex w-100 px-3 py-2" style="min-height: 50px; background-color: #212529; color: white">
+                                        <div class="" id="icon_detail" style="font-size: 40px;">
+                                            icon
+                                        </div>
+                                        <div class="px-2 d-flex">
+                                            <div style="font-size: 24px;" id="temp_detail">
+                                                Temp
+                                            </div>
+                                            <div style="font-size: 12px;">°C</div>
+                                        </div>
+                                        <div class="" style="font-size: 12px;">
+                                            <div>
+                                                <span>Pressure: </span>
+                                                <span id="precipitation_detail">a</span>
+                                            </div>
+                                            <div>
+                                                <span>Humidity: </span>
+                                                <span id="humidity_detail">a</span>
+                                            </div>
+                                            <div>
+                                                <span>Rainfall: </span>
+                                                <span id="rainfall_detail">a</span>
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto d-flex flex-column float-right">
+                                            <span>Soccoro, Oriental Mindoro</span>
+                                            <span id="weather_day_detail" class="float-right text-right"></span>
+                                            <span id="weather_desc_detail" class="float-right text-right"></span>
+                                        </div>
+                                    </div>
+
+                                    <div id="" class="d-flex flex-column" data-touch="false" data-interval="false" data-ride="carousel" style="min-height: 200px; background-color: #212529; color: white">
+                                      <canvas class="my-2 weather_chart" id="weather_chart"></canvas>
+                                      <div class="carousel-inner weather_table_cont" id="carousel_inner" style="min-height: 150px;">
+                                        <table  id="weather_table" class="table">
+                                            
+                                        </table>
+
+                                        <ol class="carousel-indicators" id="page">
+                                            <li class="week_switch" class="active"></li>
+                                            <li class="week_switch"></li>
+                                        </ol>
+
+                                      </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="card-body">
                                      <button class="btn btn-primary" id="forecast_check">Forecast Weather</button>
                                      <button class="btn btn-secondary" id="test_historical">Historical Weather</button>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="col-lg-5 col-xl-4">
