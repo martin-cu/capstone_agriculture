@@ -2087,14 +2087,26 @@ exports.addDiagnosis = function(req,res){
 			if(err)
 				throw err;
 			else{
-				var i, lastest;
+				var i, lastest, crop_plan;
 				latest = 0;
+				crop_plan = -1;
 				// console.log(crop_calendar);  //FIX HERE
 				for(i =0; i < crop_calendar.length; i++){
 					console.log(crop_calendar[i].farm_name + " - " + farm_name);
 					console.log(crop_calendar[i].last_prep_date + " - " + crop_calendar[latest].last_prep_date);
 					if(crop_calendar[i].farm_name == farm_name){
+
 						latest  = i;
+						var temp_harvest = new Date(crop_calendar[i].harvest_date);
+						temp_harvest.setTime(temp_harvest.getTime + (7 * 24 * 60 * 60 * 1000));
+						if(diagnosis.date_diagnosed > crop_calendar[i].land_prep_date && diagnosis.date_diagnosed < temp_harvest){
+							// console.log("Date diagnosed: " + diagnosis.date_diagnosed);
+							// console.log("Land Prep date: " + crop_calendar[i].land_prep_date);
+							// console.log("Harvest date: " + crop_calendar[i].harvest_date);
+							//console.log(crop_calendar[i].stage);
+							crop_plan = i;
+						}
+
 						if(crop_calendar[i].land_prep_date > crop_calendar[latest].land_prep_date)
 							latest  = i;
 					}
@@ -2102,20 +2114,62 @@ exports.addDiagnosis = function(req,res){
 					// if(crop_calendar[i].farm_name == farm_name)
 					// 	diagnosis["calendar_id"] = crop_calendar[i].calendar_id;
 				}
-				console.log(latest);
-				console.log(crop_calendar[latest].calendar_id);
-				if(farm_name != crop_calendar[latest].farm_name){
+				console.log(crop_plan);
+				console.log(crop_calendar[crop_plan].calendar_id);
+				if(farm_name != crop_calendar[latest].farm_name || crop_plan == -1){
 					diagnosis["calendar_id"] = null;
 					diagnosis["stage_diagnosed"] = null;
 				}
 				else{
-					diagnosis["calendar_id"] = crop_calendar[latest].calendar_id;
-					diagnosis["stage_diagnosed"] = crop_calendar[latest].stage;
+					var stage;
+					var maturity_days = crop_calendar[crop_plan].maturity_days;
+					var land_prep = new Date(crop_calendar[crop_plan].land_prep_date);
+					var sowing = new Date(crop_calendar[crop_plan].sowing_date);
+					var vegetation = new Date();
+					vegetation.setTime(sowing.getTime() + (7 * 24 * 60 * 60 * 1000));
+					var reproduction = new Date();
+					reproduction.setTime(vegetation.getTime() + (maturity_days * 24 * 60 * 60 * 1000));
+					var ripening = new Date();
+					ripening.setTime(reproduction.getTime() + (35* 24 * 60 * 60 * 1000));
+					var harvesting = new Date();
+					harvesting.setTime(ripening.getTime() + (30 * 24 * 60 * 60 * 1000));
+					// console.log(diagnosis.date_diagnosed);
+					// console.log(land_prep);
+					// console.log(sowing);
+					// console.log(vegetation);
+					// console.log(reproduction);
+					// console.log(ripening);
+					// console.log(harvesting);
+
+					var diag_date = new Date(diagnosis.date_diagnosed);
+					if(diag_date > harvesting){
+						stage = "Harvesting";
+					}
+					else if(diag_date > ripening){
+						stage = "Ripening";
+					}
+					else if(diag_date > reproduction){
+						stage = "Reproduction";
+					}
+					else if(diag_date > vegetation){
+						stage = "Vegetation";
+					}
+					else if(diag_date > sowing){
+						stage = "Sowing";
+					}
+					else if(diag_date > land_prep){
+						stage = "Land Preparation";
+					}
+					else{
+						stage = null;
+					}
+					console.log(stage);
+					diagnosis["calendar_id"] = crop_calendar[crop_plan].calendar_id;
+					diagnosis["stage_diagnosed"] = stage;
 				}
 				
 					
 			}
-
 
 
 			pestdiseaseModel.getDiagnosis({farm_id :diagnosis.farm_id},diagnosis.type, function(err, diagnoses){
@@ -2128,8 +2182,8 @@ exports.addDiagnosis = function(req,res){
 						
 						if(diagnoses[i].status == "Present" && diagnosis.pd_id == diagnoses[i].pd_id){
 							console.log("DO NOT ADD. ALREADY PRESENT");
-							console.log(diagnosis.pd_id);
-							console.log(diagnoses[i].pd_id);
+							// console.log(diagnosis.pd_id);
+							// console.log(diagnoses[i].pd_id);
 							add = false;
 							break;
 						}
@@ -2158,7 +2212,7 @@ exports.addDiagnosis = function(req,res){
 								//Create new WorkOrders
 								var today = new Date();
 								today.setDate(today.getDate() + 7);	
-								console.log(workorders[0][1]);
+								// console.log(workorders[0][1]);
 								for(i = 0;i < workorders.length; i++){
 
 									var temp_wo = {
@@ -2229,6 +2283,7 @@ exports.getRecommendationDiagnosis = function(req,res){
 				var i;
 				for(i = 0; i < solutions.length; i++){
 					var solution = {
+						date_words : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
 						date : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
 						type : solutions[i].solution_name,
 						desc : solutions[i].solution_desc
@@ -2247,6 +2302,7 @@ exports.getRecommendationDiagnosis = function(req,res){
 
 exports.getPDProbability = function(req, res){
 	var center = req.query.center;
+	var farmtypes = [];
 	if(center == null){
 		var lat = 13.073091;
 		var lon = 121.388563;
@@ -2256,154 +2312,173 @@ exports.getPDProbability = function(req, res){
 		var lon = center[0];
 	}
 	
-	new Date(Date.now());
-
-	var d1 = new Date(Date.now());
-	var d2 = new Date(Date.now());
-	d2.setDate(d2.getDate() - 2);
-	d1.setDate(d1.getDate() - 1);
-
-	var start_date = dataformatter.dateToUnix(d2);
-	var end_date = dataformatter.dateToUnix(d1);
-	
-	var x = new Date();
-	var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
-
-	request(url, { json: true }, function(err, response, body) {
+	farmModel.filteredFarmDetails({farm_id : req.query.farm_id}, function(err, details) {
 		if (err)
 			throw err;
 		else {
-			// //console.log(body);
-			for (var i = 0; i < body.length; i++) {
-				body[i].dt = dataformatter.unixtoDate(body[i].dt);
-			}
-			
-			//***** Call Agro API for succeeding 5 day forecast
-			var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
-			request(forecast_url, { json: true }, function(err, response, forecast_body) {
-				if (err)
-					throw err;
-				else {
-					forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
+			console.log(details);
+			farmtypes.push(details[0].land_type);
+		}
 
-					var hour_arr = [];
-					for (var i = 0; i < forecast_body.length; i++) {
-						forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
-						hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
-					}
-					// //console.log(forecast_body);
-					
-					//***** Get unique hour timestamps from forecast and filter data
-					hour_arr = [...new Map(hour_arr.map(item =>
-						[item, item])).values()];
+		var d1 = new Date(Date.now());
+		var d2 = new Date(Date.now());
+		d2.setDate(d2.getDate() - 2);
+		d1.setDate(d1.getDate() - 1);
 
-					body = dataformatter.smoothHourlyData(body, hour_arr);
-					forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
+		var start_date = dataformatter.dateToUnix(d2);
+		var end_date = dataformatter.dateToUnix(d1);
+		
+		var x = new Date();
+		var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
-					//***** Build on Agro API and use ANN to forecast remaining 9 days
-					var result = analyzer.weatherForecast14D(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
-					var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
-					
-					result.forecast = dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
+		request(url, { json: true }, function(err, response, body) {
+			if (err)
+				throw err;
+			else {
+				// //console.log(body);
+				for (var i = 0; i < body.length; i++) {
+					body[i].dt = dataformatter.unixtoDate(body[i].dt);
+				}
+				
+				//***** Call Agro API for succeeding 5 day forecast
+				var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+				request(forecast_url, { json: true }, function(err, response, forecast_body) {
+					if (err)
+						throw err;
+					else {
+						forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
 
-					forecast = dataformatter.mapAndFormatForecastResult(result, hour_arr);
-					
-					// //console.log(forecast[0]);
-					var daily_ctr = 0;
-					var dmin_temp = 0, dmax_temp = 0, dhumidity = 0, dpressure = 0, drainfall = 0;
-					for(var i = 0; i < forecast.length; i++){
-						// //console.log(forecast[i]);
+						var hour_arr = [];
+						for (var i = 0; i < forecast_body.length; i++) {
+							forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
+							hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
+						}
+						// //console.log(forecast_body);
+						
+						//***** Get unique hour timestamps from forecast and filter data
+						hour_arr = [...new Map(hour_arr.map(item =>
+							[item, item])).values()];
 
-						var ctr = 0;
-						var min_temp = 0, max_temp = 0, humidity = 0, pressure = 0, rainfall = 0;
-						for(var y = 0;y < forecast[i].data.length; y++){
-							if(!isNaN(forecast[i].data[y].min_temp)){
-								min_temp = min_temp + forecast[i].data[y].min_temp;
-								max_temp = max_temp + forecast[i].data[y].max_temp;
-								humidity = humidity + forecast[i].data[y].humidity;
-								pressure = pressure + forecast[i].data[y].pressure;
-								rainfall = rainfall + forecast[i].data[y].rainfall;
+						body = dataformatter.smoothHourlyData(body, hour_arr);
+						forecast_body = dataformatter.smoothHourlyData(forecast_body, hour_arr);
 
-								ctr++;
+						//***** Build on Agro API and use ANN to forecast remaining 9 days
+						var result = analyzer.weatherForecast14D(dataformatter.prepareData(body, 1), dataformatter.prepareData(forecast_body, 1), hour_arr.length+1);
+						var keys = ['min_temp', 'max_temp', 'humidity', 'pressure', 'rainfall', 'id'];
+						
+						result.forecast = dataformatter.convertForecastWeather(dataformatter.arrayToObject(result.forecast, keys));
+
+						forecast = dataformatter.mapAndFormatForecastResult(result, hour_arr);
+						
+						// //console.log(forecast[0]);
+						var daily_ctr = 0;
+						var dmin_temp = 0, dmax_temp = 0, dhumidity = 0, dpressure = 0, drainfall = 0;
+						for(var i = 0; i < forecast.length; i++){
+							// //console.log(forecast[i]);
+
+							var ctr = 0;
+							var min_temp = 0, max_temp = 0, humidity = 0, pressure = 0, rainfall = 0;
+							for(var y = 0;y < forecast[i].data.length; y++){
+								if(!isNaN(forecast[i].data[y].min_temp)){
+									min_temp = min_temp + forecast[i].data[y].min_temp;
+									max_temp = max_temp + forecast[i].data[y].max_temp;
+									humidity = humidity + forecast[i].data[y].humidity;
+									pressure = pressure + forecast[i].data[y].pressure;
+									rainfall = rainfall + forecast[i].data[y].rainfall;
+
+									ctr++;
+								}
+								
+							}
+							if(ctr != 0){
+								min_temp = min_temp / ctr;
+								max_temp = max_temp / ctr;
+								humidity = humidity / ctr;
+								pressure = pressure / ctr;
+								rainfall = rainfall / ctr;
 							}
 							
+
+							dmin_temp = dmin_temp + min_temp;
+							dmax_temp = dmax_temp + max_temp;
+							dhumidity = dhumidity + humidity;
+							dpressure = dpressure + pressure;
+							drainfall = drainfall + rainfall;
+
+							daily_ctr++;
 						}
-						if(ctr != 0){
-							min_temp = min_temp / ctr;
-							max_temp = max_temp / ctr;
-							humidity = humidity / ctr;
-							pressure = pressure / ctr;
-							rainfall = rainfall / ctr;
+
+						var weather = {
+							min_temp : ((dmin_temp / daily_ctr) - 32) / 1.8,
+							max_temp : ((dmax_temp / daily_ctr) - 32) / 1.8,
+							humidity : dhumidity / daily_ctr,
+							precipitation : drainfall / daily_ctr
 						}
 						
-
-						dmin_temp = dmin_temp + min_temp;
-						dmax_temp = dmax_temp + max_temp;
-						dhumidity = dhumidity + humidity;
-						dpressure = dpressure + pressure;
-						drainfall = drainfall + rainfall;
-
-						daily_ctr++;
-					}
-
-					var weather = {
-						min_temp : ((dmin_temp / daily_ctr) - 32) / 1.8,
-						max_temp : ((dmax_temp / daily_ctr) - 32) / 1.8,
-						humidity : dhumidity / daily_ctr,
-						precipitation : drainfall / daily_ctr
-					}
-					
-					// //console.log(weather);
+						// //console.log(weather);
 
 
-					var season = {
-						season_temp : 35,
-						season_humidity : 65
-					}
-					var cc_query = {
-						status: ['In-Progress', 'Active', "Completed"]
-					}
-
-					cropCalendarModel.getCropCalendars(cc_query, function(err, stage){
-						if(err)
-							throw err;
-						else{
-							var i, index;
-							for(i = 0; i < stage.length; i++)
-								if(stage[i].calendar_id == req.query.calendar_id){
-									index = i;
-									break;
-								}
-							// console.log(stage[index]);
-							var stage = {
-								stage_name : stage[0].stage
-							}	
+						var season = {
+							season_temp : 35,
+							season_humidity : 65
 						}
-						res.send({});
-						// pestdiseaseModel.getPDProbabilityPercentage(weather, season, null, stage,function(err, possible_pests){
-						// 	if(err){
-						// 		throw err;
-						// 	}else{
-						// 		var statements = new Array();
-						// 		for(i = 0; i < possible_pests.length; i++){
-						// 			stmt = possible_pests[i].pest_name + " - May occur due to ";
-						// 			if(possible_pests[i].weather_id != null)
-						// 				stmt = stmt + possible_pests[i].weather + " weather, ";
-						// 			if(possible_pests[i].season_id != null)
-						// 				stmt = stmt + possible_pests[i].season_name + " season ";
-						// 			if(possible_pests[i].stage_id != null)
-						// 				stmt = stmt + possible_pests[i].t_stage_name + " stage ";
-						// 			statements.push({ statement : stmt});
-						// 		}
-						// 	}
-						// 	// console.log(possible_pests);
-						// 	// console.log(req.query.calendar_id);
-						// 	res.send(possible_pests);
-						// });
-					});
-				}
-			});
-		}
+						var cc_query = {
+							status: ['In-Progress', 'Active', "Completed"]
+						}
+
+						cropCalendarModel.getCropCalendars(cc_query, function(err, stage){
+							if(err)
+								throw err;
+							else{
+								var i, index = null;
+								for(i = 0; i < stage.length; i++)
+									if(stage[i].calendar_id == req.query.calendar_id){
+										index = i;
+										break;
+									}
+								// console.log(stage[index]);
+								var cur_stage = {
+									stage_name : stage[0].stage
+								}	
+							}
+							// res.send({});
+							// console.log(stage);
+							if(index == null){
+								var cur_stage = {
+									stage_name : null
+								}	
+							}
+							else{
+								var cur_stage = {
+									stage_name : stage[index].stage
+								}	
+								farmtypes.push(stage[index].method);
+							}
+							pestdiseaseModel.getPDProbabilityPercentage(weather, season, farmtypes, cur_stage,function(err, possible_pests){
+								if(err){
+									throw err;
+								}else{
+									var statements = new Array();
+									for(i = 0; i < possible_pests.length; i++){
+										stmt = possible_pests[i].pest_name + " - May occur due to ";
+										if(possible_pests[i].weather_id != null)
+											stmt = stmt + possible_pests[i].weather + " weather, ";
+										if(possible_pests[i].season_id != null)
+											stmt = stmt + possible_pests[i].season_name + " season ";
+										if(possible_pests[i].stage_id != null)
+											stmt = stmt + possible_pests[i].t_stage_name + " stage ";
+										statements.push({ statement : stmt});
+									}
+								}
+								// console.log(possible_pests);
+								// console.log(req.query.calendar_id);
+								res.send(possible_pests);
+							});
+						});
+					}
+				});
+			}
+		});
 	});
 };
 
@@ -2502,12 +2577,13 @@ exports.getPreventions = function(req, res){
 			var sowing = new Date(req.query.sowing_date);
 			var vegetation = new Date(req.query.vegetation_date);
 			var reproduction = new Date();
-			reproduction.setDate(vegetation.getDate() + maturity_days);
+			reproduction.setTime(vegetation.getTime() + (maturity_days * 24 * 60 * 60 * 1000));
 			var ripening = new Date();
-			ripening.setDate(reproduction.getDate() + 35);
+			ripening.setTime(reproduction.getTime() + (35* 24 * 60 * 60 * 1000));
 			var harvesting = new Date();
-			harvesting.setDate(ripening.getDate() + 30);
+			harvesting.setTime(ripening.getTime() + (30 * 24 * 60 * 60 * 1000));
 
+			
 			//Get 
 			if(type == "Pest"){
 				pestdiseaseModel.getPestPreventions(id, function(err, preventions){
@@ -2559,7 +2635,7 @@ exports.getPreventions = function(req, res){
 						else if(possibilities.frequent_stage == "Harvesting")
 							date = dataformatter.formatDate(harvesting, 'YYYY-MM-DD');
 						else
-							date = dataformatter.formatDate(land_prep, 'YYYY-MM-DD');
+						date = date = dataformatter.formatDate(land_prep, 'YYYY-MM-DD');
 
 						for(i = 0; i < preventions.length; i++){
 							

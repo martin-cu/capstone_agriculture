@@ -316,9 +316,9 @@ exports.getFarmDetails = function(req, res) {
 																if(err)
 																	throw err;
 																else{
-																	var calendar_index = 0;
+																	var calendar_index = -1;
 																	if(calendar_id == null)
-																		calendar_index = 0;
+																		calendar_index = -1;
 																	else{
 																		for(i = 0; i < crop_calendar_details.length; i++){
 																			if(crop_calendar_details[i].calendar_id == calendar_id){
@@ -326,25 +326,28 @@ exports.getFarmDetails = function(req, res) {
 																				break;
 																			}
 																		}
+																		if(calendar_index != -1){
+																			var expected_vegetation = crop_calendar_details[calendar_index].sowing_date;
+																			crop_calendar_details[calendar_index].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'mm DD, YYYY');
+																			var calendar_details = crop_calendar_details[calendar_index];
+																			calendar_details["expected_harvest"] = new Date(expected_vegetation);
+																			calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[calendar_index].maturity_days + 65);
+																			calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
+																			html_data["crop_calendar_details"] = calendar_details;
 
-																		var expected_vegetation = crop_calendar_details[calendar_index].sowing_date;
-																		crop_calendar_details[calendar_index].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'mm DD, YYYY');
-																		var calendar_details = crop_calendar_details[calendar_index];
-																		calendar_details["expected_harvest"] = new Date(expected_vegetation);
-																		calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[calendar_index].maturity_days + 65);
-																		calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
-																		html_data["crop_calendar_details"] = calendar_details;
+																			var land_prep = calendar_details.land_prep_date;
+																			var sowing = calendar_details.sowing_date;
+																			var ripening = new Date(expected_vegetation);
+																			ripening.setDate(ripening.getDate() + calendar_details.maturity_days + 35);
+																			var reproductive = new Date(expected_vegetation);
+																			var vegetation = calendar_details.sow_date_completed;
+																			var harvest = calendar_details.expected_harvest;
+																		}
+																		
 																	}
 	
 																}
 																//console.log(crop_calendar_details);
-																var land_prep = calendar_details.land_prep_date;
-																var sowing = calendar_details.sowing_date;
-																var ripening = new Date(expected_vegetation);
-																ripening.setDate(ripening.getDate() + calendar_details.maturity_days + 35);
-																var reproductive = new Date(expected_vegetation);
-																var vegetation = calendar_details.sow_date_completed;
-																var harvest = calendar_details.expected_harvest;
 																var wo_query = {
 																	where: {
 																		key: ['crop_calendar_id'],
