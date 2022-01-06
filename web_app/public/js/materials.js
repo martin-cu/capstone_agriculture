@@ -245,7 +245,7 @@ $(document).on('click','.remove-btn', function(){
 });
 $(document).on('click', "#add-btn-mat", function(){
     var count = $(this).val();
-        if($(".new-item").length == 10){
+        if($(".new-item").length == 5){
             alert("Limit reached");
         }
         else{
