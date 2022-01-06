@@ -26,7 +26,7 @@ exports.createWorkOrderResources = function(query, next) {
 }
 
 exports.getDetailedWorkOrder = function(query, next) {
-	var sql = "select wot.date_completed, cct.crop_plan, wot.work_order_id, wot.type, wot.crop_calendar_id, date_created, date_due, date_start, wot.status, wot.desc, notes, cct.harvest_yield, ft.farm_name, ft.farm_desc from work_order_table as wot join crop_calendar_table cct on wot.crop_calendar_id = cct.calendar_id join farm_table ft using(farm_id) where ?;";
+	var sql = "select wot.date_completed, cct.crop_plan, wot.work_order_id, wot.type, wot.crop_calendar_id, date_created, date_due, date_start, wot.status, wot.desc, notes, cct.harvest_yield, ft.farm_id, ft.farm_name, ft.farm_desc from work_order_table as wot join crop_calendar_table cct on wot.crop_calendar_id = cct.calendar_id join farm_table ft using(farm_id) where ?;";
 	sql = mysql.format(sql, query);
 	//console.log(sql);
 	mysql.query(sql, next);

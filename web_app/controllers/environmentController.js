@@ -1796,7 +1796,7 @@ exports.getDiagnosisDetails = function(req, res){
 		if(err)
 			throw err;
 		else{
-			console.log(diagnosis_details);
+			// console.log(diagnosis_details);
 			if(diagnosis_details[0].date_solved == null){
 				diagnosis_details[0].date_solved = "Not yet resolved";
 				diagnosis_details[0]["solved"] = true;
@@ -2114,11 +2114,11 @@ exports.addDiagnosis = function(req,res){
 					// if(crop_calendar[i].farm_name == farm_name)
 					// 	diagnosis["calendar_id"] = crop_calendar[i].calendar_id;
 				}
-				console.log(crop_plan);
-				console.log(crop_calendar[crop_plan].calendar_id);
+				// console.log(crop_plan);
+				// console.log(crop_calendar[crop_plan].calendar_id);
 				if(farm_name != crop_calendar[latest].farm_name || crop_plan == -1){
-					diagnosis["calendar_id"] = null;
-					diagnosis["stage_diagnosed"] = null;
+					diagnosis["calendar_id"] = crop_calendar[latest].calendar_id;
+					diagnosis["stage_diagnosed"] = crop_calendar[latest].stage;
 				}
 				else{
 					var stage;
@@ -2224,6 +2224,7 @@ exports.addDiagnosis = function(req,res){
 										crop_calendar_id : diagnosis.calendar_id
 									}
 								}
+								console.log("Create work order from diagnosis");
 								workOrderModel.createWorkOrder(temp_wo, function(err, success){});
 								//Create new PD_Recommendation
 								//pestdiseaseModel.addNewPDRecommendation()

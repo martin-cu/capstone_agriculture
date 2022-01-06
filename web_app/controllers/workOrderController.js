@@ -2,6 +2,7 @@ const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const workOrderModel = require('../models/workOrderModel.js');
+const materialModel = require('../models/materialModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const harvestModel = require('../models/harvestModel.js');
 var request = require('request');
@@ -309,7 +310,7 @@ exports.getWorkOrdersPage = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			console.log(list);
+			// console.log(list);
 			for (var i = 0; i < list.length; i++) {
 				list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
 				list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
@@ -443,6 +444,56 @@ exports.editWorkOrder = function(req, res) {
 		}
 	}
 
+	//add pesticide usage && update farm materials
+	var type = req.body.type.split("-");
+	// console.log(type);
+	// console.log(req.body.status);
+	if(type[0] == "Apply pesticide" && req.body.status == "Completed"){
+		//check if enough
+		workOrderModel.getDetailedWorkOrder({work_order_id : req.body.wo_id}, function(err, wo_details){
+			if(err)
+				throw err;
+			else{
+				materialModel.getFarmMaterials(wo_details[0].farm_id, function(err, farm_materials){
+					if(err)
+						throw err;
+					else{
+						var i; 
+						for(i = 0; i < farm_materials.length; i++){
+							
+							if(farm_materials[i].item_type == "Pesticide" && farm_materials[i].item_name == type[1]){
+								// console.log("Found it");
+								// console.log(farm_materials[i].item_type);
+								// console.log(farm_materials[i].item_name);
+								// console.log(farm_materials[i].current_amount);
+								//check if enough
+								if(farm_materials[i].current_amount >= 5){
+									//subtract and add pesticide usage
+									materialModel.updateFarmMaterials({current_amount : farm_materials[i].current_amount - 5}, {farm_mat_id : farm_materials[i].farm_mat_id}, function(err, success){
+
+									});
+									var usage = {
+										pesticide_id : farm_materials[i].item_id,
+										farm_id : wo_details[0].farm_id,
+										amount : 5,
+										date_used : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+									};
+									materialModel.addPesticideUsage(usage, function(err, success){
+
+									});
+								}
+								else{
+									console.log("not enough amount");
+									workOrderModel.updateWorkOrder({status : "In-Progress", date_completed : null}, filter, function(err, list){});
+								}
+								break;
+							}
+						}
+					}
+				});
+			}
+		});
+	}
 	workOrderModel.updateWorkOrder(query, filter, function(err, list) {
 		if (err)
 			throw err;
