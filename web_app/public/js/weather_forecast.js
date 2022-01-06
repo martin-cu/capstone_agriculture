@@ -513,6 +513,8 @@ $(document).ready(function() {
 	d2.setDate(d2.getDate() - 60);
 	var refresh_on = 0;
 	var loaded = false;
+	var hour = new Date();
+	hour = hour.getHours();
 
 	// Run this each time a page is loaded
 	$.get('/get_weather_forecast', {}, function(forecast_result) {

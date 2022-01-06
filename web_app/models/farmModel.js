@@ -1,6 +1,32 @@
 var mysql = require('./connectionModel');
 mysql = mysql.connection;
 
+exports.createForecastedYieldRecord = function(data, next) {
+	var sql = "insert into forecasted_yield set ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+};
+
+exports.getForecastedYieldRecord = function(data, next) {
+	var sql = "SELECT temp, humidity, pressure, rainfall, seed_id, harvested, N, P, K, seed_rate, forecast FROM forecasted_yield where ";
+	for (var i = 0; i < data.calendar_id.length; i++) {
+		sql += 'calendar_id = '+data.calendar_id[i];
+		if (i != data.calendar_id.length-1) {
+			sql +=' or ';
+		}
+	}
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.updateForecastYieldRecord = function(data, filter, next) {
+	var sql = "update forecasted_yield set ? where ?";
+	sql = mysql.format(sql, data);
+	sql = mysql.format(sql, filter);
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
 exports.addFarm = function(data, next) {
 	var sql = "insert into farm_table set ?";
 	sql = mysql.format(sql, data);

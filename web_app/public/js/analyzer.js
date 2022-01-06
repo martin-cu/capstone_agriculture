@@ -14,19 +14,19 @@ function parseDecimal(num, decimal) {
 	return parseFloat((num).toFixed(decimal));
 }
 
-// [temp, humidity, pressure, rainfall, seed_type, yield, N, P, K]
+// [temp, humidity, pressure, rainfall, seed_type, yield, N, P, K, seed rate]
 exports.forecastYield = function(dataset, testing) {
 	const net = new brain.brain.recurrent.LSTMTimeStep({
-	  inputSize: 9,
+	  inputSize: 10,
 	  hiddenLayers: [9],
-	  outputSize: 9,
+	  outputSize: 10,
 	});
 	const trainingData = [dataset.data];
 	//console.log(trainingData);
 	net.train(trainingData, { 
 		//log: true 
 	});
-
+	//console.log(testing.data);
 	const forecast = net.forecast(testing.data, 1);
 	//console.log(forecast);
 	//console.log(dataset.val);

@@ -355,9 +355,9 @@ function processSeedRate(seed_list, farm_list) {
 		$('#seed_rate_cont').html(seed_rate+' kg/ha');
 		
 		seed_rate = (seed_rate / conversion) * farm_area;
-
+		console.log(seed_rate);
 		seed_rate = Math.round((seed_rate/seed_details.amount) * 100) / 100;
-
+		console.log(seed_details);
 		$('#seed_qty').html(seed_rate+' bags');
 		
 		$('#num_seed_bags').val(seed_rate);
@@ -473,6 +473,11 @@ $(document).ready(function() {
 			var fr_items;
 			var wo_fr_items = [];
 			var fr_plan_id;
+
+			// Create forecast record
+			$.get('/create_forecast_record', { calendar_id: crop_plan.insertId, seed_id: form_data.seed_id, forecast: form_data.seed_expected_yield }, function(forecast_record) {
+
+			});
 
 			// Check if FR Plan already exists!
 			$.get('/get_nutrient_plan_details', { farm_id: form_data.farm_id }, function(fr_plans) {

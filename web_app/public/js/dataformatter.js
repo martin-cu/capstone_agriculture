@@ -313,6 +313,7 @@ exports.normalizeData = function(array) {
 	for (i = 0; i < array.length; i++)
 	{
 	   var norm = (array[i]-min)/(max-min);
+	   norm = Number.isNaN(norm) ? 1 : norm;
 	   array[i] = norm;
 	}
 
