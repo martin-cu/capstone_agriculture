@@ -1,10 +1,25 @@
-<div class="container-fluid ">
+<style>
+    table td {
+        border-style: none !important;
+    }
+</style>
+
+<div class="container-fluid">
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
         <h3 class="text-dark mb-0">Farms &gt; Work Order</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
     </div>
-    <div class="card shadow mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
-            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Work Order {{work_order.work_order_id}}</h6>
+    <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
+            
+            <div class="col" style="max-width: 70px; padding-top: 2px">
+                <button type="submit" class="btn btn-primary btn-md" id="back" onclick="history.back()"> 
+                    <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                </button>        
+            </div>
+
+            <div class="col" style="margin-right: 650px; padding-top: 15px">
+                <h6>Detailed Work Order {{work_order.work_order_id}}</h6>
+            </div>
         </div>
         <div class="card-body">
             <form method="post" action="/edit_work_order" id="edit_wo_form">
@@ -15,7 +30,7 @@
                             <tr>
                                 <td style="width: 1px;">Status</td>
                                 <td style="width: 50px;">
-                                    <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" id="status" name="status" readonly>
+                                    <select class="form-select" style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" id="status" name="status" readonly>
                                         <option value="Pending" {{#compareTwoValues work_order.status 'Pending' operator='==='}}selected{{/compareTwoValues}}>Pending</option>
                                         <option value="In-Progress" {{#compareTwoValues work_order.status 'In-Progress' operator='==='}}selected{{/compareTwoValues}}>In-Progress</option>
                                         <option value="Completed" {{#compareTwoValues work_order.status 'Completed' operator='==='}}selected{{/compareTwoValues}}>Completed</option>
@@ -44,7 +59,7 @@
                             </tr>
                             <tr>
                                 <td style="font-weight: normal;">Farm</td>
-                                <td><input type="text" class="" required="" readonly id="farm_name" name="farm_name" value="{{work_order.farm_name}}"></td>
+                                <td style="padding-right: 100px;"><input type="text" class="form-select" required="" readonly id="farm_name" name="farm_name" value="{{work_order.farm_name}}"></td>
                                 <td>Crop Calendar</td>
                                 <td>
                                     <input type="text" class="form-control" id="crop_plan" name="crop_plan" value="{{work_order.crop_plan}}" readonly>
@@ -53,12 +68,12 @@
                             </tr>
                             <tr>
                                 <td style="font-weight: normal;">Type</td>
-                                <td>
+                                <td style="padding-right: 100px;">
                                     <!-- <select style="height: 28px;padding-top: 3px;padding-bottom: 3px;font-size: 12px;width: 200px;" required="" readonly id="type" name="type">
                                         <option value="">Pesticide Application</option>
                                         <option value="">Fertilizer Application</option>
                                     </select> -->
-                                    <input type="text" required="" readonly id="type" name="type" value="{{work_order.type}}">
+                                    <input class="form-select" type="text" required="" readonly id="type" name="type" value="{{work_order.type}}">
                                 </td>
                                 <td></td>
                                 <td></td>
@@ -66,7 +81,7 @@
                             <tr>
                                 <td style="font-weight: normal;">Description</td>
                                 <td colspan="3">
-                                    <textarea type="text" class="w-50" readonly id="notes" name="notes"  rows="3" style="resize: none;" value="{{work_order.notes}}">{{work_order.notes}}</textarea>
+                                    <textarea type="text" class="form-control" readonly id="notes" name="notes"  rows="3" style="resize: none;" value="{{work_order.notes}}">{{work_order.notes}}</textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -83,14 +98,14 @@
                             </tr>
                             <tr>
                                 <td style="font-weight: normal;">Start Date</td>
-                                <td style="width: 100px;">
-                                    <input type="date" required="" readonly id="date_start" name="date_start" value="{{work_order.date_start}}">
+                                <td style="width: 100px; padding-right: 100px">
+                                    <input class="form-control" type="date" required="" readonly id="date_start" name="date_start" value="{{work_order.date_start}}">
                                     <input type="hidden" id="date_created" name="date_created" value="{{work_order.date_created}}">
                                 </td>
                                 <td style="width: 100px;">Completion Date</td>
                                 <td style="width: 100px;">
                                     {{#if work_order.date_completed}}
-                                    <input type="date" required="" readonly id="date_completed" name="date_completed" value="{{work_order.date_completed}}">
+                                    <input class="form-control" type="date" required="" readonly id="date_completed" name="date_completed" value="{{work_order.date_completed}}">
                                     {{else}}
                                     N/A
                                     {{/if}}
@@ -98,7 +113,7 @@
                             </tr>
                             <tr>
                                 <td style="font-weight: normal;">Due Date</td>
-                                <td ><input type="date" required="" readonly id="date_due" name="date_due" value="{{work_order.date_due}}"></td>
+                                <td style="padding-right: 100px;"><input class="form-control" type="date" required="" readonly id="date_due" name="date_due" value="{{work_order.date_due}}"></td>
                                 <td ></td>
                                 <td>
                                     
@@ -117,21 +132,21 @@
 
                             {{#if harvest_details}}
                             <tr>
-                                <td colspan="4" style="font-weight: normal;">Harvest Details</td>
+                                <td colspan="4" style="font-weight: bold;">Harvest Details</td>
 
                             </tr>
                             <tr>
                                 <td colspan="3" id="harvest_details_row">
                                     {{#each harvest_details}}
                                     <div class="d-flex">
-                                        <div class="d-flex flex-column">
+                                        <div class="d-flex flex-column" style="padding-right: 10px;">
                                             <label class="text-center">Sacks Harvested</label>
-                                            <input type="number" name="sacks_harvested" id="sacks_harvested" value="{{this.sacks_harvested}}" readonly min="0">
+                                            <input class="form-control" type="number" name="sacks_harvested" id="sacks_harvested" value="{{this.sacks_harvested}}" readonly min="0">
                                         </div>
                                         
                                         <div class="d-flex flex-column">
                                             <label class="text-center">Harvest Type</label>
-                                            <select name="harvest_type" class="ml-3" readonly id="harvest_type">
+                                            <select class="form-control" name="harvest_type" class="ml-3" readonly id="harvest_type">
                                                 <option>...</option>
                                                 <option value="Full Harvest" {{#compareTwoValues this.type 'Full Harvest' operator='==='}}selected{{/compareTwoValues}}>Full Harvest</option>
                                                 <option value="Partial Harvest" {{#compareTwoValues this.type 'Partial Harvest' operator='==='}}selected{{/compareTwoValues}}>Partial Harvest</option>
@@ -160,10 +175,10 @@
                                     <td></td>
                                     <td colspan="3">
                                         <div class="d-flex">
-                                            <input type="text" required="" readonly id="{{../resources.lbl.name}}" name="{{../resources.lbl.name}}" value="{{this.material_name}}" style="">
+                                            <input class="form-control" type="text" required="" readonly id="{{../resources.lbl.name}}" name="{{../resources.lbl.name}}" value="{{this.material_name}}" style="width: 375px">
                                             <input class="hide" style="" type="text" id="{{../resources.lbl.item}}" name="{{../resources.lbl.item}}" value="{{this.item_id}}" readonly="true">
                                             <div class="d-flex flex-column" style="">
-                                                <input class=" mx-2" style="width: 100px;" type="number" id="{{../resources.lbl.qty}}" name="{{../resources.lbl.qty}}" step="any" value="{{this.qty}}" readonly>
+                                                <input class="form-control mx-2" style="width: 100px;" type="number" id="{{../resources.lbl.qty}}" name="{{../resources.lbl.qty}}" step="any" value="{{this.qty}}" readonly>
                                             </div>
                                         </div>
                                             
@@ -289,8 +304,8 @@
             }
 
             cont = createDOM({ type: 'div', class: 'mr-5 mt-5', style: '', html: '', attr: null });
-            btn_submit = createDOM({ type: 'button', class: 'btn btn-success float-right', style: '', html: 'Save', attr: btn_attr });
-            btn_cancel = createDOM({ type: 'button', class: 'btn btn-danger float-right mr-2', style: '', html: 'Cancel', attr: btn_cancel_attr });
+            btn_submit = createDOM({ type: 'button', class: 'btn round btn-primary float-right', style: '', html: 'Save', attr: btn_attr });
+            btn_cancel = createDOM({ type: 'button', class: 'btn round btn-secondary float-right mr-2', style: '', html: 'Cancel', attr: btn_cancel_attr });
 
             cont.appendChild(btn_submit);
             cont.appendChild(btn_cancel);

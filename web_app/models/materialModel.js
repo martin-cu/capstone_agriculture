@@ -241,7 +241,7 @@ exports.addNewFarmMaterial = function(material, next){
 }
 
 exports.getFarmMaterials = function(farm_id, next){
-	var sql = 'SELECT fm.*, st.seed_name as item_name, st.seed_desc as item_desc,units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN seed_table st ON fm.item_type = "Seed" && fm.item_id = st.seed_id UNION SELECT fm.*, pt.pesticide_name as item_name, pt.pesticide_desc as item_desc, units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN pesticide_table pt ON fm.item_type = "Pesticide" && fm.item_id = pt.pesticide_id UNION SELECT fm.*, fr.fertilizer_name as item_name, fr.fertilizer_desc as item_desc, units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN fertilizer_table fr ON fm.item_type = "Fertilizer" && fm.item_id = fr.fertilizer_id;';
+	var sql = 'SELECT fm.*, ft.farm_name, st.seed_name as item_name, st.seed_desc as item_desc,units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN seed_table st ON fm.item_type = "Seed" && fm.item_id = st.seed_id UNION SELECT fm.*, ft.farm_name, pt.pesticide_name as item_name, pt.pesticide_desc as item_desc, units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN pesticide_table pt ON fm.item_type = "Pesticide" && fm.item_id = pt.pesticide_id UNION SELECT fm.*, ft.farm_name, fr.fertilizer_name as item_name, fr.fertilizer_desc as item_desc, units FROM farm_materials fm INNER JOIN farm_table ft ON ft.farm_id = fm.farm_id INNER JOIN fertilizer_table fr ON fm.item_type = "Fertilizer" && fm.item_id = fr.fertilizer_id;';
 	var farm = " WHERE ft.farm_id = ?;";
 
 	if(farm_id != null){

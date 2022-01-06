@@ -282,7 +282,7 @@ $(document).on("change",'.purchase_item_type', function(){
     var select = "item" + id.charAt(id.length - 1);
     // alert(select);
     if(type == "Seed")
-        $("#item_unit" + id.charAt(id.length - 1)).text("grams");
+        $("#item_unit" + id.charAt(id.length - 1)).text("Kg");
     else{
         $("#item_unit" + id.charAt(id.length - 1)).text("Bags");
     }

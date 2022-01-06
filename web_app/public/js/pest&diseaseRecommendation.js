@@ -32,18 +32,6 @@ $(document).ready(function() {
 	}, 100000);
 
 
-	// setInterval(function(){
-	// 	//Create Recommendation
-	// 	//Loop through diagnosis
-	// 	$.get('/ajaxGetDiagnoses', {farm_id : null, type : null}, function(diagnoses){
-	// 		var i;
-	// 		for(i = 0; i < diagnoses.length; i++){
-				
-	// 		}
-	// 	});
-	// }, 100000)
-
-
 	//CROP CALENDAR CREATION
 	if (view == 'add_crop_calendar') {
 

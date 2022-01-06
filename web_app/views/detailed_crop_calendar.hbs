@@ -283,6 +283,7 @@ div.card-body h6, div.card-body p {
                                                                         <th>Fertilizer</th>
                                                                         <th>Amount</th>
                                                                         <th>Status</th>
+                                                                        <th></th>
                                                                     </tr>
                                                                     {{#each fertilizer_wos}}
                                                                     <tr>
@@ -291,6 +292,19 @@ div.card-body h6, div.card-body p {
                                                                         <td>{{this.fertilizer_name}}</td>
                                                                         <td>{{this.amount}}</td>
                                                                         <td>{{this.status}}</td>
+                                                                        <td>
+                                                                            <div class="dropdown no-arrow">
+                                                                                <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                    <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                                </button>
+                                                                                <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                    <a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}" >&nbsp;View Details</a>
+                                                                                    {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                    <div class="dropdown-divider"></div>
+                                                                                    <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
                                                                     </tr>
                                                                     {{/each}}
 
@@ -304,7 +318,7 @@ div.card-body h6, div.card-body p {
                                             </div>
                     
 
-                                                <div class="row">
+                                                {{!-- <div class="row">
                                                 <div class="col">
                                                     <div class="card shadow mb-4">
                                                         <div class="card-header mini2 py-3" style="height: auto; border-style: none">
@@ -325,7 +339,7 @@ div.card-body h6, div.card-body p {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                            
                                                 
@@ -336,82 +350,65 @@ div.card-body h6, div.card-body p {
                                             <div class="tab-pane fade" id="pesticide-application-plan" role="tabpanel" aria-labelledby="pesticide-application-tab">
                                             
                                             <h6 style="font-weight: bold; margin-bottom: 10px; margin-top: 20px">Recently Detected Pests</h6>
-                        
+                                            <div class="row">
+                                                <div class="col">
+                                
+                                                    <div class="card shadow mb-4">
+                                                        <div class="card-header mini2 py-3" style="height: auto; border-style: none">
+                                                            <h6 class="fw-bold m-0">Pest and Disease Plan<br></h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                                <div class="table-responsive">
+                                                                    <table class="table" id="fertilizer_history">
+                                                                        <tr>
+                                                                            <th>Target Date</th>
+                                                                            <th>Date Completed</th>
+                                                                            <th>Action</th>
+                                                                            <th>Description</th>
+                                                                            <th>Status</th>
+                                                                            <th></th>
+                                                                        </tr>
+                                                                        {{#each pd_wos}}
+                                                                        <tr>
+                                                                            <td>{{this.date_start}}</td>
+                                                                            <td>{{this.date_completed}}</td>
+                                                                            <td>{{this.type}}</td>
+                                                                            <td>{{this.notes}}</td>
+                                                                            <td>{{this.status}}</td>
+                                                                            <td style="text-align: center"> 
+                                                                            <div class="dropdown no-arrow">
+                                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                                    </button>
+                                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                                        <a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}" >&nbsp;View Details</a>
+                                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                                        <div class="dropdown-divider"></div>
+                                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        {{/each}}
+
+                                                                    </table>
+                                                                </div>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                             {{!-- START CARDS --}}
 
                                             {{!-- Maybe the for each handlebar could be used for each detected pest? --}}
-                                            <div class="row">
-
-                                            {{!-- PEST INFORMATION CARD --}}
-                                            <div class="col">
-                                                <div class="card shadow mb-4">
-                                                    <div class="card-header mini2 py-3" style="height: auto; border-style: none">
-                                                        <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest 1<br></h6>
-                                                    </div>
-                                                    <div class="card-body" style="height: 239.97px;">
-                                                        <div class="table-responsive" style="border-style: none;">
-                                                            <table class="table">
-                                                                <thead>
-                                                                {{!-- <tr></tr> --}}
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr style="border-style: none;">
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest ID<br></span> <span class="d-xxl-flex justify-content-xxl-start">P-01<br></span></td>
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pest Name<br></span><span class="d-xxl-flex justify-content-xxl-start">[Pest Name]<br></span></td>
-                                                                    </tr>
-                                                                    <tr style="border-style: none;">
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Symptoms<br></span><span class="d-xxl-flex justify-content-xxl-start">[Symptoms]<br></span></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                                    
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {{!-- END OF PEST INFORMATION CARD --}}
- 
-                                            {{!-- PEST APPLICATION PLAN CARD --}}
-                                            <div class="col">
-                                                <div class="card shadow mb-4">
-                                                    <div class="card-header mini2 py-3" style="height: auto; border-style: none">
-                                                        <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan 1 Information<br></h6>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div class="table-responsive" style="border-style: none;">
-                                                            <table class="table">
-                                                                <thead>
-                                                                {{!-- <tr></tr> --}}
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr style="border-style: none;">
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Pesticide<br></span> <span class="d-xxl-flex justify-content-xxl-start">Pesticide Name<br></span></td>
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Chemical Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty /ha<br></span></td>
-                                                                    </tr>
-                                                                    <tr style="border-style: none;">
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">From Date<br></span><span class="d-xxl-flex justify-content-xxl-start">From Date<br></span></td>
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">To Date<br></span><span class="d-xxl-flex justify-content-xxl-start">To Date<br></span></td>
-                                                                    </tr>
-                                                                    <tr style="border-style: none;">
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Water Rate<br></span><span class="d-xxl-flex justify-content-xxl-start">Qty gal/ha<br></span></td>
-                                                                        <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Effectivity Rating<br></span><span class="d-xxl-flex justify-content-xxl-start">0.00%<br></span></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            {{!-- END OF PEST APPLICATION PLAN CARD --}}
-
-                                            </div>
+                                            
                                             {{!-- END CARDS --}}
  
-                                            <h6 style="font-weight: bold; margin-bottom: 20px">Recently Detected Diseases</h6>
+                                            {{!-- <h6 style="font-weight: bold; margin-bottom: 20px">Recently Detected Diseases</h6> --}}
 
                                             {{!-- If none detected --}}
-                                            <p>No Detected Diseases Yet</p>
+                                            {{!-- <p>No Detected Diseases Yet</p> --}}
 
                                             {{!-- Else, add for each row of cards like the one above --}}
                                             </div>
