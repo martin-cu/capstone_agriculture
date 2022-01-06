@@ -487,7 +487,7 @@ exports.addPurchase = function(req,res){
                     item_desc : req.body.item_desc,
                     item_id : req.body.item[i].item,
                     amount : req.body.item[i].amount,
-                    request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+                    request_date : dataformatter.formatDate(new Date(req.body.date_purchased), 'YYYY-MM-DD')
                 }
 
                 var cont = true;

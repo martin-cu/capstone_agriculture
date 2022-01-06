@@ -515,65 +515,65 @@ $(document).ready(function() {
 	var loaded = false;
 
 	// Run this each time a page is loaded
-	$.get('/get_weather_forecast', {}, function(forecast_result) {
-		//console.log(formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD'));
-		if (forecast_result == 0) {
-			refresh_on = hour + 1;
-			$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
-				let query = normalizeForDB(result, hour);
+	// $.get('/get_weather_forecast', {}, function(forecast_result) {
+	// 	//console.log(formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD'));
+	// 	if (forecast_result == 0) {
+	// 		refresh_on = hour + 1;
+	// 		$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+	// 			let query = normalizeForDB(result, hour);
 
-				$.post('/upload_weather_forecast', query, function(upload_result) {
-					console.log('DB upload success');
+	// 			$.post('/upload_weather_forecast', query, function(upload_result) {
+	// 				console.log('DB upload success');
 
-					loaded = false;
-				});
-			});	
-		}
-		else if (hour == refresh_on && hour != forecast_result[0].time_uploaded || 
-			formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD') != formatDate(new Date(), 'YYYY-MM-DD')) {
-			console.log(new Date()+' : Deleting DB records...');
-			$.get('/clear_weather_forecast', {}, function(status) {
+	// 				loaded = false;
+	// 			});
+	// 		});	
+	// 	}
+	// 	else if (hour == refresh_on && hour != forecast_result[0].time_uploaded || 
+	// 		formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD') != formatDate(new Date(), 'YYYY-MM-DD')) {
+	// 		console.log(new Date()+' : Deleting DB records...');
+	// 		$.get('/clear_weather_forecast', {}, function(status) {
 
-				//console.log('Generating weather forecast...');
-				refresh_on = hour + 1;
-				$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
-					let query = normalizeForDB(result, hour);
+	// 			//console.log('Generating weather forecast...');
+	// 			refresh_on = hour + 1;
+	// 			$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+	// 				let query = normalizeForDB(result, hour);
 
-					$.post('/upload_weather_forecast', query, function(upload_result) {
-						console.log('DB upload success');
+	// 				$.post('/upload_weather_forecast', query, function(upload_result) {
+	// 					console.log('DB upload success');
 
-						loaded = false;
-					});
-				});	
-			})
-		}
-		else {
-			console.log('Getting weather forecast...');
+	// 					loaded = false;
+	// 				});
+	// 			});	
+	// 		})
+	// 	}
+	// 	else {
+	// 		console.log('Getting weather forecast...');
 
-			refresh_on = forecast_result[0].time_uploaded + 1;
-		}
+	// 		refresh_on = forecast_result[0].time_uploaded + 1;
+	// 	}
 
-		/************  DB to UI Start *************/
-		//console.log(view+' - '+loaded);
-		// if (view == 'farm_monitoring' && loaded == false) {
+	// 	/************  DB to UI Start *************/
+	// 	//console.log(view+' - '+loaded);
+	// 	// if (view == 'farm_monitoring' && loaded == false) {
 
-		// 	loaded = true;
-		// 	$('#weather_table').empty();
-		// 	appendForecastCards(processForecastDB(forecast_result));
-		// 	//appendForecastDetails(result.forecast[0]);
+	// 	// 	loaded = true;
+	// 	// 	$('#weather_table').empty();
+	// 	// 	appendForecastCards(processForecastDB(forecast_result));
+	// 	// 	//appendForecastDetails(result.forecast[0]);
 
-		// 	// // Recommendation
-		// 	// generateRecommendation(result.forecast);
+	// 	// 	// // Recommendation
+	// 	// 	// generateRecommendation(result.forecast);
 
-		// 	// $('.carousel-inner').on('click', '.forecast_card', function() {
-		// 	// 	var card = $('.forecast_card').index(this);
+	// 	// 	// $('.carousel-inner').on('click', '.forecast_card', function() {
+	// 	// 	// 	var card = $('.forecast_card').index(this);
 
-		// 	// 	appendForecastDetails(result.forecast[card]);
-		// 	// });
-		// }
+	// 	// 	// 	appendForecastDetails(result.forecast[card]);
+	// 	// 	// });
+	// 	// }
 
-		/************  DB to UI End *************/
-	});
+	// 	/************  DB to UI End *************/
+	// });
 
 	// setInterval(function() {
 	// 	var hour = new Date();

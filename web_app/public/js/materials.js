@@ -245,7 +245,7 @@ $(document).on('click','.remove-btn', function(){
 });
 $(document).on('click', "#add-btn-mat", function(){
     var count = $(this).val();
-        if($(".new-item").length == 5){
+        if($(".new-item").length == 10){
             alert("Limit reached");
         }
         else{
@@ -282,7 +282,7 @@ $(document).on("change",'.purchase_item_type', function(){
     var select = "item" + id.charAt(id.length - 1);
     // alert(select);
     if(type == "Seed")
-        $("#item_unit" + id.charAt(id.length - 1)).text("grams");
+        $("#item_unit" + id.charAt(id.length - 1)).text("Kg");
     else{
         $("#item_unit" + id.charAt(id.length - 1)).text("Bags");
     }
