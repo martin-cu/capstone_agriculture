@@ -184,6 +184,9 @@ router.get('/deleteFarmRecord/:id', farmController.retireFarm);
 
 /*** Agro API Start ***/
 //Combined Environment Variable Query
+router.get('/create_forecast_record', farmController.ajaxCreateForecastedYieldRecord);
+router.get('/create_complete_yield_forecast/:farm_name/:start/:end/:redirect/:calendar_id', farmController.completeYieldForecast);
+router.get('/get_forecast_records', farmController.ajaxGetForecastRecord);
 router.get('/get_calendar_variables', farmController.getIncludedCalendars);
 router.get('/forecast_yield_farm', farmController.getYieldVariables);
 router.get('/forecast_yield', farmController.forecastYield);

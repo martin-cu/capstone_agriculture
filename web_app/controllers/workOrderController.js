@@ -309,6 +309,7 @@ exports.getWorkOrdersPage = function(req, res) {
 		if (err)
 			throw err;
 		else {
+			console.log(list);
 			for (var i = 0; i < list.length; i++) {
 				list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
 				list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
@@ -316,6 +317,7 @@ exports.getWorkOrdersPage = function(req, res) {
 			}
 
 			var html_data = { wo_list: list };
+			console.log(html_data);
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
 
 			res.render('farms', html_data);
@@ -420,6 +422,7 @@ exports.editWorkOrder = function(req, res) {
 	var filter = {
 		work_order_id: req.body.wo_id
 	};
+	var update_forecast = false;
 
 	if (!Array.isArray(req.body.sacks_harvested))
 		req.body.sacks_harvested = [req.body.sacks_harvested];
@@ -434,6 +437,9 @@ exports.editWorkOrder = function(req, res) {
 		}
 		else if (query.type == 'Harvest') {
 			next_stage = 'End';
+		}
+		else if (query.type == 'Fertilizer Application') {
+			update_forecast = true;
 		}
 	}
 
@@ -519,7 +525,25 @@ exports.editWorkOrder = function(req, res) {
 										});
 									}
 									else {
-										res.redirect('/farms/work_order&id='+filter.work_order_id);
+										if (update_forecast) {
+											console.log('update forecast!');
+											// Get required farm details for updating yield forecast
+											cropCalendarModel.getYieldForecastVariables({ calendar_id: query.crop_calendar_id }, function(err, calendar_var) {
+												if (err)
+													throw err;
+												else {
+													var farm_name = calendar_var[0].farm_name
+													var start = dataformatter.formatDate(new Date(calendar_var[0].sowing_date), 'YYYY-MM-DD');
+													var end = dataformatter.formatDate(new Date(calendar_var[0].harvest_date), 'YYYY-MM-DD');
+													var redirect = 'work_order&id='+filter.work_order_id;
+													res.redirect('/create_complete_yield_forecast/'+farm_name+'/'+start+'/'+end+'/'+redirect+'/'+query.crop_calendar_id);
+												}
+											});
+													
+										}
+										else {
+											res.redirect('/farms/work_order&id='+filter.work_order_id);
+										}
 									}
 								}
 							}
@@ -585,7 +609,22 @@ exports.editWorkOrder = function(req, res) {
 															if (err)
 																throw err;
 															else {
-																res.redirect('/farms/work_order&id='+filter.work_order_id);
+																// Update actual harvest in forecast record
+																var forecast_update = {
+																	harvested: total_sacks
+																};
+																var forecast_filter = {
+																	calendar_id: query.crop_calendar_id
+																}
+																console.log(forecast_update);
+																farmModel.updateForecastYieldRecord(forecast_update, forecast_filter, function(err, update_status) {
+																	if (err)
+																		throw err;
+																	else {
+																		// Redirect
+																		res.redirect('/farms/work_order&id='+filter.work_order_id);
+																	}
+																})
 															}
 														});
 													}

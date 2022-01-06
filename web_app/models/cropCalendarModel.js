@@ -11,6 +11,7 @@ exports.createCycle = function(data, next) {
 exports.readCropCalendar = function(query, next) {
 	var sql = "select * from crop_calendar_table join seed_table on seed_planted = seed_id where ?";
 	sql = mysql.format(sql, query);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -20,6 +21,12 @@ exports.createCropCalendar = function(data, next) {
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 };
+
+exports.getYieldForecastVariables = function(data, next) {
+	var sql = "select sowing_date, harvest_date, farm_name from crop_calendar_table join farm_table using(farm_id) where ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+}
 
 //New sql with calendar stage based on seed maturity days
 // stages : Land Prepation / Sowing / Vegetation / Reproductive / Ripening / Harvesting
