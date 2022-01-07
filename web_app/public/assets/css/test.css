@@ -93,8 +93,8 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
  }
 
   input[type="text"], input[type="date"], input[type="password"], input[type="datetime-local"], select.form-select,
-  select.browser-default.custom-select{
-    border-radius: 20px;
+  select.form-control, select.browser-default.custom-select, .form-control{
+    border-radius: 20px !important;
   }
 
   #addFarm {
