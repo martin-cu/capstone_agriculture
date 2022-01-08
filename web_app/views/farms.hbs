@@ -11,34 +11,46 @@
                 <div class="card-body detailed_cont">
                     <form class="register-form" id="work_order_form" method="post" action="/create_work_order">
                         <fieldset>
-                            <div class="form-row">
-                                <div class="col-6 col-sm-6 col-md-6"><label>Farm</label>
-                                    <div id="lp-name-wrapper"></div>
-                                    <select class="form-control" id="farm_id" name="farm_id">
-                                    </select>
-                                </div>
+                            
+                            <div class="form-group" style="margin-left: 5px;">
+                                <div class="form-row">
+                                    <div class="col-6 col-sm-6 col-md-6"><label>Farm</label>
+                                        <div id="lp-name-wrapper"></div>
+                                        <select class="form-control" id="farm_id" name="farm_id">
+                                        </select>
+                                    </div>
 
-                                <div class="col-6 col-sm-6 col-md-6"><label>Crop Calendar</label>
-                                    <div id="lp-name-wrapper"></div>
-                                    <select class="form-control" id="crop_calendar_id" name="crop_calendar_id">
-                                    </select>
-                                </div>
+                                    <div class="col-6 col-sm-6 col-md-6"><label>Crop Calendar</label>
+                                        <div id="lp-name-wrapper"></div>
+                                        <select class="form-control" id="crop_calendar_id" name="crop_calendar_id">
+                                        </select>
+                                    </div>
 
-                                <div class="col-6 col-sm-6 col-md-6"><label>Type</label>
-                                    <div id="lp-lastname-wrapper"></div>
-                                    <select class="form-control" id="wo_type" name="wo_type">
-                                        <!-- <option value="Sow Seed">Sow Seed</option> -->
-                                        <option value="Pesticide Application">Pesticide Application</option>
-                                        <option value="Fertilizer Application">Fertilizer Application</option>
-                                        <option value="Water Fields">Water Fields</option>
-                                    </select>
                                 </div>
-                                <div class="col-6 col-sm-6 col-md-6">
-                                    <div id="lp-name-wrapper-1"><label>Description</label><input class="form-control" type="text" id="lp-name-1" placeholder="Short description on the work order"></div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-left: 5px;">
+                                <div class="form-row">
+                                    <div class="col-6 col-sm-6 col-md-6"><label>Type</label>
+                                        <div id="lp-lastname-wrapper"></div>
+                                        <select class="form-control" id="wo_type" name="wo_type">
+                                            <!-- <option value="Sow Seed">Sow Seed</option> -->
+                                            <option value="Pesticide Application">Pesticide Application</option>
+                                            <option value="Fertilizer Application">Fertilizer Application</option>
+                                            <option value="Water Fields">Water Fields</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6 col-sm-6 col-md-6">
+                                        <div id="lp-name-wrapper-1">
+                                            <label>Description</label>
+                                            <input class="form-control" type="text" id="lp-name-1" placeholder="Short description on the work order">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-sm-6 col-md-6">
+                                        <div id="lp-lastname-wrapper-1"></div>
+                                    </div>
                                 </div>
-                                <div class="col-6 col-sm-6 col-md-6">
-                                    <div id="lp-lastname-wrapper-1"></div>
-                                </div>
+                            </div>
                                 
                                 <!-- <div class="col-12 col-sm-6 col-md-12">
                                     <div id="lp-check1-wrapper">
@@ -48,19 +60,21 @@
                                 <div class="col-6 col-sm-6 col-md-6">
                                     <div id="lp-name-wrapper-2"><label class="d-block">Rice Yield</label><input class="form-control d-inline-flex" type="number" style="width: 300px;"><label class="d-inline-flex" style="margin-left: 10px;">sacks</label></div>
                                 </div> -->
-                            </div>
-
-                            <div class="form-row">
-                                <div class="col-6 col-sm-6 col-md-6">
-                                    <div id="lp-name-wrapper-3"><label>Start Date</label>
-                                        <input type="date" class="form-control" id="start_date" name="start_date" aria-describedby="emailHelp" placeholder="" required>
+                           
+                            <div class="form-group" style="margin-left: 5px;">
+                                <div class="form-row">
+                                    <div class="col-6 col-sm-6 col-md-6">
+                                        <div id="lp-name-wrapper-3"><label>Start Date</label>
+                                            <input type="date" class="form-control" id="start_date" name="start_date" aria-describedby="emailHelp" placeholder="" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-sm-6 col-md-6">
+                                        <div id="lp-lastname-wrapper-2"></div><label>Due Date</label><input type="date" class="form-control" id="due_date" name="due_date" aria-describedby="emailHelp" placeholder="" required>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-6 col-md-6">
-                                    <div id="lp-lastname-wrapper-2"></div><label>Due Date</label><input type="date" class="form-control" id="due_date" name="due_date" aria-describedby="emailHelp" placeholder="" required>
-                                </div>
                             </div>
-
+              
+                        <div class="form-group" style="margin-left: 5px;">
                             <div class="form-row">
                                 <div class="col-12 col-sm-6 col-md-12">
                                     <label>Resources</label>
@@ -70,17 +84,39 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-left: 5px;">
+                            <div class="form-row">
+
                                 <div class="col-12 col-sm-6 col-md-12" style="margin-top: -20px;">
-                                    <div id="customfield1-wrapper"><label>Notes</label>
-                                        <textarea type="text" class="form-control" id="notes" name="notes" aria-describedby="emailHelp" placeholder="" rows="3" style="resize: none;"></textarea>
-                                    </div>
+                                        <div id="customfield1-wrapper"><label>Notes</label>
+                                            <textarea type="text" class="form-control" id="notes" name="notes" aria-describedby="emailHelp" placeholder="" rows="3" style="resize: none;"></textarea>
+                                        </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-12 col-sm-12 col-md-12 mt-3"><button class="btn btn-primary float-right shadow" type="submit" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);">Create Work Order</button></div>
+                            {{!-- <div class="col-12 col-sm-12 col-md-12 mt-3"><button class="btn btn-primary float-right shadow" type="submit" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);">Create Work Order</button></div> --}}
 
                         </fieldset>
                     </form>
+
+                    <!-- Circles which indicates the steps of the form: -->
+                    <div style="text-align:center;padding-top:40px;padding-bottom:10px">
+                        {{!-- <span class="step"></span>
+                        <span class="step"></span> --}}
+                     </div>
+
+                    <div class="modal-footer">
+                    <div class="modal_footer_content" id="_step1">
+                        <button type="button" class="btn round btn-secondary" onclick='window.location="/farms"'>Cancel</button>
+                        <button class="btn btn-primary" type="submit">Create Work Order</button>
+                    </div>
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -91,15 +127,7 @@
             <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Work Order Records</p>
         </div>
          <div class="card-body">
-                            <div class="card" id="TableSorterCard-1">
-                                <div class="row table-topper align-items-center">
-                                    <div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
-                                    <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
-                                        <h6 id="counter-1">Showing: <strong id="rowCount">ALL</strong>&nbsp;Row(s)</h6>
-                                    </div>
-                                    <div class="col-4 text-right" style="margin: 0px;padding: 5px 10px;"><a href="#" data-toggle="modal" data-target="#tablehelpModal"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;"></i></a></div>
-                                </div>
-                                <div class="row">
+                            <div class="row">
                                     <div class="col-12">
                                         <div style="width: auto;">
                                             <table class="table table tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
@@ -144,7 +172,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                               <nav class="float-right" style="margin-right: 10px;">
+                                               {{!-- <nav class="float-right" style="margin-right: 10px;">
                                                         <ul class="pagination">
                                                             <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
                                                             <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -154,12 +182,12 @@
                                                             <li class="page-item"><a class="page-link" href="#">5</a></li>
                                                             <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
                                                         </ul>
-                                                    </nav>       
+                                                    </nav>        --}}
                                     </div>
 
                                 </div>
 
-                                <div class="modal fade" role="dialog" tabindex="-1" id="tablehelpModal-1" aria-labeledby="tablehelpModal" aria-hidden="true">
+                                {{!-- <div class="modal fade" role="dialog" tabindex="-1" id="tablehelpModal-1" aria-labeledby="tablehelpModal" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -251,8 +279,7 @@
                                             <div class="modal-footer"><button class="btn btn-danger" type="button" data-dismiss="modal">Close</button></div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div> --}}
                         </div>
     </div>
 </div>
@@ -395,6 +422,11 @@
     }
 
     $(document).ready(function() {
+
+        // Data Table (For Pagination and Filter)
+        $('#ipi-table').DataTable( {
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        });
 
         // $('#work_order_form').on('submit', function(e) {
         //  e.preventDefault();
