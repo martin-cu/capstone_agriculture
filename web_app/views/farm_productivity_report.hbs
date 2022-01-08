@@ -33,82 +33,41 @@
                                             <table class="table table tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
                                                 <thead class="thead-dark">
                                                     <tr style="background: #332C1F;">
-                                                        <th style="">#</th>
                                                         <th style="">Farm</th>
-                                                        <th style="">Expected Yield</th>
-                                                        <th style="">Forecasted Yield</th>
-                                                        <th style="">Net Spend(+/-)</th>
-                                                        <th style="">Productivity</th>
+                                                        <th style="">Crop Plan</th>
+                                                        <th style="">Current Yield</th>
+                                                        <th style="">Productivity (Current / Previous)</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody aria-live="polite" aria-relevant="all">
-                                                 
-                                                   <tr role="row">
-                                                        <td style="text-align: center;"> 1</td>
-                                                        <td style="text-align: center;"> Farm 1</td>
-                                                        <td style="text-align: center;"> 50 cavans/ha </td>
-                                                        <td style="text-align: center;"> 50 cavans/ha </td>
-                                                        <td style="text-align: center;"> +PHP 500,000.00 </td>
-                                                        <td style="color: #22bb33; text-align: center;"> High Productivity </td>
-                                                            <span>
-                                                            <div class="dropdown no-arrow" style="display:inline-block; float: right">
-                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                                    </button>
-                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                                        <a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}">View Details</a>
-                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
-                                                                        <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                    {{#each farm_productivity}}
+                                                    <tr role="row">
+                                                        <td>{{this.farm_name}}</td>
+                                                        <td>
+                                                            <div class="d-flex flex-column">
+                                                                {{this.crop_plan}}
+                                                                <small>({{this.status}})</small>
+                                                            </div>
+                                                        </td>
+                                                        <td class="">{{this.current_yield}}</td>
+                                                        <td>
+                                                            <div class="d-flex w-100">
+                                                                <big class="w-50 text-right">{{this.current_productivity}}</big>
+                                                                <big class="mx-3"> / </big>
+                                                                <small class="mt-2 w-50">{{this.prev_productivity}}</small>
+                                                                <div class="d-flex">
+                                                                    <!-- <div class="">
+                                                                        <i class=" fas fa-arrow-alt-circle-{{this.change.arrow}} fa-2x"></i>
+                                                                    </div> -->
+                                                                    <div class="mt-1 {{this.change.color}}">
+                                                                        {{this.change.val}}%
                                                                     </div>
+                                                                    
                                                                 </div>
-                                                            </span> 
+                                                            </div>
                                                         </td>
                                                     </tr>
-                                                     <tr role="row">
-                                                        <td style="text-align: center;"> 2</td>
-                                                        <td style="text-align: center;"> Farm 2</td>
-                                                        <td style="text-align: center;"> 50 cavans/ha </td>
-                                                        <td style="text-align: center;"> 30 cavans/ha </td>
-                                                        <td style="text-align: center;"> -PHP 100,000.00 </td>
-                                                        <td style="color: #f0ad4e; text-align: center;"> Medium Productivity </td>
-                                                            <span>
-                                                            <div class="dropdown no-arrow" style="display:inline-block; float: right">
-                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                                    </button>
-                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                                        <a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}">View Details</a>
-                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
-                                                                        <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
-                                                                    </div>
-                                                                </div>
-                                                            </span> 
-                                                        </td>
-                                                    </tr>
-                                                     <tr role="row">
-                                                        <td style="text-align: center;"> 3</td>
-                                                        <td style="text-align: center;"> Farm 3</td>
-                                                        <td style="text-align: center;"> 50 cavans/ha </td>
-                                                        <td style="text-align: center;"> 10 cavans/ha </td>
-                                                        <td style="text-align: center;"> -PHP 500,000.00 </td>
-                                                        <td style="color: #bb2124; text-align: center;"> Low Productivity </td>
-                                                            <span>
-                                                            <div class="dropdown no-arrow" style="display:inline-block; float: right">
-                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                                    </button>
-                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                                        <a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}">View Details</a>
-                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
-                                                                        <div class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
-                                                                    </div>
-                                                                </div>
-                                                            </span> 
-                                                        </td>
-                                                    </tr>
+                                                    {{/each}}
                                                   
                                                 </tbody>
                                             </table>

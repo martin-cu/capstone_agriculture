@@ -1,6 +1,40 @@
 const brain = require('brain.js');
 const DecisionTree = require('decision-tree');
 
+exports.calculateProductivity = function(fp_overview, input_resources) {
+	for (var i = 0; i < fp_overview.length; i++) {
+		fp_overview[i]['input_items'] = input_resources.filter(e => fp_overview[i].calendar_id == e.calendar_id);
+		fp_overview[i]['net_spend'] = fp_overview[i]['input_items'].reduce((a, b) => a + b.total_cost, 0);
+		fp_overview[i]['prev_input_items'] = input_resources.filter(e => fp_overview[i].max_prev_calendar == e.calendar_id);
+		fp_overview[i]['prev_net_spend'] = fp_overview[i]['prev_input_items'].reduce((a, b) => a + b.total_cost, 0);
+
+		fp_overview[i]['current_productivity'] = 'N/A';
+		fp_overview[i]['prev_productivity'] = Math.round((fp_overview[i].max_previous_yield / fp_overview[i].prev_net_spend) * 100000) / 100000;
+		
+		fp_overview[i].current_yield = fp_overview[i].current_yield != null ? fp_overview[i].current_yield
+			 : fp_overview[i].current_yield = 'N/A';
+		fp_overview[i]['current_productivity'] = fp_overview[i].current_yield != 'N/A' ? Math.round((fp_overview[i].current_yield / fp_overview[i].net_spend) * 100000) / 100000 : 'N/A';
+		
+		fp_overview[i]['change'] = { 
+			val: fp_overview[i].current_productivity != 'N/A' ? 
+				fp_overview[i].current_productivity > fp_overview[i].prev_productivity ? 
+				fp_overview[i].current_productivity / fp_overview[i].prev_productivity :
+				fp_overview[i].prev_productivity / fp_overview[i].current_productivity
+				: 0,
+			arrow: fp_overview[i].current_productivity != 'N/A' ? 
+				fp_overview[i].current_productivity > fp_overview[i].prev_productivity ? 
+				'up' :
+				'down'
+				: 'up'
+		};
+
+		fp_overview[i].change.val = fp_overview[i].change.val != 0 ? parseInt((fp_overview[i].change.val * 100) - 100) : 0;
+		fp_overview[i].change.color = fp_overview[i].change.arrow == 'up' ? 
+		fp_overview[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
+	}
+	console.log(fp_overview);
+	return fp_overview;
+}
 
  exports.processNutrientRecommendation = function(data) {
  	
