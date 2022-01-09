@@ -467,6 +467,7 @@ exports.editWorkOrder = function(req, res) {
 						for(i = 0; i < farm_materials.length; i++){
 							
 							if(farm_materials[i].item_type == "Pesticide" && farm_materials[i].item_name == type[1]){
+								// console.log( farm_materials[i].farm_mat_id);
 								// console.log("Found it");
 								// console.log(farm_materials[i].item_type);
 								// console.log(farm_materials[i].item_name);

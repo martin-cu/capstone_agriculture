@@ -2067,7 +2067,7 @@ exports.addDiagnosis = function(req,res){
 	var i;
 	for(i = 0; i < req.body.solution.length; i++)
 		workorders.push(req.body.solution[i].split("|"));
-		
+	
 	var diagnosis = {
 		type : req.body.type,
 		farm_id : req.body.farm_id,
@@ -2220,7 +2220,7 @@ exports.addDiagnosis = function(req,res){
 								}
 								
 								//Create new WorkOrders
-								var today = new Date();
+								var today = new Date(); 
 								today.setDate(today.getDate() + 7);	
 								// console.log(workorders[0][1]);
 								for(i = 0;i < workorders.length; i++){
@@ -2229,15 +2229,18 @@ exports.addDiagnosis = function(req,res){
 										type : workorders[i][1],
 										notes : workorders[i][2],
 										date_created : new Date(),
-										date_start : new Date(workorders[i][0]),
+										date_start : new Date(),
 										date_due : today,
 										crop_calendar_id : diagnosis.calendar_id
 									}
+									console.log("Create work order from diagnosis");
+									workOrderModel.createWorkOrder(temp_wo, function(err, success){});
 								}
-								console.log("Create work order from diagnosis");
-								workOrderModel.createWorkOrder(temp_wo, function(err, success){});
+								
 								//Create new PD_Recommendation
 								//pestdiseaseModel.addNewPDRecommendation()
+								// res.redirect("/pest_and_disease/diagnose");
+
 								res.redirect("/pest_and_disease/diagnose_details?id=" + last[0].last);
 							});
 							
