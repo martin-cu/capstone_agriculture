@@ -203,6 +203,15 @@
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 
+<script>
+// Data Table (For Pagination and Filter)
+$('.table.table-striped.table-bordered.tablesorter').DataTable( {
+  "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+  "search": {
+    "caseInsensitive": false
+  }
+});
+</script>
 
 </body>
 

@@ -60,7 +60,7 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
     border-color: #EDD172 !important;
 }
 
-#back {
+#back.btn.btn-primary {
 
     width: 25px;
     border-radius: 100%;
@@ -69,14 +69,14 @@ button#more.btn.btn-primary.btn-sm.dropdown-toggle:focus, button#more.btn.btn-pr
     color: #939C1F;
 }
 
-#back:hover {
+#back.btn.btn-primary :hover {
     background-color: white;
     border-color: white;
     color: #939C1F;
     filter: brightness(95%);
 }
 
-#back:focus, #back:focus:active, #userNav:focus, #userNav:focus:active {
+#back.btn.btn-primary:focus, #back.btn.btn-primary:focus:active, #userNav:focus, #userNav:focus:active {
     background-color: white !important;
     border-color: white !important;
     color: #939C1F !important;
@@ -383,3 +383,31 @@ a.dropdown-item.notSidebar:hover {
 }
 
 /* END OF MAPBOX */
+
+/* TABLE PAGINATION */
+
+a.page-link {
+    color: #657429;
+}
+
+a.page-link:hover {
+    color: #657429;
+    background-color: white;
+    filter: brightness(95%);
+}
+
+.page-item.active .page-link {
+    background-color: #BDBE14;
+    border-color: #BDBE14;
+}
+
+.dataTables_info {
+    color: #332C1F !important;
+}
+
+/* END OF TABLE PAGINATION */ 
+
+.viewDetails, .viewDetails:hover {
+    color: #BD9E4B;
+    font-weight: 600;
+}
