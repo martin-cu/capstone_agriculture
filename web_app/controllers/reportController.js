@@ -9,7 +9,7 @@ exports.getDetailedReport = function(req, res) {
 
 exports.getFarmProductivityReport = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
 
 	reportModel.getFarmProductivity(function(err, fp_overview) {
 		if (err)

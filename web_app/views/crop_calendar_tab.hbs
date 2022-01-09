@@ -1,3 +1,13 @@
+<style>
+    table td, th {
+        color:#332C1F;
+    } 
+
+    label {
+        color: #332C1F;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
         <h3 class="text-dark mb-0">Farms &gt; Crop Calendar</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
@@ -156,20 +166,17 @@
             <p class="d-inline-flex m-0 font-weight-bold" style="color: rgb(255,255,255);">Past Crop Calendars</p><button onclick='window.location="/crop_calendar/add"' class="btn btn-primary d-inline-flex float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);font-size: 12px;"><span>Create Crop Calendar<i class="fa fa-plus-circle" style="margin-left: 5px;"></i></span></button>
         </div>
         <div class="card-body">
-
-
-            <div class="card" id="TableSorterCard-1">
-                <div class="row table-topper align-items-center">
+                {{!-- <div class="row table-topper align-items-center">
                     <div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
                     <div class="col-4 text-center" style="margin: 0px;padding: 5px 10px;">
                         <h6 id="counter-1">Showing: <strong id="rowCount">ALL</strong>&nbsp;Row(s)</h6>
                     </div>
                     <div class="col-4 text-right" style="margin: 0px;padding: 5px 10px;"><a href="#" data-toggle="modal" data-target="#tablehelpModal"><i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Custom Sort Details" aria-hidden="true" style="padding: 5px 15px;margin: 2px;"></i></a></div>
-                </div>
+                </div> --}}
                 <div class="row">
                     <div class="col-12">
                         <div style="width: auto;">
-                            <table class="table table tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
+                            <table class="table table-striped table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
                                 <thead class="thead-dark">
                                     <tr style="background: #332C1F;">
                                         <th style="">Crop Plan</th>
@@ -208,7 +215,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <nav class="float-right" style="margin-right: 10px;">
+                        {{!-- <nav class="float-right" style="margin-right: 10px;">
                                 <ul class="pagination">
                                     <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
                                     <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -218,11 +225,10 @@
                                     <li class="page-item"><a class="page-link" href="#">5</a></li>
                                     <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
                                 </ul>
-                            </nav>       
+                            </nav>        --}}
                     </div>
 
                 </div>
-            </div>
 
         </div>
     </div>
