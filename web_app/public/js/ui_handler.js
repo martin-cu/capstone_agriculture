@@ -90,8 +90,12 @@ $(document).ready(function() {
 				//GENERATE RECOMMENDATION
 				$.get('/generateRecommendationDiagnosis',{farm_name : $("#farm_id option:selected").text(), type : $("#diagnosis_type").val(), pd_id : $("#pd_list").val()}, function(result){
 					var i;
-					for(i = 0; i < result.length; i++)
-						$("#recommended_solutions").append('<div class="row"><div class="col-lg-3"><label class="form-check-label font-weight-bold" for="formCheck-2" >' + result[i].date_words + '</label></div><div class="col-lg-3"><label class="form-check-label font-weight-bold" for="formCheck-2" >' + result[i].type + '</label></div><div class="col-lg-5"><label class="form-check-label font-weight-bold" for="formCheck-2" style="max-width: 200px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">' + result[i].desc + '</label></div><div class="col-lg-1"><input name="solution[' + i + ']" id="" class="form-check-input symptom-checkbox" type="checkbox" value="' + result[i].date + '|' + result[i].type + '|' + result[i].desc + '" form="add_diagnosis_form"></div></div>');
+					console.log(result.symptoms);
+					console.log(result.recommend_solutions);
+					for(i = 0; i < result.symptoms.length; i++)
+						$("#symptom_list").append('<div class="row"><div class="col-xl-12"><div class="form-check" style="margin-left: 15px;"><input name="symptom[' + i + ']" id="" class="form-check-input symptom-checkbox" type="checkbox" value="' + result.symptoms[i].symptom_id +'" form="add_diagnosis_form"><label class="form-check-label font-weight-bold" for="formCheck-2" >' + result.symptoms[i].detail_name +'</label></div></div></div>');
+					for(i = 0; i < result.recommended_solutions.length; i++)
+						$("#recommended_solutions").append('<div class="row"><div class="col-lg-3"><label class="form-check-label font-weight-bold" for="formCheck-2" >' + result.recommended_solutions[i].date_words + '</label></div><div class="col-lg-3"><label class="form-check-label font-weight-bold" for="formCheck-2" >' + result.recommended_solutions[i].type + '</label></div><div class="col-lg-5"><label class="form-check-label font-weight-bold" for="formCheck-2" style="max-width: 200px;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">' + result.recommended_solutions[i].desc + '</label></div><div class="col-lg-1"><input name="solution[' + i + ']" id="" class="form-check-input symptom-checkbox" type="checkbox" value="' + result.recommended_solutions[i].date + '|' + result.recommended_solutions[i].type + '|' + result.recommended_solutions[i].desc + '" form="add_diagnosis_form"></div></div>');
 				});
 				processModalStep($(this).parent().attr('id'), $(this).val());
 				

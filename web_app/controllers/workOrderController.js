@@ -99,6 +99,11 @@ exports.getDetailedWO = function(req, res) {
 				type = null;
 			}
 
+			var wo_type = details.type.split("-");
+			if(wo_type[0] == "Apply pesticide" || wo_type[0] == "Apply fungicide"){
+				html_data["pesticide"] = true;
+			}
+
 			if (type != null) {
 				if (type == 'Harvest') {
 					var wo_list_query = {
@@ -318,7 +323,7 @@ exports.getWorkOrdersPage = function(req, res) {
 			}
 
 			var html_data = { wo_list: list };
-			console.log(html_data);
+			// console.log(html_data);
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
 
 			res.render('farms', html_data);
@@ -448,7 +453,7 @@ exports.editWorkOrder = function(req, res) {
 	var type = req.body.type.split("-");
 	// console.log(type);
 	// console.log(req.body.status);
-	if(type[0] == "Apply pesticide" && req.body.status == "Completed"){
+	if((type[0] == "Apply pesticide" || type[0] == "Apply fungicide") && req.body.status == "Completed"){
 		//check if enough
 		workOrderModel.getDetailedWorkOrder({work_order_id : req.body.wo_id}, function(err, wo_details){
 			if(err)

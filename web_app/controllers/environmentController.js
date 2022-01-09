@@ -2096,19 +2096,29 @@ exports.addDiagnosis = function(req,res){
 					console.log(crop_calendar[i].last_prep_date + " - " + crop_calendar[latest].last_prep_date);
 					if(crop_calendar[i].farm_name == farm_name){
 
-						latest  = i;
+						// latest  = i;
 						var temp_harvest = new Date(crop_calendar[i].harvest_date);
-						temp_harvest.setTime(temp_harvest.getTime + (7 * 24 * 60 * 60 * 1000));
-						if(diagnosis.date_diagnosed > crop_calendar[i].land_prep_date && diagnosis.date_diagnosed < temp_harvest){
-							// console.log("Date diagnosed: " + diagnosis.date_diagnosed);
-							// console.log("Land Prep date: " + crop_calendar[i].land_prep_date);
-							// console.log("Harvest date: " + crop_calendar[i].harvest_date);
-							//console.log(crop_calendar[i].stage);
-							crop_plan = i;
+						var i_date = new Date(crop_calendar[i].land_prep_date);
+						var index_date = new Date(crop_calendar[latest].land_prep_date);
+						var diagnose_date = new Date(diagnosis.date_diagnosed);
+						
+						// console.log(diagnose_date.getTime() - i_date.getTime());
+						// console.log(diagnose_date.getTime() - temp_harvest.getTime() );
+						// console.log("000000000000000");
+
+
+						if(diagnose_date.getTime() - i_date.getTime() >= 0){
+							if(diagnose_date.getTime() - temp_harvest.getTime() <= 0){
+								crop_plan = i;
+								i = crop_calendar.length;
+							}
+							else{
+								latest  = i;
+							}
 						}
 
-						if(crop_calendar[i].land_prep_date > crop_calendar[latest].land_prep_date)
-							latest  = i;
+						// if(crop_calendar[i].land_prep_date > crop_calendar[latest].land_prep_date)
+						// 	latest  = i;
 					}
 						
 					// if(crop_calendar[i].farm_name == farm_name)
@@ -2116,7 +2126,7 @@ exports.addDiagnosis = function(req,res){
 				}
 				// console.log(crop_plan);
 				// console.log(crop_calendar[crop_plan].calendar_id);
-				if(farm_name != crop_calendar[latest].farm_name || crop_plan == -1){
+				if(crop_plan == -1){
 					diagnosis["calendar_id"] = crop_calendar[latest].calendar_id;
 					diagnosis["stage_diagnosed"] = crop_calendar[latest].stage;
 				}
@@ -2163,7 +2173,7 @@ exports.addDiagnosis = function(req,res){
 					else{
 						stage = null;
 					}
-					console.log(stage);
+					// console.log(stage);
 					diagnosis["calendar_id"] = crop_calendar[crop_plan].calendar_id;
 					diagnosis["stage_diagnosed"] = stage;
 				}
@@ -2271,7 +2281,11 @@ exports.getRecommendationDiagnosis = function(req,res){
 					//add to recommendation
 					recommended_solutions.push(solution);
 				}
-				res.send(recommended_solutions);
+				pestdiseaseModel.getPestSymptoms(id, function(err, symptoms){
+					// console.log(recommended_solutions);
+					// console.log(symptoms);
+					res.send({recommended_solutions: recommended_solutions, symptoms : symptoms});
+				});
 			}
 		});
 	}
@@ -2280,7 +2294,6 @@ exports.getRecommendationDiagnosis = function(req,res){
 			if(err)
 				throw err;
 			else{
-				console.log(solutions);
 				var i;
 				for(i = 0; i < solutions.length; i++){
 					var solution = {
@@ -2291,7 +2304,12 @@ exports.getRecommendationDiagnosis = function(req,res){
 					}
 					recommended_solutions.push(solution);
 				}
-				res.send(recommended_solutions);
+				
+				pestdiseaseModel.getDiseaseSymptoms(id, function(err, symptoms){
+					// console.log(recommended_solutions);
+					// console.log(symptoms);
+					res.send({recommended_solutions: recommended_solutions, symptoms : symptoms});
+				});
 
 			}
 		});
