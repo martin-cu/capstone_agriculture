@@ -32,11 +32,14 @@ exports.getDetailedReport = function(req, res) {
 exports.getFarmProductivityReport = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+	console.log('----------------------');
 
 	reportModel.getFarmProductivity(function(err, fp_overview) {
 		if (err)
 			throw err;
 		else {
+			console.log('----------------------');
+
 			var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id).concat(fp_overview.map(({ max_prev_calendar }) => max_prev_calendar));
 			reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
 				if (err)

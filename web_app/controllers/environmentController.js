@@ -1346,12 +1346,34 @@ exports.getFarmPestDiseases = function(req, res){
 														if(err)
 															throw err;
 														else{
-															var i;
-															for(i = 0; i < diagnosis.length; i++)
+															var i, x;
+															for(i = 0; i < diagnosis.length; i++){
 																diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+																for(x = 0 ; x < possible_pests.length; x++){
+																	if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																		possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																		if(diagnosis[i].farm_id == farm_id.farm_id)
+																			possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																	}
+																}
+															}
+
+															//Sort possibilties
+															var temp_pos = [];
+															var smallest = 0;
+															for(x = 1 ; x < possible_pests.length; x++){
+																
+																if(possible_pests[smallest].probability < possible_pests[x].probability){
+																	temp_pos.push(possible_pests[x]);
+																}
+																else{
+																	temp_pos.push(possible_pests[smallest]);
+																	smallest = x;
+																}
+															}
 															html_data["diagnosis"] = diagnosis;
 															html_data["statements"] = statements;
-															html_data["probability"] = possible_pests;
+															html_data["probability"] = temp_pos;
 															html_data["weather"] = weather;
 															html_data["main"] = forecast_body[0].main;
 															res.render("farm_pestdisease", html_data);
@@ -1532,22 +1554,55 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 									if(type == "Pest"){
 										pestdiseaseModel.getPestProbabilityPercentage(weather, season, farmtypes, cur_stage,function(err, possible_pests){
 											if(err){
-												console.log(err);
 												throw err;
 											}else{
 												console.log(possible_pests);
 												var statements = new Array();
 					
 												var ctr = possible_pests.length;
-												if(ctr < 5)
-												while(ctr != 5){
-													possible_pests.push({});
-													ctr++;
-												};
+												// if(ctr < 5)
+												// while(ctr != 5){
+												// 	possible_pests.push({});
+												// 	ctr++;
+												// };
 										
 											}
-											html_data["probability"] = possible_pests;
-											res.send(html_data);
+
+											pestdiseaseModel.getDiagnosis(farm_id, null, function(err, diagnosis){
+
+												if(err)
+													throw err;
+												else{
+													var i, x;
+													for(i = 0; i < diagnosis.length; i++){
+														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+														for(x = 0 ; x < possible_pests.length; x++){
+															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																if(diagnosis[i].farm_id == farm_id.farm_id)
+																	possible_pests[x].probability = possible_pests[x].probability * 1.1;
+															}
+															
+														}
+													}
+
+													//Sort possibilties
+													var temp_pos = [];
+													var smallest = 0;
+													for(x = 1 ; x < possible_pests.length; x++){
+														
+														if(possible_pests[smallest].probability < possible_pests[x].probability){
+															temp_pos.push(possible_pests[x]);
+														}
+														else{
+															temp_pos.push(possible_pests[smallest]);
+															smallest = x;
+														}
+													}
+												}
+												html_data["probability"] = temp_pos;
+												res.send(html_data);
+											});
 										});
 									}
 									else if(type == "Disease"){
@@ -1559,15 +1614,48 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 												console.log(possible_pests);
 												var statements = new Array();
 					
-												var ctr = possible_pests.length;
-												if(ctr < 5)
-												while(ctr != 5){
-													possible_pests.push({});
-													ctr++;
-												};
+												// var ctr = possible_pests.length;
+												// if(ctr < 5)
+												// while(ctr != 5){
+												// 	possible_pests.push({});
+												// 	ctr++;
+												// };
 											}
-											html_data["probability"] = possible_pests;
-											res.send(html_data);
+
+											pestdiseaseModel.getDiagnosis(farm_id, null, function(err, diagnosis){
+
+												if(err)
+													throw err;
+												else{
+													var i, x;
+													for(i = 0; i < diagnosis.length; i++){
+														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+														for(x = 0 ; x < possible_pests.length; x++){
+															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																if(diagnosis[i].farm_id == farm_id.farm_id)
+																	possible_pests[x].probability = possible_pests[x].probability * 1.1;
+															}
+														}
+													}
+
+													//Sort possibilties
+													var temp_pos = [];
+													var smallest = 0;
+													for(x = 1 ; x < possible_pests.length; x++){
+														
+														if(possible_pests[smallest].probability < possible_pests[x].probability){
+															temp_pos.push(possible_pests[x]);
+														}
+														else{
+															temp_pos.push(possible_pests[smallest]);
+															smallest = x;
+														}
+													}
+												}
+												html_data["probability"] = temp_pos;
+												res.send(html_data);
+											});
 										});
 									}
 								}
