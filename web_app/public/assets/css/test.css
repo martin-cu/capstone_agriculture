@@ -411,3 +411,7 @@ a.page-link:hover {
     color: #BD9E4B;
     font-weight: 600;
 }
+
+.farm_li.list-group-item.active_farm > span, .farm_li.list-group-item.active_farm{
+    background:#EEEEEE;
+}

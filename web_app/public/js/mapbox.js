@@ -1,6 +1,7 @@
 
 $(document).on("click", ".farm_li", function(){
 	$('.loader').css('visibility', 'hidden'); //to show
+	
 });
 function update_color_meter(){
     $(".probability_value").each(function(){
@@ -275,9 +276,18 @@ $(document).ready(function() {
 
 			for (var i = 0; i < farms.length; i++) {
 				li = '';
+				
+				// Append active class if first li
+				if (i == 0) {
+					li = '<li style="'+style+'" class="farm_li list-group-item active_farm" data="'+farms[i].farm_id+'"><span>'+farms[i].farm_name+'</span><span class="float-end">'+farms[i].farm_area+'ha'+'</span></li>';
+					$('#monitor_farm_list').append(li);
+				}
 
-				li = '<li style="'+style+'" class="farm_li list-group-item" data="'+farms[i].farm_id+'"><span>'+farms[i].farm_name+'</span><span class="float-end">'+farms[i].farm_area+'ha'+'</span></li>';
-				$('#monitor_farm_list').append(li);
+				// Append default class
+				else {
+					li = '<li style="'+style+'" class="farm_li list-group-item" data="'+farms[i].farm_id+'"><span>'+farms[i].farm_name+'</span><span class="float-end">'+farms[i].farm_area+'ha'+'</span></li>';
+					$('#monitor_farm_list').append(li);
+				}
 			}
 			var query = farms[0].farm_name;
 
@@ -509,7 +519,12 @@ $(document).ready(function() {
 		
 		//ONCLICK
 		$('#monitor_farm_list').on('click', '.farm_li', function() {
+			//alert("hi");
 			
+			// Add active class to the current li (highlight it)
+			var current = document.getElementsByClassName("active_farm");
+			current[0].className = current[0].className.replace(" active_farm", "");
+			this.className += " active_farm";
 
 			viewed_farm_id = $(this).attr('data');
 			viewed_farm_name = $($(this).children()[0]).html();
