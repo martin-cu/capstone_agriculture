@@ -76,6 +76,10 @@ exports.init_session = function(obj, role, name, username, tab) {
 	else if (tab === 'sms_messages') 
 		obj['messages_tab'] = true;
 
+	// Reports
+	else if (tab === 'reports') 
+	obj['reports_tab'] = true;
+
 
 	return obj;
 }

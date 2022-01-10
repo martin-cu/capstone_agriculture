@@ -1,3 +1,24 @@
+<style>
+     table td, table th, strong, span {
+        color: #332c1f;
+    }
+
+    h3 {
+        color: white;
+    }
+
+    h5, div.col {
+        color: #657429;
+    }
+
+    a.btn.multisteps-form__progress-btn.js-active, a.btn.multisteps-form__progress-btn {
+        color: #657429;
+    }
+
+    a.btn.multisteps-form__progress-btn.js-active::before {
+        background: #D6CD41;
+    }
+</style>
 
 {{!-- <div class="container-fluid">
     <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Farms</h3>
@@ -440,11 +461,11 @@
             <div class="card shadow mb-4">
                 <div class="card-body">
                     <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Current Soil Data</h6>
-                    <div class="table-responsive" style="margin-top: 10px;">
+                    <div class="table-responsive" style="margin-top: 20px; margin-bottom: 24px">
                         <table class="table">
-                            <thead>
+                            {{!-- <thead>
                                 <tr></tr>
-                            </thead>
+                            </thead> --}}
                             <tbody>
                                 <tr>
                                     <td style="padding: 8px;">Temperature at the surface</td>
@@ -477,14 +498,14 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-6">
-                            <div class="card shadow" style="margin-bottom: 10px;">
-                                <div class="card-body" style="height: 266.01px; max-height: 266.01px">
+                            <div class="card shadow" style="margin-bottom: 10px; height: 260px; max-height: 260px">
+                                <div class="card-body">
                                     <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Farm Information</h6>
-                                    <div class="table-responsive" style="margin-top: 10px;">
+                                    <div class="table-responsive" style="margin-top: 20px;">
                                         <table class="table">
-                                            <thead>
+                                            {{!-- <thead>
                                                 <tr></tr>
-                                            </thead>
+                                            </thead> --}}
                                             <tbody>
                                                 <tr>
                                                     <td style="width: 170px;padding: 0px;border-style: none;"><span class="d-table-cell" style="font-weight: bold;border-style: none;" >Farm ID</span><span style="border-style: none;" id="farm_id">F-05</span></td>
@@ -505,14 +526,14 @@
                             </div>
                         </div>
                         <div class="col-xl-6">
-                            <div class="card shadow" style="margin-bottom: 0px;">
-                                <div class="card-body h-100" style="height: 266.01px; max-height: 266.01px">
+                            <div class="card shadow" style="margin-bottom: 0px; height: 260px; max-height: 260px">
+                                <div class="card-body h-100">
                                     <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Forecasted vs. Expected Yield</h6>
-                                    <div class="table-responsive" style="border-style: none;">
+                                    <div class="table-responsive" style="border-style: none; margin-top:20px">
                                         <table class="table">
-                                            <thead style="border-style: none;">
+                                            {{!-- <thead style="border-style: none;">
                                                 <tr style="border-style: none;"></tr>
-                                            </thead>
+                                            </thead> --}}
                                             <tbody style="border-style: none;">
                                                 <tr style="border-style: none;">
                                                     <td style="width: 170px;border-style: none;text-align: left;line-height: 18px;" colspan="2">Forecasted yield is taken from the current inputs and current data sets from the weather forecasts, while expected yield is based from the historical data of LA Rice Mill.&nbsp;</td>
@@ -571,7 +592,7 @@
                                     
                                     <div class="multisteps-form__progress" style="margin-top: 20px;"><a class="btn multisteps-form__progress-btn js-active" role="button" title="User Info">Land Preparation</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Sowing</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Vegetation&nbsp;</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Reproduction</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Ripening</a><a class="btn multisteps-form__progress-btn" role="button" title="User Info">Harvest</a></div>
                                     <form id="main-form" class="multisteps-form__form" style="margin-top: 10px;">
-                                        <div id="single-form-next" class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn">
+                                        <div id="single-form-next" class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn" style="background-color: #212529 !important;">
                                             <h3 class="text-center multisteps-form__title">Land Preparation</h3>
                                             
                                             <div id="form-content-3" class="multisteps-form__content">
@@ -607,7 +628,7 @@
                                                 <div id="next-button" class="button-row d-flex mt-4"><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
-                                        <div id="single-form-next-prev-3" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
+                                        <div id="single-form-next-prev-3" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn" style="background-color: #212529 !important;">
                                             <h3 class="text-center multisteps-form__title">Sowing</h3>
                                             <div id="form-content-3" class="multisteps-form__content">
                                                 <div class="scrollmenu" style="">
@@ -618,7 +639,7 @@
                                                 <div id="next-prev-buttons-3" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
-                                        <div id="single-form-next-prev-2" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
+                                        <div id="single-form-next-prev-2" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn" style="background-color: #212529 !important;">
                                             <h3 class="text-center multisteps-form__title">Vegetation</h3>
                                             <div id="form-content-3" class="multisteps-form__content">
                                                 <div class="scrollmenu" style="">
@@ -630,7 +651,7 @@
                                                 <div id="next-prev-buttons-2" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
-                                        <div id="single-form-next-prev-1" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
+                                        <div id="single-form-next-prev-1" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn" style="background-color: #212529 !important;">
                                             <h3 class="text-center multisteps-form__title">Reproduction</h3>
                                             <div id="form-content-2" class="multisteps-form__content">
                                                 <div class="scrollmenu" style="">
@@ -641,7 +662,7 @@
                                                 <div id="next-prev-buttons-1" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
-                                        <div id="single-form-next-prev-4" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
+                                        <div id="single-form-next-prev-4" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn" style="background-color: #212529 !important;">
                                             <h3 class="text-center multisteps-form__title">Ripening</h3>
                                             <div id="form-content-5" class="multisteps-form__content">
                                                 <div class="scrollmenu" style="">
@@ -652,7 +673,7 @@
                                                 <div id="next-prev-buttons-4" class="button-row d-flex mt-4"><button class="btn btn btn-primary js-btn-prev" type="button" title="Prev">Prev</button><button class="btn btn btn-primary ml-auto js-btn-next" type="button" title="Next">Next</button></div>
                                             </div>
                                         </div>
-                                        <div id="single-form-next-prev" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn">
+                                        <div id="single-form-next-prev" class="multisteps-form__panel shadow p-4 rounded bg-white" data-animation="scaleIn" style="background-color: #212529 !important;">
                                             <h3 class="text-center multisteps-form__title">Harvest</h3>
                                             <div id="form-content-1" class="multisteps-form__content">
                                                 <div class="scrollmenu" style="">
@@ -671,12 +692,12 @@
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="card shadow" style="margin-bottom: 10px;">
-                                <div class="card-body" style="height: 301px; max-height: 301px; position: relative">
+                                <div class="card-body" style="height: 320px; max-height: 320px; position: relative">
                                     <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Soil Data</h6>
                                     <div>
                                         {{!-- <canvas data-bss-chart="{&quot;type&quot;:&quot;pie&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Seeds&quot;,&quot;Pesticides&quot;,&quot;Fertilizer&quot;,&quot;Salary&quot;,&quot;Fuel/Electricity&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Data&quot;,&quot;backgroundColor&quot;:[&quot;rgb(255,179,102)&quot;,&quot;rgb(39,121,163)&quot;,&quot;rgb(126,179,59)&quot;,&quot;rgb(255,182,177)&quot;,&quot;rgb(86,197,255)&quot;],&quot;borderColor&quot;:[&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;,&quot;rgba(0,0,0,0.1)&quot;],&quot;data&quot;:[&quot;2000&quot;,&quot;3000&quot;,&quot;3000&quot;,&quot;5000&quot;,&quot;6000&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:true,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;position&quot;:&quot;bottom&quot;,&quot;reverse&quot;:false},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;bold&quot;,&quot;display&quot;:true,&quot;text&quot;:&quot;Total Consumption of the Farm&quot;,&quot;position&quot;:&quot;top&quot;}}}">
                                         </canvas> --}}
-                                        <ul class="list-group">
+                                        <ul class="list-group" style="margin-top: 20px;">
                                             <li class="list-group-item"><span>Soil Texture</span><span class="float-end" id="soil_texture"></span></li>
                                             <li class="list-group-item"><span>pH Lvl</span><span class="float-end" id="ph_lvl">0.00 {{detailed_data.pH_lvl}}</span></li>
                                             <li class="list-group-item"><span>N</span><span class="float-end" id="n_lvl">0.00 {{detailed_data.n_val}}</span></li>
@@ -684,16 +705,17 @@
                                             <li class="list-group-item"><span>K20</span><span class="float-end" id="k_lvl">0.00 {{detailed_data.k_val}}</span></li>
                                         </ul>
                                     </div>
+                                    <div></div>
                                     <button class="btn btn-primary float-right" type="button" style="border-radius: 20px;padding: 2px 10px;background: #EDD172;border-style: none;color: rgb(94,83,61);position: absolute; bottom: 10px; right: 10px" id="soil-data-btn" href="/nutrient_management">View more</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6" style="">
                             <div class="card shadow" style="margin-bottom: 10px;">
-                                <div class="card-body" style="height: 301px; max-height: 301px; position: relative">
+                                <div class="card-body" style="height: 320px; max-height: 320px; position: relative">
                                     <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Pest and Diseases</h6>
                                     {{!-- <div><canvas data-bss-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Land Prep&quot;,&quot;Sowing&quot;,&quot;Vegetation&quot;,&quot;Reproduction&quot;,&quot;Ripening&quot;,&quot;Harvest&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Pest&quot;,&quot;backgroundColor&quot;:&quot;#4e73df&quot;,&quot;borderColor&quot;:&quot;#4e73df&quot;,&quot;data&quot;:[&quot;1&quot;,&quot;2&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;]},{&quot;label&quot;:&quot;Disease&quot;,&quot;backgroundColor&quot;:&quot;rgb(255,179,102)&quot;,&quot;borderColor&quot;:&quot;rgb(255,179,102)&quot;,&quot;data&quot;:[&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:true,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;position&quot;:&quot;bottom&quot;},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;,&quot;display&quot;:true,&quot;text&quot;:&quot;Pest and Disesase Occurence in the Farm&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;gridLines&quot;:{&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:true,&quot;drawOnChartArea&quot;:true},&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;,&quot;beginAtZero&quot;:true}}],&quot;yAxes&quot;:[{&quot;gridLines&quot;:{&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:true},&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;,&quot;beginAtZero&quot;:true}}]}}}"></canvas></div><button class="btn btn-primary float-right" type="button" style="border-radius: 20px;padding: 2px 10px;background: #EDD172;border-style: none;color: rgb(94,83,61);margin-top: 15px;">View more</button> --}}
-                                    <div class="table-responsive" style="max-height: 208px; overflow-y:auto !important">
+                                    <div class="table-responsive" style="margin-top: 20px; max-height: 208px; overflow-y:auto !important">
                                         <table class="table">
                                             <thead>
                                                 <tr>
@@ -710,6 +732,7 @@
                                                         <td class="probability_value">{{this.probability}}</td>
                                                     </tr>
                                                 {{/each}}
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -720,14 +743,14 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="card shadow" style="margin-bottom: 10px;">
+                            <div class="card shadow mb-4" style="margin-bottom: 10px;">
                                 <div class="card-body">
                                     <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Farm Resources</h6>
-                                    <div class="row space-rows" style="margin-top: 10px;margin-right: 0px;margin-bottom: 0px;margin-left: 0px;">
+                                    <div class="row space-rows" style="margin-top: 20px;margin-right: 0px;margin-bottom: 0px;margin-left: 0px;">
                                         <div class="col" style="padding: 0px;margin-right: 10px;">
                                             <div class="card cards-shadown cards-hover" data-aos="flip-left" data-aos-duration="950">
                                                 <div class="card-body">
-                                                    <h6 class="font-weight-bold" style="color: #332C1F;font-size: 16px;text-align: center;margin-bottom: 5px;border-style: none;border-color: #EEEEEE;background: #EEEEEE;">Seed</h6>
+                                                    <h6 class="font-weight-bold" style="color: #332C1F;font-size: 16px;text-align: center;margin-bottom: 5px;border-style: none;border-color: #D6CD41;background: #D6CD41;">Seed</h6>
                                                     <div class="table-responsive">
                                                         <table class="table">
                                                             <thead>
@@ -752,12 +775,12 @@
                                         <div class="col" style="padding: 0px;margin-right: 10px;">
                                             <div class="card cards-shadown cards-hover" data-aos="slide-right" data-aos-duration="950">
                                                 <div class="card-body">
-                                                    <h6 class="font-weight-bold" style="color: #332C1F;font-size: 16px;text-align: center;margin-bottom: 5px;border-style: none;border-color: #EEEEEE;background: #EEEEEE;">Fertilizer</h6>
+                                                    <h6 class="font-weight-bold" style="color: #332C1F;font-size: 16px;text-align: center;margin-bottom: 5px;border-style: none;border-color: #D6CD41;background: #D6CD41;">Fertilizer</h6>
                                                     <div class="table-responsive">
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th style="padding: 2px;width: 170px;">Type</th>
+                                                                    <th class="text-center" style="padding: 2px;width: 170px;">Type</th>
                                                                     <th class="text-center" style="padding: 2px;width: 170px;">Amount</th>
                                                                 </tr>
                                                             </thead>
@@ -777,12 +800,12 @@
                                         <div class="col" style="padding: 0px;">
                                             <div class="card cards-shadown cards-hover" data-aos="flip-up" data-aos-duration="950">
                                                 <div class="card-body">
-                                                    <h6 class="font-weight-bold" style="color: #332C1F;font-size: 16px;text-align: center;margin-bottom: 5px;border-style: none;border-color: #EEEEEE;background: #EEEEEE;">Pesticide</h6>
+                                                    <h6 class="font-weight-bold" style="color: #332C1F;font-size: 16px;text-align: center;margin-bottom: 5px;border-style: none;border-color: #D6CD41;background: #D6CD41;">Pesticide</h6>
                                                     <div class="table-responsive">
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th style="padding: 2px;width: 170px;">Type</th>
+                                                                    <th class="text-center" style="padding: 2px;width: 170px;">Type</th>
                                                                     <th class="text-center" style="padding: 2px;width: 170px;">Amount</th>
                                                                 </tr>
                                                             </thead>
