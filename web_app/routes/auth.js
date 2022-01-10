@@ -99,8 +99,6 @@ router.get('/crop_calendar', cropCalendarController.getCropCalendarTab);
 router.get('/crop_calendar/add', cropCalendarController.getAddCropCalendar);
 router.get('/crop_calendar/details', cropCalendarController.getDetailedCropCalendar); //fix path later
 
-router.get('/farm_productivity_report', reportController.getFarmProductivityReport)
-
 //router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later
 
 router.get('/harvest_cycle', farmController.getHarvestCycle);
@@ -171,6 +169,8 @@ router.post('/create_work_order', workOrderController.createWorkOrder);
 router.post('/edit_work_order', workOrderController.editWorkOrder);
 
 //Report
+router.get('/farm_productivity_report', reportController.getFarmProductivityReport);
+router.get('/farm_productivity/detailed', reportController.getDetailedReport);
 router.get('/test_report', reportController.getDetailedReport);
 
 /*** Page Navigation End ***/

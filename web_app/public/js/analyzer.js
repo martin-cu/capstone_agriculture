@@ -1,6 +1,66 @@
 const brain = require('brain.js');
 const DecisionTree = require('decision-tree');
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+}
+
+exports.processDetailedFarmProductivity = function(fp, resources) {
+	var fp_obj = {
+		yield: { arr: [], total: 0 },
+		inputs: { arr: [], total: 0 },
+		productivity: 0
+	}
+
+	var category_cont;
+	var cont_obj;
+	var obj;
+	var input_types = ['Seed', 'Fertilizer', 'Pesticide', 'Employee Labor'];
+	var input_categories = ['Input Resources', 'Labor']
+	var temp_arr;
+	var index = 0;
+
+	var input_obj = {
+		name: fp[0].seed_name, forecasted_yield: fp[0].forecast_yield+' cavans/ha', 
+		current_yield: fp[0].current_yield != null ? fp[0].current_yield+' cavans/ha' : 'N/A',
+		total: fp[0].current_yield != null ? fp[0].current_yield * fp[0].farm_area+' cavans': 'N/A'
+	}
+	fp_obj.yield.arr.push(input_obj);
+	fp_obj.yield.total = input_obj.total;
+
+	for (var y = 0; y < input_categories.length; y++) {
+		category_cont = { title: input_categories[y], rows: [], total: 0 };
+
+		for (var i = index; i < input_types.length; i++) {
+			temp_arr = resources.filter(e => e.type == input_types[i]);
+
+			cont_obj = { title: input_types[i], rows: [], total: 0 };
+			for (var x = 0; x < temp_arr.length; x++) {
+				obj = { input: temp_arr[x].resource_name, qty: temp_arr[x].qty, units: temp_arr[x].resource_unit, 
+					cost_per_unit: numberWithCommas((Math.round(parseFloat(temp_arr[x].price) * 100)/100).toFixed(2)), 
+					total_cost: numberWithCommas((Math.round(parseFloat(temp_arr[x].total_cost) * 100)/100).toFixed(2)) };
+				
+				cont_obj.total += parseFloat(temp_arr[x].total_cost);
+				cont_obj.rows.push(obj);
+				fp_obj.inputs.total += parseFloat(temp_arr[x].total_cost);
+			}
+			cont_obj.total = numberWithCommas((Math.round(cont_obj.total * 100)/100).toFixed(2));
+			if (input_categories[y] == 'Input Resources' && input_types[i] != 'Employee Labor' 
+				|| input_categories[y] == 'Labor' && input_types[i] == 'Employee Labor') {
+				category_cont.rows.push(cont_obj);
+			}
+		}
+		fp_obj.inputs.arr.push(category_cont);
+		index++;
+	}
+
+	fp_obj.productivity = fp_obj.yield.total != 'N/A' ? (Math.round(parseInt(fp_obj.yield.total.replace(' cavans','')) / fp_obj.inputs.total * 1000) / 1000)+' cavans per peso' : 'N/A';
+	fp_obj['cost_per_cavan'] = fp_obj.yield.total != 'N/A' ? (Math.round(fp_obj.inputs.total / parseInt(fp_obj.yield.total.replace(' cavans','')) * 1000) / 1000)+' pesos per cavan per' : 'N/A';
+	fp_obj.inputs.total = numberWithCommas((Math.round(fp_obj.inputs.total * 100)/100).toFixed(2));
+
+	return fp_obj;
+}
+
 exports.calculateProductivity = function(fp_overview, input_resources) {
 	for (var i = 0; i < fp_overview.length; i++) {
 		fp_overview[i]['input_items'] = input_resources.filter(e => fp_overview[i].calendar_id == e.calendar_id);
@@ -32,7 +92,8 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 		fp_overview[i].change.color = fp_overview[i].change.arrow == 'up' ? 
 		fp_overview[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 	}
-	console.log(fp_overview);
+
+	//console.log(fp_overview);
 	return fp_overview;
 }
 

@@ -51,20 +51,32 @@
                                                         </td>
                                                         <td class="">{{this.current_yield}}</td>
                                                         <td>
-                                                            <div class="d-flex w-100">
-                                                                <big class="w-50 text-right">{{this.current_productivity}}</big>
-                                                                <big class="mx-3"> / </big>
-                                                                <small class="mt-2 w-50">{{this.prev_productivity}}</small>
-                                                                <div class="d-flex">
-                                                                    <!-- <div class="">
-                                                                        <i class=" fas fa-arrow-alt-circle-{{this.change.arrow}} fa-2x"></i>
-                                                                    </div> -->
-                                                                    <div class="mt-1 {{this.change.color}}">
-                                                                        {{this.change.val}}%
+                                                            <div class="d-flex">
+                                                                <div class="d-flex w-75">
+                                                                    <big class="w-50 text-right">{{this.current_productivity}}</big>
+                                                                    <big class="mx-3"> / </big>
+                                                                    <small class="mt-2 w-50">{{this.prev_productivity}}</small>
+                                                                    <div class="d-flex">
+                                                                        <!-- <div class="">
+                                                                            <i class=" fas fa-arrow-alt-circle-{{this.change.arrow}} fa-2x"></i>
+                                                                        </div> -->
+                                                                        <div class="mt-1 {{this.change.color}}">
+                                                                            {{this.change.val}}%
+                                                                        </div>
                                                                     </div>
-                                                                    
                                                                 </div>
+                                                                <span class="w-25">
+                                                                    <div class="dropdown no-arrow" style="display:inline-block; float: right">
+                                                                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                        </button>
+                                                                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                            <a class="dropdown-item notSidebar" href="/farm_productivity/detailed?calendar_id={{this.calendar_id}}">View Details</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </span> 
                                                             </div>
+                                                            
                                                         </td>
                                                     </tr>
                                                     {{/each}}

@@ -4,12 +4,34 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 
 exports.getDetailedReport = function(req, res) {
-	res.render('detailed_farm_report', {});
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+
+	reportModel.getFarmProductivity(function(err, fp_overview) {
+		if (err)
+			throw err;
+		else {
+			fp_overview = fp_overview.filter(e => e.calendar_id == req.query.calendar_id);
+			var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id).concat(fp_overview.map(({ max_prev_calendar }) => max_prev_calendar));
+			reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
+				if (err)
+					throw err;
+				else {
+					input_resources = input_resources.filter(e => e.calendar_id == req.query.calendar_id);
+					html_data['farm_productivity'] = analyzer.processDetailedFarmProductivity(fp_overview, input_resources);
+					console.log('----------------------');
+					//console.log(html_data['farm_productivity']);
+					//console.log(input_resources);
+					res.render('detailed_farm_report', html_data)
+				}
+			});
+		}
+	});
 }
 
 exports.getFarmProductivityReport = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
 
 	reportModel.getFarmProductivity(function(err, fp_overview) {
 		if (err)
