@@ -332,9 +332,11 @@ exports.getWorkOrdersPage = function(req, res) {
 }
 
 exports.getWorkOrdersDashboard = function(req, res) {
+	console.log(req.notifs[0]);
 	var upcoming = [];
 	var completed = [];
-	var html_data;
+	var html_data = {};
+	
 	var query = {
         order: ['work_order_table.status ASC', 'work_order_table.date_due asc']
     }
@@ -365,6 +367,10 @@ exports.getWorkOrdersDashboard = function(req, res) {
 
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
 
+			for(i = 0; i < req.notifs.length; i++){
+				req.notifs[i].date = dataformatter.formatDate(new Date(req.notifs[i].date), 'mm DD, YYYY');
+			}
+			html_data["notifs"] = req.notifs;
 			res.render('home', html_data);
 		}
 	});
