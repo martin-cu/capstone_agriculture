@@ -21,18 +21,19 @@
 
             <li class="nav-item dropdown no-arrow mx-1" style="padding-top: 7px;">
                 <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: #584c33;"><span class="badge bg-danger badge-counter">{{notifs.length}}</span><i class="fas fa-bell fa-fw"></i></a>
-                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in" style="background-color: pink;">
-                        <h6 class="dropdown-header" style="background: #939C1F;border-style: none;">alerts center</h6>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in" style="background-color: #7D7D7D !important;">
+                        <h6 class="dropdown-header" style="background: #7D7D7D;border-style: none;">Notifications</h6>
                             {{#each notifs}}
-                                <a class="dropdown-item d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="background: #ffffff;">
+                                <a class="dropdown-item d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}">
                                     <div class="mr-3">
-                                        <div class="bg-{{this.color}} icon-circle"><i class="fas fa-{{this.icon}} text-white"></i></div>
+                                        <div class="bg-{{this.color}} icon-circle" style="color: white !important;"><i class="fas fa-{{this.icon}} text-white" style="color: white !important;"></i></div>
                                     </div>
                                     <div>
-                                        <span class="small text-gray-500">{{this.date}}</span>
-                                        <p class="small text-dark">{{this.notification_title}}</p>
+                                        <span class="small text-gray-500" style="color: #EEEEEE !important;">{{this.date}}</span>
+                                        <p class="small text-dark" style="color: white !important; font-weight:bold">{{this.notification_title}}</p>
                                     </div>
                                 </a>
+                                <div class="dropdown-divider"></div>
                             {{/each}}
                             {{!-- <a class="dropdown-item d-flex align-items-center" href="#" style="background: #ffffff;">
                                 <div class="mr-3">
@@ -59,56 +60,62 @@
                                 <p class="small text-dark">Spending Alert: We've noticed unusually high spending for your account.</p>
                             </div>
                         </a> --}}
-                        <a class="dropdown-item text-center small text-gray-500" href="/notifications" style="background: #ffffff;">Show All Alerts</a>
+                        <a class="dropdown-item text-center small text-white-500 notifShowAlerts" href="/notifications">Show All Notifications</a>
                     </div>
                 </div>
             </li>
 
             <li class="nav-item dropdown no-arrow mx-1" style="padding-top: 7px;">
-                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: #584c33;"><span class="badge bg-danger badge-counter">7</span><i class="fas fa-envelope fa-fw"></i></a>
-                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                       <h6 class="dropdown-header" style="background: #939C1F;border-style: none;">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#" style="background: #ffffff;">
-                            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="../../images/avatars/avatar4.jpeg">
+                <div class="nav-item dropdown no-arrow">
+                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: #584c33;">
+                        <span class="badge bg-danger badge-counter">7</span>
+                        <i class="fas fa-envelope fa-fw"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in" style="background-color: #7D7D7D !important;">
+                       <h6 class="dropdown-header" style="background: #7D7D7D;border-style: none;">Messages</h6>
+                       
+                       {{!-- FOR EACH --}}
+                       <a class="dropdown-item d-flex align-items-center notification" href="#" style="background: #ffffff;">
+                            <div class="dropdown-list-image me-3">
+                                <img class="rounded-circle" src="../../images/avatars/avatar4.jpeg">
                                 <div class="bg-success status-indicator"></div>
                             </div>
                             <div class="fw-bold">
-                                <div class="text-truncate"><span class="small text-dark">Hi there! I am wondering if you can help me with a problem I've been having.</span></div>
-                                <p class="small text-gray-500 mb-0">Emily Fowler - 58m</p>
+                                <div class="text-truncate">
+                                <span class="small text-white" style="color: #EEEEEE !important">Hi there! I am wondering if you can help me with a problem I've been having.</span></div>
+                                <p class="small text-white-500 mb-0" style="color: white !important; font-weight: bold">Emily Fowler - 58m</p>
                             </div>
                         </a>
-                        <a class="dropdown-item d-flex align-items-center" href="#" style="background: #ffffff;">
-                            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="../../images/avatars/avatar2.jpeg">
-                                <div class="status-indicator"></div>
-                            </div>
-                            <div class="fw-bold">
-                                <div class="text-truncate"><span class="small text-dark">I have the photos that you ordered last month!</span></div>
-                                <p class="small text-gray-500 mb-0">Jae Chun - 1d</p>
-                            </div>
-                        </a><a class="dropdown-item d-flex align-items-center" href="#" style="background: #ffffff;">
-                            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="../../images/avatars/avatar3.jpeg">
-                                <div class="bg-warning status-indicator"></div>
-                            </div>
-                            <div class="fw-bold">
-                                <div class="text-truncate"><span class="small text-dark">Last month's report looks great, I am very happy with the progress so far, keep up the good work!</span></div>
-                                <p class="small text-gray-500 mb-0">Morgan Alvarez - 2d</p>
-                            </div>
-                        </a><a class="dropdown-item d-flex align-items-center" href="#" style="background: #ffffff;">
-                            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="../../images/avatars/avatar5.jpeg">
+
+                        <div class="dropdown-divider"></div>
+                        {{!-- END OF FOR EACH --}}
+                        
+                        {{!-- DELETE LATER --}}
+                        <a class="dropdown-item d-flex align-items-center notification" href="#" style="background: #ffffff;">
+                            <div class="dropdown-list-image me-3">
+                                <img class="rounded-circle" src="../../images/avatars/avatar4.jpeg">
                                 <div class="bg-success status-indicator"></div>
                             </div>
                             <div class="fw-bold">
-                                <div class="text-truncate"><span class="small text-dark">Am I a good boy? The reason I ask is because someone told me that people say this to all dogs, even if they aren't good...</span></div>
-                                <p class="small text-gray-500 mb-0">Chicken the Dog · 2w</p>
+                                <div class="text-truncate">
+                                <span class="small text-white" style="color: #EEEEEE !important">Hi there! I am wondering if you can help me with a problem I've been having.</span></div>
+                                <p class="small text-white-500 mb-0" style="color: white !important; font-weight: bold">Emily Fowler - 58m</p>
                             </div>
-                        </a><a class="dropdown-item text-center small text-gray-500" href="#" style="background: #ffffff;">Show All Alerts</a>
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+                        {{!-- END OF DELETE LATER --}}
+
+
+                        <a class="dropdown-item text-center small text-white-500 notifShowAlerts" href="">Show All Messages</a>
+
                     </div>
                 </div>
                 <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
             </li>
 
-            <div class="d-none d-sm-block topbar-divider">
-
-            </div>
+            <div class="d-none d-sm-block topbar-divider"></div>
+            
             {{!-- Start User Profile Section --}}
 
             <div class="nav-item dropdown no-arrow" style="margin-top: 10px;" id="userNav">
@@ -129,8 +136,6 @@
                     </a>
                 </div>
             </div>
-
-
 
                 {{!-- <li class="nav-item dropdown no-arrow" style="background-color: white; border-radius: 20px">
                 <div class="nav-item dropdown no-arrow">

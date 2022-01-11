@@ -415,3 +415,29 @@ a.page-link:hover {
 .farm_li.list-group-item.active_farm{
     background:#EEEEEE;
 }
+
+/* NOTIFICATIONS */
+
+.dropdown-item.d-flex.align-items-center.notification {
+    background-color: #7D7D7D !important;
+    border-style: none;
+}
+
+.dropdown-item.d-flex.align-items-center.notification:hover {
+    background-color: #BDBE14 !important;
+}
+
+.dropdown-item.text-center.small.text-white-500.notifShowAlerts {
+    background-color: #7D7D7D !important;
+    color: white !important;
+    border-style: none;
+    margin-bottom: 10px !important;
+}
+
+.dropdown-item.text-center.small.text-white-500.notifShowAlerts:hover {
+    background-color: #BDBE14 !important;
+    color: white;
+    border-style: none;
+}
+
+/* END OF NOTIFICATIONS */
