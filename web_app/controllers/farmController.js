@@ -398,12 +398,45 @@ exports.getFarmDetails = function(req, res) {
 																	// //console.log("WORKORDERS");
 																	// //console.log(workorders);
 																	
-																	html_data["workorders"] = workorders;
-																	html_data["queries"] = queries;
-																	html_data["statements"] = statements;
-																	html_data["probability"] = possible_pests;
-																	html_data["main"] = forecast_body[0].main;
-																	res.send(html_data);
+																	pestdiseaseModel.getDiagnosis({farm_id : farm_id}, null, function(err, diagnosis){
+
+																		if(err)
+																			throw err;
+																		else{
+																			var i, x;
+																			for(i = 0; i < diagnosis.length; i++){
+																				diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+																				for(x = 0 ; x < possible_pests.length; x++){
+																					if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																						possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																						if(diagnosis[i].farm_id == farm_id.farm_id)
+																							possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																					}
+																				}
+																			}
+						
+																			//Sort possibilties
+																			var temp_pos = [];
+																			var smallest = 0;
+																			for(x = 1 ; x < possible_pests.length; x++){
+																				
+																				if(possible_pests[smallest].probability < possible_pests[x].probability){
+																					temp_pos.push(possible_pests[x]);
+																				}
+																				else{
+																					temp_pos.push(possible_pests[smallest]);
+																					smallest = x;
+																				}
+																			}
+																		}
+																	
+																		html_data["workorders"] = workorders;
+																		html_data["queries"] = queries;
+																		html_data["statements"] = statements;
+																		html_data["probability"] = temp_pos;
+																		html_data["main"] = forecast_body[0].main;
+																		res.send(html_data);
+																	});
 																});
 															});
 														});
