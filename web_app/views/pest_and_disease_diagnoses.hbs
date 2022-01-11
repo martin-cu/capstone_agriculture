@@ -318,6 +318,7 @@
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Diagnosis ID</th>
+                                                <th>Type</th>
                                                 <th>Date Diagnosed</th>
                                                 <th>Farm Affected</th>
                                                 <th>Status</th>
@@ -327,6 +328,7 @@
                                             {{#each pest_diagnoses}}
                                                 <tr>
                                                     <td>{{this.name}}</td>
+                                                    <td>{{this.type}}</td>
                                                     <td>{{this.date_diagnosed}}</td>
                                                     <td>{{this.farm_name}}</td>
                                                     <td class="{{this.status}} flex-container" style="display: flex; flex-flow: horizontal;"><div style="width: 80%;"><span class="{{this.status}}">{{this.status}}</span></div>
@@ -760,62 +762,5 @@ function fixStepIndicator3(n) {
 }
 
 // END OF TAB 3
-
-function diagnosesFilter() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("filterDiagnosesTable");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("diagnosesTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
-}
-
-function pestsFilter() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("filterPestsTable");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("pestsTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
-}
-
-function diseasesFilter() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("filterDiseasesTable");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("diseasesTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }       
-  }
-}
 
 </script>

@@ -1348,7 +1348,7 @@ exports.getFarmPestDiseases = function(req, res){
 														else{
 															var i, x;
 															for(i = 0; i < diagnosis.length; i++){
-																diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+																diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
 																for(x = 0 ; x < possible_pests.length; x++){
 																	if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
 																		possible_pests[x].probability = possible_pests[x].probability * 1.1;
@@ -1575,7 +1575,7 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 												else{
 													var i, x;
 													for(i = 0; i < diagnosis.length; i++){
-														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
 														for(x = 0 ; x < possible_pests.length; x++){
 															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
 																possible_pests[x].probability = possible_pests[x].probability * 1.1;
@@ -1629,7 +1629,7 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 												else{
 													var i, x;
 													for(i = 0; i < diagnosis.length; i++){
-														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
 														for(x = 0 ; x < possible_pests.length; x++){
 															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
 																possible_pests[x].probability = possible_pests[x].probability * 1.1;
@@ -1808,8 +1808,8 @@ exports.getDiagnoses = function(req, res) {
 		else{
 			var i;
 			for(i =0; i < diagnoses.length; i++){
-				diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
-				diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_solved)), 'mm DD, YYYY');
+				diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_diagnosed)), 'YYYY-MM-DD');
+				diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_solved)), 'YYYY-MM-DD');
 			}
 			
 
@@ -1819,8 +1819,8 @@ exports.getDiagnoses = function(req, res) {
 				else{
 					var i;
 					for(i =0; i < pest_diagnoses.length; i++){
-						pest_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
-						pest_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_solved)), 'mm DD, YYYY');
+						pest_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_diagnosed)), 'YYYY-MM-DD');
+						pest_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_solved)), 'YYYY-MM-DD');
 					}
 					
 					pestdiseaseModel.getDiagnosis(null, "Disease", function(err, disease_diagnoses){
@@ -1829,8 +1829,8 @@ exports.getDiagnoses = function(req, res) {
 						else{
 							var i;
 							for(i =0; i < disease_diagnoses.length; i++){
-								disease_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
-								disease_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_solved)), 'mm DD, YYYY');
+								disease_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_diagnosed)), 'YYYY-MM-DD');
+								disease_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_solved)), 'YYYY-MM-DD');
 							}
 
 							farmModel.getAllFarms(function(err, farms){
@@ -1890,9 +1890,9 @@ exports.getDiagnosisDetails = function(req, res){
 				diagnosis_details[0]["solved"] = true;
 			}
 			else
-				diagnosis_details[0].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_solved)), 'mm DD, YYYY');
+				diagnosis_details[0].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_solved)), 'YYYY-MM-DD');
 					
-			diagnosis_details[0].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_diagnosed)), 'mm DD, YYYY');
+			diagnosis_details[0].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_diagnosed)), 'YYYY-MM-DD');
 			html_data["details"] = diagnosis_details[0];
 			
 		}
@@ -1984,7 +1984,7 @@ exports.getPestandDiseaseDiscover = function(req,res){
 			var i;
 			for(i = 0; i < pests.length; i++){
 				if(pests[i].last_diagnosed != null)
-				pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'mm DD, YYYY');
+				pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'YYYY-MM-DD');
 			}
 			html_data["pests"] = pests;
 		}
@@ -1995,7 +1995,7 @@ exports.getPestandDiseaseDiscover = function(req,res){
 				var i;
 				for(i = 0; i < diseases.length; i++){
 					if(diseases[i].last_diagnosed != null)
-					diseases[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diseases[i].last_diagnosed)), 'mm DD, YYYY');
+					diseases[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diseases[i].last_diagnosed)), 'YYYY-MM-DD');
 				}
 				html_data["diseases"] = diseases;
 			}
@@ -2363,7 +2363,7 @@ exports.getRecommendationDiagnosis = function(req,res){
 				var i;
 				for(i = 0; i < solutions.length; i++){
 					var solution = {
-						date_words : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
+						date_words : dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
 						date : dataformatter.formatDate(new Date(), 'MM-DD-YYYY'),
 						type : solutions[i].detail_name,
 						desc : solutions[i].detail_desc
@@ -2388,8 +2388,8 @@ exports.getRecommendationDiagnosis = function(req,res){
 				var i;
 				for(i = 0; i < solutions.length; i++){
 					var solution = {
-						date_words : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
-						date : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
+						date_words : dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
+						date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
 						type : solutions[i].solution_name,
 						desc : solutions[i].solution_desc
 					}
