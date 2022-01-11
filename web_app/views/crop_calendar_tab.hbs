@@ -184,7 +184,7 @@
                                         <th style="">Seed</th>
                                         <th style="">Sow Date</th>
                                         <th style="">Method</th>
-                                        <th style=""></th>
+                                        <th style="">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody aria-live="polite" aria-relevant="all">
@@ -195,7 +195,7 @@
                                         <td style="">{{this.seed_name}}</td>
                                         <td style="">{{this.sowing_date}}</td>
                                         <td style="">{{this.method}}</td>
-                                        <td> {{this.status}} 
+                                        <td class="{{this.status}}"> {{this.status}} 
                                             <span>
                                             <div class="dropdown no-arrow" style="display:inline-block; float: right">
                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">

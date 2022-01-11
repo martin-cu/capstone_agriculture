@@ -26,13 +26,13 @@
                                 <div class="form-row">
                                     <div class="col-6 col-sm-6 col-md-6"><label>Farm</label>
                                         <div id="lp-name-wrapper"></div>
-                                        <select class="form-control" id="farm_id" name="farm_id">
+                                        <select class="form-select" id="farm_id" name="farm_id">
                                         </select>
                                     </div>
 
                                     <div class="col-6 col-sm-6 col-md-6"><label>Crop Calendar</label>
                                         <div id="lp-name-wrapper"></div>
-                                        <select class="form-control" id="crop_calendar_id" name="crop_calendar_id">
+                                        <select class="form-select" id="crop_calendar_id" name="crop_calendar_id">
                                         </select>
                                     </div>
 
@@ -43,7 +43,7 @@
                                 <div class="form-row">
                                     <div class="col-6 col-sm-6 col-md-6"><label>Type</label>
                                         <div id="lp-lastname-wrapper"></div>
-                                        <select class="form-control" id="wo_type" name="wo_type">
+                                        <select class="form-select" id="wo_type" name="wo_type">
                                             <!-- <option value="Sow Seed">Sow Seed</option> -->
                                             <option value="Pesticide Application">Pesticide Application</option>
                                             <option value="Fertilizer Application">Fertilizer Application</option>
@@ -122,7 +122,7 @@
                     <div class="modal-footer">
                     <div class="modal_footer_content" id="_step1">
                         <button type="button" class="btn round btn-secondary" onclick='window.location="/farms"'>Cancel</button>
-                        <button class="btn btn-primary" type="submit">Create Work Order</button>
+                        <button class="btn btn-primary" type="submit" form="work_order_form">Create Work Order</button>
                     </div>
 
                     </div>
@@ -162,7 +162,7 @@
                                                         <td>{{this.crop_plan}}</td>
                                                         <td>{{this.date_due}}</td>
                                                         <td style="word-wrap:break-word;">{{this.notes}}</td>
-                                                        <td> {{this.status}} 
+                                                        <td class="{{this.status}}"> {{this.status}} 
                                                             <span>
                                                             <div class="dropdown no-arrow" style="display:inline-block; float: right">
                                                                     <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">

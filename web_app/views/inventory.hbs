@@ -6,6 +6,10 @@
     label {
         color: #332C1F;
     }
+
+    h4.card-title {
+        font-weight: bold;
+    }
 </style>
 
 <div class="container-fluid">
@@ -60,7 +64,8 @@
 
 
     <div class="row" style="padding: 0px 12px;">
-        <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>All Farms</strong></label>
+        <div class="col-xxl-9">
+            {{!-- <label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>All Farms</strong></label> --}}
             
                 <div class="card shadow mb-4">
                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
@@ -90,18 +95,18 @@
                                                 <th>Material type</th>
                                                 <th>stock level</th>
                                                 <th>unit</th>
-                                                <th></th>
+                                                {{!-- <th></th> --}}
                                             </tr>
                                         </thead>
                                         <tbody id="materials_table">
                                                 {{#each materials}}
-                                                    <tr class="clickable">
+                                                    <tr class="">
                                                         <td>{{this.farm_name}}</td>
                                                         <td>{{this.item_name}}</td>
                                                         <td>{{this.item_type}}</td>
                                                         <td>{{this.current_amount}}</td>
                                                         <td>{{this.units}}</td>
-                                                        <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td>
+                                                        {{!-- <td>{{#if blank}}{{else}}<i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;">{{/if}}</i></td> --}}
                                                     </tr>
                                                 {{/each}}
                                         </tbody>
@@ -205,12 +210,15 @@
             </div>
             
         </div>
-        <div class="col">
-            <div class="card shadow mb-4" >
-                <div class="card-header " style="height: auto;background: rgba(255,165,0,0);">
+        <div class="col" style="padding-top: 0px;">
+            <div class="card shadow mb-4">
+                {{!-- <div class="card-header " style="height: auto;background: rgba(255,165,0,0);">
                     <h6 class="fw-bold m-0" style="color: #FFFFFF;">Low Stocks</h6>
+                </div> --}}
+                <div class="card-header py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
+                    <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Low Stocks</p>
                 </div>
-                <div class="card-body" style="padding: 10px; height : 600px; overflow-x : hidden; overflow-y : auto">
+                <div class="card-body" style="padding: 10px; height : 565px; overflow-x : hidden; overflow-y : auto">
                     {{#each low_stocks}}
                         <div class="card " style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="">
                             <div class="row">
@@ -223,6 +231,15 @@
                                 </div>
                             </div>
                         </div>
+                    {{else}}
+                    <div class="card " style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3 text-center"><label class="form-label">No low stock materials</label></div>
+                                </div>
+                            </div>
+                        </div>
+
                     {{/each}}
                         
                 </div>
