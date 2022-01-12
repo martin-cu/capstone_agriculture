@@ -22,6 +22,7 @@ exports.getDetailedReport = function(req, res) {
 					console.log('----------------------');
 					//console.log(html_data['farm_productivity']);
 					//console.log(input_resources);
+					html_data["notifs"] = req.notifs;
 					res.render('detailed_farm_report', html_data)
 				}
 			});
@@ -47,6 +48,7 @@ exports.getFarmProductivityReport = function(req, res) {
 						else {
 							html_data['harvest_reports'] = harvest_reports;
 							html_data['farm_productivity'] = analyzer.calculateProductivity(fp_overview, input_resources);
+							html_data["notifs"] = req.notifs;
 							res.render('farm_productivity_report', html_data);
 						}
 					});			
@@ -78,7 +80,7 @@ exports.getSummaryHarvestReport = function(req, res) {
 								else {
 									console.log(historical_yield);
 									html_data['data'] = analyzer.processHarvestSummary(chart_data, early_harvest, historical_yield);
-									
+									html_data["notifs"] = req.notifs;
 									res.render('summary_harvest_report', html_data);
 								}
 							});

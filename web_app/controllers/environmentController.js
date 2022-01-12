@@ -9,6 +9,7 @@ const cropCalendarModel = require('../models/cropCalendarModel.js');
 const materialModel = require('../models/materialModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
+const notifModel = require('../models/notificationModel.js');
 var request = require('request');
 var solver = require('javascript-lp-solver');
 const e = require('connect-flash');
@@ -199,6 +200,7 @@ exports.getPestDiseaseManagement = function(req, res) {
 														html_data["diseases"] = diseases;
 														html_data["symptoms"] = symptoms;
 														html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+														html_data["notifs"] = req.notifs;
 														res.render('pest_disease', html_data);
 														
 													}
@@ -358,6 +360,7 @@ exports.getProbability = function(req, res){
 
 							pestdiseaseModel.getPestProbabilityPercentage(weather, season, null, stage, function(err, probability){
 								html_data["possible_pest"] = probability;
+								html_data["notifs"] = req.notifs;
 								res.render('pest_disease3', html_data);
 							});
 						}
@@ -404,6 +407,7 @@ exports.getPestFactors = function(req,res){
 										html_data["symptoms"] = symptoms;
 										html_data["factors"] = factors;
 										js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+										html_data["notifs"] = req.notifs;
 										res.render('pest_disease2', html_data);
 									}
 								}
@@ -434,6 +438,7 @@ exports.getPestFactors = function(req,res){
 							html_data['pest_name'] =  details[0].disease_name;
 							html_data["factors"] = factors;
 							js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+							html_data["notifs"] = req.notifs;
 							res.render('pest_disease2', html_data);
 						}
 					}
@@ -512,6 +517,7 @@ exports.addPest = function(req,res){
 			}
 		}
 	});
+	html_data["notifs"] = req.notifs;
 	res.render('pest_disease');
 }
 
@@ -584,6 +590,7 @@ exports.addDisease = function(req,res){
 			}
 		}
 	});
+	html_data["notifs"] = req.notifs;
 	res.render('pest_disease');
 }
 
@@ -592,6 +599,7 @@ exports.addDisease = function(req,res){
 exports.getNurientManagement = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_discover');
+	html_data["notifs"] = req.notifs;
 	res.render('nutrient_mgt', html_data);
 }
 
@@ -984,6 +992,7 @@ exports.detailedNutrientManagement = function(req, res) {
 																	html_data['calendar_details'] = calendar_details[0];
 																	html_data['farm_id'] = farm_id;
 																	console.log(html_data);
+																	html_data["notifs"] = req.notifs;
 																	res.render('nutrient_mgt_detailed', html_data);
 																}
 															});
@@ -1042,7 +1051,7 @@ exports.clearWeatherForecastRecords = function(req, res) {
 exports.getFarmResources = function(req, res){
 	var html_data = {};
 
-	var farm_id = 1;
+	var farm_id = req.query.farm_id;
 	var type = "Seed";
 
 
@@ -1062,7 +1071,7 @@ exports.getFarmResources = function(req, res){
 					seeds.push({blank : true});
 					ctr++;
 				};
-				// console.log(seeds);
+				console.log(seeds);
 				html_data["seed"] = seeds;
 			}
 
@@ -1094,6 +1103,8 @@ exports.getFarmResources = function(req, res){
 							console.log(orders);
 							html_data["orders"] = orders;
 						}
+						html_data["farm_id"] = farm_id;
+						html_data["notifs"] = req.notifs;
 						res.render("farm_resources", html_data);
 					});
 				});
@@ -1306,7 +1317,7 @@ exports.getFarmPestDiseases = function(req, res){
 												var cur_stage = {
 													stage_name : crop_calendars[index].stage
 												}	
-												farmtypes.push(farm_details[index].method);
+												farmtypes.push(crop_calendars[index].method);
 											}
 										
 											var fertilizer = null;
@@ -1346,7 +1357,7 @@ exports.getFarmPestDiseases = function(req, res){
 														if(err)
 															throw err;
 														else{
-															var i, x;
+															var i, x, existing = [];
 															for(i = 0; i < diagnosis.length; i++){
 																diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
 																for(x = 0 ; x < possible_pests.length; x++){
@@ -1355,7 +1366,10 @@ exports.getFarmPestDiseases = function(req, res){
 																		if(diagnosis[i].farm_id == farm_id.farm_id)
 																			possible_pests[x].probability = possible_pests[x].probability * 1.1;
 																	}
-																}
+																	
+																}	
+																if(diagnosis[i].status == "Present")
+																	existing.push(diagnosis[i]);
 															}
 
 															//Sort possibilties
@@ -1371,11 +1385,12 @@ exports.getFarmPestDiseases = function(req, res){
 																	smallest = x;
 																}
 															}
-															html_data["diagnosis"] = diagnosis;
+															html_data["diagnosis"] = existing;
 															html_data["statements"] = statements;
 															html_data["probability"] = temp_pos;
 															html_data["weather"] = weather;
 															html_data["main"] = forecast_body[0].main;
+															html_data["notifs"] = req.notifs;
 															res.render("farm_pestdisease", html_data);
 														}
 													});
@@ -1712,6 +1727,7 @@ exports.getPestDiseaseDetails = function(req, res){
 										html_data['type'] = "Pest";
 										// html_data["factors"] = factors;
 										js.init_session(html_data, 'role', 'name', 'username', tab_name);
+										html_data["notifs"] = req.notifs;
 										res.render('pest_disease_details', html_data);
 									}
 								}
@@ -1742,6 +1758,7 @@ exports.getPestDiseaseDetails = function(req, res){
 							html_data['type'] = "Disease";
 							html_data["symptoms"] = symptoms;
 							js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+							html_data["notifs"] = req.notifs;
 							res.render('pest_disease_details', html_data);
 						}
 					}
@@ -1859,6 +1876,7 @@ exports.getDiagnoses = function(req, res) {
 										html_data["disease_diagnoses"] = disease_diagnoses;
 										html_data["diagnoses"] = diagnoses;
 										html_data["farms"] = farms;
+										html_data["notifs"] = req.notifs;
 										res.render('pest_and_disease_diagnoses', html_data);
 									});
 								});
@@ -1905,6 +1923,7 @@ exports.getDiagnosisDetails = function(req, res){
 				html_data["symptoms"] = symptoms;
 			}
 			html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
+			html_data["notifs"] = req.notifs;
 			res.render('pest_disease_diagnose_details', html_data);
 		});
 	});
@@ -1932,6 +1951,7 @@ exports.getAddDiagnosis = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_diagnosis');
+	html_data["notifs"] = req.notifs;
 	res.render('add_diagnosis', html_data);
 }
 
@@ -1939,6 +1959,7 @@ exports.getAddPest = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_pest');
+	html_data["notifs"] = req.notifs;
 	res.render('add_pest', html_data);
 }
 
@@ -1946,6 +1967,7 @@ exports.getAddDisease = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_disease');
+	html_data["notifs"] = req.notifs;
 	res.render('add_disease', html_data);
 }
 
@@ -1953,6 +1975,7 @@ exports.getDetailedDiagnosis = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_diagnosis');
+	html_data["notifs"] = req.notifs;
 	res.render('detailed_diagnosis', html_data);
 }
 
@@ -1960,6 +1983,7 @@ exports.getDetailedPest = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_pest');
+	html_data["notifs"] = req.notifs;
 	res.render('detailed_pest', html_data);
 }
 
@@ -1967,6 +1991,7 @@ exports.getDetailedDisease = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_disease');
+	html_data["notifs"] = req.notifs;
 	res.render('detailed_disease', html_data);
 }
 
@@ -2023,6 +2048,7 @@ exports.getPestandDiseaseDiscover = function(req,res){
 							else{
 								html_data["solutions"] = solutions;
 							}
+							html_data["notifs"] = req.notifs;
 							res.render('pest_disease_discover', html_data);
 						});
 					});
@@ -2329,6 +2355,18 @@ exports.addDiagnosis = function(req,res){
 								//pestdiseaseModel.addNewPDRecommendation()
 								// res.redirect("/pest_and_disease/diagnose");
 
+								//Create Notification
+								var notif = {
+									date : new Date(),
+									farm_id : diagnosis.farm_id,
+									notification_title : "New Pest/Disease diagnosed",
+									url : "/pest_and_disease/diagnose_details?id=" + last[0].last,
+									icon : "bug",
+									color : "danger"
+								}
+								notifModel.createNotif(notif, function(err, success){
+
+								});
 								res.redirect("/pest_and_disease/diagnose_details?id=" + last[0].last);
 							});
 							

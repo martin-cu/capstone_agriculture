@@ -3,6 +3,7 @@ const js = require('../public/js/session.js');
 const materialModel = require('../models/materialModel');
 const farmModel = require('../models/farmModel');
 const dataformatter = require('../public/js/dataformatter.js');
+const notifModel = require('../models/notificationModel.js');
 const { Solve } = require('javascript-lp-solver');
 
 exports.getMaterials = function(req,res){
@@ -16,7 +17,8 @@ exports.getMaterials = function(req,res){
             if(seeds.length != 0){
                 html_data["seed"] = seeds;
                 html_data = js.init_session(html_data, 'role', 'name', 'username', 'farm');
-				res.render('materials', html_data);
+				html_data["notifs"] = req.notifs;
+                res.render('materials', html_data);
             }
             else{
                 
@@ -101,6 +103,7 @@ exports.test = function(req,res){
 
     //else add new
     
+    html_data["notifs"] = req.notifs;
     res.render("test",{test_data : "ADDED NEW ITEM"});
 }
 
@@ -249,6 +252,7 @@ exports.getPurchases = function(req, res){
 
 //API Test
 exports.testAPI = function(req, res){
+    html_data["notifs"] = req.notifs;
     res.render("api");
 }
 
@@ -312,10 +316,10 @@ exports.getOrders = function(req, res){
                             for(i = 0; i < pending.length; i++){
                                 if(pending[i].purchase_price == null)
                                     pending[i].purchase_price = "0.00";
-                                console.log("TYPE: " + typeof(pending[i].request_date) + pending[i].request_date);
+                                // console.log("TYPE: " + typeof(pending[i].request_date) + pending[i].request_date);
                                 pending[i].request_date = dataformatter.formatDate(pending[i].request_date, 'YYYY-MM-DD');
                             }
-                            console.log(pending);
+                            // console.log(pending);
                             html_data["pending"] = pending;
                         }
                         materialModel.getAllPurchases(null, {status : "Processing"}, function(err, processing){
@@ -330,6 +334,7 @@ exports.getOrders = function(req, res){
                                 }
                                 html_data["processing"] = processing;
                             }
+                            html_data["notifs"] = req.notifs;
                             res.render("orders", html_data);
                         });
                         
@@ -403,6 +408,7 @@ exports.getInventory = function(req, res){
                         html_data["farms"] = farms;
                         html_data["low_stocks"] = low_stocks;
                         console.log(low_stocks);
+                        html_data["notifs"] = req.notifs;
                         res.render("inventory", html_data);
                     });
                    
@@ -477,7 +483,7 @@ exports.newMaterial = function(req, res){
 exports.addPurchase = function(req,res){ 
 
     console.log("------------------------------------------------------------------");
-    console.log(req.body.item);
+    // console.log(req.body.item);
     console.log("------------------------------------------------------------------");
     var farm_id = req.body.farm;
 
@@ -491,7 +497,7 @@ exports.addPurchase = function(req,res){
 
             for(i = 0; i < req.body.item.length; i++){
                 var purchase = {
-                    purchase_status : "Processing",
+                    purchase_status : "Pending",
                     requested_by : 1,
                     farm_id : farm_id,
                     item_type : req.body.item[i].type,
@@ -510,6 +516,22 @@ exports.addPurchase = function(req,res){
                     materialModel.addPurchase(purchase, function(err, add){
                         if(err)
                             console.log(err);
+                        else{
+                            console.log("THIS");
+                            console.log(add);
+                            //Create Notification
+                            var notif = {
+                                date : new Date(),
+                                farm_id : farm_id,
+                                notification_title : "New pending order",
+                                url : "/orders/details?id=" + add.insertId,
+                                icon : "fax",
+                                color : "primary"
+                            };
+                            notifModel.createNotif(notif, function(err, success){
+
+                            });
+                        }
                     });
                 console.log("Add purchase");
             }
@@ -557,6 +579,7 @@ exports.getPurchaseDetails = function(req,res){
             console.log(details[0]);
         }
         html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
+        html_data["notifs"] = req.notifs;
         res.render("purchaseDetails", html_data);
     });
 }

@@ -48,7 +48,8 @@ exports.ajaxGetWOResources = function(req, res) {
 			// html_data['resources'] = resource_details;
 			// html_data['resources']['title'] = type+'s:';
 			// html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
-			// res.render('detailed_work_order', html_data);
+			// html_data["notifs"] = req.notifs;
+			//res.render('detailed_work_order', html_data);
 			res.send(resource_details);
 		}
 	});
@@ -130,6 +131,8 @@ exports.getDetailedWO = function(req, res) {
 												details.push({});
 											html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
 											html_data['harvest_details'] = details;
+											html_data["notifs"] = req.notifs;
+											html_data["notifs"] = req.notifs;
 											res.render('detailed_work_order', html_data);
 										}
 									});
@@ -163,6 +166,8 @@ exports.getDetailedWO = function(req, res) {
 										html_data['resources'] = resource_details;
 										html_data['resources']['title'] = type+'s:';
 										html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
+										html_data["notifs"] = req.notifs;
+										html_data["notifs"] = req.notifs;
 										res.render('detailed_work_order', html_data);
 									}
 								});
@@ -177,7 +182,8 @@ exports.getDetailedWO = function(req, res) {
 								html_data['resources'] = resource_details;
 								html_data['resources']['title'] = type+'s:';
 								html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
-	
+								html_data["notifs"] = req.notifs;
+								html_data["notifs"] = req.notifs;
 								res.render('detailed_work_order', html_data);
 							}
 						});
@@ -185,6 +191,8 @@ exports.getDetailedWO = function(req, res) {
 				}
 			}
 			else {
+				html_data["notifs"] = req.notifs;
+				html_data["notifs"] = req.notifs;
 				res.render('detailed_work_order', html_data);
 			}
 		}
@@ -325,7 +333,8 @@ exports.getWorkOrdersPage = function(req, res) {
 			var html_data = { wo_list: list };
 			// console.log(html_data);
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
-
+			html_data["notifs"] = req.notifs;
+			html_data["notifs"] = req.notifs;
 			res.render('farms', html_data);
 		}
 	});
@@ -367,9 +376,8 @@ exports.getWorkOrdersDashboard = function(req, res) {
 
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
 
-			for(i = 0; i < req.notifs.length; i++){
-				req.notifs[i].date = dataformatter.formatDate(new Date(req.notifs[i].date), 'mm DD, YYYY');
-			}
+			
+			html_data["notifs"] = req.notifs;
 			html_data["notifs"] = req.notifs;
 			res.render('home', html_data);
 		}

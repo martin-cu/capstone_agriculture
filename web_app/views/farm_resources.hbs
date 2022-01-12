@@ -46,7 +46,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div><input hidden id="farm_id" value="{{farm_id}}">
                     <div class="row" style="padding: 0px 12px;">
                         <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Resources (Inventory)</strong></label>
                             <div class="card">
@@ -80,7 +80,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody id="resources_table">
-
+                                                        
                                                         {{#each seed}}
                                                             <tr class="clickable resources">
                                                                 <td>{{this.item_name}}</td>

@@ -339,6 +339,7 @@ $(document).ready(function() {
 				$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 				
 				$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+				$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
 				
 				$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
 				$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
@@ -437,6 +438,7 @@ $(document).ready(function() {
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 					
 					$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+					$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
 
 					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
 					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
@@ -564,6 +566,7 @@ $(document).ready(function() {
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 					
 					$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+					$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
 					
 					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
 					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
