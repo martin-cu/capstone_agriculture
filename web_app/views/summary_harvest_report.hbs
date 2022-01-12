@@ -1,0 +1,231 @@
+<div class="m-3">
+	<div class="d-flex px-5 w-75">
+		<!-- <canvas id="canvas" style="width: 250px !important; height: 250px !important;">
+			
+		</canvas> -->
+		{{#each data.chart_data}}
+		<canvas id="{{this.title}}" class="mx-3" style="max-width: 450px !important; max-height: 300px !important;"></canvas>
+		{{/each}}
+	</div>
+
+	<div class="row">
+		 <div>
+		 	Summary
+		 </div>
+		 <div>a</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<div style="width: auto;">
+				<table class="table table-striped table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
+					<thead class="thead-dark">
+						<tr style="background: #332C1F;">
+							<th style="">Farm Name</th>
+							<th style="">Seed Name</th>
+							<th style="" class="">Historical Yield (Avg)</th>
+							<th style="">Actual Yield</th>
+						</tr>
+					</thead>
+					<tbody aria-live="polite" aria-relevant="all">
+					 	
+						{{#each data.detailed_list }}
+						<tr role="row">
+							<td>{{this.farm_name}}</td>
+							<td>{{this.seed_name}}</td>
+							<td class="text-right">{{this.historical_yield}} cavans/ha</td>
+							<td class="text-right d-flex">
+								<div class="ml-auto mr-3 d-flex">
+									<div class="">{{this.harvested}} cavans/ha</div>
+									<div class="ml-2 {{this.change.color}}">
+										{{this.change.val}}%
+									</div>
+								</div>
+								
+								<span>
+									<div class="dropdown no-arrow" style="display:inline-block; float: right">
+										<button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+											<i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+										</button>
+										<div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+											<a class="dropdown-item notSidebar" href="/harvest_report/{{this.crop_plan}}?id={{this.calendar_ids}}">View Details</a>
+										</div>
+									</div>
+								</span> 
+							</td>
+
+						</tr>
+						{{/each}}
+
+					   <!-- <tr role="row">
+							<td> Farm Productivity Report</td>
+							<td> October 1, 2021 - March 1, 2021</td>
+							<td> Palay 2021 </td>
+							<td> Ongoing
+								<span>
+								<div class="dropdown no-arrow" style="display:inline-block; float: right">
+										<button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+											<i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+										</button>
+										<div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+											<a class="dropdown-item notSidebar" href="/test_report">View Details</a>
+											{{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+										</div>
+									</div>
+								</span> 
+							</td>
+						</tr> -->
+						<!-- <tr role="row">
+							<td> Harvest Report</td>
+							<td> October 1, 2021 - March 1, 2021</td>
+							<td> Palay 2021 </td>
+							<td> Completed
+								<span>
+								<div class="dropdown no-arrow" style="display:inline-block; float: right">
+										<button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+											<i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+										</button>
+										<div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+											<a class="dropdown-item notSidebar" href="/farms/work_order&id={{this.work_order_id}}">View Details</a>
+											{{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+										</div>
+									</div>
+								</span> 
+							</td>
+						</tr> -->
+					</tbody>
+				</table>
+			</div>
+				   {{!-- <nav class="float-right" style="margin-right: 10px;">
+							<ul class="pagination">
+								<li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+								<li class="page-item"><a class="page-link" href="#">1</a></li>
+								<li class="page-item"><a class="page-link" href="#">2</a></li>
+								<li class="page-item"><a class="page-link" href="#">3</a></li>
+								<li class="page-item"><a class="page-link" href="#">4</a></li>
+								<li class="page-item"><a class="page-link" href="#">5</a></li>
+								<li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+							</ul>
+						</nav>        --}}
+		</div>
+
+								</div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+	var obj = {{{data.json_chart_data}}};
+	console.log(obj);
+
+	var default_opt = {
+			legend: {
+			position: 'top',
+			},
+			title: {
+			display: true,
+			text: 'Chart.js Outcome Graph'
+			},
+			scale: {
+			ticks: {
+			beginAtZero: true
+			}
+			},
+			tooltips:{
+			enabled:false,
+			callbacks:{
+				label: function(tooltipItem, data){
+				var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+				//This will be the tooltip.body
+				return datasetLabel + ': ' + tooltipItem.yLabel +': '+ data.datasets[tooltipItem.datasetIndex].notes[tooltipItem.index];
+			}
+			},
+			custom: function(tooltip){
+			// Tooltip Element
+			var tooltipEl = document.getElementById('chartjs-tooltip');
+			if (!tooltipEl) {
+			tooltipEl = document.createElement('div');
+			tooltipEl.id = 'chartjs-tooltip';
+			tooltipEl.innerHTML = "<table></table>"
+			document.body.appendChild(tooltipEl);
+			}
+			// Hide if no tooltip
+			if (tooltip.opacity === 0) {
+			tooltipEl.style.opacity = 0;
+			return;
+			}
+			// Set caret Position
+			tooltipEl.classList.remove('above', 'below', 'no-transform');
+			if (tooltip.yAlign) {
+			tooltipEl.classList.add(tooltip.yAlign);
+			} else {
+			tooltipEl.classList.add('no-transform');
+			}
+			function getBody(bodyItem) {
+			return bodyItem.lines;
+			}
+			// Set Text
+			if (tooltip.body) {
+			var titleLines = tooltip.title || [];
+			var bodyLines = tooltip.body.map(getBody);
+			var innerHtml = '<thead>';
+			titleLines.forEach(function(title) {
+
+			innerHtml += '<tr><th>' + title + '</th></tr>';
+			});
+			innerHtml += '</thead><tbody>';
+			bodyLines.forEach(function(body, i) {
+			var colors = tooltip.labelColors[i];
+			var style = 'background:' + colors.backgroundColor;
+			style += '; border-color:' + colors.borderColor;
+			style += '; border-width: 2px';
+			var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
+			innerHtml += '<tr><td>' + span + body + '</td></tr>';
+			});
+			innerHtml += '</tbody>';
+			var tableRoot = tooltipEl.querySelector('table');
+			tableRoot.innerHTML = innerHtml;
+			}
+			var position = this._chart.canvas.getBoundingClientRect();
+			// Display, position, and set styles for font
+			tooltipEl.style.opacity = 1;
+			tooltipEl.style.left = position.left + tooltip.caretX + 'px';
+			tooltipEl.style.top = position.top + tooltip.caretY + 'px';
+			tooltipEl.style.fontFamily = tooltip._fontFamily;
+			tooltipEl.style.fontSize = tooltip.fontSize;
+			tooltipEl.style.fontStyle = tooltip._fontStyle;
+			tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
+			}
+			}
+		};
+
+	var color = Chart.helpers.color;
+	var color_arr = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 
+	'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(231,233,237)'];
+
+	for (var i = 0; i < obj.length; i++) {
+		var target = document.getElementById(obj[i].title);
+		var options = {
+			type: 'radar', data: { labels: obj[i].labels, datasets: [], options: default_opt }
+		}
+
+		for (var x = 0; x < obj[i].datasets.length; x++) {
+			options.data.datasets.push({
+				label: obj[i].datasets[x].label,
+				backgroundColor: color(color_arr[x]).alpha(0.2).rgbString(),
+				borderColor: color_arr[x],
+				pointBackgroundColor: color_arr[x],
+				data: obj[i].datasets[x].data
+			});
+		}
+
+		new Chart(target, options);
+	}
+
+
+	var view = '';
+</script>

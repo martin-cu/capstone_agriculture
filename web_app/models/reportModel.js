@@ -23,3 +23,56 @@ exports.getInputResourcesUsed = function(data, next) {
 	//console.log(sql);
 	mysql.query(sql, next);
 }
+
+exports.getHarvestReports = function(next) {
+	var sql = "SELECT group_concat(calendar_id , '') as calendar_ids, crop_plan, count(*) as count, DATE_FORMAT(min(land_prep_date), '%b %d, %Y') as min_start, DATE_FORMAT(max(harvest_date), '%b %d, %Y') as max_end, case when max(status) != 'Completed' then 'Partially Complete' else 'Completed' end as status FROM crop_calendar_table group by crop_plan order by crop_plan desc, max(harvest_date) desc;";
+	mysql.query(sql, next);
+}
+
+exports.getHarvestSummaryChart = function(data, next) {
+	var sql = "select ft.farm_name, st.seed_name, fy.* from crop_calendar_table cct join seed_table st on st.seed_id = cct.seed_planted join farm_table ft using(farm_id) join forecasted_yield fy using(calendar_id) where ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+}
+
+exports.getEarlyHarvestDetails = function(data, next) {
+	var sql = "select t.* from ( select count(*) as frequency, sum(sacks_harvested) as harvest, stage_harvested, type, cct_id from harvest_details where ?";
+	for (var i = 0; i < data.calendar_ids.length; i++) {
+		sql = mysql.format(sql, { cct_id: data.calendar_ids[i] });
+		if (i != data.calendar_ids.length - 1) {
+			sql += " or ?";
+		}
+		else {
+			sql += " ";
+		}
+	}
+	sql += "group by cct_id, stage_harvested ) as t where t.stage_harvested != 'Harvesting'";
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.getHistoricalYieldQuery = function(data, next) {
+	var sql = " select * from ( select * from ( select *, @rn := if(@prev = farm_id, @rn + 1, 1) as rn, @prev := farm_id from crop_calendar_table join (select @prev := null, @rn := 0) as vars order by farm_id, harvest_date desc ) as t ) as t1 where t1.calendar_id in ( select calendar_id from crop_calendar_table where ?";
+	for (var i = 0; i < data.calendar_ids.length; i++) {
+		sql = mysql.format(sql, { calendar_id: data.calendar_ids[i] });
+		if (i != data.calendar_ids.length - 1) {
+			sql += " or ?";
+		}
+		else {
+			sql += " ";
+		}
+	}
+	sql += " )";
+	mysql.query(sql, next);
+}
+
+exports.getHistoricalYield = function(data, next) {
+	var sql = "select farm_name, count(*) as count, sum(harvest_yield) / count(*) as avg_yield from ( select farm_name, cct.*, @rn := if(@prev = cct.farm_id, @rn + 1, 1) as rn, @prev := cct.farm_id from crop_calendar_table cct join (select @prev := null, @rn := 0) as vars join farm_table using(farm_id) order by farm_id, harvest_date desc ) as t where ";
+	for (var i = 0; i < data.length; i++) {
+		if (i != 0)
+			sql += ' or ';
+		sql += '(farm_id = '+data[i].farm_id+' and rn > '+data[i].rn+')';
+	}
+	sql += ' group by farm_id';
+	mysql.query(sql, next);
+}

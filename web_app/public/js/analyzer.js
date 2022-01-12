@@ -5,6 +5,103 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 }
 
+function smoothRadarChartData(obj) {
+	var highest, higher;
+	var highest_key, higher_key;
+	var i = 0;
+	for (const key in obj) {
+		if (obj.hasOwnProperty(key) && typeof(obj[key]) == 'number') {
+			if (i == 0) {
+				highest = obj[key];
+				higher = obj[key];
+				highest_key = key;
+				higher_key = key;
+			}
+
+			if (obj[key] > highest) {
+				higher = highest;
+				higher_key = highest_key;
+
+				highest = obj[key];
+				highest_key = key;
+			}
+			i++;
+		}
+	}
+	obj['modifier'] = obj[highest_key] / obj[higher_key];
+	obj[highest_key] = obj[higher_key];
+
+	return obj;
+}
+
+exports.processHarvestSummary = function(data, harvest, history) {
+	console.log(harvest);
+	const unique = [...new Map(data.map(item =>
+	  [item.seed_name, item])).values()];
+	var obj_keys = ['seed_rate', 'temp', 'humidity', 'pressure', 'rainfall', 'N', 'P', 'K', 'forecast', 'harvested'];
+	var chart_arr = [];
+	var dataset_obj;
+
+	for (var i = 0; i < unique.length; i++) {
+		var chart_data = { labels: ['Seed Rate', 'Avg Temp', 'Avg Humidity', 'Avg Pressure', 'Avg Rainfall',
+		'N', 'P', 'K', 'Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
+		chart_data.datasets = [];
+		chart_data.title = unique[i].seed_name;
+		//console.log(chart_data.title);
+		for (var x = 0; x < data.length; x++) {
+			dataset_obj = { label: data[x].farm_name, data: [] };
+
+			if (unique[i].seed_name === data[x].seed_name) {
+				data[x].temp -= 273.15;
+				data[x].temp = Math.round(data[x].temp * 100)/100;
+				data[x].humidity = Math.round(data[x].humidity * 100)/100;
+				data[x].pressure = Math.round(data[x].pressure * 100)/100;
+				data[x].rainfall = Math.round(data[x].rainfall * 100)/100;
+
+				data[x] = smoothRadarChartData(data[x]);
+				for (var y = 0; y < obj_keys.length; y++) {
+					dataset_obj.data.push(data[x][obj_keys[y]]);
+				}
+				chart_data.datasets.push(dataset_obj);
+			}
+
+		}
+
+		chart_arr.push(chart_data);
+	}
+
+	for (var i = 0; i < harvest.length; i++) {
+
+	}
+
+	for (var i = 0; i < data.length; i++) {
+		data[i]['historical_yield'] = 'N/A';
+		for (var x = 0; x < history.length; x++) {
+			//console.log(data[i].farm_id +' - '+history[x].farm_id);
+			if (data[i].farm_name == history[x].farm_name) {
+				data[i]['historical_yield'] = history[x].avg_yield;
+			}
+		}
+		data[i]['change'] = { 
+			val: data[i].historical_yield != 'N/A' ? 
+				data[i].historical_yield > data[i].harvested ? 
+				data[i].historical_yield / data[i].harvested :
+				data[i].harvested / data[i].historical_yield : 0,
+			arrow: data[i].historical_yield != 'N/A' ? 
+				data[i].harvested >= data[i].historical_yield ? 
+				'up' :
+				'down'
+				: 'up'
+		};
+
+		data[i].change.val = data[i].change.val != 0 ? parseInt((data[i].change.val * 100) - 100) : 0;
+		data[i].change.color = data[i].change.arrow == 'up' ? 
+		data[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
+	}
+	console.log(data);
+	return { chart_data: chart_arr, json_chart_data: JSON.stringify(chart_arr), detailed_list: data };
+}
+
 exports.processDetailedFarmProductivity = function(fp, resources) {
 	var fp_obj = {
 		yield: { arr: [], total: 0 },
@@ -82,7 +179,7 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 				fp_overview[i].prev_productivity / fp_overview[i].current_productivity
 				: 0,
 			arrow: fp_overview[i].current_productivity != 'N/A' ? 
-				fp_overview[i].current_productivity > fp_overview[i].prev_productivity ? 
+				fp_overview[i].current_productivity >= fp_overview[i].prev_productivity ? 
 				'up' :
 				'down'
 				: 'up'
