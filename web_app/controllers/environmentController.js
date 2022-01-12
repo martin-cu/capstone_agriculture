@@ -1346,12 +1346,34 @@ exports.getFarmPestDiseases = function(req, res){
 														if(err)
 															throw err;
 														else{
-															var i;
-															for(i = 0; i < diagnosis.length; i++)
-																diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'mm DD, YYYY');
+															var i, x;
+															for(i = 0; i < diagnosis.length; i++){
+																diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
+																for(x = 0 ; x < possible_pests.length; x++){
+																	if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																		possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																		if(diagnosis[i].farm_id == farm_id.farm_id)
+																			possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																	}
+																}
+															}
+
+															//Sort possibilties
+															var temp_pos = [];
+															var smallest = 0;
+															for(x = 1 ; x < possible_pests.length; x++){
+																
+																if(possible_pests[smallest].probability < possible_pests[x].probability){
+																	temp_pos.push(possible_pests[x]);
+																}
+																else{
+																	temp_pos.push(possible_pests[smallest]);
+																	smallest = x;
+																}
+															}
 															html_data["diagnosis"] = diagnosis;
 															html_data["statements"] = statements;
-															html_data["probability"] = possible_pests;
+															html_data["probability"] = temp_pos;
 															html_data["weather"] = weather;
 															html_data["main"] = forecast_body[0].main;
 															res.render("farm_pestdisease", html_data);
@@ -1532,22 +1554,55 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 									if(type == "Pest"){
 										pestdiseaseModel.getPestProbabilityPercentage(weather, season, farmtypes, cur_stage,function(err, possible_pests){
 											if(err){
-												console.log(err);
 												throw err;
 											}else{
 												console.log(possible_pests);
 												var statements = new Array();
 					
 												var ctr = possible_pests.length;
-												if(ctr < 5)
-												while(ctr != 5){
-													possible_pests.push({});
-													ctr++;
-												};
+												// if(ctr < 5)
+												// while(ctr != 5){
+												// 	possible_pests.push({});
+												// 	ctr++;
+												// };
 										
 											}
-											html_data["probability"] = possible_pests;
-											res.send(html_data);
+
+											pestdiseaseModel.getDiagnosis(farm_id, null, function(err, diagnosis){
+
+												if(err)
+													throw err;
+												else{
+													var i, x;
+													for(i = 0; i < diagnosis.length; i++){
+														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
+														for(x = 0 ; x < possible_pests.length; x++){
+															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																if(diagnosis[i].farm_id == farm_id.farm_id)
+																	possible_pests[x].probability = possible_pests[x].probability * 1.1;
+															}
+															
+														}
+													}
+
+													//Sort possibilties
+													var temp_pos = [];
+													var smallest = 0;
+													for(x = 1 ; x < possible_pests.length; x++){
+														
+														if(possible_pests[smallest].probability < possible_pests[x].probability){
+															temp_pos.push(possible_pests[x]);
+														}
+														else{
+															temp_pos.push(possible_pests[smallest]);
+															smallest = x;
+														}
+													}
+												}
+												html_data["probability"] = temp_pos;
+												res.send(html_data);
+											});
 										});
 									}
 									else if(type == "Disease"){
@@ -1559,15 +1614,48 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 												console.log(possible_pests);
 												var statements = new Array();
 					
-												var ctr = possible_pests.length;
-												if(ctr < 5)
-												while(ctr != 5){
-													possible_pests.push({});
-													ctr++;
-												};
+												// var ctr = possible_pests.length;
+												// if(ctr < 5)
+												// while(ctr != 5){
+												// 	possible_pests.push({});
+												// 	ctr++;
+												// };
 											}
-											html_data["probability"] = possible_pests;
-											res.send(html_data);
+
+											pestdiseaseModel.getDiagnosis(farm_id, null, function(err, diagnosis){
+
+												if(err)
+													throw err;
+												else{
+													var i, x;
+													for(i = 0; i < diagnosis.length; i++){
+														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
+														for(x = 0 ; x < possible_pests.length; x++){
+															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																if(diagnosis[i].farm_id == farm_id.farm_id)
+																	possible_pests[x].probability = possible_pests[x].probability * 1.1;
+															}
+														}
+													}
+
+													//Sort possibilties
+													var temp_pos = [];
+													var smallest = 0;
+													for(x = 1 ; x < possible_pests.length; x++){
+														
+														if(possible_pests[smallest].probability < possible_pests[x].probability){
+															temp_pos.push(possible_pests[x]);
+														}
+														else{
+															temp_pos.push(possible_pests[smallest]);
+															smallest = x;
+														}
+													}
+												}
+												html_data["probability"] = temp_pos;
+												res.send(html_data);
+											});
 										});
 									}
 								}
@@ -1720,8 +1808,8 @@ exports.getDiagnoses = function(req, res) {
 		else{
 			var i;
 			for(i =0; i < diagnoses.length; i++){
-				diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
-				diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_solved)), 'mm DD, YYYY');
+				diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_diagnosed)), 'YYYY-MM-DD');
+				diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnoses[i].date_solved)), 'YYYY-MM-DD');
 			}
 			
 
@@ -1731,8 +1819,8 @@ exports.getDiagnoses = function(req, res) {
 				else{
 					var i;
 					for(i =0; i < pest_diagnoses.length; i++){
-						pest_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
-						pest_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_solved)), 'mm DD, YYYY');
+						pest_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_diagnosed)), 'YYYY-MM-DD');
+						pest_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(pest_diagnoses[i].date_solved)), 'YYYY-MM-DD');
 					}
 					
 					pestdiseaseModel.getDiagnosis(null, "Disease", function(err, disease_diagnoses){
@@ -1741,8 +1829,8 @@ exports.getDiagnoses = function(req, res) {
 						else{
 							var i;
 							for(i =0; i < disease_diagnoses.length; i++){
-								disease_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_diagnosed)), 'mm DD, YYYY');
-								disease_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_solved)), 'mm DD, YYYY');
+								disease_diagnoses[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_diagnosed)), 'YYYY-MM-DD');
+								disease_diagnoses[i].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(disease_diagnoses[i].date_solved)), 'YYYY-MM-DD');
 							}
 
 							farmModel.getAllFarms(function(err, farms){
@@ -1802,9 +1890,9 @@ exports.getDiagnosisDetails = function(req, res){
 				diagnosis_details[0]["solved"] = true;
 			}
 			else
-				diagnosis_details[0].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_solved)), 'mm DD, YYYY');
+				diagnosis_details[0].date_solved = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_solved)), 'YYYY-MM-DD');
 					
-			diagnosis_details[0].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_diagnosed)), 'mm DD, YYYY');
+			diagnosis_details[0].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis_details[0].date_diagnosed)), 'YYYY-MM-DD');
 			html_data["details"] = diagnosis_details[0];
 			
 		}
@@ -1896,7 +1984,7 @@ exports.getPestandDiseaseDiscover = function(req,res){
 			var i;
 			for(i = 0; i < pests.length; i++){
 				if(pests[i].last_diagnosed != null)
-				pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'mm DD, YYYY');
+				pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'YYYY-MM-DD');
 			}
 			html_data["pests"] = pests;
 		}
@@ -1907,7 +1995,7 @@ exports.getPestandDiseaseDiscover = function(req,res){
 				var i;
 				for(i = 0; i < diseases.length; i++){
 					if(diseases[i].last_diagnosed != null)
-					diseases[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diseases[i].last_diagnosed)), 'mm DD, YYYY');
+					diseases[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diseases[i].last_diagnosed)), 'YYYY-MM-DD');
 				}
 				html_data["diseases"] = diseases;
 			}
@@ -2275,7 +2363,7 @@ exports.getRecommendationDiagnosis = function(req,res){
 				var i;
 				for(i = 0; i < solutions.length; i++){
 					var solution = {
-						date_words : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
+						date_words : dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
 						date : dataformatter.formatDate(new Date(), 'MM-DD-YYYY'),
 						type : solutions[i].detail_name,
 						desc : solutions[i].detail_desc
@@ -2300,8 +2388,8 @@ exports.getRecommendationDiagnosis = function(req,res){
 				var i;
 				for(i = 0; i < solutions.length; i++){
 					var solution = {
-						date_words : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
-						date : dataformatter.formatDate(new Date(), 'mm DD, YYYY'),
+						date_words : dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
+						date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
 						type : solutions[i].solution_name,
 						desc : solutions[i].solution_desc
 					}

@@ -6,6 +6,10 @@
     label {
         color: #332C1F;
     }
+
+    h4.card-title {
+        font-weight: bold;
+    }
 </style>
 
 <div class="container-fluid" >
@@ -60,7 +64,8 @@
 
 
     <div class="row" style="padding: 0px 12px;">
-        <div class="col-xxl-9"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>All Farms</strong></label>
+        <div class="col-xxl-9">
+            {{!-- <label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>All Farms</strong></label> --}}
             <div role="tablist" id="accordion-1" style="margin-bottom: 20px;">
                 <div class="card shadow mb-4">
                     <div class="card-header" role="tab" style="background: #939C1F;padding: 16px 20px;height: auto;">
@@ -178,7 +183,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card shadow mb-4">
                 <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
                     {{!-- <a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; " data-toggle="modal" data-target="#addPurchaseModal">Add Purchase</a> --}}
                     <ul class="nav nav-tabs card-header-tabs">
@@ -198,31 +203,45 @@
                         <div class="row">
                             <div class="col-12">
                                 <div>
-                                    <table class="table table-striped table-bordered tablesorter" id="ipi-table">
+                                    <table class="table table-striped table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Farm</th>
                                                 <th>Name</th>
-                                                <th>Material type</th>
+                                                <th>Type</th>
                                                 <th>Amount</th>
-                                                <th>Unit</th>
+                                                {{!-- <th>Unit</th> --}}
                                                 <th>Request date</th>
-                                                <th>Date purchased date</th>
+                                                <th>Purchase date</th>
                                                 <th>Status</th>
                                                 {{!-- <th>cost per unit</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody id="materials_table">
                                                 {{#each purchases}}
-                                                    <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
+                                                    <tr class="">
                                                         <td>{{this.farm_name}}</td>
                                                         <td>{{this.item_name}}</td>
                                                         <td>{{this.item_type}}</td>
-                                                        <td>{{this.amount}}</td>
-                                                        <td>{{this.units}}</td>
-                                                        <td>{{this.request_date}}</td>
-                                                        <td>{{this.date_purchased}}</td>
-                                                        <td class="{{this.purchase_status}}">{{this.purchase_status}}</td>
+                                                        <td>{{this.amount}} {{this.units}}</td>
+                                                        {{!-- <td>{{this.units}}</td> --}}
+                                                        <td style="word-wrap:break-word;">{{this.request_date}}</td>
+                                                        <td style="word-wrap:break-word;">{{this.date_purchased}}</td>
+                                                        <td class="{{this.purchase_status}}">{{this.purchase_status}}
+                                                                             <span style="padding-left: 10px">
+                                                            <div class="dropdown no-arrow" style="display:inline-block; float: right">
+                                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                                    </button>
+                                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                                        <a class="dropdown-item notSidebar" href="/orders/details?id={{this.purchase_id}}">View Details</a>
+                                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                                                                        <div class="dropdown-divider"></div>
+                                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a> --}}
+                                                                    </div>
+                                                                </div>
+                                                            </span> 
+                                                        </td>
                                                     </tr>
                                                 {{/each}}
                                             </tr>
@@ -247,7 +266,7 @@
 
                 <div id="per_farm_materials" hidden>
                     {{#each farms}}
-                        <div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem; color:#332C1F">
+                        <div class="row farm_inventory aos-init" data-aos="flip-up" data-aos-duration="450" style="margin: 1rem 1rem; color:#332C1F;">
                                 <div class="col-xl-3" style="padding: 2rem;">
                                     <div class="" >
                                         <div class="">
@@ -264,9 +283,9 @@
                                                     <th>Name</th>
                                                     <th>Material type</th>
                                                     <th>Amount</th>
-                                                    <th>Unit</th>
+                                                    {{!-- <th>Unit</th> --}}
                                                     <th>Request date</th>
-                                                    <th>Date purchased date</th>
+                                                    <th>Purchase date</th>
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
@@ -275,8 +294,8 @@
                                                     <tr class="clickable" href="/orders/details?id={{this.purchase_id}}">
                                                         <td>{{this.item_name}}</td>
                                                         <td>{{this.item_type}}</td>
-                                                        <td>{{this.amount}}</td>
-                                                        <td>{{this.units}}</td>
+                                                        <td>{{this.amount}} {{this.units}}</td>
+                                                        {{!-- <td>{{this.units}}</td> --}}
                                                         <td>{{this.request_date}}</td>
                                                         <td>{{this.date_purchased}}</td>
                                                         <td class="{{this.purchase_status}}">{{this.purchase_status}}</td>
@@ -293,14 +312,14 @@
             </div>
             
         </div>
-        <div class="col">
-            <div class="row">
-                <div class="col">
-                    <div class="card shadow mb-4">
-                        <div class="card-header " style="height: auto;background: rgba(255,165,0,0);">
+        <div class="col" style="padding-top: 0px;">
+            <div class="row" style="padding-top: 0px;">
+                <div class="col" style="padding-top: 0px;">
+                    <div class="card shadow mb-4" style="height: 380px; max-height: 380px;">
+                        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;padding: 16px 20px;height: auto;">
                             <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pending Orders</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="overflow-y:auto">
                             {{#each pending}}
                                 <div class="card clickable" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="/orders/details?id={{this.purchase_id}}">
                                     <div class="row">
@@ -314,6 +333,15 @@
                                         </div>
                                     </div>
                                 </div>
+                            {{else}}
+                            <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;">
+                                    <div class="row">
+                                        <div class="col">
+                                              <div class="mb-3 text-center"><label class="form-label">No pending orders</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             {{/each}}
                                 
                         </div>
@@ -321,13 +349,13 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="padding-top: 5px;">
                 <div class="col">
-                    <div class="card shadow mb-4" >
-                        <div class="card-header " style="height: auto;background: rgba(255,165,0,0);">
+                    <div class="card shadow mb-4" style="height: 380px; max-height: 380px;">
+                        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;padding: 16px 20px;height: auto;">
                             <h6 class="fw-bold m-0" style="color: #FFFFFF;">Processing Orders</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="overflow-y:auto">
                             {{#each processing}}
                                 <div class="card clickable" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;" href="/orders/details?id={{this.purchase_id}}">
                                     <div class="row">
@@ -340,6 +368,14 @@
                                             <div class="mb-3 text-right"><label class="form-label">Php {{this.purchase_price}}</label></div>
                                         </div>
                                     </div>
+                                </div>
+                                {{else}}
+                                <div class="card" style="border-color: rgb(78,79,85);margin-bottom: 10px; padding-left :20px;padding-right :20px;">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="mb-3 text-center"><label class="form-label">No processing orders</label></div>
+                                            </div>
+                                        </div>
                                 </div>
                             {{/each}}
                                 
@@ -489,3 +525,7 @@
       
     </div>
 </div> --}}
+
+<script>
+    var view = 'orders';
+</script>

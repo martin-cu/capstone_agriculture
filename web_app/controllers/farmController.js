@@ -329,11 +329,11 @@ exports.getFarmDetails = function(req, res) {
 																		}
 																		if(calendar_index != -1){
 																			var expected_vegetation = crop_calendar_details[calendar_index].sowing_date;
-																			crop_calendar_details[calendar_index].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'mm DD, YYYY');
+																			crop_calendar_details[calendar_index].land_prep_date = dataformatter.formatDate(dataformatter.formatDate(new Date(crop_calendar_details[0].land_prep_date)), 'YYYY-MM-DD');
 																			var calendar_details = crop_calendar_details[calendar_index];
 																			calendar_details["expected_harvest"] = new Date(expected_vegetation);
 																			calendar_details.expected_harvest.setDate(calendar_details.expected_harvest.getDate() +  crop_calendar_details[calendar_index].maturity_days + 65);
-																			calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'mm DD, YYYY')
+																			calendar_details.expected_harvest = dataformatter.formatDate(dataformatter.formatDate(new Date(calendar_details.expected_harvest)), 'YYYY-MM-DD')
 																			html_data["crop_calendar_details"] = calendar_details;
 
 																			var land_prep = calendar_details.land_prep_date;
@@ -389,21 +389,54 @@ exports.getFarmDetails = function(req, res) {
 																			if(workorders[i].date_completed == null)
 																				workorders[i].date_completed = "Not yet completed";
 																			else
-																				workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'mm DD, YYYY');
-																			workorders[i].date_start = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_start)), 'mm DD, YYYY');
-																			workorders[i].date_due = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_due)), 'mm DD, YYYY');
-																			workorders[i].date_created = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_created)), 'mm DD, YYYY');
+																				workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'YYYY-MM-DD');
+																			workorders[i].date_start = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_start)), 'YYYY-MM-DD');
+																			workorders[i].date_due = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_due)), 'YYYY-MM-DD');
+																			workorders[i].date_created = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_created)), 'YYYY-MM-DD');
 																		}
 																	}
 																	// //console.log("WORKORDERS");
 																	// //console.log(workorders);
 																	
-																	html_data["workorders"] = workorders;
-																	html_data["queries"] = queries;
-																	html_data["statements"] = statements;
-																	html_data["probability"] = possible_pests;
-																	html_data["main"] = forecast_body[0].main;
-																	res.send(html_data);
+																	pestdiseaseModel.getDiagnosis({farm_id : farm_id}, null, function(err, diagnosis){
+
+																		if(err)
+																			throw err;
+																		else{
+																			var i, x;
+																			for(i = 0; i < diagnosis.length; i++){
+																				diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
+																				for(x = 0 ; x < possible_pests.length; x++){
+																					if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
+																						possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																						if(diagnosis[i].farm_id == farm_id.farm_id)
+																							possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																					}
+																				}
+																			}
+						
+																			//Sort possibilties
+																			var temp_pos = [];
+																			var smallest = 0;
+																			for(x = 1 ; x < possible_pests.length; x++){
+																				
+																				if(possible_pests[smallest].probability < possible_pests[x].probability){
+																					temp_pos.push(possible_pests[x]);
+																				}
+																				else{
+																					temp_pos.push(possible_pests[smallest]);
+																					smallest = x;
+																				}
+																			}
+																		}
+																	
+																		html_data["workorders"] = workorders;
+																		html_data["queries"] = queries;
+																		html_data["statements"] = statements;
+																		html_data["probability"] = temp_pos;
+																		html_data["main"] = forecast_body[0].main;
+																		res.send(html_data);
+																	});
 																});
 															});
 														});
@@ -940,7 +973,7 @@ exports.queryYieldVariables = function(req, res) {
 			body = JSON.parse(body);
 			body = body.filter(e => e.cl < 60);
 			for (var i = 0; i < body.length; i++) {
-				body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+				body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
 				body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
 			}
 
@@ -954,7 +987,7 @@ exports.queryYieldVariables = function(req, res) {
 		        else {
 
 					for (var i = 0; i < body.length; i++) {
-		        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+		        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
 		        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
 		        	}
 
@@ -973,7 +1006,7 @@ exports.queryYieldVariables = function(req, res) {
 				        else {
 
 							for (var i = 0; i < body.length; i++) {
-				        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+				        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
 				        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
 				        	}
 
@@ -987,7 +1020,7 @@ exports.queryYieldVariables = function(req, res) {
 						        else {
 
 									for (var i = 0; i < body.length; i++) {
-						        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+						        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
 						        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
 						        	}
 
@@ -1070,7 +1103,7 @@ exports.getSatelliteImageryData = function(req, res) {
 			body = JSON.parse(body);
 
 			for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
         		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 			//var result = body[body.length-1];
@@ -1112,7 +1145,7 @@ exports.getHistoricalSoilData = function(req, res){
         	body = JSON.parse(body);
 
 			for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
         		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
@@ -1141,7 +1174,7 @@ exports.getAccumulatedTemperature = function(req, res){
         	body = JSON.parse(body);
 
 			for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
         		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
@@ -1167,7 +1200,7 @@ exports.getAccumulatedPrecipitation = function(req, res){
         	body = JSON.parse(body);
 
 			for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
         		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
@@ -1205,7 +1238,7 @@ exports.getHistoricalUVI = function(req, res){
         	body = JSON.parse(body);
 
 			for (var i = 0; i < body.length; i++) {
-        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
         		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
         	}
 
@@ -1251,7 +1284,7 @@ exports.getHistoricalWeather = function(req, res){
         else {
         	for (var i = 0; i < body.length; i++) {
         		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
-        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'mm DD, YYYY');
+        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
         	}
 
 

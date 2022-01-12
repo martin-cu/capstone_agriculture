@@ -261,9 +261,9 @@ exports.getOrders = function(req, res){
             throw err;
         else{
             for(x = 0; x < purchases.length; x++){
-                purchases[x].request_date = dataformatter.formatDate(purchases[x].request_date, 'mm DD, YYYY');
+                purchases[x].request_date = dataformatter.formatDate(purchases[x].request_date, 'YYYY-MM-DD');
                 if(purchases[x].date_purchased != null)
-                    purchases[x].date_purchased = dataformatter.formatDate(purchases[x].date_purchased, 'mm DD, YYYY');
+                    purchases[x].date_purchased = dataformatter.formatDate(purchases[x].date_purchased, 'YYYY-MM-DD');
             }
             html_data["purchases"] = purchases;
         }
@@ -302,7 +302,7 @@ exports.getOrders = function(req, res){
                                 if(pending[i].purchase_price == null)
                                     pending[i].purchase_price = "0.00";
                                 console.log("TYPE: " + typeof(pending[i].request_date) + pending[i].request_date);
-                                pending[i].request_date = dataformatter.formatDate(pending[i].request_date, 'mm DD, YYYY');
+                                pending[i].request_date = dataformatter.formatDate(pending[i].request_date, 'YYYY-MM-DD');
                             }
                             console.log(pending);
                             html_data["pending"] = pending;
@@ -315,7 +315,7 @@ exports.getOrders = function(req, res){
                                     if(processing[i].purchase_price == null)
                                         processing[i].purchase_price = "0.00";
                                     if(processing[i].request_date != null)
-                                    processing[i].request_date = dataformatter.formatDate(processing[i].request_date, 'mm DD, YYYY');
+                                    processing[i].request_date = dataformatter.formatDate(processing[i].request_date, 'YYYY-MM-DD');
                                 }
                                 html_data["processing"] = processing;
                             }
@@ -537,9 +537,9 @@ exports.getPurchaseDetails = function(req,res){
             throw err;
         else{
             console.log(details[0]);
-            details[0].request_date = dataformatter.formatDate(details[0].request_date, 'mm DD, YYYY');
+            details[0].request_date = dataformatter.formatDate(details[0].request_date, 'YYYY-MM-DD');
             if(details[0].date_purchased != null)
-                details[0].date_purchased = dataformatter.formatDate(details[0].date_purchased, 'mm DD, YYYY');
+                details[0].date_purchased = dataformatter.formatDate(details[0].date_purchased, 'YYYY-MM-DD');
             else
             details[0].date_purchased = "not yet purchased";
             html_data['details'] = details[0];

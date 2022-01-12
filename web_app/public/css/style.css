@@ -6,9 +6,9 @@
 	background-color: #FAEBD7;
 }
 
-.tertiary {
+/* .tertiary {
 
-}
+} */
 
 .btn.round {
 	border-radius:  50px !important;
@@ -120,9 +120,9 @@ body {
 }
 
 
-.dropdown-lbl {
+/* .dropdown-lbl {
 
-}
+} */
 
 .topbar {
 	height:  4.375rem !important;
@@ -156,9 +156,9 @@ body {
 	max-height: 180px;
 }
 
-.weather_table_cont {
+/* .weather_table_cont {
 
-}
+} */
 
 .forecast_card:hover {
 	background-color: gainsboro !important;
@@ -408,27 +408,32 @@ div.scrollmenu {
   }
 
 
-  .Pending{
-	color : purple;
-}
-.Processing{
-	color : rgb(214, 127, 93);
-}
-.Purchased{
-	color : rgb(138, 230, 0);
-}
-.Completed{
-	color : rgb(138, 230, 0);
+.Pending {
+	color : #F0A276;
 }
 
-.current_wo{
+.Processing {
+	color : #F0A276;
+}
+.Purchased {
+	color : #4BACAD;
+}
+.Completed {
+	color : #4BACAD;
+}
+
+.Solved {
+	color : #4BACAD;
+}
+
+.current_wo {
 	background-color: rgb(255, 248, 222);
 }
 
-.past_wo{
+.past_wo {
 	background-color: rgb(213, 255, 213);
 }
-
+/* Alternative red: #DA7593 */
 .Present {
-	color: red;
+	color: #CA4E0C;
 }

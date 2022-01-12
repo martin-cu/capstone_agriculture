@@ -72,7 +72,7 @@ exports.getCropCalendarTab = function(req, res) {
 						else{
 							for(i = 0; i < past_calendars.length; i++){
 								if(past_calendars[i].sowing_date != null)
-									past_calendars[i].sowing_date = dataformatter.formatDate(new Date(past_calendars[i].sowing_date), "mm DD, YYYY")
+									past_calendars[i].sowing_date = dataformatter.formatDate(new Date(past_calendars[i].sowing_date), "YYYY-MM-DD")
 							}
 							html_data["past_calendars"] = past_calendars;
 						}
@@ -164,9 +164,9 @@ exports.getDetailedCropCalendar = function(req, res) {
 		if(err)
 			throw err;
 		else{
-			crop_calendar[0].land_prep_date = dataformatter.formatDate(new Date(crop_calendar[0].land_prep_date), 'mm DD, YYYY');
-			crop_calendar[0].sowing_date = dataformatter.formatDate(new Date(crop_calendar[0].sowing_date), 'mm DD, YYYY');
-			crop_calendar[0].harvest_date = dataformatter.formatDate(new Date(crop_calendar[0].harvest_date), 'mm DD, YYYY');
+			crop_calendar[0].land_prep_date = dataformatter.formatDate(new Date(crop_calendar[0].land_prep_date), 'YYYY-MM-DD');
+			crop_calendar[0].sowing_date = dataformatter.formatDate(new Date(crop_calendar[0].sowing_date), 'YYYY-MM-DD');
+			crop_calendar[0].harvest_date = dataformatter.formatDate(new Date(crop_calendar[0].harvest_date), 'YYYY-MM-DD');
 
 		}
 
@@ -187,9 +187,9 @@ exports.getDetailedCropCalendar = function(req, res) {
 			else{
 				var i;
 				for(i = 0; i < wos.length; i++){
-					wos[i].date_start = dataformatter.formatDate(new Date(wos[i].date_start), 'mm DD, YYYY');
+					wos[i].date_start = dataformatter.formatDate(new Date(wos[i].date_start), 'YYYY-MM-DD');
 					if(wos[i].date_completed != null)
-						wos[i].date_completed = dataformatter.formatDate(new Date(wos[i].date_completed), 'mm DD, YYYY');
+						wos[i].date_completed = dataformatter.formatDate(new Date(wos[i].date_completed), 'YYYY-MM-DD');
 					else
 						wos[i].date_completed = "Not yet completed"
 					
@@ -207,10 +207,10 @@ exports.getDetailedCropCalendar = function(req, res) {
 				else{
 					for(i = 0; i < fertilizers.length; i++){
 						if(fertilizers[i].date_completed != null)
-							fertilizers[i].date_completed = dataformatter.formatDate(new Date(fertilizers[i].date_completed), 'mm DD, YYYY');
+							fertilizers[i].date_completed = dataformatter.formatDate(new Date(fertilizers[i].date_completed), 'YYYY-MM-DD');
 						else
 							fertilizers[i].date_completed = "Not yet completed"
-						fertilizers[i].target_application_date = dataformatter.formatDate(new Date(fertilizers[i].target_application_date), 'mm DD, YYYY');
+						fertilizers[i].target_application_date = dataformatter.formatDate(new Date(fertilizers[i].target_application_date), 'YYYY-MM-DD');
 					}
 				}
 

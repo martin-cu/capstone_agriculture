@@ -6,6 +6,7 @@ const employeeController = require('../controllers/employeeController');
 const cropCalendarController = require('../controllers/cropCalendarController');
 const environmentController = require('../controllers/environmentController');
 const reportController = require('../controllers/reportController');
+const notifController = require('../controllers/notificationController.js');
 const globe = require('../controllers/sms-mt');
 
 router.get('/login', (req, res) => {
@@ -77,7 +78,7 @@ router.post('/create_wo', workOrderController.createWO);
 //router.get('/', farmController.getDashboard);
 //router.get('/home', farmController.getDashboard);
 
-router.get('/', workOrderController.getWorkOrdersDashboard); 
+router.get('/', notifController.getNotification ,workOrderController.getWorkOrdersDashboard); 
 
 router.get('/farms', workOrderController.getWorkOrdersPage); 
 router.get('/farms/add', farmController.getAddFarm);
@@ -239,7 +240,8 @@ router.get('/updatePurchase', materialController.updatePurchase);
 
 router.get('/getMaterialsAjax/:type', materialController.getMaterialsAjax);
 
-
+router.get("/updateNotif", notifController.updateNotif);
+router.get("/notifications", notifController.getNotificationTab);
 
 
 
