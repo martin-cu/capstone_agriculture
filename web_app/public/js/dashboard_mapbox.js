@@ -27,6 +27,18 @@ function getNumFarms() {
     return numFarms;
 }
 
+// Return number of low stock items
+function getNumLowStocks() {
+    var numLowStocks = 0;
+    $.get('/get_low_stocks', null, function(lowStocks) {
+        for (var i = 0; i < lowStocks.length; i++) {
+            numLowStocks++;
+        }
+    });
+
+    return numLowStocks;
+}
+
 // SHOW POLYGONS FROM AGRO API
 $(document).ready(function() {
 
@@ -37,6 +49,9 @@ $(document).ready(function() {
 
         // Get Number of Farms
         document.getElementById("numFarms").innerHTML = getNumFarms();
+
+        // Get Number of Low Stocks
+        document.getElementById("numLowStocks").innerHTML = getNumLowStocks();
 
         // GET FARMS AJAX kept incase pushing of polygons to coordinates array
             // need to be filtered with current list of farms (compared to agro api's list)

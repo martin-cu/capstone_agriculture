@@ -57,6 +57,7 @@ router.get('/getAll_materials', materialController.ajaxGetAllMaterials);
 router.get('/getResourcesPerFarm', environmentController.ajaxGetResources);
 router.get('/filter_nutrient_mgt', environmentController.ajaxGetDetailedNutrientMgt);
 router.get('/get_cycle_resources_used', materialController.ajaxGetResourcesUsed);
+router.get('/get_low_stocks', materialController.ajaxGetLowStocks);
 
 router.post('/upload_wo', workOrderController.ajaxCreateWorkOrder);
 router.post('/create_wo', workOrderController.createWO);

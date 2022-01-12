@@ -71,6 +71,17 @@ exports.ajaxGetResourcesUsed = function(req, res) {
     })
 }
 
+exports.ajaxGetLowStocks = function(req, res) {
+    materialModel.getLowStocks(null, function(err, result){
+        if(err)
+            throw err;
+        else{
+            res.send(result);
+        }
+    })
+}
+
+
 
 
 

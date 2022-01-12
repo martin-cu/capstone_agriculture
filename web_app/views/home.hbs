@@ -12,23 +12,30 @@
                         <div class="text-uppercase text-primary font-weight-bold text-xs" style="margin-top: -20px;"><span>Active Farms</span></div>
                         <div class="text-dark font-weight-bold h5 mb-0"><span id="numFarms"></span></div>
                     </div>
-                    <div class="col-auto"><svg class="bi bi-house-fill fa-2x text-gray-300" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                    <div class="col-auto">
+                        {{!-- <svg class="bi bi-house-fill fa-2x text-gray-300" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"></path>
                             <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"></path>
-                        </svg></div>
+                        </svg> --}}
+                        <i class="fas fa-farm text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-success py-2">
+        <div class="card shadow border-left-success py-2" style="border-left-color: #CA4E0C !important;">
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-success font-weight-bold text-xs" style="margin-top: -20px;"><span>Low stock resources</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0"><span>0</span></div>
+                        <div class="text-uppercase text-success font-weight-bold text-xs" style="margin-top: -20px;">
+                            <span style="color:#CA4E0C !important;">Low stock resources</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0"><span id="numLowStocks"></span></div>
                     </div>
-                    <div class="col-auto"><i class="fa fa-list-alt fa-2x text-gray-300"></i></div>
+                    <div class="col-auto">
+                        <i class="fas fa-exclamation-triangle text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+                        {{!-- <i class="fa fa-list-alt fa-2x "></i> --}}
+                        </div>
                 </div>
             </div>
         </div>
@@ -50,7 +57,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-auto d-xl-flex justify-content-xl-start align-items-xl-center"><i class="fas fa-ruble-sign d-xl-flex align-items-xl-center fa-2x text-gray-300"></i></div>
+            <div class="col-auto d-xl-flex justify-content-xl-start align-items-xl-center">
+                <i class="fas fa-chart-bar text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+                {{!-- <i class="fas fa-ruble-sign d-xl-flex align-items-xl-center fa-2x text-gray-300"></i> --}}
+                </div>
         </div>
             </div>
         </div>
@@ -63,7 +73,9 @@
                         <div class="text-uppercase text-warning font-weight-bold text-xs" style="margin-top: -20px;"><span>Farmer Queries</span></div>
                         <div class="text-dark font-weight-bold h5 mb-0"><span>0</span></div>
                     </div>
-                    <div class="col-auto"><i class="fa fa-mobile fa-2x text-gray-300"></i></div>
+                    <div class="col-auto">
+                        <i class="fa fa-mobile fa-2x text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+                    </div>
                 </div>
             </div>
         </div>
