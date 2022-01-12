@@ -55,7 +55,7 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 	}
 
 	fp_obj.productivity = fp_obj.yield.total != 'N/A' ? (Math.round(parseInt(fp_obj.yield.total.replace(' cavans','')) / fp_obj.inputs.total * 1000) / 1000)+' cavans per peso' : 'N/A';
-	fp_obj['cost_per_cavan'] = fp_obj.yield.total != 'N/A' ? (Math.round(fp_obj.inputs.total / parseInt(fp_obj.yield.total.replace(' cavans','')) * 1000) / 1000)+' pesos per cavan per' : 'N/A';
+	fp_obj['cost_per_cavan'] = fp_obj.yield.total != 'N/A' ? (Math.round(fp_obj.inputs.total / parseInt(fp_obj.yield.total.replace(' cavans','')) * 1000) / 1000)+' pesos per cavan per' : '&nbsp';
 	fp_obj.inputs.total = numberWithCommas((Math.round(fp_obj.inputs.total * 100)/100).toFixed(2));
 
 	return fp_obj;
