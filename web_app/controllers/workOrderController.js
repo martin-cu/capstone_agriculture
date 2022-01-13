@@ -367,6 +367,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 				else if (list[i].status == 'Completed') {
 					list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
 					list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+					list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');
 					list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
 	
 					completed.push(list[i]);
