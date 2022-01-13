@@ -101,6 +101,11 @@ exports.getWorkOrders = function(query, next) {
 				}
 			}
 		}
+
+		if (query.hasOwnProperty('limit')) {
+			sql += ' limit '+query.limit;
+			
+		}
 	}
 	//console.log(sql);
 	mysql.query(sql, next);

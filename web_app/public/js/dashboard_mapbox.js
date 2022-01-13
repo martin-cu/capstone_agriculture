@@ -60,7 +60,7 @@ $(document).ready(function() {
 			
         // Start getting list of polygons
         $.get('/agroapi/polygon/readAll', {}, function(polygons) {
-
+	
             // Initialize geojson object that stores an array of features
                 geojson = {
                     "name":"MyPolygons",
@@ -73,11 +73,14 @@ $(document).ready(function() {
                 for (var j = 0; j < polygons.length; j++) {
 
                     
-                    if (polygons[j].name == farms[i].farm_name) {        
+                    if (polygons[j].name == farms[i].farm_name) {     
                     
                     // Get other farm details
                     $.get("/ajax_farm_detailsDashboard", {farm_id : farms[i].farm_id}, function(farm_details){
-
+                    
+                    // Load environment details
+                    $.get('/agroapi/soil/current', { polyid: polygons[j].id }, function(soil) {
+                        
                     for (var k = 0; k < farm_details.length; k++) {
 
                     var farm_manager = farm_details[k].first_name + " " + farm_details[k].last_name;
@@ -91,10 +94,11 @@ $(document).ready(function() {
                                             'properties': {
                                                 'name': '<strong>' + farms[i].farm_name + "</strong>", //alternative html text
                                                 'description': 
-                                                '<strong style="color: #939C1F; font-size: 16px">' + farms[i].farm_name+ '</strong><br>'
+                                                '<strong style="color: #939C1F; font-size: 16px">' + farms[i].farm_name + '</strong><br>'
                                                     + '<strong> Area Size: </strong>' + farms[i].farm_area + 'ha<br>'
                                                     + '<strong> Land Type: </strong>' + farms[i].land_type + '<br>'
-                                                    + '<strong> Farm Manager: </strong>' + farm_manager,
+                                                    + '<strong> Farm Manager: </strong>' + farm_manager + '<br>'
+                                                    + '<strong> Soil Moisture: </strong>' + Math.round(soil.moisture * 100) / 100 + '%' + '<br>',
                                                 },
                                             
                                             });
@@ -105,6 +109,9 @@ $(document).ready(function() {
 
                 });
                 // END OF GET FARM DETAILS AJAX
+
+                });
+                // END OF ENVIRONMENT DETAILS AJAX
                     
                 }
                

@@ -338,7 +338,8 @@ exports.getWorkOrdersDashboard = function(req, res) {
 	var html_data = {};
 	
 	var query = {
-        order: ['work_order_table.status ASC', 'work_order_table.date_due asc']
+        order: [ 'work_order_table.status asc', 'work_order_table.date_completed desc', 'work_order_table.date_due ASC'],
+		 limit: ['10']
     }
 	workOrderModel.getWorkOrders(query, function(err, list) {
 		if (err)

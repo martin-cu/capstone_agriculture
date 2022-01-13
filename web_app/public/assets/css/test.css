@@ -358,6 +358,7 @@ a.dropdown-item.notSidebar:hover {
     /* border: 1px solid #e3e6f0; */
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	color: #332C1F;
+    width: fit-content;
 }
 
 /* MAPBOX */
