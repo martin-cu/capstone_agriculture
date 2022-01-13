@@ -52,9 +52,8 @@ $(document).ready(function(){
         $(this).css("background", "#F0F0F0");
 
         $("tr.resources").remove();
-
         //update table
-        $.get("/getResourcesPerFarm", {farm_id : 1, type : $(this).text()}, function(result){
+        $.get("/getResourcesPerFarm", {farm_id : $("#farm_id").val(), type : $(this).text()}, function(result){
             var i = 0;
             for(i = 0; i < result.items.length; i++){
                 $("#resources_table").append('<tr class="clickable resources"><td>' + result.items[i].item_name +'</td><td>' +  result.items[i].item_type  +'</td><td>' + result.items[i].current_amount +'</td><td>' + result.items[i].units +'<td><i class="fa fa-ellipsis-h d-inline float-end" style="text-align: right;"></i></td></tr>');

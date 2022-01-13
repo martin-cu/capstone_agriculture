@@ -22,6 +22,7 @@ exports.forecastYield = function(req, res) {
 			throw err;
 		else {
 			//console.log(farms);
+			html_data["notifs"] = req.notifs;
 			res.render('yield_forecast_test', { list: farms });
 		}
 	});
@@ -43,6 +44,7 @@ exports.getDashboard = function(req, res) {
 	html_data["title"] = "Dashboard";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
 
+	html_data["notifs"] = req.notifs;
 	res.render('home', html_data);
 }
 
@@ -53,6 +55,7 @@ exports.getFarms = function(req, res) {
 		else {
 			var html_data = { farm_list: farm_list };
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+			html_data["notifs"] = req.notifs;
 			res.render('farms', html_data);
 		}
 	});
@@ -63,6 +66,7 @@ exports.getAddFarm = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Farm Monitoring";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_farm');
+	html_data["notifs"] = req.notifs;
 	res.render('add_farm', html_data);
 }
 
@@ -469,6 +473,7 @@ exports.getFarmDetailsDashboard = function(req, res) {
 exports.getMonitorFarms = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+	html_data["notifs"] = req.notifs;
 	res.render('farm_monitoring', html_data);
 }
 
@@ -504,25 +509,29 @@ exports.retireFarm = function(req, res) {
 // exports.getCropCalendar = function(req, res) {
 // 	var html_data = {};
 // 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
-// 	res.render('crop_calendar', html_data); //crop_calendar
+// 	html_data["notifs"] = req.notifs;
+//res.render('crop_calendar', html_data); //crop_calendar
 // }
 
 // exports.getAddCropCalendar = function(req, res) {
 // 	var html_data = {};
 // 	html_data["title"] = "Crop Calendar";
 // 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
-// 	res.render('add_crop_calendar', html_data); //crop_calendar_test
+// 	html_data["notifs"] = req.notifs;
+//res.render('add_crop_calendar', html_data); //crop_calendar_test
 // }
 
 // exports.getAddCropCalendar2 = function(req, res) { //delete later
 // 	var html_data = {};
 // 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
-// 	res.render('crop_calendar_test', html_data); //crop_calendar_test
+// 	html_data["notifs"] = req.notifs;
+//res.render('crop_calendar_test', html_data); //crop_calendar_test
 // }
 
 exports.getHarvestCycle = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'harvest_cycle');
+	html_data["notifs"] = req.notifs;
 	res.render('harvest_cycle', html_data);
 }
 
@@ -544,6 +553,7 @@ exports.getGeoMap = function(req, res) {
 						else {
 							var html_data = { farm_data: dataformatter.aggregateFarmData(farm_data, plot_data, employee_data)};
 							////console.log(html_data);
+							html_data["notifs"] = req.notifs;
 							res.render('home', {});
 						}
 					})
@@ -1403,7 +1413,8 @@ exports.getPolygonInfo = function(req, res){
         else {
         	//console.log(body);
 
-        	res.render('home', {});
+        	html_data["notifs"] = req.notifs;
+			res.render('home', {});
         }
     });
 }
@@ -1446,7 +1457,8 @@ exports.updatePolygonName = function(req, res){
         else {
         	//console.log(body);
 
-        	res.render('home', {});
+        	html_data["notifs"] = req.notifs;
+			res.render('home', {});
         }
     });
 }

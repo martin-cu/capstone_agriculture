@@ -123,3 +123,14 @@ exports.deleteResourceRecord = function(query, next) {
 	sql = mysql.format(sql, query);
 	mysql.query(sql, next);
 }
+
+
+exports.getDueWorkorders = function(next){
+	var sql = "SELECT wot.*, ft.farm_id, ft.farm_name FROM work_order_table wot INNER JOIN crop_calendar_table cct ON cct.calendar_id = wot.crop_calendar_id INNER JOIN farm_table ft ON ft.farm_id = cct.farm_id WHERE DATEDIFF(DATE(now()) , date_due) = 0 && wot.status != 'Completed';"
+	mysql.query(sql, next);
+}
+
+exports.getOverdueWorkorders = function(next){
+	var sql = "SELECT wot.*, ft.farm_id, ft.farm_name FROM work_order_table wot INNER JOIN crop_calendar_table cct ON cct.calendar_id = wot.crop_calendar_id INNER JOIN farm_table ft ON ft.farm_id = cct.farm_id WHERE DATEDIFF(DATE(now()) , date_due) > 0 && wot.status != 'Completed';"
+	mysql.query(sql, next);
+}

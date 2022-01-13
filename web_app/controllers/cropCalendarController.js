@@ -76,6 +76,7 @@ exports.getCropCalendarTab = function(req, res) {
 							}
 							html_data["past_calendars"] = past_calendars;
 						}
+						html_data["notifs"] = req.notifs;
 						res.render('crop_calendar_tab', html_data);
 					});
 				}
@@ -151,6 +152,7 @@ exports.getAddCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Crop Calendar";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
+	html_data["notifs"] = req.notifs;
 	res.render('add_crop_calendar', html_data);
 }
 
@@ -236,6 +238,7 @@ exports.getDetailedCropCalendar = function(req, res) {
 					html_data["fertilizer_wos"] = fertilizers;
 					html_data["pd_wos"] = pd_wos;
 					html_data["crop_plan_details"] = crop_calendar[0];
+					html_data["notifs"] = req.notifs;
 					res.render('detailed_crop_calendar', html_data); 
 				});
 			});
