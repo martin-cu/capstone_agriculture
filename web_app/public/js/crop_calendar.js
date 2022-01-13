@@ -333,11 +333,23 @@ function adjustDates(seed_list, event) {
 	$('#sowing_date_start').val(formatDate(sowing_start, 'YYYY-MM-DD'));
 
 	var sowing_end = sowing_start;
-	sowing_end = addDays(sowing_end, 7);
+	//Adjust
+	var sowing_days;
+	//Get planting method
+	var planting_method;
+	planting_method = $("#method").val();
+	if(planting_method == "Transplanting")
+		sowing_days = 2;
+	else if(planting_method == "Direct Seeding")
+		sowing_days = 10;
+	sowing_end = addDays(sowing_end, sowing_days);
 	$('#sowing_date_end').val(formatDate(sowing_end, 'YYYY-MM-DD'));
 
+	//Adjust
+	var seed_id;
+	seed_id = $("#seed_id").val();
 	var harvest_start = sowing_end;
-	harvest_start = addDays(harvest_start, selected_seed_dat - 60);
+	harvest_start = addDays(harvest_start, selected_seed_dat + 65);
 	$('#harvest_date_start').val(formatDate(harvest_start, 'YYYY-MM-DD'));
 
 	var harvest_end = harvest_start;
@@ -440,6 +452,10 @@ $(document).ready(function() {
 	var calendar_id;
 
 	//Event listeners
+	$("#method").on("change", function(){
+		adjustDates(seed_list, 'seed');
+	});
+
 	$('#land_prep_date_start').on('change', function() {
 		adjustDates(seed_list, 'land_prep');
 	});
