@@ -173,7 +173,8 @@ router.post('/edit_work_order', workOrderController.editWorkOrder);
 //Report
 router.get('/farm_productivity_report', reportController.getFarmProductivityReport);
 router.get('/farm_productivity/detailed', reportController.getDetailedReport);
-router.get('/harvest_report/:crop_plan', reportController.getSummaryHarvestReport);
+router.get('/harvest_report/:crop_plan/summary', reportController.getSummaryHarvestReport);
+router.get('/harvest_report/:crop_plan/detailed', reportController.getDetailedHarvestReport);
 router.get('/test_report', reportController.getDetailedReport);
 
 /*** Page Navigation End ***/

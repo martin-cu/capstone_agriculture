@@ -1,18 +1,24 @@
 <div class="m-3">
-	<div class="d-flex px-5 w-75">
+	<div class="d-flex w-100">
 		<!-- <canvas id="canvas" style="width: 250px !important; height: 250px !important;">
 			
 		</canvas> -->
 		{{#each data.chart_data}}
-		<canvas id="{{this.title}}" class="mx-3" style="max-width: 450px !important; max-height: 300px !important;"></canvas>
+		<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded">
+			<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
+				Seed: {{this.title}}
+			</div>
+			<canvas id="{{this.title}}" class="px-3 py-3" style="max-width: 100% !important; max-height: 300px !important;"></canvas>	
+		</div>
+		
 		{{/each}}
 	</div>
 
-	<div class="row">
+	<div class="row my-3">
 		 <div>
 		 	Summary
 		 </div>
-		 <div>a</div>
+		 <div class="text-dark">{{data.overview}}</div>
 	</div>
 
 	<div class="row">
@@ -48,7 +54,7 @@
 											<i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
 										</button>
 										<div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-											<a class="dropdown-item notSidebar" href="/harvest_report/{{this.crop_plan}}?id={{this.calendar_ids}}">View Details</a>
+											<a class="dropdown-item notSidebar" href="/harvest_report/{{this.crop_plan}}/detailed?id={{this.calendar_id}}">View Details</a>
 										</div>
 									</div>
 								</span> 
@@ -124,11 +130,11 @@
 
 	var default_opt = {
 			legend: {
-			position: 'top',
+			position: 'bottom',
 			},
 			title: {
 			display: true,
-			text: 'Chart.js Outcome Graph'
+			text: 'Chart Title'
 			},
 			scale: {
 			ticks: {

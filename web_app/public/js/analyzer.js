@@ -34,14 +34,15 @@ function smoothRadarChartData(obj) {
 	return obj;
 }
 
-exports.processHarvestSummary = function(data, harvest, history) {
+exports.processHarvestSummary = function(data, harvest, history, fp) {
 	console.log(harvest);
 	const unique = [...new Map(data.map(item =>
 	  [item.seed_name, item])).values()];
 	var obj_keys = ['seed_rate', 'temp', 'humidity', 'pressure', 'rainfall', 'N', 'P', 'K', 'forecast', 'harvested'];
 	var chart_arr = [];
 	var dataset_obj;
-
+	var summary = '';
+	
 	for (var i = 0; i < unique.length; i++) {
 		var chart_data = { labels: ['Seed Rate', 'Avg Temp', 'Avg Humidity', 'Avg Pressure', 'Avg Rainfall',
 		'N', 'P', 'K', 'Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
@@ -69,17 +70,37 @@ exports.processHarvestSummary = function(data, harvest, history) {
 
 		chart_arr.push(chart_data);
 	}
-
-	for (var i = 0; i < harvest.length; i++) {
-
+	
+	if (harvest.filter(e => e.farm_name).length != 0) {
+		summary += `A total of ${harvest.filter(e => e.farm_name).length} farms conducted special/early harvest. `;
+		for (var i = 0; i < harvest.length; i++) {
+			if (i == 1) {
+				summary += ' On the other hand, ';
+			}
+			summary += `${harvest[i].farm_name} conducted early harvests ${harvest[i].frequency} and was able to harvest a total of ${harvest[i].harvest} cavans with the earliest during the ${harvest[i].stage_harvested} stage.`;
+		}
+	} 
+	else {
+		summary += 'All farms were able to complete their respective crop calendars without any special/early harvests.';
 	}
+	var highest_yield = fp.reduce((a,b)=>a.current_yield>b.current_yield?a:b);
+	var highest_productivity = fp.reduce((a,b)=>a.current_productivity>b.current_productivity?a:b);
+	var lowest_yield = fp.reduce((a,b)=>a.current_yield<b.current_yield?a:b);
+	var lowest_productivity = fp.reduce((a,b)=>a.current_productivity<b.current_productivity?a:b);
 
+	summary += ` ${highest_yield.farm_name} is the top performer in terms of cavans harvest with a harvest of ${highest_yield.current_yield} 
+	while the worst performer is ${lowest_yield.farm_name} with a harvest of only ${lowest_yield.current_yield}. In terms of farm productivity however,
+		${highest_productivity.farm_name} performed the best with costs incurred per cavan at Php 
+	${(Math.round(highest_productivity.net_spend / parseFloat(highest_productivity.current_yield*highest_productivity.farm_area)))} per cavan produced.`;
+	
+	summary = summary.replace(/(\r\n|\n|\r)/gm, "");
+	
 	for (var i = 0; i < data.length; i++) {
 		data[i]['historical_yield'] = 'N/A';
 		for (var x = 0; x < history.length; x++) {
 			//console.log(data[i].farm_id +' - '+history[x].farm_id);
 			if (data[i].farm_name == history[x].farm_name) {
-				data[i]['historical_yield'] = history[x].avg_yield;
+				data[i]['historical_yield'] = Math.round(history[x].avg_yield * 100)/100;
 			}
 		}
 		data[i]['change'] = { 
@@ -98,8 +119,8 @@ exports.processHarvestSummary = function(data, harvest, history) {
 		data[i].change.color = data[i].change.arrow == 'up' ? 
 		data[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 	}
-	console.log(data);
-	return { chart_data: chart_arr, json_chart_data: JSON.stringify(chart_arr), detailed_list: data };
+
+	return { chart_data: chart_arr, json_chart_data: JSON.stringify(chart_arr), detailed_list: data, overview: summary };
 }
 
 exports.processDetailedFarmProductivity = function(fp, resources) {
@@ -120,7 +141,7 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 	var input_obj = {
 		name: fp[0].seed_name, forecasted_yield: fp[0].forecast_yield+' cavans/ha', 
 		current_yield: fp[0].current_yield != null ? fp[0].current_yield+' cavans/ha' : 'N/A',
-		total: fp[0].current_yield != null ? fp[0].current_yield * fp[0].farm_area+' cavans': 'N/A'
+		total: fp[0].current_yield != null ? Math.round(fp[0].current_yield * fp[0].farm_area * 100)/100+' cavans': 'N/A'
 	}
 	fp_obj.yield.arr.push(input_obj);
 	fp_obj.yield.total = input_obj.total;
@@ -139,7 +160,10 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 				
 				cont_obj.total += parseFloat(temp_arr[x].total_cost);
 				cont_obj.rows.push(obj);
-				fp_obj.inputs.total += parseFloat(temp_arr[x].total_cost);
+				if (input_categories[y] == 'Input Resources' && input_types[i] != 'Employee Labor' 
+					|| input_categories[y] == 'Labor' && input_types[i] == 'Employee Labor') {
+					fp_obj.inputs.total += parseFloat(temp_arr[x].total_cost);
+				}
 			}
 			cont_obj.total = numberWithCommas((Math.round(cont_obj.total * 100)/100).toFixed(2));
 			if (input_categories[y] == 'Input Resources' && input_types[i] != 'Employee Labor' 
@@ -147,6 +171,7 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 				category_cont.rows.push(cont_obj);
 			}
 		}
+
 		fp_obj.inputs.arr.push(category_cont);
 		index++;
 	}

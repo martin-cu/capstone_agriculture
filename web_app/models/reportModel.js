@@ -30,13 +30,13 @@ exports.getHarvestReports = function(next) {
 }
 
 exports.getHarvestSummaryChart = function(data, next) {
-	var sql = "select ft.farm_name, st.seed_name, fy.* from crop_calendar_table cct join seed_table st on st.seed_id = cct.seed_planted join farm_table ft using(farm_id) join forecasted_yield fy using(calendar_id) where ?";
+	var sql = "select cct.crop_plan, ft.farm_name, st.seed_name, fy.* from crop_calendar_table cct join seed_table st on st.seed_id = cct.seed_planted join farm_table ft using(farm_id) join forecasted_yield fy using(calendar_id) where ?";
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 }
 
 exports.getEarlyHarvestDetails = function(data, next) {
-	var sql = "select t.* from ( select count(*) as frequency, sum(sacks_harvested) as harvest, stage_harvested, type, cct_id from harvest_details where ?";
+	var sql = "SELECT t.* FROM (SELECT farm_name, COUNT(*) AS frequency, SUM(sacks_harvested) AS harvest, stage_harvested, type, cct_id FROM harvest_details join crop_calendar_table on calendar_id = cct_id join farm_table using(farm_id) WHERE ? ";
 	for (var i = 0; i < data.calendar_ids.length; i++) {
 		sql = mysql.format(sql, { cct_id: data.calendar_ids[i] });
 		if (i != data.calendar_ids.length - 1) {

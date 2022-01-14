@@ -76,10 +76,22 @@ exports.getSummaryHarvestReport = function(req, res) {
 								if (err)
 									throw err;
 								else {
-									console.log(historical_yield);
-									html_data['data'] = analyzer.processHarvestSummary(chart_data, early_harvest, historical_yield);
-									
-									res.render('summary_harvest_report', html_data);
+									reportModel.getFarmProductivity(function(err, fp_overview) {
+										if (err)
+											throw err;
+										else {
+											var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id).concat(fp_overview.map(({ max_prev_calendar }) => max_prev_calendar));
+											reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
+												if (err)
+													throw err;
+												else {
+													html_data['data'] = analyzer.processHarvestSummary(chart_data, early_harvest, historical_yield, analyzer.calculateProductivity(fp_overview, input_resources));
+													
+													res.render('summary_harvest_report', html_data);
+												}
+											});
+										}
+									});
 								}
 							});
 						}
@@ -88,4 +100,11 @@ exports.getSummaryHarvestReport = function(req, res) {
 			});
 		}
 	});
+}
+
+exports.getDetailedHarvestReport = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+
+	res.render('detailed_harvest_report', html_data);
 }
