@@ -43,6 +43,11 @@ function createDOM(obj) {
 
 function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 	console.log(farm_name);
+	var farm_area
+	$.get('/get_farm_list', {}, function(farm_list) {
+		farm_area = farm_list.filter(e => e.farm_name, farm_name)[0].farm_area;
+	});
+	console.log('Farm area: '+farm_area);
 	var result_arr = [];
 	var temp_dat;
 
@@ -188,7 +193,6 @@ function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 					}
 
 					var obj;
-
 					for (var i = 0; i < stages_arr.length; i++) {
 						var now = new Date();
 
@@ -197,21 +201,22 @@ function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 
 						if (N == 'Surplus' && stage == 'Midtillering' 
 							|| stage == 'Panicle') {
-							N_amount += 10;
+							N_amount -= 10;
 						}
 						else if (N == 'Deficient' && stage == 'Midtillering' 
 							|| stage == 'Panicle') {
-							N_amount -= 10;
+							N_amount += 10;
 						}
 						if (dat == null) {
 							dat = sowing_date - 1;
 						}
 						var diff = (split_pattern[stages_arr[i]].dat_range[0] - dat);
+					console.log(N_amount+' = '+farm_area);
 
 						obj = {
 							desc: stage,
 							date: formatDate(new Date(now.setDate(now.getDate() + ( diff < 0 ? 1 : diff ) )), 'YYYY-MM-DD'),
-							amount: N_amount,
+							amount: N_amount*farm_area,
 							nutrient: 'N'
 						};
 					

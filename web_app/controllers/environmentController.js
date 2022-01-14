@@ -639,7 +639,7 @@ function recommendFertilizerPlan(obj, materials) {
 	var multiplier = 1.5;
 	var constraints = {
 		N: { min: obj.n_lvl },
-		P: { min: obj.p_lvl },
+		P: { min: obj.p_lvl, max: obj.p_lvl*1.1 },
 		K: { min: obj.k_lvl },
 	};
 	//console.log(obj);

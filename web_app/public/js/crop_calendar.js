@@ -366,9 +366,9 @@ function processSeedRate(seed_list, farm_list) {
 		var seed_rate = $('#seed_rate').val();
 		$('#seed_rate_cont').html(seed_rate+' kg/ha');
 		
-		seed_rate = (seed_rate / conversion) * farm_area;
+		seed_rate = ((seed_rate / conversion) * farm_area);
 		console.log(seed_rate);
-		seed_rate = Math.round((seed_rate/seed_details.amount) * 100) / 100;
+		seed_rate = Math.ceil((seed_rate/seed_details.amount));
 		console.log(seed_details);
 		$('#seed_qty').html(seed_rate+' bags');
 		
@@ -480,6 +480,8 @@ $(document).ready(function() {
 		e.preventDefault();
 
 		var form_data = $('#crop_calendar_form').serializeJSON();
+		console.log(form_data);
+
 		//form_data['fr_items'] = consolidateFRItems(wo_arr);
 		//console.log(form_data);
 
