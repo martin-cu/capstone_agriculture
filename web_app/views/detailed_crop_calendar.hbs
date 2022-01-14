@@ -556,25 +556,31 @@ label {
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
                         <th style="border-color: #EEEEEE; text-align:left">Seed Name</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Quantity</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Subtotal</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                {{!-- Replace later --}}
-                <tr>
-                    <td>Seed Name 1</td>
-                    <td style="text-align: right;">0 bags</td>
-                    <td style="text-align: right;">0 bags</td>
-                </tr>                
-                {{!-- End of Replace later --}}
+                    {{#if materials.seed}}
+                    {{#each materials.seed}}
+                    <tr>
+                        <td>{{this.item_name}}</td>
+                        <td class="text-right">{{this.current_amount}} bags</td>
+                        <td class="text-right">{{this.deficient_qty}}</td>
+                    </tr>
+                    {{/each}}
+                    {{else}}
+                    <tr>
+                        <td colspan="3" class="text-center">None</td>
+                    </tr>
+                    {{/if}}
                                                          
                 </tbody>
             </table>
-            <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
+            <!-- <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
             Total Seeds Required: 0 bags
-            </span> 
+            </span>  -->
         </div>
         <br>
         {{!-- END OF SEEDS --}}
@@ -586,39 +592,31 @@ label {
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
                         <th style="border-color: #EEEEEE; text-align:left">Fertilizer Name</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Quantity</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Subtotal</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                {{!-- Replace later --}}
-                <tr>
-                    <td>Fertilizer Name 1</td>
-                    <td style="text-align: right;">0 bags</td>
-                    <td style="text-align: right;">0 bags</td>
-                </tr>
-
-                <tr>
-                    <td>Fertilizer Name 2</td>
-                    <td style="text-align: right;">0 bags</td>
-                    <td style="text-align: right;">0 bags</td>
-                </tr>
-
-                <tr>
-                    <td>Fertilizer Name 3</td>
-                    <td style="text-align: right;">0 bags</td>
-                    <td style="text-align: right;">0 bags</td>
-                </tr>
-                
-                {{!-- End of Replace later --}}
-
+                    {{#if materials.fertilizer}}
+                    {{#each materials.fertilizer}}
+                    <tr>
+                        <td>{{this.item_name}}</td>
+                        <td class="text-right">{{this.current_amount}} bags</td>
+                        <td class="text-right">{{this.deficient_qty}} {{#compareTwoValues this.deficient_qty 'N/A' operator='!='}} bags{{/compareTwoValues}}</td>
+                    </tr>
+                    {{/each}}
+                    {{else}}
+                    <tr>
+                        <td colspan="3" class="text-center">None</td>
+                    </tr>
+                    {{/if}}
                                                          
                 </tbody>
             </table>
-            <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
+            <!-- <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
             Total Fertilizers Required: 0 bags
-            </span> 
+            </span>  -->
         </div>
         <br>
         {{!-- END OF FERTILIZERS --}}
@@ -630,51 +628,44 @@ label {
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
                         <th style="border-color: #EEEEEE; text-align:left">Pesticide Name</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Quantity</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Subtotal</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                {{!-- Replace later --}}
-                <tr>
-                    <td>Pesticide Name 1</td>
-                    <td style="text-align: right;">0 bags</td>
-                    <td style="text-align: right;">0 bags</td>
-                </tr>
-
-                <tr>
-                    <td>Pesticide Name 2</td>
-                    <td style="text-align: right;">0 bags</td>
-                    <td style="text-align: right;">0 bags</td>
-                </tr>
-
-                <tr>
-                    <td>Pesticide Name 3</td>
-                    <td style="text-align: right;">0 bags</td>
-                    <td style="text-align: right;">0 bags</td>
-                </tr>
-                
-                {{!-- End of Replace later --}}
+                    {{#if materials.pesticide}}
+                    {{#each materials.pesticide}}
+                        <tr>
+                            <td>{{this.item_name}}</td>
+                            <td class="text-right">{{this.current_amount}} bags</td>
+                            <td class="text-right">{{this.deficient_qty}}</td>
+                        </tr>
+                    {{/each}}
+                    {{else}}
+                    <tr>
+                        <td colspan="3" class="text-center">None</td>
+                    </tr>
+                    {{/if}}
 
                                                          
                 </tbody>
             </table>
-            <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
+            <!-- <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
             Total Pesticides Required: 0 bags
-            </span> 
+            </span>  -->
         </div>
         <br>
         {{!-- END OF PESTICIDES --}}
         <br> <br> 
     </div>
     
-    <div style="float:right; width: 500px; background-color: #D6CD41; color: #584C33; padding: 20px; border-radius: 10px; margin-top: 10px;">
+    <!-- <div style="float:right; width: 500px; background-color: #D6CD41; color: #584C33; padding: 20px; border-radius: 10px; margin-top: 10px;">
     <span style="font-size: 20px; font-weight: bold;">REQUIRED MATERIALS SUMMARY:</span> <br><br>
     <span style="font-size: 18px; font-weight: bold;">Seeds:</span> <span style="font-size: 18px; float:right">0 bags</span><br>
     <span style="font-size: 18px; font-weight: bold;">Fertilizers:</span> <span style="font-size: 18px; float:right">0 bags</span><br>
     <span style="font-size: 18px; font-weight: bold;">Pesticides:</span> <span style="font-size: 18px; float:right">0 bags</span>
-    </div>
+    </div> -->
   
 </div> 
 {{!-- END OF MATERIALS PDF --}}
