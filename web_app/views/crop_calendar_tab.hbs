@@ -13,8 +13,24 @@
         <h3 class="text-dark mb-0">Farms &gt; Crop Calendar</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
     </div>
     <div class="card shadow" style="max-width: 1350px; margin: 0px auto">
-        <div class="card-header py-3" style="background: #667529;height: auto;">
-            <p class="d-inline-flex m-0 font-weight-bold" style="color: rgb(255,255,255);">Active Crop Calendar</p><button onclick='window.location="/crop_calendar/add"' class="btn btn-primary d-inline-flex float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);font-size: 12px;"><span>Create Crop Calendar<i class="fa fa-plus-circle" style="margin-left: 5px;"></i></span></button>
+        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff; height: auto">
+              <div class="col" style="padding-top: 10px;">
+                        <h6>Active Crop Calendar</h6>
+            
+                </div>
+            {{!-- <p class="d-inline-flex m-0 font-weight-bold" style="color: rgb(255,255,255);">Active Crop Calendar</p> --}}
+            {{!-- <button onclick='window.location="/crop_calendar/add"' class="btn btn-primary d-inline-flex float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);font-size: 12px;"><span>Create Crop Calendar<i class="fa fa-plus-circle" style="margin-left: 5px;"></i></span></button> --}}
+            <div class="dropdown no-arrow" style="padding-top: 5px">
+                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                        </button>
+                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in" style="vertical-align: top;">
+                            <a class="dropdown-item notSidebar" onclick='window.location="/crop_calendar/add"' style="color: white;">&nbsp;Create Crop Calendar</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item notSidebar" href="#" type="button" value="print" id="print">&nbsp;View Required Materials Summary</a>
+                            {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Cancel Crop Calendar</a> --}}
+                        </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -162,8 +178,8 @@
     </div>
 
     <div class="card shadow" style="max-width: 1350px; margin: 20px auto">
-        <div class="card-header py-3" style="background: #667529;height: auto;">
-            <p class="d-inline-flex m-0 font-weight-bold" style="color: rgb(255,255,255);">Past Crop Calendars</p><button onclick='window.location="/crop_calendar/add"' class="btn btn-primary d-inline-flex float-right shadow" type="button" style="border-radius: 20px;padding: 5px 18px;background: #EDD172;border-style: none;color: rgb(51,44,31);font-size: 12px;"><span>Create Crop Calendar<i class="fa fa-plus-circle" style="margin-left: 5px;"></i></span></button>
+        <div class="card-header py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
+            <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Past Crop Calendars</p>
         </div>
         <div class="card-body">
                 {{!-- <div class="row table-topper align-items-center">

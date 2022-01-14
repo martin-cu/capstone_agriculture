@@ -776,7 +776,7 @@ exports.getDiseaseProbability = function(weather, season, fertilizer, stage, nex
 
 exports.getPestProbabilityPercentage = function(weather, season, farmtype, stage, next){
 	sql = "";
-	start = "SELECT 'Pest' as type, a.pest_id as pd_id, a.pest_name as pd_name, a.pest_desc as pd_desc, COUNT(a.pest_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.pest_id) /  8* 100,2) AS probability FROM (";
+	start = "SELECT 'Pest' as type, a.pest_id as pd_id, a.pest_name as pd_name, a.pest_desc as pd_desc, COUNT(a.pest_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.pest_id) /  10* 100,2) AS probability FROM (";
 	end = ") a ";
 	weather_temp = 'SELECT p.pest_id, p.pest_name, p.pest_desc, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
 	weather_humidity = 'SELECT p.pest_id, p.pest_name, p.pest_desc,"Weather humidity" AS factor, wt.humidity AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
@@ -902,7 +902,7 @@ exports.getPestProbabilityPercentage = function(weather, season, farmtype, stage
 
 exports.getDiseaseProbabilityPercentage = function(weather, season, farmtype, stage, next){
 	sql = "";
-	start = "SELECT 'Disease' as type, a.disease_id as pd_id, a.disease_name as pd_name, a.disease_desc as pd_desc, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) /  8* 100,2) AS probability FROM (";
+	start = "SELECT 'Disease' as type, a.disease_id as pd_id, a.disease_name as pd_name, a.disease_desc as pd_desc, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) /  10* 100,2) AS probability FROM (";
 	end = ") a ";
 	weather_temp = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
 	weather_humidity = 'SELECT p.disease_id, p.disease_name, p.disease_desc, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
@@ -1027,7 +1027,7 @@ exports.getDiseaseProbabilityPercentage = function(weather, season, farmtype, st
 
 exports.getPDProbabilityPercentage = function(weather, season, farmtype, stage, next){
 	sql = "";
-	start = "(SELECT a.disease_id as pd_id, a.disease_name as pd_name, 'Disease' as type, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) /  8* 100,2) AS probability FROM (";
+	start = "(SELECT a.disease_id as pd_id, a.disease_name as pd_name, 'Disease' as type, COUNT(a.disease_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.disease_id) /  10* 100,2) AS probability FROM (";
 	end = ") a ";
 	weather_temp = 'SELECT p.disease_id, p.disease_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
 	weather_humidity = 'SELECT p.disease_id, p.disease_name, "Weather humidity" AS factor, wt.humidity AS value FROM disease_table p INNER JOIN weather_disease wp ON p.disease_id = wp.disease_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
@@ -1150,7 +1150,7 @@ exports.getPDProbabilityPercentage = function(weather, season, farmtype, stage, 
 
 //==============================UNION=================================//
 
-	start = "(SELECT a.pest_id as pd_id, a.pest_name as pd_name, 'Pest' as type, COUNT(a.pest_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.pest_id) /  8* 100,2) AS probability FROM (";
+	start = "(SELECT a.pest_id as pd_id, a.pest_name as pd_name, 'Pest' as type, COUNT(a.pest_id) AS count, b.factor_count AS factor_count, ROUND(COUNT(a.pest_id) /  10* 100,2) AS probability FROM (";
 	end = ") a ";
 	weather_temp = 'SELECT p.pest_id, p.pest_name, "Weather temp" AS factor, (wt.min_temp + wt.max_temp) / 2 AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';
 	weather_humidity = 'SELECT p.pest_id, p.pest_name, "Weather humidity" AS factor, wt.humidity AS value FROM pest_table p INNER JOIN weather_pest wp ON p.pest_id = wp.pest_id INNER JOIN weather_table wt ON wt.weather_id = wp.weather_id WHERE ';

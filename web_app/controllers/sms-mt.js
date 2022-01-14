@@ -42,6 +42,7 @@ exports.getSubscriptions = function(req, res) {
 	var html_data = {};
   html_data["title"] = "SMS Management > Subscriptions";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_subscriptions');
+  html_data["notifs"] = req.notifs;
 	res.render('sms_subscriptions', html_data);
 }
 
@@ -49,6 +50,7 @@ exports.getAddSubscription = function(req, res) {
 	var html_data = {};
   html_data["title"] = "SMS Management > Subscriptions";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_add_subscription');
+  html_data["notifs"] = req.notifs;
 	res.render('add_subscription', html_data);
 }
 
@@ -56,6 +58,7 @@ exports.getMessages = function(req, res) {
 	var html_data = {};
   html_data["title"] = "SMS Management > Messages";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_messages');
+  html_data["notifs"] = req.notifs;
 	res.render('sms_messages', html_data);
 }
 
