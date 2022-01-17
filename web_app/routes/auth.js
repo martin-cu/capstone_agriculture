@@ -6,6 +6,7 @@ const employeeController = require('../controllers/employeeController');
 const cropCalendarController = require('../controllers/cropCalendarController');
 const environmentController = require('../controllers/environmentController');
 const reportController = require('../controllers/reportController');
+const openWeatherController = require('../controllers/openWeatherController');
 const notifController = require('../controllers/notificationController.js');
 const globe = require('../controllers/sms-mt');
 
@@ -214,6 +215,10 @@ router.get('/get_employees', employeeController.ajaxEmployees);
 router.post('/assign_farmers', farmController.assignFarmers);
 /*** Agro API End ***/
 
+/*** OpenWeather API Start ***/
+router.get('/forecast_weather14d', openWeatherController.get14DWeatherForecast);
+router.get('/get_national_alert', openWeatherController.getNationalAlerts);
+/*** Agro API End ***/
 
 
 

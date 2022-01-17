@@ -4,13 +4,12 @@
 			
 		</canvas> -->
 		{{#each data.chart_data}}
-		<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded">
+		<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
 			<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
 				Seed: {{this.title}}
 			</div>
-			<canvas id="{{this.title}}" class="px-3 py-3" style="max-width: 100% !important; max-height: 300px !important;"></canvas>	
+			<canvas id="{{this.title}}" class="px-3 py-3" style="max-width: 100% !important; max-height: 400px !important;"></canvas>	
 		</div>
-		
 		{{/each}}
 	</div>
 

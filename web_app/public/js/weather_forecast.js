@@ -63,6 +63,9 @@ function processIcons(desc) {
 	else if (desc == 'scattered clouds') {
 		icon = 'fas fa-cloud-meatball';
 	}
+	else if (desc == 'moderate rain') {
+		icon = 'fas fa-cloud-rain';
+	}
 	else {
 		console.log('Unknown desc please add in js file!');
 		//console.log(desc);
@@ -101,19 +104,23 @@ function createForecastCards(data) {
 	h6.appendChild(i);
 
 	div = document.createElement('div');
-	div.setAttribute('class', 'd-flex');
+	div.setAttribute('class', 'd-flex w-100 justify-content-center');
 
 	small1 = document.createElement('small');
 	small1.setAttribute('class', 'form-text font-weight-bold');
 	small1.setAttribute('style', 'color: #332C1F;');
 	small1.innerHTML = data.max_temp+'° ';
-
+	var small3 = document.createElement('small');
+	small3.setAttribute('class', 'form-text');
+	small3.setAttribute('style', 'color: #332C1F;');
+	small3.innerHTML = '/';
 	small2 = document.createElement('small');
 	small2.setAttribute('class', 'form-text text-muted');
 	small2.setAttribute('style', 'color: #332C1F;');
 	small2.innerHTML = data.min_temp+'°';
 
 	div.appendChild(small1);
+	div.appendChild(small3);
 	div.appendChild(small2);
 
 	div_cont.appendChild(h2);
@@ -197,8 +204,66 @@ function switchWeek(week) {
 }
 
 function appendRecommendation(obj) {
-	$('#weather_outlook').html(obj.risk_lvl);
-	$('#weather_summary').html(obj.msg);
+	var cont, div, lbl, dates; 
+
+	cont = document.createElement('div');
+	cont.setAttribute('class', 'd-flex');
+	
+	div = document.createElement('div');
+	div.setAttribute('class', 'd-flex flex-column');
+	
+	lbl = document.createElement('label');
+	lbl.innerHTML = 'Suggested Date:';
+
+	dates = document.createElement('div');
+	dates.setAttribute('class', 'text-center font-weight-normal');
+	dates.innerHTML = obj.suggested_date;
+
+	div.appendChild(lbl);
+	div.appendChild(dates);
+
+	cont.appendChild(div);
+
+	for (var i = 0; i < obj.consecutive_rain.length; i++) {
+		if (i == 0) {
+			div = document.createElement('div');
+			div.setAttribute('class', 'd-flex flex-column ml-3');
+			
+			lbl = document.createElement('label');
+			lbl.innerHTML = 'Expected Continuous Rainfall During:';
+
+			div.appendChild(lbl);
+		}
+		dates = document.createElement('div');
+		dates.setAttribute('class', 'text-center font-weight-normal');
+		dates.innerHTML = formatDate(new Date(obj.consecutive_rain[i].start), 'YYYY-MM-DD') + ' - ' + formatDate(new Date(obj.consecutive_rain[i].end), 'YYYY-MM-DD');
+
+		div.appendChild(dates);
+	}
+	cont.appendChild(div);
+
+	for (var i = 0; i < obj.heavy_rain.length; i++) {
+		if (i == 0) {
+			div = document.createElement('div');
+			div.setAttribute('class', 'd-flex flex-column ml-3');
+			
+			lbl = document.createElement('label');
+			lbl.innerHTML = 'Expected Heavy Rain During:';
+
+			div.appendChild(lbl);
+		}
+		dates = document.createElement('div');
+		dates.setAttribute('class', 'text-center font-weight-normal');
+		dates.innerHTML = formatDate(new Date(obj.heavy_rain[i].date), 'YYYY-MM-DD');
+
+		div.appendChild(dates);
+	}
+	cont.appendChild(div);
+
+	$('#weather_outlook').html(cont);
+
+	
+	// $('#weather_summary').html(obj.msg);
 }
 
 function generateRecommendation(arr) {
@@ -214,12 +279,77 @@ function generateRecommendation(arr) {
 	var chain = false, good_chain = false;
 	var push = false, good_push = false;
 
+	var m_stats = {
+		ideal_days: [],
+		heavy_rain: [],
+		consecutive_rain: [],
+		suggested_date: null
+	};
+	var prev_index;
+	var temp_arr;
 	for (var i = 0; i < arr.keys.length; i++) {
-		for (var x = 0; x < arr.data.length; x++) {
-			
+		for (var x = 0; x < arr.data[arr.keys[i]].length; x++) {
+			//console.log(arr.data[arr.keys[i]]);			
+
+			if (arr.data[arr.keys[i]][x].desc == 'light rain' || arr.data[arr.keys[i]][x].desc == 'moderate rain') {
+				if (counter == 0) {
+					temp_arr = []
+					temp_arr.push(arr.data[arr.keys[i]][x]);
+
+					chain = true;
+					counter = 1;
+					start_date = arr.data[arr.keys[i]][x].date;
+				}
+				else {
+					temp_arr.push(arr.data[arr.keys[i]][x]);
+					counter++;
+					end_date = arr.data[arr.keys[i]][x].date;
+				}
+			}
+			else if (arr.data[arr.keys[i]][x].desc == 'heavy intensity rain') {
+				m_stats.heavy_rain.push(arr.data[arr.keys[i]][x]);
+
+				if (counter >= 3) {
+					m_stats.consecutive_rain.push({ arr: temp_arr, start: formatDate(new Date(start_date), 'YYYY-MM-DD'), end: formatDate(new Date(end_date), 'YYYY-MM-DD') });
+				}
+
+				temp_arr = [];
+				chain = false;
+				counter = 0;
+			}
+			else {
+				if (counter >= 3) {
+					m_stats.consecutive_rain.push({ arr: temp_arr, start: formatDate(new Date(start_date), 'YYYY-MM-DD'), end: formatDate(new Date(end_date), 'YYYY-MM-DD') });
+				}
+
+				temp_arr = [];
+				chain = false;
+				counter = 0;
+
+				m_stats.ideal_days.push(arr.data[arr.keys[i]][x]);
+			}
 		}
-		//console.log(arr.data[arr.keys[i]]);
 	}
+
+	var date;
+	if (m_stats.heavy_rain.length != 0) {
+		date = new Date(m_stats.heavy_rain[m_stats.heavy_rain.length - 1].date);
+		date.setDate(date.getDate() + 1);
+		m_stats.suggested_date = date;
+	}
+	else {
+		if (m_stats.ideal_days.length != 0) {
+			date = new Date(m_stats.ideal_days[m_stats.ideal_days.length - 1].date);
+			m_stats.suggested_date = date;
+		}
+		else {
+			date = new Date(m_stats.consecutive_rain[0].date);
+			m_stats.suggested_date = date;
+		}
+	}
+	m_stats.suggested_date = formatDate(m_stats.suggested_date, 'YYYY-MM-DD');
+
+	appendRecommendation(m_stats);
 	// for (var i = 0; i < arr.length; i++) {
 	// 	var count = arr[i].data.filter(data => data.desc == 'light rain').length;
 	// 	//console.log(arr[i].date+' - '+count);
@@ -649,7 +779,7 @@ $(document).ready(function() {
 	// }, 600000);
 
 
-	if (view == 'add_crop_calendar' || view == 'home') {
+	if (view == 'home' || view == 'add_crop_calendar') {
 		jQuery.ajaxSetup({async: false });
 		var hour = new Date();
 		hour = hour.getHours();
@@ -666,28 +796,29 @@ $(document).ready(function() {
 				appendDailyDetails(processDailyDetails(forecast_records.data[day]));
 				styleSelectedCard(0);
 				switchWeek(0);
+
 				generateRecommendation(forecast_records);
 			}
 		});
 		if (forecast_records != null) {
-			var options = { data: processChartData(forecast_records.data[day]) }
-			options = setChartOptions(options);
+			// var options = { data: processChartData(forecast_records.data[day]) }
+			// options = setChartOptions(options);
 
-			var ctx = document.getElementById('weather_chart').getContext('2d');
+			// var ctx = document.getElementById('weather_chart').getContext('2d');
 
-			var weather_chart = new Chart(ctx, options);
+			// var weather_chart = new Chart(ctx, options);
 
 			// Change viewed active daily detail
 			$('#weather_table').on('click', '.forecast_card', function() {
 				styleSelectedCard($('.forecast_card').index(this));
 				appendDailyDetails(processDailyDetails(forecast_records.data[$(this).attr('value')]));
 
-				var options = { data: processChartData(forecast_records.data[$(this).attr('value')]) }
-				options = setChartOptions(options);
-				var ctx = document.getElementById('weather_chart').getContext('2d');
+				// var options = { data: processChartData(forecast_records.data[$(this).attr('value')]) }
+				// options = setChartOptions(options);
+				// var ctx = document.getElementById('weather_chart').getContext('2d');
 
-				weather_chart.destroy();
-				weather_chart = new Chart(ctx, options);
+				// weather_chart.destroy();
+				// weather_chart = new Chart(ctx, options);
 			});
 
 			// Change week
@@ -700,12 +831,12 @@ $(document).ready(function() {
 				styleSelectedCard(card);
 				appendDailyDetails(processDailyDetails(forecast_records.data[day]));
 
-				var options = { data: processChartData(forecast_records.data[day]) }
-				options = setChartOptions(options);
-				var ctx = document.getElementById('weather_chart').getContext('2d');
+				// var options = { data: processChartData(forecast_records.data[day]) }
+				// options = setChartOptions(options);
+				// var ctx = document.getElementById('weather_chart').getContext('2d');
 
-				weather_chart.destroy();
-				weather_chart = new Chart(ctx, options);
+				// weather_chart.destroy();
+				// weather_chart = new Chart(ctx, options);
 			});
 		}
 	}

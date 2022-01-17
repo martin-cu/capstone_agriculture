@@ -35,7 +35,6 @@ function smoothRadarChartData(obj) {
 }
 
 exports.processHarvestSummary = function(data, harvest, history, fp) {
-	console.log(harvest);
 	const unique = [...new Map(data.map(item =>
 	  [item.seed_name, item])).values()];
 	var obj_keys = ['seed_rate', 'temp', 'humidity', 'pressure', 'rainfall', 'N', 'P', 'K', 'forecast', 'harvested'];
@@ -83,11 +82,13 @@ exports.processHarvestSummary = function(data, harvest, history, fp) {
 	else {
 		summary += 'All farms were able to complete their respective crop calendars without any special/early harvests.';
 	}
-	var highest_yield = fp.reduce((a,b)=>a.current_yield>b.current_yield?a:b);
-	var highest_productivity = fp.reduce((a,b)=>a.current_productivity>b.current_productivity?a:b);
-	var lowest_yield = fp.reduce((a,b)=>a.current_yield<b.current_yield?a:b);
-	var lowest_productivity = fp.reduce((a,b)=>a.current_productivity<b.current_productivity?a:b);
-
+	
+	var highest_yield = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_yield>b.current_yield?a:b);
+	var highest_productivity = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_productivity>b.current_productivity?a:b);
+	var lowest_yield = fp.filter(e => e.status == 'Completed' && e.current_yield != 'N/A').reduce((a,b)=>a.current_yield<b.current_yield?a:b);
+	var lowest_productivity = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_productivity<b.current_productivity?a:b);
+	// console.log(lowest_yield.calendar_id);
+	// console.log(highest_productivity.calendar_id);
 	summary += ` ${highest_yield.farm_name} is the top performer in terms of cavans harvest with a harvest of ${highest_yield.current_yield} 
 	while the worst performer is ${lowest_yield.farm_name} with a harvest of only ${lowest_yield.current_yield}. In terms of farm productivity however,
 		${highest_productivity.farm_name} performed the best with costs incurred per cavan at Php 

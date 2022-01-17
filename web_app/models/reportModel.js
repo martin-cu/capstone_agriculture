@@ -32,6 +32,7 @@ exports.getHarvestReports = function(next) {
 exports.getHarvestSummaryChart = function(data, next) {
 	var sql = "select cct.crop_plan, ft.farm_name, st.seed_name, fy.* from crop_calendar_table cct join seed_table st on st.seed_id = cct.seed_planted join farm_table ft using(farm_id) join forecasted_yield fy using(calendar_id) where ?";
 	sql = mysql.format(sql, data);
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 

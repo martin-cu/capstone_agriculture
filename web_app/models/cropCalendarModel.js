@@ -85,12 +85,12 @@ exports.getRequiredMaterials = function(query, next) {
 	var sql2 = " group by farm_id, wort.type, wort.item_id union select farm_id, fm.item_type, null, fm.item_id, fm.current_amount from crop_calendar_table cct join farm_materials fm using(farm_id) where ";
 	var sql3 = " and isActive = 1 ) as t1 group by farm_id, t1.type, t1.item_id ) as t2 where t2.qty is not null"
 	for (var i = 0; i < query.calendar_id.length; i++) {
-		sql1 += ' cct.calendar_id = '+query.calendar_id[i];
-		sql2 += ' cct.calendar_id = '+query.calendar_id[i];
-		if (i!= 0 && i != query.calendar_id.length - 1) {
+		if (i > 0 && i <= query.calendar_id.length - 1) {
 			sql1 += ' or ';
 			sql2 += ' or ';
 		}
+		sql1 += ' cct.calendar_id = '+query.calendar_id[i];
+		sql2 += ' cct.calendar_id = '+query.calendar_id[i];
 	}
 	sql1 = sql1 + sql2 + sql3;
 	mysql.query(sql1, next);
