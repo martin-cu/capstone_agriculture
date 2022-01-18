@@ -2819,7 +2819,6 @@ exports.getPDFrequency = function(req, res){
 			else{
 				// console.log(temp_total);
 				for(x = 0; x < temp_total.length; x++){
-					console.log("ok");
 					var freq_stage = "N/A", stage_count = 0;
 					for(i = 0; i < frequency.length; i++){
 						if(temp_total[x].pd_id == frequency[i].pd_id && temp_total[x].type == frequency[i].type){
@@ -2846,7 +2845,7 @@ exports.getPDFrequency = function(req, res){
 				
 				new_total[0]["selected"] = true;
 
-				console.log(new_total);
+				// console.log(new_total);
 
 			}
 			html_data["total"] = new_total;
@@ -2858,6 +2857,72 @@ exports.getPDFrequency = function(req, res){
 	});
 };
 
+
+exports.ajaxDiagnosisPDFrequency = function(req, res){
+	var type = req.query.type;
+	pestdiseaseModel.getTotalDiagnosesPerPD(function(err, total){
+		if(err)
+			throw err;
+		else{
+			var i,x, temp_total = [];
+			var pest = [];
+			var disease = [];
+			
+			temp_total = total;
+			
+		}
+		pestdiseaseModel.getDiagnosisFrequentStage(function(err, frequency){
+			if(err)
+				throw err;
+			else{
+				// console.log(temp_total);
+				for(x = 0; x < temp_total.length; x++){
+					var freq_stage = "N/A", stage_count = 0;
+					for(i = 0; i < frequency.length; i++){
+						if(temp_total[x].pd_id == frequency[i].pd_id && temp_total[x].type == frequency[i].type){
+							if(frequency[i].count > stage_count){
+								stage_count = frequency[i].count;
+								freq_stage = frequency[i].stage_diagnosed;
+							}
+						}
+					}
+					temp_total[x]["frequent_stage"] = freq_stage;
+				}
+
+
+				for(x = 0; x < temp_total.length; x++){
+					if(temp_total[x].type == "Pest")
+						pest.push(temp_total[x]);
+					if(temp_total[x].type == "Disease")
+						disease.push(temp_total[x]);
+				}
+				var new_total = [];
+				var new_pest = [];
+				var new_disease = [];
+				for(i = 0; i < 5; i++){
+					new_total.push(temp_total[i]);
+					new_pest.push(pest[i]);
+					new_disease.push(disease[i]);
+				}
+				
+				new_total[0]["selected"] = true;
+
+				// console.log(new_total);
+
+			}
+			if(type == "pest"){
+				res.send(new_pest);
+			}
+			else if(type == "disease"){
+				res.send(new_disease);
+			}
+			else{
+				res.send(new_total);
+			}
+		});
+	});
+}
+
 exports.ajaxDiagnosisListPerPD = function(req,res){
 	var pd_id = req.query.pd_id;
 	var type = req.query.type;
@@ -2868,8 +2933,6 @@ exports.ajaxDiagnosisListPerPD = function(req,res){
 	if(type == "")
 		type = null;
 	
-	console.log(pd_id);
-	console.log(type);
 	pestdiseaseModel.getDiagnosisList(pd_id, type, function(err, diagnosis_list){
 		if(err)
 			err;
