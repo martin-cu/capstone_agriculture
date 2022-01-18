@@ -142,6 +142,7 @@ router.get('/pest_and_disease/discover', notifController.getNotification ,enviro
 router.post('/pest_and_disease/discover', environmentController.addNewPD);
 router.get('/pest_and_disease/diagnose', notifController.getNotification , environmentController.getDiagnoses);
 router.post('/pest_and_disease/diagnose', environmentController.addDiagnosis);
+router.get('/pest_and_disease/frequency', notifController.getNotification , environmentController.getPDFrequency);
 router.get('/pest_and_disease/diagnose_add_diagnosis', environmentController.getAddDiagnosis);
 router.get('/pest_and_disease/diagnose_add_pest',notifController.getNotification , environmentController.getAddPest);
 router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAddDisease);
@@ -153,6 +154,7 @@ router.get('/pest_and_disease/diagnose_detailed_pest', environmentController.get
 router.get('/pest_and_disease/diagnose_detailed_disease', environmentController.getDetailedDisease);
 	//ajax
 router.get('/ajaxGetPestandDisease', environmentController.ajaxGetPD);
+router.get('/ajaxGetDiagnosisList', environmentController.ajaxDiagnosisListPerPD);
 
 
 //Nutrient Management

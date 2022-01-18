@@ -1396,3 +1396,30 @@ exports.getDiagnosisFrequentStage = function(next){
 	mysql.query(sql, next); return(sql);
 };
 
+
+
+
+//For frequency
+exports.getTotalDiagnosesPerPD = function(next){
+	var sql = 'SELECT * FROM (SELECT a.*, SUM(a.count) as total FROM (SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed is null GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Land Preparation" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Sowing" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Vegetation" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Reproductive" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Ripening" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Harvesting" GROUP BY pest_id) a GROUP BY pd_name ';
+	sql = sql + ' UNION ';
+	sql = sql + 'SELECT b.*, SUM(b.count) as total FROM (SELECT a.disease_id as pd_id, a.type , a.disease_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = "disease") a WHERE stage_diagnosed is null GROUP BY disease_id UNION SELECT a.disease_id as pd_id, a.type , a.disease_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = "disease") a WHERE stage_diagnosed = "Land Preparation" GROUP BY disease_id UNION SELECT a.disease_id as pd_id, a.type , a.disease_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = "disease") a WHERE stage_diagnosed = "Sowing" GROUP BY disease_id UNION SELECT a.disease_id as pd_id, a.type , a.disease_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = "disease") a WHERE stage_diagnosed = "Vegetation" GROUP BY disease_id UNION SELECT a.disease_id as pd_id, a.type , a.disease_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = "disease") a WHERE stage_diagnosed = "Reproductive" GROUP BY disease_id UNION SELECT a.disease_id as pd_id, a.type , a.disease_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = "disease") a WHERE stage_diagnosed = "Ripening" GROUP BY disease_id UNION SELECT a.disease_id as pd_id, a.type , a.disease_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = "disease") a WHERE stage_diagnosed = "Harvesting" GROUP BY disease_id) b GROUP BY pd_name) a ORDER BY total DESC';
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+exports.getDiagnosisList = function(pd_id, type, next){
+	var sql = 'SELECT * FROM (SELECT d.*, pt.pest_name as pd_name, pt.pest_desc as pd_desc, ft.farm_name, cct.crop_plan FROM diagnosis d INNER JOIN farm_table ft ON d.farm_id = ft.farm_id INNER JOIN crop_calendar_table cct ON cct.calendar_id = d.calendar_id INNER JOIN pest_table pt ON d.pd_id = pt.pest_id && d.type = "Pest" UNION SELECT d.*, pt.disease_name as pd_name, pt.disease_desc as pd_desc, ft.farm_name, cct.crop_plan FROM diagnosis d INNER JOIN farm_table ft ON d.farm_id = ft.farm_id INNER JOIN crop_calendar_table cct ON cct.calendar_id = d.calendar_id INNER JOIN disease_table pt ON d.pd_id = pt.disease_id && d.type = "Disease") a WHERE a.pd_id = ? && a.type = ? ORDER BY date_diagnosed DESC';
+
+
+	if(pd_id != null || pd_id != "")
+		sql = mysql.format(sql, pd_id);
+
+	if(type != null || type != "")
+		sql = mysql.format(sql, type);
+	
+	console.log(sql);
+	mysql.query(sql, next); return(sql);
+};
+
+

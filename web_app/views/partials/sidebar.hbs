@@ -42,13 +42,14 @@
 
             <li class="nav-item" style="">
                 <div class="nav-item dropdown " style="margin-bottom: 0px;padding: 16px;">
-                    <a aria-expanded="false" data-toggle="collapse" data-target="#pestAndDisease" href="#" class="dropdown-lbl text-decoration-none {{# if pest_and_disease_discover}}active{{/if}} {{# if pest_and_disease_diagnoses}}active{{/if}}"id="thirdDp"><i class="dropdown-lbl fas fa-bug" 
+                    <a aria-expanded="false" data-toggle="collapse" data-target="#pestAndDisease" href="#" class="dropdown-lbl text-decoration-none {{# if pest_and_disease_discover}}active{{/if}}{{# if pest_and_disease_frequency}}active{{/if}} {{# if pest_and_disease_diagnoses}}active{{/if}}"id="thirdDp"><i class="dropdown-lbl fas fa-bug" 
                         style="margin-right: 10px;"></i>Pest and Disease &nbsp;&nbsp;
                         <i class="fas fa-caret-down"></i>
                     </a>
                     <div class="collapse" style="" id="pestAndDisease">
                         <a class="dropdown-item {{# if pest_and_disease_discover}}active{{/if}}" href="/pest_and_disease/discover" style="">Discover</a>
                         <a class="dropdown-item {{# if pest_and_disease_diagnoses}}active{{/if}}" href="/pest_and_disease/diagnose" style="">Diagnose</a>
+                        <a class="dropdown-item {{# if pest_and_disease_frequency}}active{{/if}}" href="/pest_and_disease/frequency" style="">Frequency</a>
                     </div>
                 </div>
             </li>
