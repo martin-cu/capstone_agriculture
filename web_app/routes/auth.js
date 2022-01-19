@@ -8,6 +8,7 @@ const environmentController = require('../controllers/environmentController');
 const reportController = require('../controllers/reportController');
 const openWeatherController = require('../controllers/openWeatherController');
 const notifController = require('../controllers/notificationController.js');
+const disasterController = require('../controllers/disasterController.js');
 const globe = require('../controllers/sms-mt');
 
 router.get('/login', (req, res) => {
@@ -86,6 +87,9 @@ router.get('/farms', notifController.getNotification ,workOrderController.getWor
 router.get('/farms/add', farmController.getAddFarm);
 
 router.get('/materials', materialController.getMaterials);
+
+//Disaster Tab
+router.get('/disaster_management', disasterController.getDisasterManagement);
 
 //Farms Tab
 router.get("/farm_resources",notifController.getNotification , environmentController.getFarmResources);
@@ -218,6 +222,7 @@ router.post('/assign_farmers', farmController.assignFarmers);
 /*** OpenWeather API Start ***/
 router.get('/forecast_weather14d', openWeatherController.get14DWeatherForecast);
 router.get('/get_national_alert', openWeatherController.getNationalAlerts);
+router.get('/get_climate_forecast', openWeatherController.climateForecast);
 /*** Agro API End ***/
 
 

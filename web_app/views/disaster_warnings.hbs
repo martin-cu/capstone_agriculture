@@ -1,0 +1,81 @@
+
+<div class="container-fluid">
+	<div class="d-sm-flex justify-content-between align-items-center mb-4">
+		<h3 class="text-dark mb-0">Disaster Management</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
+	</div>
+
+	<div class="col-lg-7 col-xl-12">
+			<div class="card shadow mb-4">
+				<div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
+					<h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Farm Productivity Overview</h6>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-12">
+							<div style="width: auto;">
+
+								<table class="table table-striped table-bordered tablesorter dataTable no-footer" id="ipi-table" style="table-layout: fixed; width: 100%;" aria-describedby="ipi-table_info">
+									<thead class="thead-dark">
+
+									</thead>
+									<tbody aria-live="polite" aria-relevant="all">
+										{{#each rainfall}}
+										<tr>
+												
+											<td colspan="4">
+												<div class="d-flex flex-column">
+													<div>Category: {{this.details.type}}</div>
+													<div>Classification: {{this.details.classification}}</div>
+													<div>ETA: {{this.details.target_date}} <small class="text-muted">({{this.details.days}} days from now)</small></div>
+
+													<div>Pressure: {{this.details.pressure}}</div>
+													<div>Humidity: {{this.details.humidity}}</div>
+													<div>Expected Rainfall: {{this.details.rainfall}}</div>
+													<div>Wind Speed: {{this.details.mph}} mph</div>
+													<div>Direction: {{this.details.wind_direction}}°</div>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<th>Impacted Farm</th>
+											<th>Crop Details</th>
+											<th>Risk Level</th>
+											<th>Potential Damages</th>
+										</tr>
+											{{#each this.farms}}
+											<tr>
+												<td>{{this.farm_name}}</td>
+												<td>
+													<div class="d-flex flex-column">
+														<label>{{this.seed_name}}</label>
+														<small class="text-muted">{{this.stage}} (Expected stage on target date)</small>
+													</div>
+												</td>
+												<td class="{{{this.severity.color}}}">
+													{{this.severity.val}}
+												</td>
+												<td class="{{{this.severity.damage_color}}}">
+													{{this.severity.damage}}
+												</td>
+											</tr>
+											<tr>
+												<td colspan="4">
+													<div class="d-flex flex-column">
+														<label>Recommendation</label>
+														<div>{{this.recommendation}}</div>
+													</div>
+												</td>
+											</tr>											
+											{{/each}}
+										{{/each}}
+									</tbody>
+								</table></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="ipi-table_info" role="status" aria-live="polite">Showing 1 to 5 of 5 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="ipi-table_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="ipi-table_previous"><a href="#" aria-controls="ipi-table" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="ipi-table" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item next disabled" id="ipi-table_next"><a href="#" aria-controls="ipi-table" data-dt-idx="2" tabindex="0" class="page-link">Next</a></li></ul></div></div></div></div>
+							</div>
+								  
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+</div>

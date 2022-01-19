@@ -18,8 +18,23 @@ exports.getAllNotifs = function(next){
 };
 
 exports.createNotif = function(notif, next){
-    var sql = "INSERT INTO notification_table SET ?";
-    sql = mysql.format(sql, notif);
-    console.log(sql);
+    if (Array.isArray(notif)) {
+        console.log(notif.length);
+        var sql = "insert into notification_table (date, notification_title, notification_desc, farm_id, url, icon, color, status) values ";
+        for (var i = 0; i < notif.length; i++) {
+            if (i != 0) {
+                sql += ', ';
+            }
+            sql += ' ('+(Object.values(notif[i])).join(',')+')';
+        }
+        // while (sql.includes('null')) {
+        //     sql = sql.replace('null', null);
+        // }
+    }
+    else {
+        var sql = "INSERT INTO notification_table SET ?";
+        sql = mysql.format(sql, notif);
+    }
+    //console.log(sql);
     mysql.query(sql, next);
 };

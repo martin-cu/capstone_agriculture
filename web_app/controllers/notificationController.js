@@ -24,7 +24,7 @@ exports.getNotificationTab = function(req,res){
 }
 
 
-exports.createNotif = function(req,res){
+exports.createNotif = function(req,res) {
     var notif = {
         date : new Date(),
         farm_id : farm_id,

@@ -49,7 +49,7 @@ function processIcons(desc) {
 		icon = 'fas fa-cloud-rain';
 	}
 	else if (desc == 'overcast clouds') {
-		icon = '';
+		icon = 'fas fa-cloud';
 	}
 	else if (desc == 'heavy intensity rain') {
 		icon = 'fas fa-cloud-showers-heavy';
@@ -262,7 +262,7 @@ function appendRecommendation(obj) {
 
 	$('#weather_outlook').html(cont);
 
-	
+
 	// $('#weather_summary').html(obj.msg);
 }
 
@@ -651,15 +651,19 @@ $(document).ready(function() {
 		//console.log(formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD'));
 		if (forecast_result == 0) {
 			refresh_on = hour + 1;
-			$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
-				let query = normalizeForDB(result, hour);
+			$.get('/forecast_weather14d', {}, function(result) {
+				console.log(result);
+				loaded = false;
+			});
+			// $.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+			// 	let query = normalizeForDB(result, hour);
 
-				$.post('/upload_weather_forecast', query, function(upload_result) {
-					console.log('DB upload success');
+			// 	$.post('/upload_weather_forecast', query, function(upload_result) {
+			// 		console.log('DB upload success');
 
-					loaded = false;
-				});
-			});	
+			// 		loaded = false;
+			// 	});
+			// });	
 		}
 		else if (hour == refresh_on && hour != forecast_result[0].time_uploaded || 
 			formatDate(new Date(forecast_result[0].date), 'YYYY-MM-DD') != formatDate(new Date(), 'YYYY-MM-DD')) {
@@ -668,15 +672,19 @@ $(document).ready(function() {
 
 				//console.log('Generating weather forecast...');
 				refresh_on = hour + 1;
-				$.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
-					let query = normalizeForDB(result, hour);
+				$.get('/forecast_weather14d', {}, function(result) {
+					console.log(result);
+					loaded = false;
+				});
+				// $.get('/agroapi/weather/forecast', { start: d2, end: d1 }, function(result) {
+				// 	let query = normalizeForDB(result, hour);
 
-					$.post('/upload_weather_forecast', query, function(upload_result) {
-						console.log('DB upload success');
+				// 	$.post('/upload_weather_forecast', query, function(upload_result) {
+				// 		console.log('DB upload success');
 
-						loaded = false;
-					});
-				});	
+				// 		loaded = false;
+				// 	});
+				// });	
 			})
 		}
 		else {
