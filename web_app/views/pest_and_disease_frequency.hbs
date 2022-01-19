@@ -47,10 +47,11 @@
                         <div class="card-body">
                                 
                                 {{!-- TAB CONTENT --}}
-                                <select class="form-select form-select-sm" style="width : 30%;">
-                                    <option>all</option>
-                                    <option>all</option>
-                                    <option>all</option>
+                                <select class="form-select form-select-sm" id="farm_selected" style="width : 30%;">
+                                    <option value="all">all</option>
+                                    {{#each farms}}
+                                        <option value="{{this.farm_id}}">{{this.farm_name}}</option>
+                                    {{/each}}   
                                 </select>
                                 <div class="tab-content" id="nav-tabContent">
 

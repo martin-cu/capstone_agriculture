@@ -56,7 +56,7 @@ exports.init_session = function(obj, role, name, username, tab) {
 	else if (tab === 'pest_and_disease_diagnoses') 
 		obj['pest_and_disease_diagnoses'] = true;
 	else if (tab === 'pest_and_disease_frequency') 
-		obj['pest_and_disease_diagnoses'] = true;
+		obj['pest_and_disease_frequency'] = true;
 	else if (tab === 'pest_and_disease_add_diagnosis') 
 		obj['pest_and_disease_diagnoses'] = true;
 	else if (tab === 'pest_and_disease_add_pest') 

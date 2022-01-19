@@ -2695,7 +2695,7 @@ exports.getProbabilities = function(req,res){
 };
 
 exports.ajaxGetDiagnosisStageFrequency = function(req,res){
-	pestdiseaseModel.getDiagnosisFrequentStage(function(err, frequency){
+	pestdiseaseModel.getDiagnosisFrequentStage(null, function(err, frequency){
 		if(err)
 			throw err;
 		else{
@@ -2802,7 +2802,7 @@ exports.getPDFrequency = function(req, res){
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_frequency');
 	html_data["title"] = "Diagnose";
 
-	pestdiseaseModel.getTotalDiagnosesPerPD(function(err, total){
+	pestdiseaseModel.getTotalDiagnosesPerPD(null, function(err, total){
 		if(err)
 			throw err;
 		else{
@@ -2813,7 +2813,7 @@ exports.getPDFrequency = function(req, res){
 			temp_total = total;
 			
 		}
-		pestdiseaseModel.getDiagnosisFrequentStage(function(err, frequency){
+		pestdiseaseModel.getDiagnosisFrequentStage(null, function(err, frequency){
 			if(err)
 				throw err;
 			else{
@@ -2848,11 +2848,19 @@ exports.getPDFrequency = function(req, res){
 				// console.log(new_total);
 
 			}
-			html_data["total"] = new_total;
-			// html_data["pest"] = pest;
-			// html_data["disease"] = disease;
-			html_data["notifs"] = req.notifs;
-			res.render("pest_and_disease_frequency", html_data);
+
+			farmModel.getAllFarms(function(err, farms){
+				if(err)
+					throw err;
+				else{
+					html_data["farms"] = farms;
+				}
+				html_data["total"] = new_total;
+				// html_data["pest"] = pest;
+				// html_data["disease"] = disease;
+				html_data["notifs"] = req.notifs;
+				res.render("pest_and_disease_frequency", html_data);
+			});
 		});
 	});
 };
@@ -2860,7 +2868,11 @@ exports.getPDFrequency = function(req, res){
 
 exports.ajaxDiagnosisPDFrequency = function(req, res){
 	var type = req.query.type;
-	pestdiseaseModel.getTotalDiagnosesPerPD(function(err, total){
+	var farm_id = req.query.farm_id;
+	if(farm_id == "all"){
+		farm_id = null;
+	}
+	pestdiseaseModel.getTotalDiagnosesPerPD(farm_id, function(err, total){
 		if(err)
 			throw err;
 		else{
@@ -2871,7 +2883,7 @@ exports.ajaxDiagnosisPDFrequency = function(req, res){
 			temp_total = total;
 			
 		}
-		pestdiseaseModel.getDiagnosisFrequentStage(function(err, frequency){
+		pestdiseaseModel.getDiagnosisFrequentStage(farm_id, function(err, frequency){
 			if(err)
 				throw err;
 			else{
@@ -2926,6 +2938,10 @@ exports.ajaxDiagnosisPDFrequency = function(req, res){
 exports.ajaxDiagnosisListPerPD = function(req,res){
 	var pd_id = req.query.pd_id;
 	var type = req.query.type;
+	var farm_id = req.query.farm_id;
+
+	if(farm_id == "all")
+		farm_id = null;
 
 	if(pd_id == "")
 		pd_id = null;
@@ -2933,7 +2949,7 @@ exports.ajaxDiagnosisListPerPD = function(req,res){
 	if(type == "")
 		type = null;
 	
-	pestdiseaseModel.getDiagnosisList(pd_id, type, function(err, diagnosis_list){
+	pestdiseaseModel.getDiagnosisList(pd_id, type, farm_id, function(err, diagnosis_list){
 		if(err)
 			err;
 		else{
