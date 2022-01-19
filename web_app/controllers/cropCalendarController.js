@@ -200,7 +200,7 @@ exports.getDetailedCropCalendar = function(req, res) {
 					if(wos[i].date_completed != null)
 						wos[i].date_completed = dataformatter.formatDate(new Date(wos[i].date_completed), 'YYYY-MM-DD');
 					else
-						wos[i].date_completed = "Not yet completed"
+						wos[i].date_completed = "N/A" //Not yet completed (changed to reduce conflict with case insensitive search, e.g., "Completed")
 					
 					if(wos[i].type != "Land Preparation" && wos[i].type != "Sow Seed" && wos[i].type != "Fertilizer Application" && wos[i].type != "Harvest")
 						pd_wos.push(wos[i]);
@@ -218,7 +218,7 @@ exports.getDetailedCropCalendar = function(req, res) {
 						if(fertilizers[i].date_completed != null)
 							fertilizers[i].date_completed = dataformatter.formatDate(new Date(fertilizers[i].date_completed), 'YYYY-MM-DD');
 						else
-							fertilizers[i].date_completed = "Not yet completed"
+							fertilizers[i].date_completed = "N/A" //Not yet completed (changed to reduce conflict with case insensitive search, e.g., "Completed")
 						fertilizers[i].target_application_date = dataformatter.formatDate(new Date(fertilizers[i].target_application_date), 'YYYY-MM-DD');
 					}
 				}

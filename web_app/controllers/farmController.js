@@ -391,7 +391,7 @@ exports.getFarmDetails = function(req, res) {
 	
 																			dataformatter.formatDate(dataformatter.unixtoDate(workorders[i].date_completed), 'mm DD, YYYY');
 																			if(workorders[i].date_completed == null)
-																				workorders[i].date_completed = "Not yet completed";
+																				workorders[i].date_completed = "N/A"; //Not yet completed (changed to reduce conflict with case insensitive search, e.g., "Completed")
 																			else
 																				workorders[i].date_completed = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_completed)), 'YYYY-MM-DD');
 																			workorders[i].date_start = dataformatter.formatDate(dataformatter.formatDate(new Date(workorders[i].date_start)), 'YYYY-MM-DD');

@@ -10,6 +10,15 @@
     h4.card-title {
         font-weight: bold;
     }
+
+   div > span, div.col-10.col-sm-10.col-md-10 {
+        color: #332c1f !important;
+    }
+
+    div.col-1.col-sm-1.col-md-1 {
+        color: #332c1f !important;
+        font-weight: bold !important;
+    }
 </style>
 
 <div class="container-fluid" >
@@ -72,7 +81,7 @@
                         <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="font-size: 16px;color: rgb(255,255,255);font-weight: bold;">Create New Purchase Request</a></h5>
                     </div>
                     <div class="collapse item-1" role="tabpanel" data-parent="#accordion-1">
-                        <div class="card-body" id="step1_new_purchase">
+                        <div class="card-body" id="step1_new_purchase" style="color: #332c1f;">
                             <form id="new_purchase" action="/addPurchase" method="post"></form>
                                 <fieldset>
                                     <div class="form-row">
@@ -150,7 +159,7 @@
                         <div class="card-body" id="step2_new_purchase" style="display : none">
                             <div class="row">
                                 <div class="col">
-                                    <h4>Review</h4>
+                                    <h4 style="color: #332c1f;">Review</h4>
                                 </div>
                             </div>
                             <div class="row">
@@ -170,8 +179,8 @@
                                     <div class="mb-3"><label class="form-label" ><strong>Item</strong></label>
                                     </div>
                                 </div>
-                                <div class="col-4 col-sm-4 col-md-4">
-                                    <div class="mb-3"><label class="form-label"><strong>Amount</strong></label></div>
+                                <div class="col-4 col-sm-4 col-md-4" style="color: #332c1f !important;">
+                                    <div class="mb-3" style="color: #332c1f !important;"><label class="form-label" style="color: #332c1f !important;"><strong>Amount</strong></label></div>
                                 </div>
                             </div>
                             

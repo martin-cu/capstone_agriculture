@@ -1,11 +1,32 @@
+<style>
+    table th, table td {
+        color: #332c1f;
+    }
+</style>
 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
                         <h3 class="text-dark mb-0">Farms &gt; Order Details</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
                     </div>
-                    <div class="card shadow mb-4">
-                        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
-                            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Order</h6>
+
+                    <div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto;">
+                        {{!-- START CARD HEADER --}}
+                        <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
+
+                        <div class="col" style="max-width: 70px; padding-top: 2px">
+
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='history.back()'>
+                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                        </button>        
+
                         </div>
+
+                        <div class="col" style="margin-right: 650px; padding-top: 15px">
+                            <h6 style="color: #FFFFFF;">Detailed Purchase Order {{details.purchase_id}}</h6>
+                        </div>
+                           
+                        </div>
+                        {{!-- END CARD HEADER --}}
+
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-sm">
@@ -68,7 +89,7 @@
                                         </tr>
                                         <tr>
                                             <td style="font-weight: normal;border-style: none;">Note</td>
-                                            <td style="border-style: none;">{{details.item_desc}}</td>
+                                            <td style="border-style: none;">{{#if details.item_desc}} {{details.item_desc}} {{else}} N/A {{/if}}</td>
                                             <td style="border-style: none;"></td>
                                             <td style="border-style: none;"></td>
                                         </tr>
@@ -85,7 +106,13 @@
                                             <td style="width: 100px;border-style: none;"></td>
                                         </tr>
                                         <tr>
-                                            <td class="text-left" style="font-weight: normal;border-style: none;" colspan="4"><input style="border-radius : 5px; " type="text" required="" readonly="" placeholder="Item" value="{{details.item_name}}" readonly><input type="text" required="" readonly="" placeholder="Item Type" style="margin-left: 10px; border-radius : 5px;" value="{{details.item_type}}" readonly><input type="number" style="width: 100px;margin-left: 5px; border-radius : 5px;" value="{{details.amount}}" readonly><span style="margin-left: 5px;" >units</span></td>
+                                            <td class="text-left" style="font-weight: normal;border-style: none;" colspan="4">
+                                            <div class="d-flex">
+                                                <input class="form-control" style="border-radius : 5px; width: 190px" type="text" required="" readonly="" placeholder="Item" value="{{details.item_name}}" readonly>
+                                                <input class="form-control" type="text" required="" readonly="" placeholder="Item Type" style="margin-left: 10px; border-radius : 5px; width: 190px" value="{{details.item_type}}" readonly>
+                                                <input class="form-control" type="number" style="width: 100px;margin-left: 5px; border-radius : 5px; width: 100px" value="{{details.amount}}" readonly><span style="margin-left: 5px; margin-top: 7px">units</span>
+                                                </div>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -174,7 +201,7 @@
 <div class="modal fade" id="updatePurchaseModal" role="dialog">
     <div class="modal-dialog modal-lg">
       <!-- Modal content-->
-      <div class="modal-content">
+      <div class="modal-content" style="color: #332c1f !important;">
             <div class="modal-header" ><h4 class="modal-title">Update Purchase</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           

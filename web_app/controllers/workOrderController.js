@@ -347,8 +347,8 @@ exports.getWorkOrdersDashboard = function(req, res) {
 	var html_data = {};
 	
 	var query = {
-        order: [ 'work_order_table.status asc', 'work_order_table.date_completed desc', 'work_order_table.date_due ASC'],
-		 limit: ['10']
+        order: [ 'work_order_table.date_completed desc', 'work_order_table.date_due ASC'],
+		// limit: ['10']
     }
 	workOrderModel.getWorkOrders(query, function(err, list) {
 		if (err)
@@ -364,7 +364,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 					upcoming.push(list[i]);
 				}
 
-				else if (list[i].status == 'Completed') {
+				if (list[i].status == 'Completed') {
 					list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
 					list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
 					list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');

@@ -442,3 +442,17 @@ a.page-link:hover {
 }
 
 /* END OF NOTIFICATIONS */
+
+th input.form-control.form-control-sm {
+    width: 105% !important;
+    height: 25px;
+    color: #332C1F;
+}
+
+input, select, textarea{
+    color: #332C1F !important;
+}
+
+textarea:focus, input:focus {
+    color: #332C1F;
+}

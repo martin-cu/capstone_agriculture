@@ -1,6 +1,7 @@
 <style>
     .card-body.card.cards-shadown.aos-init.mini-card.symptom-card.details >h4.card-title {
         color: #657429 !important;
+        font-weight: bold !important;
     }
 </style>
 
@@ -46,7 +47,7 @@
 
                 <div class="row">
                 <div class="col" style="padding-top: 5px;">
-                    <div class="card" style="border-style: none !important;">
+                    <div class="card" style="border-style: none;">
                         <div class="card-header mini py-3" style="background-color: white !important; border-style: none;">
                             <h5 class="fw-bold m-0" style="color: #584c33;">{{details.type}} Information<br></h5>
                         </div>
@@ -54,10 +55,10 @@
                         <div class="card-body" style="color: #332C1F;">
                             <span id="id" hidden>{{details.pd_id}}</span>
                             <span id="type" hidden>{{details.type}}</span>
-                            <h4 class="text-dark card-title" style="color: #332C1F !important;"><span style="font-weight: bold;">{{details.name}}</span><span class="{{details.status}}"style="float : right;">{{details.status}}</span></h4>
+                            <h4 class="text-dark card-title" style="color: #332C1F !important; font-weight: bold;">{{details.name}}<span class="{{details.status}}"style="float : right;">{{details.status}}</span></h4>
                             <div class="row"><div class="col-xxl-5" style="margin : 10px; padding: 0px;">{{details.description}}</div></div>
-                            <div class="row"><div class="col-xxl-2" style="margin : 10px; padding: 0px;">Farm: <i class="" style="font-weight : 800">{{details.farm_name}}</i></div>
-                            <div class="col-xxl-4" style="margin : 10px; padding: 0px;">Crop Calendar: <i class="" style="font-weight : 800">{{details.crop_plan}}</i></div><div class="col-xxl-3" style="margin : 10px; padding: 0px;">Stage Diagnosed: <i class="" style="font-weight : 800">{{details.stage_diagnosed}}</i></div></div>
+                            <div class="row"><div class="col-xxl-3" style="margin : 10px; padding: 0px;">Farm: <i class="" style="font-weight : 800">{{details.farm_name}}</i></div>
+                            <div class="col-xxl-3" style="margin : 10px; padding: 0px;">Crop Calendar: <i class="" style="font-weight : 800">{{details.crop_plan}}</i></div><div class="col-xxl-3" style="margin : 10px; padding: 0px;">Stage Diagnosed: <i class="" style="font-weight : 800">{{details.stage_diagnosed}}</i></div></div>
                             <div class="row"><div class="col-xxl-3" style="margin : 10px; padding: 0px;">Date Diagnosed: <i class="" style="font-weight : 800">{{details.date_diagnosed}}</i></div>
                             <div class="col-xxl-3" style="margin : 10px; padding: 0px;">Date Resolved: <i class="" style="font-weight : 800">{{details.date_solved}}</i></div></div>
                             {{#if details.solved}}<div class="row"><div class="col-xxl-12" style="margin : 10px; padding: 0px;"><a class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px; margin-right:20px; " data-toggle="modal" data-target="#resolveModal">Resolve</a></div></div>{{/if}}
@@ -74,8 +75,8 @@
                 </div>
                 </div>
 
-                <div class="row">
-                <div class="col" style="padding-top: 5px;">
+                <div class="row" style="padding-right: 20px;">
+                <div class="col" style="padding-top: 5px; margin-left: 10px;">
                     {{!-- <label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong></strong></label> --}}
                     <div class="card shadow mb-4">
                         <div class="card-header" style="height: auto;background: rgba(255,165,0,0); background-color: #212529 !important">
