@@ -2796,3 +2796,156 @@ exports.getPreventions = function(req, res){
 		}
 	});
 }
+
+exports.getPDFrequency = function(req, res){
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_frequency');
+	html_data["title"] = "Diagnose";
+
+	pestdiseaseModel.getTotalDiagnosesPerPD(function(err, total){
+		if(err)
+			throw err;
+		else{
+			var i,x, temp_total = [];
+			var pest = [];
+			var disease = [];
+			
+			temp_total = total;
+			
+		}
+		pestdiseaseModel.getDiagnosisFrequentStage(function(err, frequency){
+			if(err)
+				throw err;
+			else{
+				// console.log(temp_total);
+				for(x = 0; x < temp_total.length; x++){
+					var freq_stage = "N/A", stage_count = 0;
+					for(i = 0; i < frequency.length; i++){
+						if(temp_total[x].pd_id == frequency[i].pd_id && temp_total[x].type == frequency[i].type){
+							if(frequency[i].count > stage_count){
+								stage_count = frequency[i].count;
+								freq_stage = frequency[i].stage_diagnosed;
+							}
+						}
+					}
+					temp_total[x]["frequent_stage"] = freq_stage;
+				}
+
+
+				for(x = 0; x < temp_total.length; x++){
+					if(temp_total[x].type == "Pest")
+						pest[x] = temp_total[x];
+					if(temp_total[x].type == "Disease")
+						disease[x] = temp_total[x];
+				}
+				var new_total = [];
+				for(i = 0; i < 5; i++){
+					new_total.push(temp_total[i]);
+				}
+				
+				new_total[0]["selected"] = true;
+
+				// console.log(new_total);
+
+			}
+			html_data["total"] = new_total;
+			// html_data["pest"] = pest;
+			// html_data["disease"] = disease;
+			html_data["notifs"] = req.notifs;
+			res.render("pest_and_disease_frequency", html_data);
+		});
+	});
+};
+
+
+exports.ajaxDiagnosisPDFrequency = function(req, res){
+	var type = req.query.type;
+	pestdiseaseModel.getTotalDiagnosesPerPD(function(err, total){
+		if(err)
+			throw err;
+		else{
+			var i,x, temp_total = [];
+			var pest = [];
+			var disease = [];
+			
+			temp_total = total;
+			
+		}
+		pestdiseaseModel.getDiagnosisFrequentStage(function(err, frequency){
+			if(err)
+				throw err;
+			else{
+				// console.log(temp_total);
+				for(x = 0; x < temp_total.length; x++){
+					var freq_stage = "N/A", stage_count = 0;
+					for(i = 0; i < frequency.length; i++){
+						if(temp_total[x].pd_id == frequency[i].pd_id && temp_total[x].type == frequency[i].type){
+							if(frequency[i].count > stage_count){
+								stage_count = frequency[i].count;
+								freq_stage = frequency[i].stage_diagnosed;
+							}
+						}
+					}
+					temp_total[x]["frequent_stage"] = freq_stage;
+				}
+
+
+				for(x = 0; x < temp_total.length; x++){
+					if(temp_total[x].type == "Pest")
+						pest.push(temp_total[x]);
+					if(temp_total[x].type == "Disease")
+						disease.push(temp_total[x]);
+				}
+				var new_total = [];
+				var new_pest = [];
+				var new_disease = [];
+				for(i = 0; i < 5; i++){
+					new_total.push(temp_total[i]);
+					new_pest.push(pest[i]);
+					new_disease.push(disease[i]);
+				}
+				
+				new_total[0]["selected"] = true;
+
+				// console.log(new_total);
+
+			}
+			if(type == "pest"){
+				res.send(new_pest);
+			}
+			else if(type == "disease"){
+				res.send(new_disease);
+			}
+			else{
+				res.send(new_total);
+			}
+		});
+	});
+}
+
+exports.ajaxDiagnosisListPerPD = function(req,res){
+	var pd_id = req.query.pd_id;
+	var type = req.query.type;
+
+	if(pd_id == "")
+		pd_id = null;
+	
+	if(type == "")
+		type = null;
+	
+	pestdiseaseModel.getDiagnosisList(pd_id, type, function(err, diagnosis_list){
+		if(err)
+			err;
+		else{
+			var i;
+			for(i = 0; i < diagnosis_list.length; i++){
+				diagnosis_list[i].date_diagnosed = dataformatter.formatDate(new Date(diagnosis_list[i].date_diagnosed), 'YYYY-MM-DD');
+				if(diagnosis_list[i].date_solved != null)
+					diagnosis_list[i].date_solved = dataformatter.formatDate(new Date(diagnosis_list[i].date_solved), 'YYYY-MM-DD');
+				else
+				diagnosis_list[i].date_solved = "N/A";
+			}
+			res.send(diagnosis_list);
+		}
+	});
+}
