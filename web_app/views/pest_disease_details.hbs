@@ -1,13 +1,101 @@
+<style>
+    .card-body.card.cards-shadown.aos-init.mini-card.symptom-card.details >h4.card-title {
+        color: #657429 !important;
+    }
+</style>
+
 <div class="container-fluid">
     <h3 class="text-dark mb-4" style="font-weight: bold;color: #332c1f;">Pests and Diseases</h3>
     <div class="row" style="padding: 0px 12px;">
-        <div class="col-xxl-12"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Possible Diagnosis</strong></label>
-            <div class="card" style="padding: 1.5rem;">
-                <span id="id" hidden>{{pd.pd_id}}</span>
-                <span id="type" hidden>{{type}}</span>
-                <h4 class="text-dark card-title">{{pd.pd_name}}</h4>
-                <h6 class="text-muted card-subtitle mb-2"><i>{{pd.scientific_name}}</i></h6>
-                <p>{{pd.pd_desc}}</p>
+        <div class="col-xxl-12">
+            {{!-- <label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Possible Diagnosis</strong></label> --}}
+               <div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto;">
+                {{!-- START CARD HEADER --}}
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
+                    
+                    <div class="col" style="max-width: 70px; padding-top: 2px">
+
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/pest_and_disease/discover"'>
+                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                        </button>        
+
+                    </div>
+
+                    <div class="col" style="margin-right: 650px; padding-top: 15px">
+                        <h6>Detailed Discover Information</h6>
+            
+                    </div>
+
+                    {{!-- <div class="dropdown no-arrow" style="padding-top: 5px">
+                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                        </button>
+                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                            <a class="dropdown-item notSidebar" href="#" type="button" value="print" id="print">&nbsp;View Required Materials</a>
+                            <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item notSidebar" href="#">&nbsp;Cancel Crop Calendar</a>
+                        </div>
+                    </div> --}}
+                </div>
+                {{!-- END CARD HEADER --}}
+
+                <div class="card-body" style="color: #332c1f;">
+                    <div class="row">
+                    <div class="col" style="padding-top: 5px;">
+                        <div class="card" style="border-style: none !important;">
+                            <div class="card-header mini py-3" style="background-color: white !important; border-style: none;">
+                                <h5 class="fw-bold m-0" style="color: #584c33;">{{type}} Information<br></h5>
+                            </div>
+
+                            <div class="card-body">
+                                <span id="id" hidden>{{pd.pd_id}}</span>
+                                <span id="type" hidden>{{type}}</span>
+                                <h4 class="text-dark card-title" style="font-weight: bold; color:#332c1f !important">{{pd.pd_name}}</h4>
+                                <h6 class="text-muted card-subtitle mb-2"><i style="color: #657429;">{{pd.scientific_name}}</i></h6>
+                                <p>{{pd.pd_desc}}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                <div class="col" style="padding-top: 5px;">
+                    <label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;">
+                        <strong>Possible Diagnosis</strong>
+                    </label>
+                    <div class="card shadow mb-4">
+                        <div class="card-header" style="height: auto;background: rgba(255,165,0,0); background-color:#212529 !important">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item"><a id="symptoms_tab" class="nav-link details_tab active" href="#" style="background: #F0F0F0;">Symptoms</a></li>
+                                <li class="nav-item"><a id="factors_tab" class="nav-link details_tab" href="#">Factors</a></li>
+                                <li class="nav-item"><a id="solutions_tab" class="nav-link details_tab" href="#">Solutions</a></li>
+                                <li class="nav-item"><a id="preventions_tab" class="nav-link details_tab" href="#">Preventions</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="scrollmenu" id="detail_table" style="padding-bottom: 20px;">
+                                        {{#each symptoms}}
+                                            <div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" >
+                                                    <h4 class="card-title" style="color: #657429 !important;">{{this.detail_name}}</h4>
+                                                    <p>{{this.detail_desc}}</p>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            </div>
             </div>
         </div>
         {{!-- <div class="col">
@@ -35,35 +123,7 @@
             </div>
         </div> --}}
     </div>
-    <div class="row" style="padding: 0px 12px;">
-        <div class="col-xxl-12"><label class="form-label d-xxl-flex justify-content-xxl-start" for="username" style="color: #332c1f;"><strong>Possible Diagnosis</strong></label>
-            <div class="card">
-                <div class="card-header" style="height: auto;background: rgba(255,165,0,0);">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item"><a id="symptoms_tab" class="nav-link details_tab active" href="#" style="background: #F0F0F0;">Symptoms</a></li>
-                        <li class="nav-item"><a id="factors_tab" class="nav-link details_tab" href="#">Factors</a></li>
-                        <li class="nav-item"><a id="solutions_tab" class="nav-link details_tab" href="#">Solutions</a></li>
-                        <li class="nav-item"><a id="preventions_tab" class="nav-link details_tab" href="#">Preventions</a></li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="scrollmenu" id="detail_table">
-                                {{#each symptoms}}
-                                    <div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" >
-                                            <h4 class="card-title">{{this.detail_name}}</h4>
-                                            <p>{{this.detail_desc}}</p>
-                                    </div>
-                                {{/each}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  
     {{!-- <div class="row space-rows">
         <div class="col offset-xxl-0">
             <div class="card cards-shadown cards-hover aos-init" data-aos="flip-left" data-aos-duration="950" style="height: 500px;">
