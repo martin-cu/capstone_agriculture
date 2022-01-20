@@ -47,12 +47,16 @@
                         <div class="card-body">
                                 
                                 {{!-- TAB CONTENT --}}
+                                <div class="d-flex" style="margin-bottom: 50px;">
+                                <label style="padding-right: 10px; margin-top: 5px">Filter Farm:</label>
                                 <select class="form-select form-select-sm" id="farm_selected" style="width : 30%;">
-                                    <option value="all">all</option>
+                                    <option value="all">All</option>
                                     {{#each farms}}
                                         <option value="{{this.farm_id}}">{{this.farm_name}}</option>
                                     {{/each}}   
                                 </select>
+                                </div>
+                              
                                 <div class="tab-content" id="nav-tabContent">
 
                                     {{!-- TAB 1 --}}
@@ -176,8 +180,9 @@
         </div>
         <div class="row">
             <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
-                <div class="card-body">
-                    <a><span class="h3" id="pd_name">Pest/Disease Name</span> <span class="h6" id="pd_type" style="margin-left: 10px;">Type</span></a><br>
+                <div class="card-body" style="color: #332c1f;">
+                    <a><span class="h3" id="pd_name" style="font-weight: bold;">Pest/Disease Name</span> 
+                    <span class="h6" id="pd_type" style="margin-left: 10px; color:#657429; font-weight: bold">Type</span></a><br>
                     <span style="margin-left: 30px;" id="pd_desc">THis is the description THis is the description THis is the description THis is the description THis is the description</span>
                     <div class="tab-content" id="nav-tabContent">
 
