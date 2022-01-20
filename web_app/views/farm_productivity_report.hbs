@@ -1,6 +1,42 @@
 <style>
-	table td {
+	table td, label {
 		color: #332c1f;
+	}
+
+	#farmTable {
+    /*margin-left: 0px;*/
+    border-radius: 10px;
+	}
+
+	/*
+	#farmTable th, #farmTable td, #farmTable tr {
+		background-color: #EEEEEE !important;
+		border-style: none !important;
+		font-size: 20px !important;
+		padding: 20px;
+	}
+	*/
+
+	#totalSummary td {
+		background-color: #EEEEEE !important;
+	}
+
+	@media print {
+	body * {
+		visibility: hidden;
+	}
+
+	#section-to-print1, #section-to-print1 *, 	#section-to-print2, #section-to-print2 * {
+		visibility: visible !important;
+		color: #332C1F;
+	}
+	
+	#section-to-print1, #section-to-print2  {
+		position: absolute;
+		width: 100%;
+		left: 0;
+		top: 0;
+	}
 	}
 	
 </style>
@@ -14,10 +50,27 @@
    
 </div>
  <div class="col-lg-7 col-xl-12">
-			<div class="card shadow mb-4">
+			    <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto">
+				
+
 				<div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
-					<h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Farm Productivity Overview</h6>
+					
+					<div class="col" style="padding-top: 5px;">
+                    	<h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Farm Productivity Overview</h6>
+                	</div>
+				
+					<div class="dropdown no-arrow" style="padding-top: 5px">
+                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                        </button>
+                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in" style="vertical-align: top;">
+
+                            <a class="dropdown-item notSidebar" href="#" type="button" value="print1" id="print1">&nbsp;View Summary Report</a>
+
+                        </div>
+           			</div>
 				</div>
+
 				<div class="card-body">
 							   
 								{{!-- <div class="row table-topper align-items-center">
@@ -31,14 +84,14 @@
 
 								<div class="row">
 									<div class="col-12">
-										<div style="width: auto;" style="max-width: 500px;">
-											<table class="table table-striped table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
+										<div style="width: auto;">
+											<table class="table table-striped table-bordered tablesorter" id="ipi-table">
 												<thead class="thead-dark">
 													<tr style="background: #332C1F;">
 														<th style="">Farm</th>
 														<th style="">Crop Plan</th>
-														<th style="" style="">Current Yield</th>
-														<th style="">Productivity (Current / Previous)</th>
+														<th style="text-align: right;">Current Yield</th>
+														<th style="text-align: right">Productivity (Current / Previous)</th>
 													</tr>
 												</thead>
 												<tbody aria-live="polite" aria-relevant="all">
@@ -51,19 +104,43 @@
 																<small>({{this.status}})</small>
 															</div>
 														</td>
-														<td class="">{{this.current_yield}}</td>
-														<td>
-															<div class="d-flex">
+														<td class="" style="text-align: right;">{{this.current_yield}}</td>
+														<td style="text-align: right;">
+														
+															<big class="w-50 text-right">{{this.current_productivity}}</big>
+
+															<big class="mx-3">/</big>
+
+															<small class="mt-2" style="margin-right: 10px">{{this.prev_productivity}}</small>
+
+															<span class="{{this.change.color}}">
+																({{this.change.val}}%)
+															</span>
+
+															<span style="margin-left: 30px;">
+																<div class="dropdown no-arrow" style="display:inline-block; float: right">
+																	<button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+																		<i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+																	</button>
+																	<div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+																		<a class="dropdown-item notSidebar" href="/farm_productivity/detailed?calendar_id={{this.calendar_id}}">View Details</a>
+																	</div>
+																</div>
+															</span> 
+
+															{{!-- Note: Changed to allow text-align: right of td --}}
+
+															{{!-- <div class="d-flex">
 																<div class="d-flex w-75">
-																	<big class="text-right" >{{{this.current_productivity}}}</big>
-																	<big class="mx-2">/</big>
-																	<small class="mt-1">{{this.prev_productivity}}</small>
+																	<big class="w-50 text-right">{{this.current_productivity}}</big>
+																	<big class="mx-3">/</big>
+																	<small class="mt-2" style="margin-right: 10px">{{this.prev_productivity}}</small>
 																	<div class="d-flex">
 																		<!-- <div class="">
 																			<i class=" fas fa-arrow-alt-circle-{{this.change.arrow}} fa-2x"></i>
 																		</div> -->
-																		<div class="mt-1 mx-3 {{this.change.color}}">
-																			{{{this.change.val}}}%
+																		<div class="mt-1 {{this.change.color}}">
+																			({{this.change.val}}%)
 																		</div>
 																		<div>{{this.outlook}}</div>
 																	</div>
@@ -79,7 +156,7 @@
 																		</div>
 																	</div>
 																</span> 
-															</div>
+															</div> --}}
 															
 														</td>
 													</tr>
@@ -191,12 +268,28 @@
 			</div>
 		</div> 
 		<div class="col-lg-7 col-xl-12">
-			<div class="card shadow mb-4">
+			<div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto">
 				<div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
-					<h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Detailed Reports</h6>
+					<div class="col" style="padding-top: 5px;">
+                    	<h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Harvest Reports</h6>
+                	</div>
+				
+					<div class="dropdown no-arrow" style="padding-top: 5px">
+                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                        </button>
+                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in" style="vertical-align: top;">
+                            {{!-- <a class="dropdown-item notSidebar" onclick='window.location="/crop_calendar/add"' style="color: white;">&nbsp;Create Crop Calendar</a>
+                            <div class="dropdown-divider"></div> --}}
+                            <a class="dropdown-item notSidebar" href="#" type="button" value="print2" id="print2">&nbsp;View Summary Report</a>
+
+                        </div>
+           			</div>
 				</div>
 				<div class="card-body">
-							<form class="d-flex" style="margin-left: 0px; margin-bottom: 20px;">
+
+							{{!-- Activate later if filtering per farm will be used --}}
+							{{!-- <form class="d-flex" style="margin-left: 0px; margin-bottom: 20px;">
 								<div class="form-row">
 									<div class="col" style="padding-top: 5px;"><label>Farm</label>
 										<div class="dropdown d-flex"><button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-toggle="dropdown" type="button" style="color: rgb(28,30,31);background: rgba(38,83,212,0);border-style: solid;border-color: rgb(209,211,226);">Farm</button>
@@ -207,7 +300,8 @@
 									<div class="col" style="padding-top: 5px;"><label>End Date</label><input class="form-control" type="date" required style="margin-left: 0px;" /></div>
 									<div class="col" style="padding-top: 5px; position: relative;"><button class="btn btn-primary btn-sm reset" type="submit" style="padding: 5px;margin: 2px;width: 70px; position:absolute; bottom:0">Filter</button></div>
 								</div>
-							</form>
+							</form> --}}
+
 								{{!-- <div class="row table-topper align-items-center">
 
 									<div class="col-4 text-left" style="margin: 0px;padding: 5px 15px;"><button class="btn btn-primary btn-sm reset" type="button" style="padding: 5px;margin: 2px;">Reset Filters</button><button class="btn btn-warning btn-sm" id="zoom_in-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-plus"></i></button><button class="btn btn-warning btn-sm" id="zoom_out-1" type="button" zoomclick="ChangeZoomLevel(-10);" style="padding: 5px;margin: 2px;"><i class="fa fa-search-minus"></i></button></div>
@@ -220,7 +314,7 @@
 								<div class="row">
 									<div class="col-12">
 										<div style="width: auto;">
-											<table class="table table-striped table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
+											<table class="table table-striped table-bordered tablesorter" id="ipi-table">
 												<thead class="thead-dark">
 													<tr style="background: #332C1F;">
 														<th style="">Report</th>
@@ -408,10 +502,278 @@
 			</div>
 		</div>           
 				   
-				</div>
+	</div>
+
+	{{!-- PRINT FARM PRODUCTIVITY SUMMARY REPORT --}}
+	<div id="section-to-print1" style="display: none; visibility: hidden">
+		<div class="container" style="font-size: 16px !important;">
+		
+		{{!-- HEADER --}}
+		<div class="row" style="margin-bottom: 20px;">
+        <div class="col" style="background: #667529; padding: 20px">
+            <div class="d-xxl-flex align-items-xxl-center">
+				<center style="margin-bottom: 20px;">
+					<img src="assets/img/LA_logo.png" style="width: 150px;margin-left: auto;margin-right: auto;">
+				</center>
+			</div>
+
+            <div>
+                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">LA Rice Mill</h1>
+            </div>
+            <div>
+                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">Farm Productivity Report</h1>
+            </div>
+            <div>
+                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 8px;">For the Crop Cycle on October 2021 - March 2022</h1>
+            </div>
+        </div>
+    </div>
+	{{!-- END OF HEADER --}}
+
+	{{!-- FOR EACH FARM --}}
+    <div class="row">
+        <div class="col" style="background-color:#332C1F;margin-top: 15px; height: auto">
+            <h4 style="color:white; font-weight: bold; margin-bottom: 15px">Farm 1</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table" id="farmTable">
+                    <thead>
+                        <tr>
+							<th style="text-align: right;">Forecasted Harvest</th>
+							<th style="text-align: right;">Actual Harvest</th>
+                            <th style="text-align: right;">Total Harvest</th>
+                            <th style="text-align: right;">Total Inputs</th>
+                            {{!-- <th>Column 2</th>
+                            <th>Column 2</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: right;">Cell 1</td>
+                            <td style="text-align: right;">Cell 2</td>
+                            <td style="text-align: right;">Cell 3</td>
+                            <td style="text-align: right;">Cell 4</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" style="background-color:#EEEEEE; padding: 5px">
+            <div style="padding: 10px;">
+			<span class="float-end" style="color:#332C1F;margin-left: 20px;font-weight: bold;">40%</span>
+			<span class="float-end" style="color: #332C1F;font-weight: bold;">Overall Productivity Rating</span></div>
+        </div>
+    </div>
+	{{!-- END OF FOR EACH FARM --}}
+
+	{{!-- DELETE LATER --}}
+      <div class="row">
+        <div class="col" style="background-color:#332C1F;margin-top: 15px; height: auto">
+            <h4 style="color:white; font-weight: bold; margin-bottom: 15px">Farm 1</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table" id="farmTable">
+                    <thead>
+                        <tr>
+							<th style="text-align: right;">Forecasted Harvest</th>
+							<th style="text-align: right;">Actual Harvest</th>
+                            <th style="text-align: right;">Total Harvest</th>
+                            <th style="text-align: right;">Total Inputs</th>
+                            {{!-- <th>Column 2</th>
+                            <th>Column 2</th> --}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: right;">Cell 1</td>
+                            <td style="text-align: right;">Cell 2</td>
+                            <td style="text-align: right;">Cell 3</td>
+                            <td style="text-align: right;">Cell 4</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" style="background-color:#EEEEEE; padding: 10px">
+            <div>
+			<span class="float-end" style="color:#332C1F;margin-left: 20px;font-weight: bold;">40%</span>
+			<span class="float-end" style="color: #332C1F;font-weight: bold;">Overall Productivity Rating</span></div>
+        </div>
+    </div>
+	{{!-- END OF DELETE LATER --}}
+
+	</div>
+
+	</div>
+	
+	{{!-- END OF PRINT FARM PRODUCTIVITY SUMMARY REPORT --}}
+
+	{{!-- PRINT HARVEST SUMMARY REPORT --}}
+	<div id="section-to-print2" style="display: none; visibility: hidden">
+		<div class="container" style="margin-top: 10px;">
+
+		{{!-- HEADER --}}
+		<div class="row" style="margin-bottom: 20px;">
+        <div class="col" style="background: #667529; padding: 20px">
+            <div class="d-xxl-flex align-items-xxl-center">
+				<center style="margin-bottom: 20px;">
+					<img src="assets/img/LA_logo.png" style="width: 150px;margin-left: auto;margin-right: auto;">
+				</center>
+			</div>
+
+            <div>
+                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">LA Rice Mill</h1>
+            </div>
+            <div>
+                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">Harvest Report</h1>
+            </div>
+            <div>
+                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 8px;">For the Crop Cycle on October 2021 - March 2022</h1>
+            </div>
+        </div>
+    	</div>
+		{{!-- END OF HEADER --}}
+
+    <div class="row">
+        <div class="col" style="background-color:#332C1F;margin-top: 15px; height: auto">
+            <h4 style="color:white; font-weight: bold; margin-bottom: 15px">Crop Plan Name</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Farm</th>
+                            <th style="text-align: left;">Seed Name</th>
+                            <th style="text-align: center;">Land Area</th>
+							<th style="text-align: right;">Historical Yield</th>
+                            <th style="text-align: right;">Actual Yield&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+							<td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+							<td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+							<td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+							<td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+							<td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+						    <td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+							<td style="text-align: right;">80 cavans/ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+						    <td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                        <tr>
+                            <td>Farm 1</td>
+                            <td>Dinorado 2021</td>
+                            <td style="text-align: center;">2 ha</td>
+                            <td style="text-align: right;">80 cavans/ha</td>
+						    <td style="text-align: right;">80 cavans/ha</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" style="background-color: #EEEEEE;">
+            <div class="table">
+                <table class="table" id="totalSummary">
+            
+                    <tbody style="border-style: none;">
+                        <tr style="border-style: none;">
+                            <td style="width: 150px;border-style: none;padding: 0px;"></td>
+                            <td style="text-align: left;width: 100px;border-style: none;font-weight: bold;">Average Harvested Crops</td>
+                            <td style="text-align: right;width: 100px;border-style: none;font-weight: bold; padding-right: 5px">60 cavans/ha</td>
+                        </tr>
+                        <tr style="border-style: none;font-weight: bold;">
+                            <td style="width: 150px;border-style: none;padding: 0px;font-weight: bold;"></td>
+                            <td style="text-align: left;width: 100px;border-style: none;font-weight: bold;">Total Harvested Crops</td>
+                            <td style="text-align: right;width: 100px;border-style: none;font-weight: bold; padding-right: 5px">60 cavans/ha</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+		</div>
+
+	</div>
 
 <script>
 	var view = "farm_productivity_report";
+
+	document.querySelector("#print1").addEventListener("click", function() {
+	$('#section-to-print1').toggle(); //removes the display:none
+    window.print();
+    $('#section-to-print1').hide(); //brings back the display:none    
+	});
+
+	
+	document.querySelector("#print2").addEventListener("click", function() {
+	$('#section-to-print2').toggle(); //removes the display:none
+    window.print();
+    $('#section-to-print2').hide(); //brings back the display:none    
+	});
+
 </script>
 
 

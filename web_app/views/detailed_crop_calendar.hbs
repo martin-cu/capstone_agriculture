@@ -36,7 +36,7 @@ div.card-body h6, div.card-body p {
 }
 
 #seedTable, #fertilizerTable, #pesticideTable {
-    margin-left: 25px;
+    /*margin-left: 0px;*/
     border-radius: 10px;
 }
 
@@ -522,10 +522,11 @@ label {
 
 {{!-- MATERIALS PDF --}}
 <div id="section-to-print" style="display: none; visibility: hidden">
-    <div class="container" style="margin-top: 10px">
-        <h1 style="font-size: 50px; font-weight: bold; color: #939C1F">PALAY 2021 - TRANSPLANT</h1>
+    <div class="container-fluid" style="margin-top: 10px">
+        
+        <h1 style="font-size: 80px; font-weight: bold; color: #939C1F">{{crop_plan_details.crop_plan}}</h1>
     
-        <h4 style="font-size: 25px">Farm Name</h4>
+        <h4 style="font-size: 30px; margin-bottom: 70px; margin-left: 10px">{{crop_plan_details.farm_name}}</h4>
 
         {{!-- No more space for this part :< --}}
         {{!-- <div class="container-fluid" style="background-color: white; padding: 20px; border-radius: 10px; width:auto; margin-top: 30px;">      
@@ -547,12 +548,12 @@ label {
             </div>
         </div> --}}
 
-        <h4 style="font-size: 30px; font-weight: bold; margin-top: 30px; margin-bottom: 30px">Required Materials Report</h4>
+        <h4 style="font-size: 30px; font-weight: bold; margin-top: 30px; margin-bottom: 30px; margin-left: 20px">Required Materials Report</h4>
         
         {{!-- SEEDS --}}
         <div class="container" style="position: relative;">
         <label for="" style="font-weight: bold; font-size: 25px; margin-bottom: 10px">Seeds</label>    
-            <table class="table" style="border-style: none; padding: 20px" id="seedTable">
+            <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="seedTable">
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
                         <th style="border-color: #EEEEEE; text-align:left">Seed Name</th>
@@ -565,14 +566,16 @@ label {
                     {{#if materials.seed}}
                     {{#each materials.seed}}
                     <tr>
-                        <td>{{this.item_name}}</td>
+                        <td style="word-wrap:break-word;">{{this.item_name}}</td>
                         <td class="text-right">{{this.current_amount}} bags</td>
                         <td class="text-right">{{this.deficient_qty}}</td>
                     </tr>
                     {{/each}}
                     {{else}}
                     <tr>
-                        <td colspan="3" class="text-center">None</td>
+                        <td style="word-wrap:break-word;">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
                     </tr>
                     {{/if}}
                                                          
@@ -588,11 +591,11 @@ label {
         {{!-- FERTILIZERS --}}
         <div class="container" style="position: relative;">
         <label for="" style="font-weight: bold; font-size: 25px; margin-bottom: 10px; margin-top: 30px">Fertilizers</label>
-         <table class="table" style="border-style: none; padding: 20px" id="fertilizerTable">
+         <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="fertilizerTable">
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
-                        <th style="border-color: #EEEEEE; text-align:left">Fertilizer Name</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word;">Fertilizer Name</th>
+                        <th style="border-color: #EEEEEE; text-align:right;">Inventory</th>
                         <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
                     </tr>
                 </thead>
@@ -608,7 +611,9 @@ label {
                     {{/each}}
                     {{else}}
                     <tr>
-                        <td colspan="3" class="text-center">None</td>
+                        <td style="word-wrap:break-word;">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
                     </tr>
                     {{/if}}
                                                          
@@ -624,10 +629,10 @@ label {
         {{!-- PESTICIDES --}}
         <div class="container" style="position: relative;">
         <label for="" style="font-weight: bold; font-size: 25px; margin-bottom: 10px; margin-top: 30px">Pesticides</label>
-         <table class="table" style="border-style: none; padding: 20px" id="pesticideTable">
+         <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="pesticideTable">
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
-                        <th style="border-color: #EEEEEE; text-align:left">Pesticide Name</th>
+                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word;">Pesticide Name</th>
                         <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
                         <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
                     </tr>
@@ -644,7 +649,9 @@ label {
                     {{/each}}
                     {{else}}
                     <tr>
-                        <td colspan="3" class="text-center">None</td>
+                        <td style="word-wrap:break-word;">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
                     </tr>
                     {{/if}}
 
