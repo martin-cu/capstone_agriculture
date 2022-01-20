@@ -71,6 +71,16 @@ exports.getAddFarm = function(req, res) {
 }
 
 //AJAX
+exports.checkFarmExists = function(req, res) {
+	farmModel.filteredFarmDetails({ farm_name: req.body.farm_name }, function(err, farm) {
+		if (err)
+			throw err;
+		else {
+			res.send(farm);
+		}
+	});
+}
+
 exports.getFarmDetails = function(req, res) {
 	var html_data = {};
 	var query = req.query;

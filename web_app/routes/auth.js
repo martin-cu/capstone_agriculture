@@ -64,6 +64,9 @@ router.get('/get_low_stocks', materialController.ajaxGetLowStocks);
 router.post('/upload_wo', workOrderController.ajaxCreateWorkOrder);
 router.post('/create_wo', workOrderController.createWO);
 
+router.post('/readFarmDetails', farmController.checkFarmExists);
+router.post('/createFarmRecord', farmController.createFarmRecord);
+router.post('/assign_farmers', farmController.assignFarmers);
 // router.get('/getPestDiseasePerFarm', environmentController.ajaxGetPossiblePD);
 
 
@@ -219,7 +222,6 @@ router.get('/agroapi/weather/history', farmController.getHistoricalWeather);
 router.get('/agroapi/weather/forecast', farmController.getForecastWeather);
 
 router.get('/get_employees', employeeController.ajaxEmployees);
-router.post('/assign_farmers', farmController.assignFarmers);
 /*** Agro API End ***/
 
 /*** OpenWeather API Start ***/
