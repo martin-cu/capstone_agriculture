@@ -25,7 +25,8 @@ exports.getInputResourcesUsed = function(data, next) {
 }
 
 exports.getHarvestReports = function(next) {
-	var sql = "SELECT group_concat(calendar_id , '') as calendar_ids, crop_plan, count(*) as count, DATE_FORMAT(min(land_prep_date), '%b %d, %Y') as min_start, DATE_FORMAT(max(harvest_date), '%b %d, %Y') as max_end, case when max(status) != 'Completed' then 'Partially Complete' else 'Completed' end as status FROM crop_calendar_table group by crop_plan order by crop_plan desc, max(harvest_date) desc;";
+	var sql = "SELECT group_concat(calendar_id , '') as calendar_ids, crop_plan, count(*) as count, DATE_FORMAT(min(land_prep_date), '%b %d, %Y') as min_start, DATE_FORMAT(max(harvest_date), '%b %d, %Y') as max_end, case when max(status) != 'Completed' then 'Partially Complete' else 'Completed' end as status FROM crop_calendar_table where status = 'Completed' group by crop_plan order by crop_plan desc, max(harvest_date) desc;";
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 

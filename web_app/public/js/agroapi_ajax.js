@@ -82,7 +82,7 @@ $(document).ready(function() {
 
 		$.post('/readFarmDetails', form_data, function(farm_record) {
 			console.log(farm_record);
-			if (farm_record.farm_list.length == 0) {
+			if (farm_record.length == 0) {
 				$.post('/agroapi/polygon/create', form_data, function(result) {
 					// Create db record of farm
 					console.log(result);
