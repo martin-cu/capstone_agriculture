@@ -211,15 +211,15 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 				: 'up'
 		};
 
-		fp_overview[i].change.val = fp_overview[i].change.val != 0 ? parseInt((fp_overview[i].change.val * 100) - 100) : '&nbsp0';
+		fp_overview[i].change.val = fp_overview[i].change.val != 0 ? parseInt((fp_overview[i].change.val * 100) - 100) : '0';
 		fp_overview[i].change.color = fp_overview[i].change.arrow == 'up' ? 
 		fp_overview[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 
 		fp_overview[i].outlook = fp_overview[i].current_productivity != 'N/A' ?
 			fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 1.4) ?
-			'Attained&nbsp&nbsp' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.4) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 1.2) ?
-			'Met&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.2) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 0.8) ?
-			'Acceptable' : 'Unmet&nbsp&nbsp&nbsp&nbsp&nbsp' : 'N/A&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+			'Attained' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.4) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 1.2) ?
+			'Met' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.2) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 0.8) ?
+			'Acceptable' : 'Unmet' : 'N/A';
 		//console.log(fp_overview[i].current_productivity+' - '+fp_overview[i].prev_productivity+'-'+fp_overview[i].outlook);
 	}
 

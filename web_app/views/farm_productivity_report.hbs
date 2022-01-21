@@ -92,6 +92,7 @@
 														<th style="">Crop Plan</th>
 														<th style="text-align: right;">Current Yield</th>
 														<th style="text-align: right">Productivity (Current / Previous)</th>
+														<th style="">Status</th>
 													</tr>
 												</thead>
 												<tbody aria-live="polite" aria-relevant="all">
@@ -116,7 +117,12 @@
 															<span class="{{this.change.color}} mr-2">
 																({{{this.change.val}}}%)
 															</span>
-															<!-- <span class="text-right" style="">{{{this.outlook}}}</span> -->
+														</td>
+
+														<td class="{{this.change.color}}">
+														
+															{{this.outlook}}
+					
 
 															<span style="margin-left: 30px;">
 																<div class="dropdown no-arrow" style="display:inline-block; float: right">
@@ -128,6 +134,8 @@
 																	</div>
 																</div>
 															</span> 
+
+															</td>
 
 															{{!-- Note: Changed to allow text-align: right of td --}}
 
@@ -159,7 +167,7 @@
 																</span> 
 															</div> --}}
 															
-														</td>
+												
 													</tr>
 													{{/each}}
 												  
