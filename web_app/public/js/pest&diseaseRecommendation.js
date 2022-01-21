@@ -92,7 +92,7 @@ $(document).ready(function() {
 									// }
 								}
 							}
-							if(probabilities[i].probability >= 35){
+							if(probabilities[i].probability >= 50){
 								// console.log("push");
 								possibilities.push(probabilities[i]);
 							}
