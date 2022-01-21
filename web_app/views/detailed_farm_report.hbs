@@ -2,30 +2,44 @@
     <div class="d-sm-flex justify-content-between align-items-center mb-4">
         <h3 class="text-dark mb-0">Farm Productivity Reports</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);"><br /><i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br /><br /></a>
     </div>
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto">
+        {{!-- CARD HEADER --}}
         <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;height: auto;padding: 16px 20px;">
-            <h6 class="font-weight-bold m-0" style="color: #FFFFFF;"><i class="fas fa-arrow-alt-circle-left" style="color: rgb(255,255,255);"></i> Farm 1 Productivity Report (PALAY 2021)</h6><i class="fas fa-print" style="color: rgb(255,255,255);"></i>
+
+            <div class="col" style="max-width: 70px; padding-top: 2px">
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/farm_productivity_report"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
+                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                        </button>        
+            </div>
+
+            <div class="col" style="margin-right: 650px; padding-top: 5px"> 
+                <h6 class="font-weight-bold m-0" style="color: #FFFFFF;">Farm 1 Productivity Report (PALAY 2021)</h6> <!-- Change to handlebar later -->
+            </div>
+        <i class="fas fa-print" style="color: rgb(255,255,255);"></i>
+         
         </div>
+        {{!-- END OF CARD HEADER --}}
+
         <div class="card-body">
             <!-- Yield -->
             <div class="table-responsive">
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th style="width: 150px;border-style: none;text-align: center;background: #332C1F;color: rgb(255,255,255);">Crop</th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);">Forecasted Harvest</th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);">Actual Harvest</th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);">Total Harvest</th>
+                            <th style="width: 150px;border-style: none;text-align: left;background:#212529;color: rgb(255,255,255);">Crop</th>
+                            <th style="border-style: none;text-align: right;width: 150px;background: #212529;color: rgb(255,255,255);">Forecasted Harvest</th>
+                            <th style="border-style: none;text-align: right;width: 150px;background: #212529;color: rgb(255,255,255);">Actual Harvest</th>
+                            <th style="border-style: none;text-align: right;width: 150px;background: #212529;color: rgb(255,255,255);">Total Harvest</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         {{#each farm_productivity.yield.arr}}
                         <tr>
-                            <td class="pl-3" style="text-align: center;color: rgb(0,0,0);">{{this.name}}</td>
-                            <td style="text-align: center;color: rgb(0,0,0);">{{this.forecasted_yield}}</td>
-                            <td style="text-align: center;color: rgb(0,0,0);">{{this.current_yield}}</td>
-                            <td style="text-align: center;color: rgb(0,0,0);">{{this.total}}</td>
+                            <td class="pl-3" style="text-align: left;color: rgb(0,0,0);">{{this.name}}</td>
+                            <td style="text-align: right;color: rgb(0,0,0);">{{this.forecasted_yield}}</td>
+                            <td style="text-align: right;color: rgb(0,0,0);">{{this.current_yield}}</td>
+                            <td style="text-align: right;color: rgb(0,0,0);">{{this.total}}</td>
                         </tr>
                         {{/each}}
 
@@ -35,11 +49,11 @@
                             <td style="border-style: none;text-align: center;background: rgba(238,238,238,0);color: rgb(0,0,0);"></td>
                             <td style="border-style: none;text-align: center;background: rgba(238,238,238,0);color: rgb(0,0,0);"></td>
                         </tr>
-                        <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
-                            <td style="border-style: none;text-align: center;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);">Total Yield</td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);">{{farm_productivity.yield.total}}</td>
+                        <tr style="text-align: center;color: rgb(0,0,0);">
+                            <td style="border-style: none;text-align: left;font-weight: bold;background: #7D7D7D;color: white; padding-top: 10px">Total Yield</td>
+                            <td style="border-style: none;text-align: center;background: #7D7D7D;color: white;"></td>
+                            <td style="border-style: none;text-align: center;background: #7D7D7D;color: white;"></td>
+                            <td style="border-style: none;text-align: right;background: #7D7D7D;color: white; padding-top: 10px; font-weight:bold">{{farm_productivity.yield.total}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -49,10 +63,10 @@
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th style="width: 150px;border-style: none;text-align: center;background: #332C1F;color: rgb(255,255,255);">Inputs</th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);">Quantity</th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);">Cost Per Unit</th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);">Total</th>
+                            <th style="width: 150px;border-style: none;text-align: left;background: #212529;color: rgb(255,255,255);">Inputs</th>
+                            <th style="border-style: none;text-align: right;width: 150px;background: #212529;color: rgb(255,255,255);">Quantity</th>
+                            <th style="border-style: none;text-align: right;width: 150px;background: #212529;color: rgb(255,255,255);">Cost Per Unit</th>
+                            <th style="border-style: none;text-align: right;width: 150px;background: #212529;color: rgb(255,255,255);">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,39 +79,49 @@
 
                             {{#each this.rows}}
                             <tr>
-                                <td class="pl-3 text-muted" colspan="4" style="border-style: none;color: rgb(0,0,0);">{{this.title}}</td>
+                                <td class="pl-3" colspan="4" style="border-style: none;color:#BD9E4B!important; font-weight:bold">{{this.title}}</td>
                             </tr>
 
                                 {{#each this.rows}}
                                 <tr>
                                     <td class="pl-3" style="color: rgb(0,0,0);">{{this.input}}</td>
-                                    <td style="text-align: center;color: rgb(0,0,0);">{{this.qty}} {{this.units}}</td>
-                                    <td style="text-align: center;color: rgb(0,0,0);">{{this.cost_per_unit}}</td>
-                                    <td style="text-align: center;color: rgb(0,0,0);">{{this.total_cost}}</td>
+                                    <td style="text-align: right;color: rgb(0,0,0);">{{this.qty}} {{this.units}}</td>
+                                    <td style="text-align: right;color: rgb(0,0,0);">{{this.cost_per_unit}}</td>
+                                    <td style="text-align: right;color: rgb(0,0,0);">{{this.total_cost}}</td>
+                                </tr>
+   
+                                {{else}}
+                                <tr>
+                                  <td class="pl-3" style="color: rgb(0,0,0);">N/A</td>
+                                    <td style="text-align: right;color: rgb(0,0,0);">N/A</td>
+                                    <td style="text-align: right;color: rgb(0,0,0);">N/A</td>
+                                    <td style="text-align: right;color: rgb(0,0,0);">N/A</td>
                                 </tr>
                                 {{/each}}
 
                             <tr>
-                                <td class="pl-5" style="font-weight: bold;border-style: none;background: #EEEEEE;color: rgb(0,0,0);">Total</td>
+                                <td class="pl-1" style="font-weight: bold;border-style: none;background: #EEEEEE;color: rgb(0,0,0); text-align: left; padding-top: 10px">Total</td>
                                 <td colspan="2" style="border-style: none;text-align: center;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                                <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);">Php {{this.total}}</td>
+                                <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0); padding-top: 10px; font-weight: bold; text-align:right;">Php {{this.total}}</td>
                             </tr>
+                            <tr></tr>
+                            
 
                             {{/each}}
 
                         {{/each}}
-                        <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
+                        {{!-- <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
                             <td style="border-style: none;text-align: center;font-weight: bold;background: rgba(238,238,238,0);color: rgb(0,0,0);"></td>
                             <td style="border-style: none;text-align: center;background: rgba(238,238,238,0);color: rgb(0,0,0);"></td>
                             <td style="border-style: none;text-align: center;background: rgba(238,238,238,0);color: rgb(0,0,0);"></td>
                             <td style="border-style: none;text-align: center;background: rgba(238,238,238,0);color: rgb(0,0,0);"></td>
-                        </tr>
+                        </tr> --}}
 
                         <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
-                            <td style="border-style: none;text-align: center;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);">Total Expenses</td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);">Php {{farm_productivity.inputs.total}}</td>
+                            <td style="border-style: none;text-align: left;font-weight: bold;background: #7D7D7D;color: white; padding-top: 10px">Total Inputs</td>
+                            <td style="border-style: none;text-align: center;background: #7D7D7D;color: white;"></td>
+                            <td style="border-style: none;text-align: center;background: #7D7D7D;color: white;"></td>
+                            <td style="border-style: none;text-align: right;background: #7D7D7D;color: white; padding-top: 10px; font-weight: bold">Php {{farm_productivity.inputs.total}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -171,25 +195,25 @@
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th style="width: 150px;border-style: none;text-align: center;background: #332C1F;color: rgb(255,255,255);">Net Spend</th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);"></th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);"></th>
-                            <th style="border-style: none;text-align: center;width: 150px;background: #332C1F;color: rgb(255,255,255);">Total</th>
+                            <th style="width: 150px;border-style: none;text-align: left;background: #212529;color: rgb(255,255,255);">Net Spend</th>
+                            <th style="border-style: none;text-align: center;width: 150px;background: #212529;color: rgb(255,255,255);"></th>
+                            <th style="border-style: none;text-align: center;width: 150px;background: #212529;color: rgb(255,255,255);"></th>
+                            <th style="border-style: none;text-align: right;width: 150px;background: #212529;color: rgb(255,255,255);">Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
-                            <td style="border-style: none;text-align: center;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);">Total Harvest</td>
+                            <td style="border-style: none;text-align: left;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);">Total Yield</td>
                             <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
                             <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);">{{farm_productivity.yield.total}}</td>
+                            <td style="border-style: none;text-align: right;background: #EEEEEE;color: rgb(0,0,0); font-weight: bold">{{farm_productivity.yield.total}}</td>
                         </tr>
 
                         <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
-                            <td style="border-style: none;text-align: center;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);">Total Inputs</td>
+                            <td style="border-style: none;text-align: left;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);">Total Inputs</td>
                             <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
                             <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);">Php {{farm_productivity.inputs.total}}</td>
+                            <td style="border-style: none;text-align: right;background: #EEEEEE;color: rgb(0,0,0); font-weight: bold">Php {{farm_productivity.inputs.total}}</td>
                         </tr>
 
                         <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
@@ -199,10 +223,10 @@
                             <td style="border-style: none;text-align: center;background: rgba(238,238,238,0);color: rgb(0,0,0);"></td>
                         </tr>
                         <tr style="text-align: center;margin-bottom: 10px;color: rgb(0,0,0);">
-                            <td style="border-style: none;text-align: center;font-weight: bold;background: #EEEEEE;color: rgb(0,0,0);">Farm Productivity</td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);"></td>
-                            <td class="d-flex flex-column" style="border-style: none;text-align: center;background: #EEEEEE;color: rgb(0,0,0);">
+                            <td style="border-style: none;text-align: left;font-weight: bold;background: #D6CD41;color: rgb(0,0,0); padding-top: 16px">Farm Productivity</td>
+                            <td style="border-style: none;text-align: center;background:#D6CD41;color: rgb(0,0,0);"></td>
+                            <td style="border-style: none;text-align: center;background: #D6CD41;color: rgb(0,0,0);"></td>
+                            <td class="d-flex flex-column" style="border-style: none;text-align: right;background: #D6CD41;color: rgb(0,0,0); font-weight: bold">
                                 <div>{{farm_productivity.productivity}}</div>
                                 <div>{{{farm_productivity.cost_per_cavan}}}</div>
                             </td>

@@ -1442,7 +1442,7 @@ exports.getTotalDiagnosesPerPD = function(farm_id, next){
 
 	sql = sql + " ORDER BY total DESC";
 	
-	// console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1460,7 +1460,7 @@ exports.getDiagnosisList = function(pd_id, type, farm_id, next){
 		sql = sql + " && farm_id = " + farm_id;
 
 	sql = sql + " ORDER BY date_diagnosed DESC";
-	// console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 };
 
