@@ -196,15 +196,15 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 		
 		fp_overview[i].current_yield = fp_overview[i].current_yield != null ? fp_overview[i].current_yield
 			 : fp_overview[i].current_yield = 'N/A';
-		fp_overview[i]['current_productivity'] = fp_overview[i].current_yield != 'N/A' ? (Math.round((fp_overview[i].current_yield / fp_overview[i].net_spend) * 100000) / 100000).toFixed(5) : `&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspN/A`;
+		fp_overview[i]['current_productivity'] = fp_overview[i].current_yield != 'N/A' ? (Math.round((fp_overview[i].current_yield / fp_overview[i].net_spend) * 100000) / 100000).toFixed(5) : `N/A`;
 		
 		fp_overview[i]['change'] = { 
-			val: fp_overview[i].current_productivity != '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspN/A' ? 
+			val: fp_overview[i].current_productivity != 'N/A' ? 
 				fp_overview[i].current_productivity > fp_overview[i].prev_productivity ? 
 				fp_overview[i].current_productivity / fp_overview[i].prev_productivity :
 				fp_overview[i].prev_productivity / fp_overview[i].current_productivity
 				: 0,
-			arrow: fp_overview[i].current_productivity != '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspN/A' ? 
+			arrow: fp_overview[i].current_productivity != 'N/A' ? 
 				fp_overview[i].current_productivity >= fp_overview[i].prev_productivity ? 
 				'up' :
 				'down'
@@ -215,11 +215,11 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 		fp_overview[i].change.color = fp_overview[i].change.arrow == 'up' ? 
 		fp_overview[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 
-		fp_overview[i].outlook = fp_overview[i].current_productivity != '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspN/A' ?
+		fp_overview[i].outlook = fp_overview[i].current_productivity != 'N/A' ?
 			fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 1.4) ?
-			'Attained' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.4) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 1.2) ?
-			'Met' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.2) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 0.8) ?
-			'Acceptable' : 'Unmet' : 'N/A';
+			'Attained&nbsp&nbsp' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.4) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 1.2) ?
+			'Met&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.2) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 0.8) ?
+			'Acceptable' : 'Unmet&nbsp&nbsp&nbsp&nbsp&nbsp' : 'N/A&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 		//console.log(fp_overview[i].current_productivity+' - '+fp_overview[i].prev_productivity+'-'+fp_overview[i].outlook);
 	}
 

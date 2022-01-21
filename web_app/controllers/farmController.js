@@ -1097,6 +1097,7 @@ exports.getHistoricalNDVI = function(req, res) {
 }
 
 exports.getSatelliteImageryData = function(req, res) {
+	//console.log(req.query.start);
 	var polygon_id = req.query.polygon_id;
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
 	var obj;

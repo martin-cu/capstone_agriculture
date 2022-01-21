@@ -83,6 +83,18 @@ exports.createNutrientItem = function(data, next) {
 	mysql.query(sql, next);
 }
 
+exports.getUpcomingImportantNutrients = function(query, next) {
+    var sql = "SELECT farm_id,fri.*, ft.fertilizer_name FROM fertilizer_recommendation_items fri join fertilizer_table ft using(fertilizer_id) join fertilizer_recommendation_plan using(fr_plan_id) where fr_plan_id in (SELECT fr_plan_id FROM fertilizer_recommendation_plan where ";
+    for (var i = 0; i < query.length; i++) {
+    	if (i != 0) {
+    		sql += ' or '; 
+    	}
+    	sql += `(farm_id = ${query[i].farm_id} and calendar_id = ${query[i].calendar_id}) `;
+    }
+    sql += ") and datediff(target_application_date, now()) >= 0 order by target_application_date";
+    mysql.query(sql, next);
+}
+
 exports.getMostActiveFRPlan = function(query, next) {
 	var sql = "select * from ( select fr_plan_id, calendar_id, last_updated, farm_id, max(status) as status from ( select max(fr_plan_id) as fr_plan_id, max(calendar_id) as calendar_id, last_updated, (select farm_id from crop_calendar_table where calendar_id = frp.calendar_id) as farm_id, null as status from fertilizer_recommendation_plan frp group by farm_id union select null, calendar_id, null, farm_id, status from crop_calendar_table ) as t where ? group by t.calendar_id ) as t1 where fr_plan_id is not null "
 	sql = mysql.format(sql, query);

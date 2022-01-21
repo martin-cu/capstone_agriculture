@@ -6,6 +6,57 @@ const nutrientModel = require('../models/nutrientModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
 var request = require('request');
 
+var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
+
+exports.getSummarizedFarmMonitoring = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+
+	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
+		if (err)
+			throw err;
+		else {
+			var nutrient_query = list.map(e => ({ farm_id: e.farm_id, calendar_id: e.calendar_id }));
+			nutrientModel.getUpcomingImportantNutrients(nutrient_query, function(err, nutrient_reco) {
+				if (err)
+					throw err;
+				else {
+					var nutrient_reco_arr = [];
+					const unique = [...new Map(nutrient_reco.map(item =>
+	  					[item.fr_plan_id, item])).values()];
+					for (var i = 0; i < unique.length; i++) {
+						for (var x = 0; x < list.length; x++) {
+							if (list[x].farm_id == unique[i].farm_id) {
+								list[x]['nutrients'] = nutrient_reco_arr.concat((nutrient_reco.filter(e => e.fr_plan_id == unique[i].fr_plan_id)).slice(0, 3));
+							}
+						}
+					}
+					console.log(nutrient_reco);
+					//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
+					var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
+				    request(url, { json: true }, function(err, response, body) {
+				        if (err)
+				        	throw err;
+				        else {
+				        	var farm_list = [];
+				        	for (var i = 0; i < list.length; i++) {
+				        		farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
+				        		list[i]['days_till_harvest'] = (list[i].maturity_days + 65) - (new Date()).getDate();
+				        	}
+
+				        	html_data['data'] = { calendars: list, farms: farm_list };
+				        	html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
+
+				        	res.render('summary_farm_monitoring', html_data);
+				        }
+				    });
+				}
+			});
+					
+		}
+	});
+}
+
 exports.getCropCalendarTab = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');

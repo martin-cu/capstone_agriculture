@@ -114,8 +114,8 @@ function getGeoData(farm_name) {
 				// 	console.log(unixToDate(imagery[i].dt));
 				// }
 
-				$.get(imagery[imagery.length-1].stats.ndvi, {}, function(stats) {
-					$('#ndvi_date').html(imagery[imagery.length-1].dt);
+				$.get(imagery[0].stats.ndvi, {}, function(stats) {
+					$('#ndvi_date').html(imagery[0].dt);
 					$('#statistics_max').html(Math.round(stats.max * 100) / 100);
 					$('#statistics_mean').html(Math.round(stats.mean * 100) / 100);
 					$('#statistics_median').html(Math.round(stats.median * 100) / 100);

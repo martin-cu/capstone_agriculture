@@ -104,18 +104,19 @@
 																<small>({{this.status}})</small>
 															</div>
 														</td>
-														<td class="" style="text-align: right;">{{this.current_yield}}</td>
+														<td class="" style="text-align: right;">{{{this.current_yield}}}</td>
 														<td style="text-align: right;">
 														
-															<big class="w-50 text-right">{{this.current_productivity}}</big>
+															<big class="text-right">{{{this.current_productivity}}}</big>
 
-															<big class="mx-3">/</big>
+															<big class="mx-2">/</big>
 
 															<small class="mt-2" style="margin-right: 10px">{{this.prev_productivity}}</small>
 
-															<span class="{{this.change.color}}">
-																({{this.change.val}}%)
+															<span class="{{this.change.color}} mr-2">
+																({{{this.change.val}}}%)
 															</span>
+															<!-- <span class="text-right" style="">{{{this.outlook}}}</span> -->
 
 															<span style="margin-left: 30px;">
 																<div class="dropdown no-arrow" style="display:inline-block; float: right">

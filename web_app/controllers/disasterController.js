@@ -112,7 +112,7 @@ exports.getDisasterManagement = function(req, res) {
 									damage_color = 'text-dark'; 
 								}
 								else if (stage == 'Ripening') {
-									damages = 'Medium';
+									damages = 'Low';
 									risk_lvl = 'Low';
 									text_color = 'text-dark';
 									damage_color = 'text-warning';
@@ -124,10 +124,10 @@ exports.getDisasterManagement = function(req, res) {
 									damage_color = 'text-warning';
 								}
 								else {
-									damages = 'High';
+									damages = 'Medium';
 									risk_lvl = 'Medium';
 									text_color = 'text-warning';
-									damage_color = 'text-danger';									
+									damage_color = 'text-warning';									
 								}
 							}
 							else if (rainfall[i].classification == 'Tropical Depression') {
