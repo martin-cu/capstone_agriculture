@@ -21,6 +21,11 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 				if (err)
 					throw err;
 				else {
+					for (var i = 0; i < nutrient_reco.length; i++) {
+						nutrient_reco[i].target_application_date = dataformatter.formatDate(nutrient_reco[i].target_application_date, 'mm DD, YYYY');
+					}
+
+
 					var nutrient_reco_arr = [];
 					const unique = [...new Map(nutrient_reco.map(item =>
 	  					[item.fr_plan_id, item])).values()];

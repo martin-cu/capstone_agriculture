@@ -3,31 +3,48 @@
 <div class="container-fluid">
 	<div class="mx-3">
 		{{#each data.calendars}}
-		<div class="card shadow border-left-warning py-2 my-3">
+		<div class="card shadow border-left-warning py-2 my-3" style="max-width: 950px;">
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
-                        <div class="text-uppercase text-warning h4 font-weight-bold text-xl" style="margin-top: -40px;"><span>{{this.farm_name}}</span></div>
+                        <div class="text-uppercase text-warning h4 font-weight-bold text-xl" style="margin-top: -40px;">
+                        	<span>{{this.farm_name}}</span>
+                        	<small style="font-size: 16px;"> ({{this.stage}})</small>
+                        </div>
                         <div class="text-dark font-weight-bold h5 mb-0"> 
                         	{{this.seed_name}} {{this.seed_rate}} kg/ha
                         </div>
                         <div class="text-dark font-weight-bold mb-0">
-                        	{{this.method}}
+                        	{{this.days_till_harvest}} days till harvest
                         </div>
                         <div class="text-dark font-weight-bold mb-0">
-                        	Days till harvest: {{this.days_till_harvest}}
+                        	{{this.method}}
                         </div>
+                     	
                         <div class="text-dark font-weight-bold mb-0 d-flex flex-column">
-                        	<div id="{{this.farm_name}}_ndvi">NDVI: -</div>
+                        	<div class="d-flex" style="height: max-content;">
+                        		<label>NDVI:&nbsp</label>
+                        		<div class="" id="{{this.farm_name}}_ndvi"> -</div>
+                        		<div id="{{this.farm_name}}_ndvi_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
+                        	</div>
+                        	
                         	<small id="{{this.farm_name}}_ndvi_date">Last updated: -</small>
                         </div>
                         <div class="text-dark font-weight-bold mb-0 d-flex flex-column">
-                        	<div id="{{this.farm_name}}_soil_moisture">Soil Moisture: -</div>
+                        	<div class="d-flex">
+                        		<label>Soil Moisture:&nbsp</label>
+                        		<div class="" id="{{this.farm_name}}_soil_moisture"> -</div>
+                        		<div id="{{this.farm_name}}_soil_moisture_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
+                        	</div>
+                        	
                         	<small id="{{this.farm_name}}_soil_moisture_date">Last updated: -</small>
+                        </div>
+                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column mt-3">
+                        	Upcoming Nutrient Recommendation Applications:
                         </div>
                         <table class="table">
                         	<tr>
-                        		<th>Application Date</th>
+                        		<th>Target Application Date</th>
                         		<th>Fertilizer</th>
                         		<th>Description</th>
                         		<th class="text-right">Amount</th>
@@ -49,6 +66,13 @@
                         	</tr>
                         	{{/each}}
                         </table>
+
+                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column mt-3">
+                        	Reported Pest/Disease Symptoms:
+                        </div>
+                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column mt-3">
+                        	N/A
+                        </div>
                     </div>
                     <!-- <div class="col-auto">
                         <i class="fa fa-mobile fa-2x text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
@@ -61,6 +85,13 @@
 </div>
 
 <script type="text/javascript">
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip({
+	  	container: 'body',
+	  	boundary: 'window'
+	  })
+	});
+
 	function formatDate(date, format) {
 		var year,month,day;
 		const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -158,8 +189,9 @@
 		$.get('/agroapi/ndvi/imagery', query, function(imagery) {
 			if (imagery.length != 0) {
 				$.get(imagery[0].stats.ndvi, {}, function(stats) {
-					$(`[id='${obj[i].name}_ndvi']`).html('NDVI: '+Math.round(stats.max * 100) / 100);
+					$(`[id='${obj[i].name}_ndvi']`).html(' '+Math.round(stats.max * 100) / 100);
 					$(`[id='${obj[i].name}_ndvi_date']`).html('Last updated: '+formatDate(new Date(imagery[0].dt), 'mm DD, YYYY'));
+					$(`[id='${obj[i].name}_ndvi_help']`).html(`N/A`);
 				});
 			}
 			else {
@@ -168,8 +200,9 @@
 		});
 
 		$.get('/agroapi/soil/current', { polyid: obj[i].id }, function(soil) {
-			$(`[id='${obj[i].name}_soil_moisture']`).html(soil.moisture == 'Soil Moisture: N/A' ? 'N/A' : 'Soil Moisture: '+Math.round(soil.moisture * 100) / 100 + '%');
+			$(`[id='${obj[i].name}_soil_moisture']`).html(soil.moisture == ' N/A' ? 'N/A' : ' '+Math.round(soil.moisture * 100) / 100 + '%');
 			$(`[id='${obj[i].name}_soil_moisture_date']`).html('Last updated: '+formatDate(new Date(soil.dt), 'mm DD, YYYY'));
+			$(`[id='${obj[i].name}_soil_moisture_help']`).html(`N/A`);
 		});
 	}
 </script>
