@@ -2695,7 +2695,7 @@ exports.getProbabilities = function(req,res){
 };
 
 exports.ajaxGetDiagnosisStageFrequency = function(req,res){
-	pestdiseaseModel.getDiagnosisFrequentStage(null, function(err, frequency){
+	pestdiseaseModel.getDiagnosisFrequentStage2(null, null, null, null, function(err, frequency){
 		if(err)
 			throw err;
 		else{
@@ -2802,7 +2802,7 @@ exports.getPDFrequency = function(req, res){
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_frequency');
 	html_data["title"] = "Diagnose";
 
-	pestdiseaseModel.getTotalDiagnosesPerPD(null, function(err, total){
+	pestdiseaseModel.getTotalDiagnosesPerPD2(null,null, function(err, total){
 		if(err)
 			throw err;
 		else{
@@ -2813,7 +2813,7 @@ exports.getPDFrequency = function(req, res){
 			temp_total = total;
 			
 		}
-		pestdiseaseModel.getDiagnosisFrequentStage(null, function(err, frequency){
+		pestdiseaseModel.getDiagnosisFrequentStage2(null, null, null, null, function(err, frequency){
 			if(err)
 				throw err;
 			else{
@@ -2855,11 +2855,50 @@ exports.getPDFrequency = function(req, res){
 				else{
 					html_data["farms"] = farms;
 				}
-				html_data["total"] = new_total;
-				// html_data["pest"] = pest;
-				// html_data["disease"] = disease;
-				html_data["notifs"] = req.notifs;
-				res.render("pest_and_disease_frequency", html_data);
+
+				pestdiseaseModel.getTotalDiagnosesPerMonth(null, null, null, null, function(err, month_frequency){
+					if(err)
+						throw err;
+					else{
+						console.log(month_frequency);
+						var i, highest = 0;
+						for(i = 0; i < month_frequency.length; i++){
+							//get highest
+							if(month_frequency[i].frequency > highest)
+								highest = month_frequency[i].frequency;
+						}
+						console.log(highest);
+						highest = Math.ceil(highest / 10) * 10;
+						for(i = 0; i < month_frequency.length; i++){
+							//update array for chart
+							month_frequency[i]["percent"] = (month_frequency[i].frequency * 1.0) / (highest * 1.0) * 100;
+							console.log(month_frequency[i].percent);
+						}
+
+						month_frequency[0]["month_label"] = "Jan";
+						month_frequency[1]["month_label"] = "Feb";
+						month_frequency[2]["month_label"] = "Mar";
+						month_frequency[3]["month_label"] = "Apr";
+						month_frequency[4]["month_label"] = "May";
+						month_frequency[5]["month_label"] = "Jun";
+						month_frequency[6]["month_label"] = "Jul";
+						month_frequency[7]["month_label"] = "Aug";
+						month_frequency[8]["month_label"] = "Sep";
+						month_frequency[9]["month_label"] = "Oct";
+						month_frequency[10]["month_label"] = "Nov";
+						month_frequency[11]["month_label"] = "Dec";
+
+						html_data["highest"] = highest;
+						html_data["middle"] = highest / 2;
+						
+					}
+					html_data["total"] = new_total;
+					html_data["month_frequency"] = month_frequency;
+					// html_data["pest"] = pest;
+					// html_data["disease"] = disease;
+					html_data["notifs"] = req.notifs;
+					res.render("pest_and_disease_frequency", html_data);
+				});
 			});
 		});
 	});
@@ -2869,10 +2908,14 @@ exports.getPDFrequency = function(req, res){
 exports.ajaxDiagnosisPDFrequency = function(req, res){
 	var type = req.query.type;
 	var farm_id = req.query.farm_id;
+	var year = req.query.year;
 	if(farm_id == "all"){
 		farm_id = null;
 	}
-	pestdiseaseModel.getTotalDiagnosesPerPD(farm_id, function(err, total){
+	if(year == "" || year == null){
+		year = null;
+	}
+	pestdiseaseModel.getTotalDiagnosesPerPD2(farm_id, year, function(err, total){
 		if(err)
 			throw err;
 		else{
@@ -2883,7 +2926,7 @@ exports.ajaxDiagnosisPDFrequency = function(req, res){
 			temp_total = total;
 			
 		}
-		pestdiseaseModel.getDiagnosisFrequentStage(farm_id, function(err, frequency){
+		pestdiseaseModel.getDiagnosisFrequentStage2(farm_id, year, null, null, function(err, frequency){
 			if(err)
 				throw err;
 			else{
@@ -2922,6 +2965,7 @@ exports.ajaxDiagnosisPDFrequency = function(req, res){
 				// console.log(new_total);
 
 			}
+
 			if(type == "pest"){
 				res.send(new_pest);
 			}

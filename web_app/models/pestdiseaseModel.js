@@ -1388,13 +1388,18 @@ exports.getProbabilities = function(type, id, next){
 	mysql.query(sql, next); return(sql);
 };
 
-exports.getDiagnosisFrequentStage = function(farm_id, next){
+exports.getDiagnosisFrequentStage = function(farm_id,year, next){
 	sql = 'SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed is null GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Land Preparation" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Sowing" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Vegetation" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Reproduction" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Ripening" GROUP BY pest_id UNION SELECT a.pest_id as pd_id, a.type , a.pest_name as pd_name, MAX(a.date_diagnosed) as last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) as count FROM (SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = "Pest") a WHERE stage_diagnosed = "Harvesting" ';
 	
 
 	if(farm_id != null && farm_id != ""){
 		sql = sql + " && farm_id = " + farm_id;
 	}
+	//Add date
+	if(year != null && year != ""){
+		sql = sql + " && YEAR(date_diagnosed) = " + year;
+	}
+
 	sql = sql + " GROUP BY pest_id ";
 
 
@@ -1403,12 +1408,83 @@ exports.getDiagnosisFrequentStage = function(farm_id, next){
 	if(farm_id != null && farm_id != ""){
 		sql = sql + " && farm_id = " + farm_id;
 	}
+	//Add date
+	if(year != null && year != ""){
+		sql = sql + " && YEAR(date_diagnosed) = " + year;
+	}
+
 	sql = sql + " GROUP BY disease_id ";
 
 	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 };
 
+exports.getDiagnosisFrequentStage2 = function(farm_id, year, pd_id, type, next){
+	var pest = "SELECT pd_id, pest_name as pd_name, type, date_diagnosed, farm_id, calendar_id, stage_diagnosed, COUNT(stage_diagnosed) as count FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = 'Pest' ";
+	var disease = "SELECT pd_id, disease_name as pd_name, type, date_diagnosed, farm_id, calendar_id, stage_diagnosed, COUNT(stage_diagnosed) as count FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = 'disease' ";
+	var end_query = ' GROUP BY pd_id, stage_diagnosed';
+	var sql;
+	var first = true;
+
+
+	if(farm_id != null && farm_id != ""){
+		if(first){
+			first = false;
+			pest = pest + " WHERE ";
+			disease = disease + " WHERE ";
+		}
+		pest = pest + " farm_id = " + farm_id;
+		disease = disease + " farm_id = " + farm_id;
+	}
+	
+	
+	if(year != null && year != ""){
+		if(first){
+			first = false;
+			pest = pest + " WHERE ";
+			disease = disease + " WHERE ";
+		}
+		else{
+			pest = pest + " && ";
+			disease = disease + " && ";
+		}
+		pest = pest + " YEAR(d.date_diagnosed) = " + year;
+		disease = disease + " YEAR(d.date_diagnosed) = " + year;
+	}
+	
+	
+	if(pd_id != null && pd_id != ""){
+		if(first){
+			first = false;
+			pest = pest + " WHERE ";
+			disease = disease + " WHERE ";
+		}
+		else{
+			pest = pest + " && ";
+			disease = disease + " && ";
+		}
+		pest = pest + " pd_id = " + pd_id;
+		disease = disease + " pd_id = " + pd_id;
+	}
+
+	if(type == null || type == ""){
+		sql = pest + end_query + " UNION " + disease + end_query;
+	}
+	else if(type == "Pest"){
+		sql = pest + end_query;
+
+	}
+	else if(type == "Disease"){
+		sql = disease + end_query;
+	}
+
+	sql = pest + end_query + " UNION " + disease + end_query;
+
+
+
+	console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
 
 
 
@@ -1442,7 +1518,111 @@ exports.getTotalDiagnosesPerPD = function(farm_id, next){
 
 	sql = sql + " ORDER BY total DESC";
 	
-	console.log(sql);
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+
+exports.getTotalDiagnosesPerPD2 = function(farm_id, year, next){
+	var sql = "SELECT a.pd_id, a.type, a.pd_name, a.last_diagnosed, SUM(a.count) AS total FROM (SELECT a.pest_id AS pd_id, a.type, a.pest_name AS pd_name, MAX(a.date_diagnosed) AS last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) AS count FROM ( SELECT * FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = 'Pest' ";
+	
+	if(farm_id != null && farm_id != ""){
+		sql = sql + " WHERE farm_id = " + farm_id;
+		if(year != null && year != ""){
+			sql = sql + " && YEAR(date_diagnosed) = " + year;
+		}
+	}
+	else{
+		if(year != null && year != ""){
+			sql = sql + " WHERE YEAR(date_diagnosed) = " + year;
+		}
+	}
+
+	sql = sql + ") a GROUP BY pd_id, stage_diagnosed UNION SELECT a.disease_id AS pd_id, a.type, a.disease_name AS pd_name, MAX(a.date_diagnosed) AS last_diagnosed, a.stage_diagnosed, COUNT(stage_diagnosed) AS count FROM ( SELECT * FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = 'Disease' ";
+	
+	
+	if(farm_id != null && farm_id != ""){
+		sql = sql + " WHERE farm_id = " + farm_id;
+		if(year != null && year != ""){
+			sql = sql + " && YEAR(date_diagnosed) = " + year;
+		}
+	}
+	else{
+		if(year != null && year != ""){
+			sql = sql + " WHERE YEAR(date_diagnosed) = " + year;
+		}
+	}
+
+	sql = sql + ") a GROUP BY pd_id, stage_diagnosed) a GROUP BY a.pd_name ORDER BY total DESC"; 
+	
+
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+exports.getTotalDiagnosesPerMonth = function(farm_id, year, pd_id, type, next){
+	var temp_end = ") a  GROUP BY a.month";
+	var month_pest = "SELECT a.month, a.type, COUNT(month) as frequency FROM ( SELECT pd_id, pest_id as pd_name, type, farm_id, calendar_id, stage_diagnosed, date_diagnosed, MONTHNAME(date_diagnosed) as month FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = 'Pest' ";
+	var month_disease = "SELECT a.month, a.type, COUNT(month) as frequency FROM ( SELECT pd_id, disease_id as pd_name, type, farm_id, calendar_id, stage_diagnosed, date_diagnosed, MONTHNAME(date_diagnosed) as month FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = 'Disease' ";
+	var months = ' SELECT * FROM (SELECT "January" AS month, null as type, 0 as frequency UNION SELECT "February" AS month, null as type, 0 as frequency UNION SELECT "March" AS month, null as type, 0 as frequency UNION SELECT "April" AS month, null as type, 0 as frequency UNION SELECT "May" AS month, null as type, 0 as frequency UNION SELECT "June" AS month, null as type, 0 as frequency UNION SELECT "July" AS month, null as type, 0 as frequency UNION SELECT "August" AS month, null as type, 0 as frequency UNION SELECT "September" AS month, null as type, 0 as frequency UNION SELECT "October" AS month, null as type, 0 as frequency UNION SELECT "November" AS month, null as type, 0 as frequency UNION SELECT "December" AS month, null as type, 0 as frequency) a GROUP BY a.month ';
+	var first = true;
+	var sql = "";
+
+	if(farm_id != null && farm_id != ""){
+		if(first){
+			first = false;
+			month_pest = month_pest + " WHERE ";
+			month_disease = month_disease + " WHERE ";
+		}
+		month_pest = month_pest + " farm_id = " + farm_id;
+		month_disease = month_disease + " farm_id = " + farm_id;
+	}
+
+
+	if(year != null && year != ""){
+		if(first){
+			first = false;
+			month_pest = month_pest + " WHERE ";
+			month_disease = month_disease + " WHERE ";
+		}
+		else{
+			month_pest = month_pest + " && ";
+			month_disease = month_disease + " && ";
+		}
+		month_pest = month_pest + " YEAR(d.date_diagnosed) = " + year;
+		month_disease = month_disease + " YEAR(d.date_diagnosed) = " + year;
+	}
+
+
+	if(pd_id != null && pd_id != ""){
+		if(first){
+			first = false;
+			month_pest = month_pest + " WHERE ";
+			month_disease = month_disease + " WHERE ";
+		}
+		else{
+			month_pest = month_pest + " && ";
+			month_disease = month_disease + " && ";
+		}
+		month_pest = month_pest + " pd_id = " + pd_id;
+		month_disease = month_disease + " pd_id = " + pd_id;
+	}
+
+	month_pest = month_pest + temp_end;
+	month_disease = month_disease + temp_end;
+	if(type == null || type == ""){
+		sql = 'SELECT * FROM (' + month_pest + " UNION " + month_disease + ' UNION ' + months + ") a GROUP BY month"; 
+	}
+	else if(type == "Pest"){
+		sql = 'SELECT * FROM (' + month_pest + " UNION " + months + ") a GROUP BY month"; 
+
+	}
+	else if(type == "Disease"){
+		sql = 'SELECT * FROM (' + month_disease + ' UNION ' + months + ") a GROUP BY month"; 
+	}
+	// console.log(month_pest);
+	// console.log(month_disease);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1460,7 +1640,7 @@ exports.getDiagnosisList = function(pd_id, type, farm_id, next){
 		sql = sql + " && farm_id = " + farm_id;
 
 	sql = sql + " ORDER BY date_diagnosed DESC";
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 };
 

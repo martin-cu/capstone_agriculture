@@ -13,10 +13,56 @@
 <div class="container-fluid">
 
         <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Pest and Disease > Frequency</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
-                    </div>
-    
+            <h3 class="text-dark mb-0">Pest and Disease > Frequency</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
+        </div>
+        
+        {{!-- <h1>Bar Chart HTML</h1>
 
+        <h1>Bar Chart HTML</h1>
+        <h2 class="title">Bar Chart HTML Example:  Using Only HTML And CSS</h2>
+            <div class="chart-wrap2 vertical">
+                
+                
+                <div class="grid">
+                    <div class="bar" style="--bar-value:85%;" data-name="Your Blog" title="Your Blog 85%"></div>
+                    <div class="bar" style="--bar-value:23%;" data-name="Medium" title="Medium 23%"></div>
+                    <div class="bar" style="--bar-value:7%;" data-name="Tumblr" title="Tumblr 7%"></div>
+                    <div class="bar" style="--bar-value:38%;" data-name="Facebook" title="Facebook 38%"></div>
+                    <div class="bar" style="--bar-value:35%;" data-name="YouTube" title="YouTube 35%"></div>
+                    <div class="bar" style="--bar-value:30%;" data-name="LinkedIn" title="LinkedIn 30%"></div>
+                    <div class="bar" style="--bar-value:5%;" data-name="Twitter" title="Twitter 5%"></div>
+                    <div class="bar" style="--bar-value:20%;" data-name="Other" title="Other 20%"></div>  
+                    <div class="bar" style="--bar-value:38%;" data-name="Facebook" title="Facebook 38%"></div>
+                    <div class="bar" style="--bar-value:35%;" data-name="YouTube" title="YouTube 35%"></div>
+                    <div class="bar" style="--bar-value:30%;" data-name="LinkedIn" title="LinkedIn 30%"></div>
+                    <div class="bar" style="--bar-value:5%;" data-name="Twitter" title="Twitter 5%"></div>
+                    <div class="bar" style="--bar-value:20%;" data-name="Other" title="Other 20%"></div>    
+                    
+                </div>
+            </div> --}}
+
+            {{!-- <script type="text/javascript">
+                
+            </script> --}}
+
+            {{!-- <div class="chart">
+                <ul class="numbers">
+                    <li><span>100%</span></li>
+                    <li><span>50%</span></li>
+                    <li><span>0%</span></li>
+                </ul>
+                <ul class="bars">
+                    <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="40"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="9"></div><span>Option 1</span></li>
+                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                </ul>
+            </div> --}}
     <div class="row">
 
         <div class="col-lg-12 col-xl-12 col-xxl-12">
@@ -47,18 +93,32 @@
                         <div class="card-body">
                                 
                                 {{!-- TAB CONTENT --}}
-                                <div class="d-flex" style="margin-bottom: 50px;">
-                                <label style="padding-right: 10px; margin-top: 5px">Filter Farm:</label>
-                                <select class="form-select form-select-sm" id="farm_selected" style="width : 30%;">
-                                    <option value="all">All</option>
-                                    {{#each farms}}
-                                        <option value="{{this.farm_id}}">{{this.farm_name}}</option>
-                                    {{/each}}   
-                                </select>
+                                <div class="d-flex">
+                                    <div class="d-flex flex-row" style="margin-bottom: 5px; width: 30%">
+                                        <label style="padding-right: 10px; margin-top: 5px">Filter Farm:</label>
+                                        <select class="form-select form-select-sm" id="farm_selected" style="width : 60%;">
+                                            <option value="all">All</option>
+                                            {{#each farms}}
+                                                <option value="{{this.farm_id}}">{{this.farm_name}}</option>
+                                            {{/each}}   
+                                        </select>
+                                    </div>
+                                    <div class="d-flex flex-row" style="margin-bottom: 5px; width: 30%">
+                                        <label style="padding-right: 10px; margin-top: 5px">Year:</label>
+                                        <select class="form-select form-select-sm" id="year_selected" style="width : 60%;">
+                                            <option value="">All</option>
+                                            <option value="2022">2022</option> 
+                                            <option value="2021">2021</option> 
+                                            <option value="2020">2020</option> 
+                                            <option value="2019">2019</option> 
+                                            <option value="2018">2018</option> 
+                                            <option value="2017">2017</option> 
+                                            <option value="2016">2016</option> 
+                                        </select>
+                                    </div>
                                 </div>
-                              
-                                <div class="tab-content" id="nav-tabContent">
 
+                                <div class="tab-content" id="nav-tabContent">
                                     {{!-- TAB 1 --}}
                                     <div class="tab-pane fade show active" id="diagnoses" role="tabpanel" aria-labelledby="diagnoses-tab">
                                     
@@ -74,8 +134,31 @@
                                     </form> --}}
                                     {{!-- <button class="btn btn-primary d-flex float-end" role="button" style=" margin-bottom: 20px; background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button> --}}
                                     
-                                    <div>
-                                        <table class="table table-striped table-bordered tablesorter" id="diagnosesTable" style="width : 50%; margin-left: auto; margin-right: auto;">
+                                    <div style="display: flex; flex-flow: row">
+                                        <div class="chart">
+                                            <ul class="numbers">
+                                                <li><span>{{highest}}</span></li>
+                                                <li><span>{{middle}}</span></li>
+                                            </ul>
+                                            <ul class="bars" id="all_monthly_frequency">
+                                                {{#each month_frequency}}
+                                                    <li><div class="bar" value="{{this.frequency}}" data-percentage="{{this.percent}}"></div><span>{{this.month_label}}</span></li>
+                                                {{/each}}
+                                                {{!-- <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="40"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="9"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li> --}}
+                                            </ul>
+                                        </div>
+                                        <table class="table table-striped table-bordered tablesorter" id="diagnosesTable" style="width : 50%; margin-left: 0px; margin-right: auto;">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th></th>
@@ -110,7 +193,28 @@
 
 
                                     {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_pest"'>Add Pest</button> --}}
-                                        <div>
+                                        <div style="display: flex; flex-flow: row">
+                                            <div class="chart">
+                                                <ul class="numbers">
+                                                    <li><span>100%</span></li>
+                                                    <li><span>50%</span></li>
+                                                    <li><span>0%</span></li>
+                                                </ul>
+                                                <ul class="bars" id="all_monthly_frequency2">
+                                                    <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="40"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="9"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                </ul>
+                                            </div>
                                             <table class="table table-striped table-bordered tablesorter" id="diagnosesTable" style="width : 50%; margin-left: auto; margin-right: auto;">
                                             <thead class="thead-dark">
                                                 <tr>
@@ -143,7 +247,28 @@
                                     </div>
                                     <div class="tab-pane fade" id="diseases" role="tabpanel" aria-labelledby="diseases-tab">
                                     {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_disease"'>Add Disease</button> --}}
-                                        <div>
+                                        <div style="display: flex; flex-flow: row">
+                                            <div class="chart">
+                                                <ul class="numbers">
+                                                    <li><span>100%</span></li>
+                                                    <li><span>50%</span></li>
+                                                    <li><span>0%</span></li>
+                                                </ul>
+                                                <ul class="bars" id="all_monthly_frequency3">
+                                                    <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="40"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="9"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                </ul>
+                                            </div>
                                             <table class="table table-striped table-bordered tablesorter" id="diagnosesTable" style="width : 50%; margin-left: auto; margin-right: auto;">
                                             <thead class="thead-dark">
                                                 <tr>
@@ -192,6 +317,28 @@
                         {{!-- ADD DIAGNOSIS --}}
                         <div role="tablist" id="accordion-diagnosis" style="margin-bottom: 20px;">
                             
+                        </div>
+                        <center>
+                            <h4 style="color: gray;">Pest/Disease Frequency</h4>
+                            <h6 style="color: gray;">Table details</h6>
+                        </center>
+                        <div class="chart" style="margin-top: 10px; margin-left: auto; margin-right: auto;">
+                            <ul class="numbers">
+                                <li><span>100%</span></li>
+                                <li><span>50%</span></li>
+                                <li><span>0%</span></li>
+                            </ul>
+                            <ul class="bars">
+                                <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="40"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="9"></div><span>Option 1</span></li>
+                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                            </ul>
                         </div>
                             <div>
                                 <table class="table table-striped table-bordered tablesorter" id="diagnosesTable">

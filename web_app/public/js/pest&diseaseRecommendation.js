@@ -1,6 +1,7 @@
 function renew(type, farm){
+	var year = $("#year_selected").val();
 
-	$.get("/ajaxGetDiagnosisPDFrequency", {type : type, farm_id : farm}, function(freq_list){
+	$.get("/ajaxGetDiagnosisPDFrequency", {type : type, farm_id : farm, year : year}, function(freq_list){
 		var i, table;
 		
 		for(i = 0; i < freq_list.length; i++){
@@ -132,7 +133,14 @@ $(document).ready(function() {
 		});
 	}
 	else if(view == "diagnosis_frequency"){
-		
+
+		//Update chart
+		$('.bars li .bar').each(function(key, bar){
+			var percentage = $(this).data('percentage');
+			$(this).animate({
+				'height' : percentage + '%'
+			},1000)
+		});
 
 		var pd = $(".frequency_radio:checked").val();
 		pd = pd.split("|");
@@ -186,11 +194,12 @@ $(document).ready(function() {
 		});
 
 
-		$("#farm_selected").on("change", function(){
+		$("#farm_selected, #year_selected").on("change", function(){
 			//CHANGE OF FARM
 			var id =$(".nav-link.active").attr("id");
 			// alert(id);
 			var farm_id = $("#farm_selected").val();
+			var year = $("#farm_selected").val();
 			if(id == "all-tab"){
 				$("#all_frequency").empty();
 				renew("all", farm_id);
@@ -223,27 +232,10 @@ $(document).ready(function() {
 });
 
 
-// $().change(function(){
-// 	var farm_id = $("#farm_selected").val();
-// 	var pd = $(".frequency_radio:checked").val();
-// 	pd = pd.split("|");
-// 	var pd_id = pd[0];
-// 	var type = pd[1];
-	
-// 	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
-// 		$("#diagnoses_list_table").empty();
-// 		var i;
-// 		$("#pd_name").text(list[0].pd_name);
-// 		$("#pd_type").text(list[0].type);
-// 		$("#pd_desc").text(list[0].pd_desc);
-// 		for(i = 0; i < list.length; i++){
-// 			$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
-// 		}
-// 	});	
-// });
 $(document).on("change",".frequency_radio", function(){
 	// alert("sad");
 	var farm_id = $("#farm_selected").val();
+	var farm_id = $("#year_selected").val();
 	var pd = $(".frequency_radio:checked").val();
 	pd = pd.split("|");
 	var pd_id = pd[0];
