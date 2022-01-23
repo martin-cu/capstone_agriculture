@@ -66,16 +66,19 @@ function processIcons(desc) {
 	else if (desc == 'moderate rain') {
 		icon = 'fas fa-cloud-rain';
 	}
+	else if (desc == 'sky is clear') {
+		icon = 'fas fa-cloud-rain';
+	}
 	else {
 		console.log('Unknown desc please add in js file!');
 		//console.log(desc);
 	}
-	return icon;
+	return desc;
 }
 
 function createForecastCards(data) {
-	var th, h2, h4, h6, div, i, small1, small2, div_cont;
-
+	var th, h2, h4, h6, div, i, small1, small2, div_cont, img, img_cont, desc;
+	var a = '';
 	th = document.createElement('td');
 	th.setAttribute('style', 'border-style: none;');
 
@@ -93,15 +96,29 @@ function createForecastCards(data) {
 	h4.setAttribute('style', 'color: #332C1F;font-size: 12px;');
 	h4.innerHTML = data.date;
 
-	h6 = document.createElement('h6');
-	h6.setAttribute('class', 'text-muted justify-content-xl-center text-align-center');
-	h6.setAttribute('style', 'text-align: center !important;');
+	// h6 = document.createElement('h6');
+	// h6.setAttribute('class', 'text-muted justify-content-xl-center text-align-center');
+	// h6.setAttribute('style', 'text-align: center !important;');
 
-	i = document.createElement('i');
-	i.setAttribute('class', 'justify-content-xl-center '+data.icon);
-	i.setAttribute('style', 'color: #332C1F;font-size: 35px;');
+	// i = document.createElement('i');
+	// i.setAttribute('class', 'justify-content-xl-center '+data.icon);
+	// i.setAttribute('style', 'color: #332C1F;font-size: 35px;');
 
-	h6.appendChild(i);
+	// h6.appendChild(i);
+
+	img_cont = document.createElement('div');
+	img_cont.setAttribute('class', 'text-muted justify-content-xl-center text-align-center w-100');
+
+	img = document.createElement('img');
+	img.setAttribute('src', `http://openweathermap.org/img/wn/${data.icon}.png`);
+	img.setAttribute('class', 'float-center text-center');
+	img.setAttribute('style', 'width: 88px; height: 60px;');
+
+	img_cont.appendChild(img);
+	console.log(data);
+	desc = document.createElement('div');
+	desc.setAttribute('class', 'w-100 text-center');
+	desc.innerHTML = data.desc;
 
 	div = document.createElement('div');
 	div.setAttribute('class', 'd-flex w-100 justify-content-center');
@@ -125,7 +142,9 @@ function createForecastCards(data) {
 
 	div_cont.appendChild(h2);
 	div_cont.appendChild(h4);
-	div_cont.appendChild(h6);
+	//div_cont.appendChild(h6);
+	div_cont.appendChild(img_cont);
+	div_cont.appendChild(desc);
 	div_cont.appendChild(div);
 	th.appendChild(div_cont);
 
@@ -153,10 +172,11 @@ function processDailyDetails(arr) {
 			obj.date = formatDate(date, 'YYYY-MM-DD');
 			obj.min_temp = arr[i].min_temp;
 			obj.max_temp = arr[i].max_temp;
-			obj.icon = processIcons(arr[i].desc);
+			obj.icon = processIcons(arr[i].icon);
 			obj.pressure = arr[i].pressure;
 			obj.humidity = arr[i].humidity;
 			obj.rainfall = arr[i].rainfall;
+			obj.desc = arr[i].desc;
 		}
 		else {
 			if (arr[i].min_temp > obj.min_temp) {

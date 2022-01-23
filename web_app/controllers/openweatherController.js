@@ -35,7 +35,8 @@ exports.get14DWeatherForecast = function(req, res) {
 					rainfall: body.list[i].hasOwnProperty('rain') ? body.list[i].rain : 0,
 					weather_id: body.list[i].weather[0].id,
 					desc: body.list[i].weather[0].description,
-					time_uploaded: hour
+					time_uploaded: hour,
+					icon: body.list[i].weather[0].icon
 				}
 				query.push(weather_obj);
 				if (weather_obj.desc == 'heavy intensity rain') {
@@ -102,7 +103,7 @@ exports.get14DWeatherForecast = function(req, res) {
 												e.target_date == '"'+disaster_records[i].target_date+'"');
 
 											if (list_index.length == 0) {
-												delete_disaster.push({ disaster_id: disaster_log[i].disaster_id });
+												delete_disaster.push({ disaster_id: disaster_records[i].disaster_id });
 											}
 										}
 										// If there are existing similar disaster records delete them

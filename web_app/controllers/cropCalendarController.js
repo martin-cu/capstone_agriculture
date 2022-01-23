@@ -135,7 +135,50 @@ exports.getCropCalendarTab = function(req, res) {
 								if (err)
 									throw err;
 								else {
-									console.log(material_list);
+									var unique;
+									var material_obj = {
+										seed: { data: material_list.filter(e => e.type == 'Seed'), rows: [] },
+										fertilizer:  { data: material_list.filter(e => e.type == 'Fertilizer'), rows: [] },
+										pesticide:  { data: material_list.filter(e => e.type == 'Pesticide'), rows: [] }
+									}
+
+									var material_obj_cont;
+
+									var obj_keys = ['seed', 'fertilizer', 'pesticide'];
+
+									for (var i = 0; i < obj_keys.length; i++) {
+										var unique_mats = [...new Map(material_obj[obj_keys[i]].data.map(item =>
+	  									[item.item_name, item])).values()];
+										unique = [...new Map(material_obj[obj_keys[i]].data.map(item =>
+	  									[item.farm_id, item])).values()];
+										
+										for (var y = 0; y < unique_mats.length; y++) {
+											material_obj[obj_keys[i]].rows.push({
+												item_name: unique_mats[y].item_name,
+												total_req: material_obj[obj_keys[i]].data.filter(e => e.item_name == unique_mats[y].item_name).map(e => (e.qty)).reduce(function (acc, obj) { return acc + obj; }, 0),
+												list: [],
+												total_deficient: material_obj[obj_keys[i]].data.filter(e => e.item_name == unique_mats[y].item_name && e.deficient_qty != 'N/A').map(e => (e.deficient_qty)).reduce(function (acc, obj) { return parseInt(acc) + parseInt(obj); }, 0)
+											});
+											for (var x = 0; x < unique.length; x++) {
+		  										var unique_farm_mats = material_obj[obj_keys[i]].data.filter(e => e.farm_id == unique[x].farm_id && e.item_id == unique_mats[y].item_id);
+
+	  											material_obj[obj_keys[i]].rows[material_obj[obj_keys[i]].rows.length-1].list = material_obj[obj_keys[i]].rows[material_obj[obj_keys[i]].rows.length-1].list.concat(
+	  												unique_farm_mats.map(item => (
+		  												{ 
+		  													farm: item.farm_name,
+		  													item: item.item_name, 
+		  													inventory: item.current_amount,
+		  													requirement: item.qty,
+		  													deficient: item.deficient_qty
+		  												}) 
+		  											)
+	  											);
+	  										}
+										}
+		  									
+									}
+									
+									html_data['materials'] = material_obj;
 									html_data["notifs"] = req.notifs;
 									res.render('crop_calendar_tab', html_data);
 								}

@@ -6,6 +6,24 @@
     label {
         color: #332C1F;
     }
+
+    @media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #section-to-print, #section-to-print * {
+    visibility: visible !important;
+    color: #332C1F;
+  }
+  
+  #section-to-print {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+  }
+}
 </style>
 
 <div class="container-fluid">
@@ -250,6 +268,194 @@
     </div>
 </div>
 
+{{!-- MATERIALS PDF --}}
+<div id="section-to-print" style="display: none; visibility: hidden">
+    <div class="container-fluid" style="margin-top: 10px">
+        
+        <h1 style="font-size: 80px; font-weight: bold; color: #939C1F">{{crop_plan_details.crop_plan}}</h1>
+    
+        <h4 style="font-size: 30px; margin-bottom: 70px; margin-left: 10px">{{crop_plan_details.farm_name}}</h4>
+
+        {{!-- No more space for this part :< --}}
+        {{!-- <div class="container-fluid" style="background-color: white; padding: 20px; border-radius: 10px; width:auto; margin-top: 30px;">      
+       
+            <div class="row" style="padding-left: 5px; margin-bottom: 30px">                         
+                <h5 class="text-dark mb-0" style="font-size: 20px;"><span style="font-weight: bold; margin-right: 80px">Land Preparation Date:</span> dd/mm/yyyy</h5>
+            </div>
+
+            <div class="row" style="padding-left: 5px; margin-bottom: 30px">                         
+                <h5 class="text-dark mb-0" style="font-size: 20px;"><span style="font-weight: bold; margin-right: 170px">Planting Dates:</span> dd/mm/yyyy to dd/mm/yyyy</h5>
+            </div>
+
+            <div class="row" style="padding-left: 5px; margin-bottom: 30px">                         
+                <h5 class="text-dark mb-0" style="font-size: 20px;"><span style="font-weight: bold; margin-right: 76px">Pest Application Dates:</span> dd/mm/yyyy to dd/mm/yyyy</h5>
+            </div>
+
+             <div class="row" style="padding-left: 5px; margin-bottom: 50px">                         
+                <h5 class="text-dark mb-0" style="font-size: 20px;"><span style="font-weight: bold; margin-right: 175px;">Harvest Dates:</span> dd/mm/yyyy to dd/mm/yyyy</h5>
+            </div>
+        </div> --}}
+
+        <h4 style="font-size: 30px; font-weight: bold; margin-top: 30px; margin-bottom: 30px; margin-left: 20px">Required Materials Report</h4>
+        
+        {{!-- SEEDS --}}
+        <div class="container" style="position: relative;">
+        <label for="" style="font-weight: bold; font-size: 25px; margin-bottom: 10px">Seeds</label>    
+            <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="seedTable">
+                <thead class="thead" style="max-height: 0px;">
+                    <tr>
+                        <th style="border-color: #EEEEEE; text-align:left">Seed Name</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Requirement</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{#if materials.seed.rows}}
+                    {{#each materials.seed.rows}}
+                    <tr>
+                        <td>{{this.item_name}}</td>
+                        <td class="text-right">{{this.total_req}}</td>
+                        <td class="text-right"></td>
+                        <td class="text-right">{{this.total_deficient}} bags</td>
+                    </tr>
+                        {{#each this.list}}
+                        <tr>
+                            <td>{{this.farm}}</td>
+                            <td class="text-right">{{this.inventory}}</td>
+                            <td class="text-right">{{this.requirement}}</td>
+                            <td class="text-right">{{this.deficient}}</td>
+                        </tr>
+                        {{/each}}
+                    {{/each}}
+                    {{else}}
+                    <tr>
+                        <td class="text-center" colspan="4" style="word-wrap:break-word;">N/A</td>
+                    </tr>
+                    {{/if}}
+                                                         
+                </tbody>
+            </table>
+            <!-- <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
+            Total Seeds Required: 0 bags
+            </span>  -->
+        </div>
+        <br>
+        {{!-- END OF SEEDS --}}
+       
+        {{!-- FERTILIZERS --}}
+        <div class="container" style="position: relative;">
+        <label for="" style="font-weight: bold; font-size: 25px; margin-bottom: 10px; margin-top: 30px">Fertilizers</label>
+         <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="fertilizerTable">
+                <thead class="thead" style="max-height: 0px;">
+                    <tr>
+                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word;">Fertilizer Name</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Requirement</th>
+                        <th style="border-color: #EEEEEE; text-align:right;">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{#if materials.fertilizer.rows}}
+                    {{#each materials.fertilizer.rows}}
+                    <tr>
+                        <td>{{this.item_name}}</td>
+                        <td class="text-right">{{this.total_req}}</td>
+                        <td class="text-right"></td>
+                        <td class="text-right">{{this.total_deficient}} bags</td>
+                    </tr>
+                        {{#each this.list}}
+                        <tr>
+                            <td>{{this.farm}}</td>
+                            <td class="text-right">{{this.inventory}}</td>
+                            <td class="text-right">{{this.requirement}}</td>
+                            <td class="text-right">{{this.deficient}}</td>
+                        </tr>
+                        {{/each}}
+                    {{/each}}
+                    {{else}}
+                    <tr>
+                        <td class="text-center" colspan="4" style="word-wrap:break-word;">N/A</td>
+                    </tr>
+                    {{/if}}
+                                                         
+                </tbody>
+            </table>
+            <!-- <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
+            Total Fertilizers Required: 0 bags
+            </span>  -->
+        </div>
+        <br>
+        {{!-- END OF FERTILIZERS --}}
+
+        {{!-- PESTICIDES --}}
+        <div class="container" style="position: relative;">
+        <label for="" style="font-weight: bold; font-size: 25px; margin-bottom: 10px; margin-top: 30px">Pesticides</label>
+         <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="pesticideTable">
+                <thead class="thead" style="max-height: 0px;">
+                    <tr>
+                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word;">Pesticide Name</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Requirement</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{#if materials.pesticide.rows}}
+                    {{#each materials.pesticide.rows}}
+                    <tr>
+                        <td>{{this.item_name}}</td>
+                        <td class="text-right">{{this.total_req}}</td>
+                        <td class="text-right"></td>
+                        <td class="text-right">{{this.total_deficient}} bags</td>
+                    </tr>
+                        {{#each this.list}}
+                        <tr>
+                            <td class="">{{this.farm}}</td>
+                            <td class="text-right">{{this.inventory}}</td>
+                            <td class="text-right">{{this.requirement}}</td>
+                            <td class="text-right">{{this.deficient}}</td>
+                        </tr>
+                        {{/each}}
+                    {{/each}}
+                    {{else}}
+                    <tr>
+                        <td class="text-center" colspan="4" style="word-wrap:break-word;">N/A</td>
+                    </tr>
+                    {{/if}}
+
+                                                         
+                </tbody>
+            </table>
+            <!-- <span  style="position:absolute; width: fit-content; right:0; margin-right: 0px; margin-top: 10px; padding: 10px; background-color: #7D7D7D; color: white; font-weight:bold;">
+            Total Pesticides Required: 0 bags
+            </span>  -->
+        </div>
+        <br>
+        {{!-- END OF PESTICIDES --}}
+        <br> <br> 
+    </div>
+    
+    <!-- <div style="float:right; width: 500px; background-color: #D6CD41; color: #584C33; padding: 20px; border-radius: 10px; margin-top: 10px;">
+    <span style="font-size: 20px; font-weight: bold;">REQUIRED MATERIALS SUMMARY:</span> <br><br>
+    <span style="font-size: 18px; font-weight: bold;">Seeds:</span> <span style="font-size: 18px; float:right">0 bags</span><br>
+    <span style="font-size: 18px; font-weight: bold;">Fertilizers:</span> <span style="font-size: 18px; float:right">0 bags</span><br>
+    <span style="font-size: 18px; font-weight: bold;">Pesticides:</span> <span style="font-size: 18px; float:right">0 bags</span>
+    </div> -->
+  
+</div> 
+{{!-- END OF MATERIALS PDF --}}
+
 <script>
     var view = 'crop_calendar_tab';
+
+    document.querySelector("#print").addEventListener("click", function() {
+        $('#section-to-print').toggle(); //removes the display:none
+        window.print();
+        $('#section-to-print').hide(); //brings back the display:none
+        
+    });
 </script>
