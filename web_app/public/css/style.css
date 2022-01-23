@@ -517,7 +517,7 @@ div.scrollmenu {
 	width : 600px;
 	height : 350px;
 	display : block;
-	margin-top: 40px;
+	/* margin-top: 40px; */
 }
 
 .numbers{
@@ -547,10 +547,10 @@ div.scrollmenu {
 }
 
 .bars{
-	color: gray;
+	color: rgb(6, 173, 0);
 	font-size: 12px;
 	font-weight: 600;
-	background: #555;
+	background: rgb(247, 247, 247);
 	margin: 0;
 	padding : 0;
 	display : inline-block;
@@ -576,24 +576,25 @@ div.scrollmenu {
 
 .bars .bar{
 	display: block;
-	background : gray;
+	background : rgb(103, 129, 31);
 	width : 25px;
 	height : 100px;
 	position: absolute;
+	border-radius: 3px;
 	bottom: 0;
 	margin-left: 5%;
 	text-align: center;
-	box-shadow: 0 0 10px 0 lightgrey;
+	box-shadow: 0 0 10px 0 rgb(92, 121, 12);
 }
 
 .bars .bar:hover{
-	background: red;
-	box-shadow: lightcoral;
+	background: rgb(0, 255, 149);
+	box-shadow: rgb(161, 255, 200);
 	cursor: pointer;
 }
 
 .bars .bar:before{
-	color: white;
+	color: rgb(95, 95, 95);
 	content: attr(value) ;
 	position :relative;
 	bottom: 20px;

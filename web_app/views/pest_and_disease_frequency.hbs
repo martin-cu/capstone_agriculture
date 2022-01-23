@@ -135,28 +135,34 @@
                                     {{!-- <button class="btn btn-primary d-flex float-end" role="button" style=" margin-bottom: 20px; background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button> --}}
                                     
                                     <div style="display: flex; flex-flow: row">
-                                        <div class="chart">
-                                            <ul class="numbers">
-                                                <li><span>{{highest}}</span></li>
-                                                <li><span>{{middle}}</span></li>
-                                            </ul>
-                                            <ul class="bars" id="all_monthly_frequency">
-                                                {{#each month_frequency}}
-                                                    <li><div class="bar" value="{{this.frequency}}" data-percentage="{{this.percent}}"></div><span>{{this.month_label}}</span></li>
-                                                {{/each}}
-                                                {{!-- <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="40"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="9"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
-                                                <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li> --}}
-                                            </ul>
+                                        <div>
+                                            <center>
+                                                <h4 style="color: gray;">Pest/Disease Frequency</h4>
+                                                <h6 style="color: gray;">Table details</h6>
+                                            </center>
+                                            <div class="chart">
+                                                <ul class="numbers" id="all_numbers">
+                                                    <li><span>{{highest}}</span></li>
+                                                    <li><span>{{middle}}</span></li>
+                                                </ul>
+                                                <ul class="bars" id="all_monthly_frequency">
+                                                    {{#each month_frequency}}
+                                                        <li><div class="bar" value="{{this.frequency}}" data-percentage="{{this.percent}}"></div><span>{{this.month_label}}</span></li>
+                                                    {{/each}}
+                                                    {{!-- <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="40"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="50"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="9"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li>
+                                                    <li><div class="bar" value="69" data-percentage="95"></div><span>Option 1</span></li> --}}
+                                                </ul>
+                                            </div>
                                         </div>
                                         <table class="table table-striped table-bordered tablesorter" id="diagnosesTable" style="width : 50%; margin-left: 0px; margin-right: auto;">
                                             <thead class="thead-dark">
@@ -195,12 +201,12 @@
                                     {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_pest"'>Add Pest</button> --}}
                                         <div style="display: flex; flex-flow: row">
                                             <div class="chart">
-                                                <ul class="numbers">
+                                                <ul class="numbers" id="pest_numbers">
                                                     <li><span>100%</span></li>
                                                     <li><span>50%</span></li>
                                                     <li><span>0%</span></li>
                                                 </ul>
-                                                <ul class="bars" id="all_monthly_frequency2">
+                                                <ul class="bars" id="pest_monthly_frequency">
                                                     <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
                                                     <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
                                                     <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
@@ -249,12 +255,12 @@
                                     {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_disease"'>Add Disease</button> --}}
                                         <div style="display: flex; flex-flow: row">
                                             <div class="chart">
-                                                <ul class="numbers">
+                                                <ul class="numbers" id="disease_numbers">
                                                     <li><span>100%</span></li>
                                                     <li><span>50%</span></li>
                                                     <li><span>0%</span></li>
                                                 </ul>
-                                                <ul class="bars" id="all_monthly_frequency3">
+                                                <ul class="bars" id="disease_monthly_frequency">
                                                     <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
                                                     <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
                                                     <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>
@@ -323,12 +329,12 @@
                             <h6 style="color: gray;">Table details</h6>
                         </center>
                         <div class="chart" style="margin-top: 10px; margin-left: auto; margin-right: auto;">
-                            <ul class="numbers">
+                            <ul class="numbers" id="diagnoses_numbers">
                                 <li><span>100%</span></li>
                                 <li><span>50%</span></li>
                                 <li><span>0%</span></li>
                             </ul>
-                            <ul class="bars">
+                            <ul class="bars" id="diagnoses_chart">
                                 <li><div class="bar" value="69" data-percentage="5"></div><span>Option 1</span></li>
                                 <li><div class="bar" value="69" data-percentage="20"></div><span>Option 1</span></li>
                                 <li><div class="bar" value="69" data-percentage="60"></div><span>Option 1</span></li>

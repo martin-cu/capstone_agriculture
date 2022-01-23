@@ -163,6 +163,7 @@ router.get('/pest_and_disease/diagnose_detailed_disease', environmentController.
 router.get('/ajaxGetPestandDisease', environmentController.ajaxGetPD);
 router.get('/ajaxGetDiagnosisList', environmentController.ajaxDiagnosisListPerPD);
 router.get('/ajaxGetDiagnosisPDFrequency', environmentController.ajaxDiagnosisPDFrequency);
+router.get('/ajaxUpdateChart', environmentController.ajaxUpdateChart);
 
 
 //Nutrient Management
