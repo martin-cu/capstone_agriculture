@@ -5,7 +5,7 @@ function renew(type, farm){
 		var i, table;
 		
 		for(i = 0; i < freq_list.length; i++){
-			table = "#" + type + "_frequency";
+			table = "#" + type.toLowerCase() + "_frequency";
 			// alert(freq_list[0].pd_name);
 			$(table).append('<tr> <td><input checked class="frequency_radio" type="radio" id="" name="fav_language" value="' + freq_list[0].pd_id +'|' + freq_list[0].type +'"></td> <td>' + freq_list[0].pd_name +'</td> <td>' + freq_list[0].type +'</td> <td>' + freq_list[0].total +'</td> <td>' + freq_list[0].frequent_stage +'</td> </tr>');
 
@@ -14,12 +14,57 @@ function renew(type, farm){
 			}
 		}
 	});
+
+	//For chart 1
+	$.get("/ajaxUpdateChart", {type : type, farm_id : farm, year : year}, function(chart_details){
+		var i, table;
+		table = "#" + type.toLowerCase() + "_monthly_frequency"; 
+		$(table).empty();
+		for(i = 0; i < chart_details.month_frequency.length; i++){
+			$(table).append('<li><div class="bar" value="' + chart_details.month_frequency[i].frequency + '" data-percentage="' + chart_details.month_frequency[i].percent + '"></div><span>' + chart_details.month_frequency[i].month_label + '</span></li>');
+		}
+
+		table = "#" + type.toLowerCase() + "_numbers"; 
+		$(table).empty();
+		$(table).append("<li><span>" + chart_details.highest + "</span></li>");
+		$(table).append("<li><span>" + chart_details.middle + "</span></li>");
+
+		$('.bars li .bar').each(function(key, bar){
+			var percentage = $(this).data('percentage');
+			$(this).animate({
+				'height' : percentage + '%'
+			},1000)
+		});
+	});	
+
 	var farm_id = $("#farm_selected").val();
 	var pd = $(".frequency_radio:checked").val();
 	pd = pd.split("|");
 	var pd_id = pd[0];
 	var type = pd[1];
 	
+	//For chart 2
+	$.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
+		var i, table;
+		table = "#diagnoses_chart"; 
+		$(table).empty();
+		for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
+			$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
+		}
+
+		table = "#diagnoses_numbers"; 
+		$(table).empty();
+		$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
+		$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
+
+		$('.bars li .bar').each(function(key, bar){
+			var percentage = $(this).data('percentage');
+			$(this).animate({
+				'height' : percentage + '%'
+			},1000)
+		});
+	});
+
 	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
 		$("#diagnoses_list_table").empty();
 		var i;
@@ -134,18 +179,11 @@ $(document).ready(function() {
 	}
 	else if(view == "diagnosis_frequency"){
 
-		//Update chart
-		$('.bars li .bar').each(function(key, bar){
-			var percentage = $(this).data('percentage');
-			$(this).animate({
-				'height' : percentage + '%'
-			},1000)
-		});
-
 		var pd = $(".frequency_radio:checked").val();
 		pd = pd.split("|");
 		var pd_id = pd[0];
 		var type = pd[1];
+		
 		$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type}, function(list){
 			$("#diagnoses_list_table").empty();
 			var i;
@@ -159,21 +197,50 @@ $(document).ready(function() {
 			}
 		});	
 
+		$.get("/ajaxUpdateChart",  {type : type, farm_id : "all", year : null, pd_id: pd_id}, function(diagnosis_chart){
+			var i, table;
+			table = "#diagnoses_chart"; 
+			$(table).empty();
+			for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
+				$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
+			}
+
+			table = "#diagnoses_numbers"; 
+			$(table).empty();
+			$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
+			$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
+			$('.bars li .bar').each(function(key, bar){
+				var percentage = $(this).data('percentage');
+				$(this).animate({
+					'height' : percentage + '%'
+				},1000)
+			});
+		});
+
+		//Update chart
+		$('.bars li .bar').each(function(key, bar){
+			var percentage = $(this).data('percentage');
+			$(this).animate({
+				'height' : percentage + '%'
+			},1000)
+		});
+
 
 		$("#all-tab, #pests-tab, #diseases-tab").on("click", function(){
 			var id = $(this).attr("id");
 			var farm_id = $("#farm_selected").val();
+			var year = $("#year_selected").val();
 			if(id == "all-tab"){
 				$("#all_frequency").empty();
 				renew("all", farm_id);
 			}
 			else if(id == "pests-tab"){
 				$("#pest_frequency").empty();
-				renew("pest", farm_id);
+				renew("Pest", farm_id);
 			}
 			else if(id == "diseases-tab"){
 				$("#disease_frequency").empty();
-				renew("disease", farm_id);
+				renew("Disease", farm_id);
 			}
 
 			var pd = $(".frequency_radio:checked").val();
@@ -199,25 +266,25 @@ $(document).ready(function() {
 			var id =$(".nav-link.active").attr("id");
 			// alert(id);
 			var farm_id = $("#farm_selected").val();
-			var year = $("#farm_selected").val();
+			var year = $("#year_selected").val();
 			if(id == "all-tab"){
 				$("#all_frequency").empty();
 				renew("all", farm_id);
 			}
 			else if(id == "pests-tab"){
 				$("#pest_frequency").empty();
-				renew("pest", farm_id);
+				renew("Pest", farm_id);
 			}
 			else if(id == "diseases-tab"){
 				$("#disease_frequency").empty();
-				renew("disease", farm_id);
+				renew("Disease", farm_id);
 			}
 
 			var pd = $(".frequency_radio:checked").val();
 			pd = pd.split("|");
 			var pd_id = pd[0];
 			var type = pd[1];
-			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
+			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 				$("#diagnoses_list_table").empty();
 				var i;
 				$("#pd_name").text(list[0].pd_name);
@@ -235,13 +302,13 @@ $(document).ready(function() {
 $(document).on("change",".frequency_radio", function(){
 	// alert("sad");
 	var farm_id = $("#farm_selected").val();
-	var farm_id = $("#year_selected").val();
+	var year = $("#year_selected").val();
 	var pd = $(".frequency_radio:checked").val();
 	pd = pd.split("|");
 	var pd_id = pd[0];
 	var type = pd[1];
 	
-	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
+	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 		$("#diagnoses_list_table").empty();
 		var i;
 		$("#pd_name").text(list[0].pd_name);
@@ -251,4 +318,27 @@ $(document).on("change",".frequency_radio", function(){
 			$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
 		}
 	});	
+
+
+	//For chart 2
+	$.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
+		var i, table;
+		table = "#diagnoses_chart"; 
+		$(table).empty();
+		for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
+			$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
+		}
+
+		table = "#diagnoses_numbers"; 
+		$(table).empty();
+		$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
+		$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
+
+		$('.bars li .bar').each(function(key, bar){
+			var percentage = $(this).data('percentage');
+			$(this).animate({
+				'height' : percentage + '%'
+			},1000)
+		});
+	});
 });

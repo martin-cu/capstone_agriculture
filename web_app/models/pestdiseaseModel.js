@@ -1482,7 +1482,7 @@ exports.getDiagnosisFrequentStage2 = function(farm_id, year, pd_id, type, next){
 
 
 
-	console.log(sql);
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
@@ -1562,9 +1562,9 @@ exports.getTotalDiagnosesPerPD2 = function(farm_id, year, next){
 
 exports.getTotalDiagnosesPerMonth = function(farm_id, year, pd_id, type, next){
 	var temp_end = ") a  GROUP BY a.month";
-	var month_pest = "SELECT a.month, a.type, COUNT(month) as frequency FROM ( SELECT pd_id, pest_id as pd_name, type, farm_id, calendar_id, stage_diagnosed, date_diagnosed, MONTHNAME(date_diagnosed) as month FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = 'Pest' ";
-	var month_disease = "SELECT a.month, a.type, COUNT(month) as frequency FROM ( SELECT pd_id, disease_id as pd_name, type, farm_id, calendar_id, stage_diagnosed, date_diagnosed, MONTHNAME(date_diagnosed) as month FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = 'Disease' ";
-	var months = ' SELECT * FROM (SELECT "January" AS month, null as type, 0 as frequency UNION SELECT "February" AS month, null as type, 0 as frequency UNION SELECT "March" AS month, null as type, 0 as frequency UNION SELECT "April" AS month, null as type, 0 as frequency UNION SELECT "May" AS month, null as type, 0 as frequency UNION SELECT "June" AS month, null as type, 0 as frequency UNION SELECT "July" AS month, null as type, 0 as frequency UNION SELECT "August" AS month, null as type, 0 as frequency UNION SELECT "September" AS month, null as type, 0 as frequency UNION SELECT "October" AS month, null as type, 0 as frequency UNION SELECT "November" AS month, null as type, 0 as frequency UNION SELECT "December" AS month, null as type, 0 as frequency) a GROUP BY a.month ';
+	var month_pest = "SELECT null as month_num, a.month, a.type, COUNT(month) as frequency FROM ( SELECT pd_id, pest_id as pd_name, type, farm_id, calendar_id, stage_diagnosed, date_diagnosed, MONTHNAME(date_diagnosed) as month FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = 'Pest' ";
+	var month_disease = "SELECT null as month_num, a.month, a.type, COUNT(month) as frequency FROM ( SELECT pd_id, disease_id as pd_name, type, farm_id, calendar_id, stage_diagnosed, date_diagnosed, MONTHNAME(date_diagnosed) as month FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = 'Disease' ";
+	var months = "SELECT * FROM (SELECT 1 as month_num,'January' AS month, NULL AS type, 0 AS frequency UNION SELECT 2 as month_num,'February' AS month, NULL AS type, 0 AS frequency UNION SELECT 3 as month_num,'March' AS month, NULL AS type, 0 AS frequency UNION SELECT 4 as month_num,'April' AS month, NULL AS type, 0 AS frequency UNION SELECT 5 as month_num,'May' AS month, NULL AS type, 0 AS frequency UNION SELECT 6 as month_num,'June' AS month, NULL AS type, 0 AS frequency UNION SELECT 7 as month_num,'July' AS month, NULL AS type, 0 AS frequency UNION SELECT 8 as month_num,'August' AS month, NULL AS type, 0 AS frequency UNION SELECT 9 as month_num,'September' AS month, NULL AS type, 0 AS frequency UNION SELECT 10 as month_num,'October' AS month, NULL AS type, 0 AS frequency UNION SELECT 11 as month_num,'November' AS month, NULL AS type, 0 AS frequency UNION SELECT 12 as month_num,'December' AS month, NULL AS type, 0 AS frequency) a GROUP BY a.month";
 	var first = true;
 	var sql = "";
 
@@ -1611,22 +1611,23 @@ exports.getTotalDiagnosesPerMonth = function(farm_id, year, pd_id, type, next){
 	month_pest = month_pest + temp_end;
 	month_disease = month_disease + temp_end;
 	if(type == null || type == ""){
-		sql = 'SELECT * FROM (' + month_pest + " UNION " + month_disease + ' UNION ' + months + ") a GROUP BY month"; 
+		sql = 'SELECT MAX(a.month_num) as month_num, a.month, a.type, a.frequency, SUM(a.frequency) as frequency FROM (' + month_pest + " UNION " + month_disease + ' UNION ' + months + ") a GROUP BY month ORDER BY month_num ASC"; 
 	}
 	else if(type == "Pest"){
-		sql = 'SELECT * FROM (' + month_pest + " UNION " + months + ") a GROUP BY month"; 
+		sql = 'SELECT MAX(a.month_num) as month_num, a.month, a.type, a.frequency, SUM(a.frequency) as frequency FROM (' + month_pest + " UNION " + months + ") a GROUP BY month ORDER BY month_num ASC"; 
 
 	}
 	else if(type == "Disease"){
-		sql = 'SELECT * FROM (' + month_disease + ' UNION ' + months + ") a GROUP BY month"; 
+		sql = 'SELECT MAX(a.month_num) as month_num, a.month, a.type, a.frequency, SUM(a.frequency) as frequency FROM (' + month_disease + ' UNION ' + months + ") a GROUP BY month ORDER BY month_num ASC"; 
 	}
+	// console.log(type);
 	// console.log(month_pest);
 	// console.log(month_disease);
 	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
-exports.getDiagnosisList = function(pd_id, type, farm_id, next){
+exports.getDiagnosisList = function(pd_id, type, farm_id, year, next){
 	var sql = 'SELECT * FROM (SELECT d.*, pt.pest_name as pd_name, pt.pest_desc as pd_desc, ft.farm_name, cct.crop_plan FROM diagnosis d INNER JOIN farm_table ft ON d.farm_id = ft.farm_id INNER JOIN crop_calendar_table cct ON cct.calendar_id = d.calendar_id INNER JOIN pest_table pt ON d.pd_id = pt.pest_id && d.type = "Pest" UNION SELECT d.*, pt.disease_name as pd_name, pt.disease_desc as pd_desc, ft.farm_name, cct.crop_plan FROM diagnosis d INNER JOIN farm_table ft ON d.farm_id = ft.farm_id INNER JOIN crop_calendar_table cct ON cct.calendar_id = d.calendar_id INNER JOIN disease_table pt ON d.pd_id = pt.disease_id && d.type = "Disease") a WHERE a.pd_id = ? && a.type = ? ';
 
 
@@ -1638,6 +1639,9 @@ exports.getDiagnosisList = function(pd_id, type, farm_id, next){
 
 	if(farm_id != null && farm_id != "")
 		sql = sql + " && farm_id = " + farm_id;
+	
+	if(year != null && year != "")
+		sql = sql + " && YEAR(a.date_diagnosed) = " + year;
 
 	sql = sql + " ORDER BY date_diagnosed DESC";
 	// console.log(sql);
