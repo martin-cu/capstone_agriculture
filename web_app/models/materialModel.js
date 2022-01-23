@@ -396,7 +396,7 @@ exports.getDetailsPurchase = function(purchase_id, next){
 	var sql;
 	sql = "SELECT * FROM (" + fertilizer + " UNION " + seed + " UNION " + pesticide + ") a WHERE ?";
 	sql = mysql.format(sql, purchase_id);
-	// console.log("\n\n\n" + sql);
+	console.log("\n\n\n" + sql);
 	mysql.query(sql, next);
 
 }
