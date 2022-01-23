@@ -5,6 +5,16 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 }
 
+exports.smoothFP = function(arr) {
+	for (var i = 0; i < arr.length; i++) {
+		arr[i]['forecast_yield'] = arr[i]['forecast_yield'] == 'N/A' ? 'N/A' : arr[i]['forecast_yield'].toFixed(2)+' cavans/ha';
+		arr[i]['current_yield'] = arr[i]['current_yield'] == 'N/A' ? 'N/A' : arr[i]['current_yield'].toFixed(2)+' cavans/ha';
+		arr[i]['total_harvest'] = arr[i]['total_harvest'] == 0 ? 'N/A' : arr[i]['total_harvest'].toFixed(2)+' cavans';
+		arr[i]['net_spend'] = numberWithCommas(arr[i]['net_spend'].toFixed(2));
+	}
+	return arr;
+}
+
 function smoothRadarChartData(obj) {
 	var highest, higher;
 	var highest_key, higher_key;
@@ -41,7 +51,9 @@ exports.processHarvestSummary = function(data, harvest, history, fp) {
 	var chart_arr = [];
 	var dataset_obj;
 	var summary = '';
-	
+	var total_harvest = 0, count_avg = 0;
+	var printable = [];
+	var og_pressure = [];	
 	for (var i = 0; i < unique.length; i++) {
 		var chart_data = { labels: ['Seed Rate', 'Avg Temp', 'Avg Humidity', 'Avg Pressure', 'Avg Rainfall',
 		'N', 'P', 'K', 'Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
@@ -52,15 +64,23 @@ exports.processHarvestSummary = function(data, harvest, history, fp) {
 			dataset_obj = { label: data[x].farm_name, data: [] };
 
 			if (unique[i].seed_name === data[x].seed_name) {
+				og_pressure.push((Math.round(data[x].pressure * 100)/100).toFixed(2));
+
 				data[x].temp -= 273.15;
-				data[x].temp = Math.round(data[x].temp * 100)/100;
+				data[x].temp = (Math.round(data[x].temp * 100)/100).toFixed(2);
 				data[x].humidity = Math.round(data[x].humidity * 100)/100;
 				data[x].pressure = Math.round(data[x].pressure * 100)/100;
-				data[x].rainfall = Math.round(data[x].rainfall * 100)/100;
+				data[x].rainfall = (Math.round(data[x].rainfall * 100)/100).toFixed(2);
 
 				data[x] = smoothRadarChartData(data[x]);
+				
 				for (var y = 0; y < obj_keys.length; y++) {
 					dataset_obj.data.push(data[x][obj_keys[y]]);
+
+					if (obj_keys[y] == 'harvested') {
+						total_harvest += data[x][obj_keys[y]];
+						count_avg++;
+					}
 				}
 				chart_data.datasets.push(dataset_obj);
 			}
@@ -69,6 +89,24 @@ exports.processHarvestSummary = function(data, harvest, history, fp) {
 
 		chart_arr.push(chart_data);
 	}
+
+	for (var i = 0; i < chart_arr.length; i++) {
+		printable = printable.concat(JSON.parse(JSON.stringify(chart_arr[i])));
+	}
+	
+	var index = 0;
+
+	for (var i = 0; i < printable.length; i++) {
+		for (var x = 0; x < printable[i].datasets.length; x++) {
+			for (var y = 0; y < og_pressure.length; y++) {
+				printable[i].datasets[x].data[2] = og_pressure[index];
+			}
+			index++;
+		}
+	}
+
+	printable['total_harvest'] = total_harvest;
+	printable['avg'] = Math.round(total_harvest / count_avg * 100) / 100;
 	
 	if (harvest.filter(e => e.farm_name).length != 0) {
 		summary += `A total of ${harvest.filter(e => e.farm_name).length} farms conducted special/early harvest. `;
@@ -121,7 +159,7 @@ exports.processHarvestSummary = function(data, harvest, history, fp) {
 		data[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 	}
 
-	return { chart_data: chart_arr, json_chart_data: JSON.stringify(chart_arr), detailed_list: data, overview: summary };
+	return { chart_data: chart_arr, json_chart_data: JSON.stringify(chart_arr), detailed_list: data, overview: summary, printable: printable };
 }
 
 exports.processDetailedFarmProductivity = function(fp, resources) {
@@ -194,6 +232,8 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 		fp_overview[i]['current_productivity'] = 'N/A';
 		fp_overview[i]['prev_productivity'] = (Math.round((fp_overview[i].max_previous_yield / fp_overview[i].prev_net_spend) * 100000) / 100000).toFixed(5);
 		
+		fp_overview[i]['total_harvest'] = fp_overview[i]['current_yield'] != 'N/A' ? fp_overview[i].farm_area * fp_overview[i].current_yield : 'N/A';
+
 		fp_overview[i].current_yield = fp_overview[i].current_yield != null ? fp_overview[i].current_yield
 			 : fp_overview[i].current_yield = 'N/A';
 		fp_overview[i]['current_productivity'] = fp_overview[i].current_yield != 'N/A' ? (Math.round((fp_overview[i].current_yield / fp_overview[i].net_spend) * 100000) / 100000).toFixed(5) : `N/A`;
