@@ -518,31 +518,32 @@
 		<div class="container" style="font-size: 16px !important;">
 		
 		{{!-- HEADER --}}
-		<div class="row" style="margin-bottom: 20px;">
-        <div class="col" style="background: #657429; padding: 20px">
-            <div class="d-xxl-flex align-items-xxl-center">
-				<center style="margin-bottom: 20px;">
-					<img src="assets/img/LA_logo.png" style="width: 150px;margin-left: auto;margin-right: auto;">
-				</center>
-			</div>
+			<div class="row" style="margin-bottom: 20px;">
+		        <div class="col" style="background: #657429; padding: 20px">
+		            <div class="d-xxl-flex align-items-xxl-center">
+						<center style="margin-bottom: 20px;">
+							<img src="assets/img/LA_logo.png" style="width: 150px;margin-left: auto;margin-right: auto;">
+						</center>
+					</div>
 
-            <div>
-                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">LA Rice Mill</h1>
-            </div>
-            <div>
-                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">Farm Productivity Report</h1>
-            </div>
-            <div>
-                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 8px;">For the Crop Cycle on October 2021 - March 2022</h1>
-            </div>
-        </div>
-    </div>
+		            <div>
+		                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">LA Rice Mill</h1>
+		            </div>
+		            <div>
+		                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 0px;">Farm Productivity Report</h1>
+		            </div>
+		            <div>
+		                <h1 style="text-align: center;font-size: 22px;color: #F1E8D7;margin-bottom: 8px;">For the Crop Cycle on October 2021 - March 2022</h1>
+		            </div>
+		        </div>
+		    </div>
 	{{!-- END OF HEADER --}}
 
 	{{!-- FOR EACH FARM --}}
+	{{#each farm_productivity}}
     <div class="row">
         <div class="col" style="background-color:#212529;margin-top: 15px; height: auto">
-            <h4 style="color:white; font-weight: bold; margin-bottom: 15px">Farm 1</h4>
+            <h4 style="color:white; font-weight: bold; margin-bottom: 15px">{{this.farm_name}}</h4>
         </div>
     </div>
     <div class="row">
@@ -551,6 +552,8 @@
                 <table class="table" id="farmTable">
                     <thead>
                         <tr>
+                        	<th style="text-align: left;">Crop Plan</th>
+                        	<th style="text-align: left;">Crop Name</th>
 							<th style="text-align: right;">Forecasted Harvest</th>
 							<th style="text-align: right;">Actual Harvest</th>
                             <th style="text-align: right;">Total Harvest</th>
@@ -561,10 +564,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="text-align: right;">Cell 1</td>
-                            <td style="text-align: right;">Cell 2</td>
-                            <td style="text-align: right;">Cell 3</td>
-                            <td style="text-align: right;">Cell 4</td>
+                        	<td style="text-align: left;">{{this.crop_plan}}</td>
+                            <td style="text-align: left;">{{this.seed_name}}</td>
+                            <td style="text-align: right;">{{this.forecast_yield}}</td>
+                            <td style="text-align: right;">{{this.current_yield}}</td>
+                            <td style="text-align: right;">{{this.total_harvest}}</td>
+                            <td style="text-align: right;">{{this.net_spend}}</td>
                         </tr>
 
                     </tbody>
@@ -575,55 +580,14 @@
     <div class="row">
         <div class="col" style="background-color:#EEEEEE; padding: 5px">
             <div style="padding: 10px;">
-			<span class="float-end" style="color:#332C1F;margin-left: 20px;font-weight: bold;">40%</span>
+			<span class="float-end" style="color:#332C1F;margin-left: 20px;font-weight: bold;">{{this.current_productivity}}%</span>
 			<span class="float-end" style="color: #332C1F;font-weight: bold;">Overall Productivity Rating</span></div>
         </div>
     </div>
+	{{/each}}
 	{{!-- END OF FOR EACH FARM --}}
 
-	{{!-- DELETE LATER --}}
-      <div class="row">
-        <div class="col" style="background-color:#212529;margin-top: 15px; height: auto">
-            <h4 style="color:white; font-weight: bold; margin-bottom: 15px">Farm 1</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="table-responsive">
-                <table class="table" id="farmTable">
-                    <thead>
-                        <tr>
-							<th style="text-align: right;">Forecasted Harvest</th>
-							<th style="text-align: right;">Actual Harvest</th>
-                            <th style="text-align: right;">Total Harvest</th>
-                            <th style="text-align: right;">Total Inputs</th>
-                            {{!-- <th>Column 2</th>
-                            <th>Column 2</th> --}}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="text-align: right;">Cell 1</td>
-                            <td style="text-align: right;">Cell 2</td>
-                            <td style="text-align: right;">Cell 3</td>
-                            <td style="text-align: right;">Cell 4</td>
-                        </tr>
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col" style="background-color:#EEEEEE; padding: 10px">
-            <div>
-			<span class="float-end" style="color:#332C1F;margin-left: 20px;font-weight: bold;">40%</span>
-			<span class="float-end" style="color: #332C1F;font-weight: bold;">Overall Productivity Rating</span></div>
-        </div>
-    </div>
-	{{!-- END OF DELETE LATER --}}
-
-	</div>
+		</div>
 
 	</div>
 	

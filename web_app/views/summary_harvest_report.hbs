@@ -10,12 +10,12 @@
 		visibility: hidden;
 	}
 
-	#section-to-print, #section-to-print * {
+	.section-to-print, .section-to-print * {
 		visibility: visible !important;
 		color: #332C1F;
 	}
 	
-	#section-to-print {
+	.section-to-print {
 		position: absolute;
 		width: 100%;
 		left: 0;
@@ -200,7 +200,7 @@
 </div>
 
 {{!-- PRINT HARVEST SUMMARY REPORT --}}
-	<div id="section-to-print" style="display: none; visibility: hidden">
+	<div class="section-to-print" style="display: none; visibility: hidden">
 		<div class="container" style="margin-top: 10px;">
 
 		{{!-- HEADER --}}
@@ -233,82 +233,35 @@
     <div class="row">
         <div class="col">
             <div class="table-responsive">
+            	
                 <table class="table">
-                    <thead>
+                	{{#each data.printable}}
+                		{{#if @first}}
                         <tr>
-                            <th>Farm</th>
-                            <th style="text-align: left;">Seed Name</th>
-                            <th style="text-align: center;">Land Area</th>
-							<th style="text-align: right;">Historical Yield</th>
-                            <th style="text-align: right;">Actual Yield&nbsp;</th>
+                        	<th class="text-left">Farm Name</th>
+                        	<th class="text-left">Seed Name</th>
+                            {{#each this.labels}}
+                            <th class="text-center">{{this}}</th>
+                            {{/each}}
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-							<td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-							<td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-							<td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-							<td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-							<td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-						    <td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-							<td style="text-align: right;">80 cavans/ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-						    <td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                        <tr>
-                            <td>Farm 1</td>
-                            <td>Dinorado 2021</td>
-                            <td style="text-align: center;">2 ha</td>
-                            <td style="text-align: right;">80 cavans/ha</td>
-						    <td style="text-align: right;">80 cavans/ha</td>
-                        </tr>
-                    </tbody>
+                        {{/if}}
+
+                    	{{#each this.datasets}}
+                    	<tr>
+                    		<td class="text-left">{{this.label}}</td>
+                    		{{#if @first}}
+                    		<td class="text-left align-middle" rowspan="{{../datasets.length}}">{{../title}}</td>
+
+                    		{{/if}}
+                    		{{#each this.data}}
+                    		<td class="text-center">{{this}}</td>
+                    		{{/each}}
+                    	</tr>
+                    	{{/each}}
+
+                    {{/each}}
                 </table>
+                
             </div>
         </div>
     </div>
@@ -321,12 +274,12 @@
                         <tr style="border-style: none;">
                             <td style="width: 150px;border-style: none;padding: 0px;"></td>
                             <td style="text-align: left;width: 100px;border-style: none;font-weight: bold;">Average Harvested Crops</td>
-                            <td style="text-align: right;width: 100px;border-style: none;font-weight: bold; padding-right: 5px">60 cavans/ha</td>
+                            <td style="text-align: right;width: 100px;border-style: none;font-weight: bold; padding-right: 5px">{{data.printable.avg}} cavans/ha</td>
                         </tr>
                         <tr style="border-style: none;font-weight: bold;">
                             <td style="width: 150px;border-style: none;padding: 0px;font-weight: bold;"></td>
                             <td style="text-align: left;width: 100px;border-style: none;font-weight: bold;">Total Harvested Crops</td>
-                            <td style="text-align: right;width: 100px;border-style: none;font-weight: bold; padding-right: 5px">60 cavans/ha</td>
+                            <td style="text-align: right;width: 100px;border-style: none;font-weight: bold; padding-right: 5px">{{data.printable.total_harvest}} cavans/ha</td>
                         </tr>
                     </tbody>
                 </table>
@@ -335,8 +288,7 @@
     </div>
 		</div>
 
-	</div>
-
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
@@ -447,10 +399,11 @@
 		new Chart(target, options);
 	}
 
+
 	document.querySelector("#print").addEventListener("click", function() {
-	$('#section-to-print').toggle(); //removes the display:none
+	$('.section-to-print').toggle(); //removes the display:none
     window.print();
-    $('#section-to-print').hide(); //brings back the display:none
+    $('.section-to-print').hide(); //brings back the display:none
     
 	});
 

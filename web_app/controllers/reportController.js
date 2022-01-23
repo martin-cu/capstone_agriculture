@@ -47,7 +47,8 @@ exports.getFarmProductivityReport = function(req, res) {
 							throw err;
 						else {
 							html_data['harvest_reports'] = harvest_reports;
-							html_data['farm_productivity'] = analyzer.calculateProductivity(fp_overview, input_resources);
+							html_data['farm_productivity'] = analyzer.smoothFP(analyzer.calculateProductivity(fp_overview, input_resources));
+							console.log(html_data.farm_productivity);
 							html_data["notifs"] = req.notifs;
 							res.render('farm_productivity_report', html_data);
 						}
