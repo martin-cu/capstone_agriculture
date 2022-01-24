@@ -3,7 +3,7 @@ mysql = mysql.connection;
 
 exports.getFarmProductivity = function(next) {
 	var sql = "select *, max(prev_calendar) as max_prev_calendar, max(previous_yield) as max_previous_yield from ( select st.seed_name, ft.farm_area, fy.forecast_yield_id, cct.calendar_id, null as prev_calendar, cct.status, ft.farm_id, ft.farm_name, cct.crop_plan, fy.forecast as forecast_yield, cct.harvest_yield as current_yield, null as previous_yield from crop_calendar_table cct left join crop_calendar_table as cct1 on (cct.farm_id = cct1.farm_id and cct.harvest_date < cct1.harvest_date) join seed_table st on cct.seed_planted = st.seed_id join forecasted_yield fy on (cct.calendar_id = fy.calendar_id and cct.seed_planted = fy.seed_id) join farm_table ft on cct.farm_id = ft.farm_id where cct1.harvest_date is null union select null, null, null, null, t1.calendar_id, null, t1.farm_id, null, null, null, null, t1.harvest_yield from ( select *, @rn := if(@prev = farm_id, @rn + 1, 1) as rn, @prev := farm_id from crop_calendar_table join (select @prev := null, @rn := 0) as vars order by farm_id, harvest_date desc ) as t1 where rn = 2 ) as t2 group by t2.farm_id ";
-	//console.log(sql);
+	console.log(sql);
 
 	mysql.query(sql, next);
 };

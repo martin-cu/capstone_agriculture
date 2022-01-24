@@ -46,7 +46,7 @@ exports.get14DWeatherForecast = function(req, res) {
 						notification_title: '"Heavy Rainfall Alert"',
 						notification_desc: '"Expected heavy intensity rain on '+weather_obj.date+'"',
 						farm_id: 'null',
-						url: '"#"',
+						url: '"/disaster_management"',
 						icon: '"exclamation-triangle"',
 						color: '"danger"',
 						status: 0
@@ -84,58 +84,65 @@ exports.get14DWeatherForecast = function(req, res) {
 									if (err)
 										throw err;
 									else {
-										var repeat_notif = [];
-										var query_notif = [];
-
-										var delete_disaster = [];
-										var list_index = [];
-										
-										for (var i = 0; i < notif_warning.length; i++) {
-											list_index = notif_list.filter(e => '"'+e.notification_title+'"' == notif_warning[i].notification_title && 
-												'"'+e.notification_desc+'"' == notif_warning[i].notification_desc);
-											if (list_index.length == 0) {
-												query_notif.push(notif_warning[i]);
-											}
-										}
-
-										for (var i = 0; i < disaster_records.length; i++) {
-											list_index = disaster_log.filter(e => e.type == disaster_records[i].type &&
-												e.target_date == '"'+disaster_records[i].target_date+'"');
-
-											if (list_index.length == 0) {
-												delete_disaster.push({ disaster_id: disaster_records[i].disaster_id });
-											}
-										}
-										// If there are existing similar disaster records delete them
-										if (delete_disaster.length != 0) {
-											disasterModel.deleteDisasterLog(delete_disaster, function(err, disaster_delete) {
-												if (err)
-													throw err;
-											});
-										}
-
-										// Create disaster log and create notif alert
-										disasterModel.createDisasterLog(disaster_log, function(err, disaster_add) {
+										// Set all previously recorded disaster warnings to inactive
+										disasterModel.updateLog({ status: 0 }, null, function(err, update_status) {
 											if (err)
 												throw err;
 											else {
-												console.log(disaster_add);
-												if (query_notif.length != 0) {
-													notifModel.createNotif(query_notif, function(err, notif) {
+												var repeat_notif = [];
+												var query_notif = [];
+
+												var delete_disaster = [];
+												var list_index = [];
+												
+												for (var i = 0; i < notif_warning.length; i++) {
+													list_index = notif_list.filter(e => '"'+e.notification_title+'"' == notif_warning[i].notification_title && 
+														'"'+e.notification_desc+'"' == notif_warning[i].notification_desc);
+													if (list_index.length == 0) {
+														query_notif.push(notif_warning[i]);
+													}
+												}
+
+												for (var i = 0; i < disaster_records.length; i++) {
+													list_index = disaster_log.filter(e => e.type == disaster_records[i].type &&
+														e.target_date == '"'+disaster_records[i].target_date+'"');
+
+													if (list_index.length == 0) {
+														delete_disaster.push({ disaster_id: disaster_records[i].disaster_id });
+													}
+												}
+												// If there are existing similar disaster records delete them
+												if (delete_disaster.length != 0) {
+													disasterModel.deleteDisasterLog(delete_disaster, function(err, disaster_delete) {
 														if (err)
 															throw err;
-														else {
-															console.log(notif);
-															res.send({});																		
-														}
 													});
 												}
-												else {
-													res.send({});
-												}
+
+												// Create disaster log and create notif alert
+												disasterModel.createDisasterLog(disaster_log, function(err, disaster_add) {
+													if (err)
+														throw err;
+													else {
+														console.log(disaster_add);
+														if (query_notif.length != 0) {
+															notifModel.createNotif(query_notif, function(err, notif) {
+																if (err)
+																	throw err;
+																else {
+																	console.log(notif);
+																	res.send({});																		
+																}
+															});
+														}
+														else {
+															res.send({});
+														}
+													}
+												});
 											}
-										});		
-	
+										});
+												
 									}
 								});				
 							}

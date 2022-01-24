@@ -5,6 +5,7 @@ const workOrderModel = require('../models/workOrderModel.js');
 const materialModel = require('../models/materialModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const harvestModel = require('../models/harvestModel.js');
+const reportModel = require('../models/reportModel.js');
 var request = require('request');
 
 function consolidateResources(type, ids, qty, wo_id) {
@@ -341,7 +342,7 @@ exports.getWorkOrdersPage = function(req, res) {
 }
 
 exports.getWorkOrdersDashboard = function(req, res) {
-	console.log(req.notifs[0]);
+	//console.log(req.notifs[0]);
 	var upcoming = [];
 	var completed = [];
 	var html_data = {};
@@ -354,34 +355,51 @@ exports.getWorkOrdersDashboard = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			for (var i = 0; i < list.length; i++) {
+			reportModel.getFarmProductivity(function(err, fp_overview) {
+				if (err)
+					throw err;
+				else {
+					var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id).concat(fp_overview.map(({ max_prev_calendar }) => max_prev_calendar));
+					reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
+						if (err)
+							throw err;
+						else {
+							for (var i = 0; i < list.length; i++) {
 
-				if (list[i].status == 'Pending') {
-					list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
-					list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
-					list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+								if (list[i].status == 'Pending') {
+									list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+									list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+									list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
 
-					upcoming.push(list[i]);
+									upcoming.push(list[i]);
+								}
+
+								if (list[i].status == 'Completed') {
+									list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+									list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+									list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');
+									list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+					
+									completed.push(list[i]);
+								}
+							}
+
+							html_data['farm_productivity'] = analyzer.smoothFP(analyzer.calculateProductivity(fp_overview, input_resources));
+							console.log(html_data.farm_productivity);
+
+							html_data = { upcomingWoList: upcoming.slice(0, 10), completedWoList: completed.slice(0, 10) };
+
+							html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+
+							
+							html_data["notifs"] = req.notifs;
+							html_data["notifs"] = req.notifs;
+							res.render('home', html_data);
+						}
+					});
 				}
-
-				if (list[i].status == 'Completed') {
-					list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
-					list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
-					list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');
-					list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
-	
-					completed.push(list[i]);
-				}
-			}
-
-			html_data = { upcomingWoList: upcoming, completedWoList: completed };
-
-			html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
-
-			
-			html_data["notifs"] = req.notifs;
-			html_data["notifs"] = req.notifs;
-			res.render('home', html_data);
+			});
+							
 		}
 	});
 }
