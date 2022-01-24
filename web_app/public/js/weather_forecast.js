@@ -233,7 +233,7 @@ function appendRecommendation(obj) {
 	div.setAttribute('class', 'd-flex flex-column');
 	
 	lbl = document.createElement('label');
-	lbl.innerHTML = 'Suggested Date:';
+	lbl.innerHTML = 'Suggested Land Preparation Date:';
 
 	dates = document.createElement('div');
 	dates.setAttribute('class', 'text-center font-weight-normal');

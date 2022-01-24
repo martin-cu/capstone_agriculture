@@ -1360,11 +1360,13 @@ exports.getFarmPestDiseases = function(req, res){
 															var i, x, existing = [];
 															for(i = 0; i < diagnosis.length; i++){
 																diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
+																
 																for(x = 0 ; x < possible_pests.length; x++){
 																	if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
 																		possible_pests[x].probability = possible_pests[x].probability * 1.1;
-																		if(diagnosis[i].farm_id == farm_id.farm_id)
+																		if(diagnosis[i].farm_id == farm_id.farm_id){
 																			possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																		}
 																	}
 																	
 																}	
@@ -2674,9 +2676,14 @@ exports.storePDRecommendation = function(req, res){
 
 //ajax
 exports.getDiagnosisList = function(req,res){
+	var farm_id = req.query.farm_id;
+	console.log(farm_id);
 
+	if(farm_id == "" || farm_id == null){
+		farm_id = null;
+	}
 	// console.log(req.query);
-	pestdiseaseModel.getDiagnosis(null, null, function(err, diagnoses){
+	pestdiseaseModel.getDiagnosis({farm_id : farm_id}, null, function(err, diagnoses){
 		// console.log("diagnoses");
 		// console.log(diagnoses);
 		res.send(diagnoses);
@@ -2685,8 +2692,13 @@ exports.getDiagnosisList = function(req,res){
 };
 
 exports.getProbabilities = function(req,res){
+	var farm_id = req.query.farm_id;
+	console.log(farm_id);
 
-	pestdiseaseModel.getProbabilities(null, null, function(err, probabilities){
+	if(farm_id == "" || farm_id == null){
+		farm_id = null;
+	}
+	pestdiseaseModel.getProbabilities(null, {farm_id : farm_id}, function(err, probabilities){
 		if(err)
 			throw err;
 		else	

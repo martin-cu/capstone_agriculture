@@ -1271,6 +1271,7 @@ exports.getPDProbabilityPercentage = function(weather, season, farmtype, stage, 
 
 	sql = sql + sql2 + ") ORDER BY probability DESC";
 
+	console.log("probability sql");
 	console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
@@ -1295,6 +1296,7 @@ exports.getDiagnosis = function(farm_id, type, next){
 		
 	}
 	else{
+		console.log(farm_id);
 		pest_diagnosis = pest_diagnosis + " && d.farm_id = ? ";
 		pest_diagnosis = mysql.format(pest_diagnosis, farm_id.farm_id);
 		disease_diagnosis = disease_diagnosis + " && d.farm_id = ? ";
@@ -1307,8 +1309,8 @@ exports.getDiagnosis = function(farm_id, type, next){
 	else if(type == "Pest")
 		sql = pest_diagnosis;
 	else if(type == "Disease")
-		sql = disease_diagnosis
-	// console.log("sql");
+		sql = disease_diagnosis;
+	// console.log("diagnosis sql");
 	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
@@ -1383,8 +1385,11 @@ exports.updatePDProbability = function(probability_id, probability, next){
 }
 
 exports.getProbabilities = function(type, id, next){
-	sql = 'SELECT *, AVG(pp.probability), MAX(date) FROM pd_probabilities pp INNER JOIN pest_table pt ON pt.pest_id = pp.pd_id JOIN farm_table using (farm_id) WHERE pp.pd_type = "Pest" GROUP BY pd_id UNION SELECT *, AVG(pp.probability), MAX(date)  FROM pd_probabilities pp INNER JOIN disease_table pt ON pt.disease_id = pp.pd_id  JOIN farm_table using (farm_id) WHERE pp.pd_type = "Disease"  GROUP BY pd_id; ';
-
+	sql = 'SELECT *, AVG(pp.probability), MAX(date) FROM pd_probabilities pp INNER JOIN pest_table pt ON pt.pest_id = pp.pd_id JOIN farm_table using (farm_id) WHERE pp.pd_type = "Pest" GROUP BY pd_id UNION SELECT *, AVG(pp.probability), MAX(date)  FROM pd_probabilities pp INNER JOIN disease_table pt ON pt.disease_id = pp.pd_id  JOIN farm_table using (farm_id) WHERE pp.pd_type = "Disease" ';
+	if(id != null && id != ""){
+		sql = sql + " && farm_id = " + id.farm_id;
+	}
+	sql = sql + " GROUP BY pd_id;";
 	mysql.query(sql, next); return(sql);
 };
 
