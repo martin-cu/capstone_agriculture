@@ -61,8 +61,8 @@ function getFarmDetails(obj) {
 		$.get("/get_crop_plans", { status: ['Active', 'In-Progress',"Completed"], where : {key : "farm_name", val : details.details[0].farm_name}}, function(result){
 			$("#crop_calendar_list").empty();
 			for(i = 0; i < result.length; i++)
-				if(result[i].crop_plan != null && result[i].farm_name == details.details[0].farm_name)
-					$("#crop_calendar_list").append('<option value="' + result[i].calendar_id + '">' + result[i].crop_plan + '</option>');
+				if(result[result.length - 1 - i].crop_plan != null && result[result.length - 1 - i].farm_name == details.details[0].farm_name)
+					$("#crop_calendar_list").append('<option value="' + result[result.length - 1 - i].calendar_id + '">' + result[result.length - 1 - i].crop_plan + '</option>');
 		});
 	});
 }
@@ -271,14 +271,16 @@ $(document).ready(function() {
 		$.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
 			console.log(farms);
 			var li, style = 'border: 1px solid rgba(0,0,0,.125)';
-			viewed_farm_id = farms[0].farm_id;
-			viewed_farm_name = farms[0].farm_name;
+			
 
 			for (var i = 0; i < farms.length; i++) {
 				li = '';
 				
 				// Append active class if first li
-				if (i == 0) {
+				if (farms[i].farm_id == selected_farm_id) {
+					viewed_farm_id = farms[i].farm_id;
+					viewed_farm_name = farms[i].farm_name;
+					var query = farms[i].farm_name;
 					li = '<li style="'+style+'" class="farm_li list-group-item active_farm" data="'+farms[i].farm_id+'"><span>'+farms[i].farm_name+'</span><span class="float-end">'+farms[i].farm_area+'ha'+'</span></li>';
 					$('#monitor_farm_list').append(li);
 				}
@@ -289,7 +291,7 @@ $(document).ready(function() {
 					$('#monitor_farm_list').append(li);
 				}
 			}
-			var query = farms[0].farm_name;
+			
 
 			getFarmDetails({ farm_id: viewed_farm_id, calendar_id : viewed_farm_id});
 			getGeoData(query);
@@ -383,6 +385,8 @@ $(document).ready(function() {
 					else
 						$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + " " + farm_details.pesticide[i].units + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
 				}
+
+				
 				//UPDATE PEST AND DISEASE CARD
 				for(i = 0; i < 3; i++){
 					if(farm_details.probability[i].pd_name == null)

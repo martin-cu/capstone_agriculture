@@ -483,6 +483,7 @@ exports.getFarmDetailsDashboard = function(req, res) {
 exports.getMonitorFarms = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+	html_data["farm_id"] = req.query.farm_id;
 	html_data["notifs"] = req.notifs;
 	res.render('farm_monitoring', html_data);
 }
