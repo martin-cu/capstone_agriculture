@@ -2707,16 +2707,26 @@ exports.getProbabilities = function(req,res){
 };
 
 exports.ajaxGetDiagnosisStageFrequency = function(req,res){
-	pestdiseaseModel.getDiagnosisFrequentStage2(null, null, null, null, function(err, frequency){
+	var farm_id = req.query.farm_id;
+	// console.log(farm_id);
+
+	if(farm_id == "" || farm_id == null){
+		farm_id = null;
+	}
+
+	pestdiseaseModel.getDiagnosisFrequentStage2(farm_id, null, null, null, function(err, frequency){
 		if(err)
 			throw err;
 		else{
+			// console.log("frequency");
+			// console.log(frequency);
 			res.send(frequency);
 		}
 	});
 }
 
 exports.getPreventions = function(req, res){
+	console.log("entered prevention");
 	var type = req.query.type;
 	var id = req.query.id;
 	
@@ -2730,7 +2740,7 @@ exports.getPreventions = function(req, res){
 		if(err)
 			throw err;
 		else{
-			console.log(seed);
+			// console.log(seed);
 
 			var maturity_days = seed[0].maturity_days;
 			var land_prep = new Date(req.query.land_prep_date);
@@ -2743,7 +2753,12 @@ exports.getPreventions = function(req, res){
 			var harvesting = new Date();
 			harvesting.setTime(ripening.getTime() + (30 * 24 * 60 * 60 * 1000));
 
-			
+			// console.log(land_prep);
+			// console.log(sowing);
+			// console.log(vegetation);
+			// console.log(reproduction);
+			// console.log(ripening);
+			// console.log(harvesting);
 			//Get 
 			if(type == "Pest"){
 				pestdiseaseModel.getPestPreventions(id, function(err, preventions){
