@@ -17,7 +17,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 			throw err;
 		else {
 			var nutrient_query = list.map(e => ({ farm_id: e.farm_id, calendar_id: e.calendar_id }));
-			nutrientModel.getUpcomingImportantNutrients(nutrient_query, function(err, nutrient_reco) {
+			nutrientModel.getUpcomingImportantNutrients(nutrient_query, 'summary', function(err, nutrient_reco) {
 				if (err)
 					throw err;
 				else {
@@ -36,7 +36,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 							}
 						}
 					}
-					console.log(nutrient_reco);
+					//console.log(nutrient_reco);
 					//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
 					var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
 				    request(url, { json: true }, function(err, response, body) {

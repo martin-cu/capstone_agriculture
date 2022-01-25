@@ -83,7 +83,7 @@ exports.createNutrientItem = function(data, next) {
 	mysql.query(sql, next);
 }
 
-exports.getUpcomingImportantNutrients = function(query, next) {
+exports.getUpcomingImportantNutrients = function(query, type, next) {
     var sql = "SELECT farm_id,fri.*, ft.fertilizer_name FROM fertilizer_recommendation_items fri join fertilizer_table ft using(fertilizer_id) join fertilizer_recommendation_plan using(fr_plan_id) where fr_plan_id in (SELECT fr_plan_id FROM fertilizer_recommendation_plan where ";
     for (var i = 0; i < query.length; i++) {
     	if (i != 0) {
@@ -91,7 +91,14 @@ exports.getUpcomingImportantNutrients = function(query, next) {
     	}
     	sql += `(farm_id = ${query[i].farm_id} and calendar_id = ${query[i].calendar_id}) `;
     }
-    sql += ") and datediff(target_application_date, now()) >= 0 order by target_application_date";
+    sql += ")";
+    if (type == 'summary') {
+    	sql += ' and datediff(target_application_date, now()) >= 0'
+    }
+    else {
+
+    }
+    sql += ' order by target_application_date';
     mysql.query(sql, next);
 }
 

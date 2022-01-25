@@ -141,7 +141,7 @@ $(document).ready(function() {
 		var selected_farm;
 		var curr_calendar;
 
-		curr_calendar = $("#crop_calendar_list").val();
+		curr_calendar = parseInt($("#crop_calendar_list").val());
 			console.log('Calendar: '+curr_calendar);
 
 		$.get('/get_forecast_records', { calendar_id: [curr_calendar] }, function(forecast_records) {

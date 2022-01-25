@@ -34,10 +34,12 @@ router.get('/get_active_calendar', cropCalendarController.ajaxGetCurrentCropCale
 router.get('/get_nutrient_plan_details', environmentController.ajaxGetNutrientPlan);
 router.get('/get_nutrient_plan_items', environmentController.ajaxGetNutrientPlanItems);
 router.get('/get_nutrient_details', environmentController.ajaxGetNutrientDetails);
+router.get('/get_recommendations', disasterController.ajaxGetRecommendations);
 router.post('/create_nutrient_plan', environmentController.ajaxCreateNutrientPlan);
 router.post('/create_nutrient_item', environmentController.ajaxCreateNutrientItem);
 router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
 router.post('/prepareFRPlan', environmentController.prepareFRPlan);
+
 
 router.get('/get_soil_records', environmentController.ajaxGetSoilRecord);
 router.post('/update_soil_records', environmentController.ajaxUpdateSoilRecord);

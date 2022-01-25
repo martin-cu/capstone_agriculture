@@ -40,12 +40,14 @@
 											</div>
 										</td>
 									</tr>
+									{{#if this.farms}}
 									<tr>
 										<th>Impacted Farm</th>
 										<th>Crop Details</th>
 										<th>Risk Level</th>
 										<!-- <th>Potential Damages</th> -->
 									</tr>
+										
 										{{#each this.farms}}
 										<tr>
 											<td>{{this.farm_name}}</td>
@@ -71,6 +73,11 @@
 											</td>
 										</tr>											
 										{{/each}}
+										{{else}}
+										<tr>
+											<td colspan="3" class="text-center">No Impacted Farms</td>
+										</tr>
+										{{/if}}
 										<tr>
 											<td colspan="3"></td>
 										</tr>
@@ -141,12 +148,14 @@
 											</div>
 										</td>
 									</tr>
+									{{#if this.farms}}
 									<tr>
 										<th>Impacted Farm</th>
 										<th>Crop Details</th>
 										<th>Risk Level</th>
 										<!-- <th>Potential Damages</th> -->
 									</tr>
+										
 										{{#each this.farms}}
 										<tr>
 											<td>{{this.farm_name}}</td>
@@ -172,6 +181,11 @@
 											</td>
 										</tr>											
 										{{/each}}
+										{{else}}
+										<tr>
+											<td colspan="3" class="text-center">No Impacted Farms</td>
+										</tr>
+										{{/if}}
 										<tr>
 											<td colspan="3"></td>
 										</tr>

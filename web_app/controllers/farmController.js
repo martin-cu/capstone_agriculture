@@ -921,6 +921,7 @@ exports.ajaxGetForecastRecord = function(req, res) {
 		if (err)
 			throw err;
 		else {
+			console.log(records);
 			res.send(records);
 		}
 	});

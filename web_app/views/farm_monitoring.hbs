@@ -746,17 +746,19 @@
                             <div class="card shadow mb-4" style="margin-bottom: 10px;">
                                 <div class="card-body">
                                     <h6 class="font-weight-bold m-0" style="color: #584c33;font-size: 20px;">Recommendations</h6>
-                                    {{!-- <div><canvas data-bss-chart="{&quot;type&quot;:&quot;bar&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Land Prep&quot;,&quot;Sowing&quot;,&quot;Vegetation&quot;,&quot;Reproduction&quot;,&quot;Ripening&quot;,&quot;Harvest&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Pest&quot;,&quot;backgroundColor&quot;:&quot;#4e73df&quot;,&quot;borderColor&quot;:&quot;#4e73df&quot;,&quot;data&quot;:[&quot;1&quot;,&quot;2&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;]},{&quot;label&quot;:&quot;Disease&quot;,&quot;backgroundColor&quot;:&quot;rgb(255,179,102)&quot;,&quot;borderColor&quot;:&quot;rgb(255,179,102)&quot;,&quot;data&quot;:[&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:true,&quot;legend&quot;:{&quot;display&quot;:true,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;position&quot;:&quot;bottom&quot;},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;,&quot;display&quot;:true,&quot;text&quot;:&quot;Pest and Disesase Occurence in the Farm&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;gridLines&quot;:{&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:true,&quot;drawOnChartArea&quot;:true},&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;,&quot;beginAtZero&quot;:true}}],&quot;yAxes&quot;:[{&quot;gridLines&quot;:{&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:true},&quot;ticks&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;,&quot;beginAtZero&quot;:true}}]}}}"></canvas></div><button class="btn btn-primary float-right" type="button" style="border-radius: 20px;padding: 2px 10px;background: #EDD172;border-style: none;color: rgb(94,83,61);margin-top: 15px;">View more</button> --}}
-                                    <div class="table-responsive" style="margin-top: 20px; max-height: 208px; overflow-y:auto !important">
+
+                                    <div class="table-responsive" style="margin-top: 20px; min-height: 208px; overflow-y:auto !important">
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th colspan="3">Type</th>
-                                                    <th colspan="9" style="text-align: left;">Recommendation</th>
+                                                    <th colspan="2">Type</th>
+                                                    <th colspan="3">Description</th>
+                                                    <th colspan="4" style="text-align: left;">Recommendation</th>
+                                                    <th colspan="1" class="text-center">WO Generated?</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table-details" id="recommendation_table">
-                                                <tr class="clickable">
+                                                <!-- <tr class="clickable">
                                                     <td colspan="3">Pest/Disease</td>
                                                     <td class="" colspan="9" style="text-align: left;">Remove weeds found on the farm</td>
                                                 </tr>
@@ -771,7 +773,40 @@
                                                 <tr class="clickable">
                                                     <td colspan="3">Pest/Disease</td>
                                                     <td class="" colspan="9" style="text-align: left;">Remove weeds found on the farm</td>
+                                                </tr> -->
+
+                                                <script id="template" type="text/x-handlebars-template">
+                                                  {{#each disasters}}
+                                                  
+                                                <tr class="clickable">
+                                                    <td colspan="2" class="text-left">Disaster Warning</td>
+                                                    <td colspan="3" class="text-left">{{this.description}}</td>
+                                                    <td colspan="4" class="text-left">
+                                                        {{#each this.recommendation}}
+                                                        {{this}}
+                                                        {{/each}}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">N/A</td>
                                                 </tr>
+                                                {{/each}}
+
+                                                {{#each nutrients}}
+                                                <tr class="clickable">
+                                                    <td colspan="2" class="text-left">Nutrient Recommendation</td>
+                                                    <td colspan="3" class="text-left">Recommended {{this.description}}</td>
+                                                    <td colspan="4" class="text-left">
+                                                        Apply {{this.amount}} bags of {{this.fertilizer_name}} on {{this.target_application_date}}
+                                                    </td>
+                                                    <td colspan="1" class="text-center">
+                                                        {{#if this.isCreated}}
+                                                        Yes
+                                                        {{else}}
+                                                        No
+                                                        {{/if}}
+                                                    </td>
+                                                </tr>
+                                                {{/each}}  
+                                                </script>                                                                                   
                                             </tbody>
                                         </table>
                                     </div>
@@ -874,3 +909,5 @@
 </script>
 
 <div class="loader" style="visibility : visible;"></div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>

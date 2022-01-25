@@ -252,6 +252,34 @@ function loadGeoMap(options) {
 	$('.loader').css('visibility', 'hidden'); //to show
 }
 
+function appendConsolidatedRecommendations(obj) {
+	console.log(obj);
+	var string, isCreated;
+	
+	$('#recommendation_table').empty();
+	
+	for (var i = 0; i < obj.disasters.length; i++) {
+		string = `<tr class="clickable"> <td colspan="2" class="text-left">Disaster Warning</td> <td colspan="3" class="text-left">${obj.disasters[i].description}</td> <td colspan="4" class="text-left"> `;
+		for (var x = 0; x < obj.disasters[i].recommendation.length; x++) {
+			string += `${obj.disasters[i].recommendation[x]}`;
+		}
+		string += `</td> <td colspan="1" class="text-center">N/A</td> </tr>`;
+		$('#recommendation_table').append(string);
+	}
+	
+	for (var i = 0; i < obj.nutrients.length; i++) {
+		if (obj.nutrients[i].isCreated) {
+			isCreated = 'Yes';
+		}
+		else {
+			isCreated = 'No';
+		}
+		string = `<tr class="clickable"> <td colspan="2" class="text-left">Nutrient Recommendation</td> <td colspan="3" class="text-left">Recommended ${obj.nutrients[i].description}</td> <td colspan="4" class="text-left"> Apply ${obj.nutrients[i].amount} bags of ${obj.nutrients[i].fertilizer_name} on ${obj.nutrients[i].target_application_date} </td> <td colspan="1" class="text-center"> ${isCreated} </td> </tr>`;
+		$('#recommendation_table').append(string);
+	}
+	
+}
+
 $(document).ready(function() {
 	
 	console.log('GIS Map Loader!!');
@@ -323,8 +351,8 @@ $(document).ready(function() {
 			}
 
 			//Get Crop calendar id
-			var calendar_id = $("#crop_calendar_list").val();
-			var active_calendar = $("#crop_calendar_list").val();
+			var calendar_id = parseInt($("#crop_calendar_list").val());
+			var active_calendar = parseInt($("#crop_calendar_list").val());
 			console.log("CALENDAR ID");
 			console.log(calendar_id);
 			$(".calendar_based").removeAttr('hidden');
@@ -417,11 +445,10 @@ $(document).ready(function() {
 				
 				update_color_meter();
 
-				
-				
-
-				
-
+				// Get disaster and nutrient recommendations on load
+				$.get('/get_recommendations', { calendar_id: calendar_id }, function(recommendation) {
+					appendConsolidatedRecommendations(recommendation);
+				});
 			});
 		});
 
@@ -559,14 +586,21 @@ $(document).ready(function() {
 						center = polygons[i].center;
 					}
 				}
+
 				//GET DETAILS OF NEW FARM
 
-				var calendar_id = $("#crop_calendar_list").val();
-				active_calendar = $("#crop_calendar_list").val();
+				var calendar_id = parseInt($("#crop_calendar_list").val());
+				active_calendar = parseInt($("#crop_calendar_list").val());
 				$(".calendar_based").removeAttr('hidden');
 				if($("#crop_calendar_list").children('option').length == 0){
 					$(".calendar_based").prop("hidden", !this.checked);
 				}
+
+				// Get disaster and nutrient recommendations on change farm selected
+				$.get('/get_recommendations',  { calendar_id: calendar_id }, function(recommendation) {
+					appendConsolidatedRecommendations(recommendation);
+				});
+
 				$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
 					$("#farm_id").text(farm_details.details[0].farm_id);
 					$("#farm_name").text(farm_details.details[0].farm_name);

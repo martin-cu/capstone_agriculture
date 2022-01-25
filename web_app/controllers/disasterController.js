@@ -5,6 +5,7 @@ const cropCalendarModel = require('../models/cropCalendarModel.js');
 const farmModel = require('../models/farmModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
 const disasterModel = require('../models/disasterModel.js');
+const nutrientModel = require('../models/nutrientModel.js');
 const notifModel = require('../models/notificationModel.js');
 
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -20,7 +21,6 @@ function dateDiffInDays(a, b) {
 function prepareRainfallDisaster(rainfall, active_calendars) {
 	var rainfall_obj = {};
 	var stage = null, recommendation, damages, risk_lvl, text_color, damage_color;
-	console.log(active_calendars);
 	rainfall['mph'] = Math.round(rainfall.wind_speed * 2.237 * 100)/100;
 	rainfall['classification'] = rainfall.mph < 38 ? 
 	'Heavy Rain' : rainfall.mph < 73 ?
@@ -175,10 +175,62 @@ exports.getDisasterManagement = function(req, res) {
 
 					html_data['active_drought'] = active_drought_arr;
 					html_data['inactive_drought'] = inactive_drought_arr;
-					
+					//console.log(html_data);
 					res.render('disaster_warnings', html_data);					
 				}
 			});
 		}
 	});
+}
+
+exports.ajaxGetRecommendations = function(req, res) {
+	var html_data = {};
+
+	disasterModel.getDisasterLogs({ status: 1 }, function(err, disasters) {
+		if (err)
+			throw err;
+		else {
+			cropCalendarModel.getCropCalendars({ where: { key: 'calendar_id', val: req.query.calendar_id }, status: [] }, function(err, active_calendars) {
+				if (err)
+					throw err;
+				else {
+					var nutrient_query = active_calendars.map(e => ({ farm_id: e.farm_id, calendar_id: e.calendar_id }));
+					nutrientModel.getUpcomingImportantNutrients(nutrient_query, '', function(err, nutrients) {
+						if (err)
+							throw err;
+						else {
+							var rainfall = disasters.filter(e => e.type == 'Heavy Rainfall'), drought = disasters.filter(e => e.type == 'Drought');
+							var rainfall_arr = [], drought_arr = [];
+
+							for (var i = 0; i < rainfall.length; i++) {
+								rainfall_arr.push(prepareRainfallDisaster(rainfall[i], active_calendars));
+							}
+
+							//console.log(consolidateRecommendations(nutrients, rainfall_arr));
+							res.send(consolidateRecommendations(nutrients, rainfall_arr));
+						}
+					});			
+				}
+			});
+		}
+	});
+}
+
+function consolidateRecommendations(nutrients, rainfall) {
+	var obj = { disasters: [], nutrients: nutrients };
+	var temp_obj;
+
+	for (var i = 0; i < nutrients.length; i++) {
+		nutrients[i].target_application_date = dataformatter.formatDate(new Date(nutrients[i].target_application_date), 'mm DD, YYYY');
+	}
+	obj.nutrients = nutrients;
+	for (var i = 0; i < rainfall.length; i++) {
+		temp_obj = { description: `Weather forecast alert with classification ${rainfall[i].details.classification} expected on ${rainfall[i].details.target_date}`, recommendation: [] };
+		for (var x = 0; x < rainfall[i].farms.length; x++) {
+			temp_obj.recommendation.push(rainfall[i].farms[x].recommendation);
+		}
+		obj.disasters.push(temp_obj);
+	}
+
+	return obj;
 }
