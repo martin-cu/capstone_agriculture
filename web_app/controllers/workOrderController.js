@@ -355,46 +355,68 @@ exports.getWorkOrdersDashboard = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			reportModel.getFarmProductivity(function(err, fp_overview) {
+			reportModel.getCalendarList('old',function(err, fp_overview) {
 				if (err)
 					throw err;
 				else {
-					var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id).concat(fp_overview.map(({ max_prev_calendar }) => max_prev_calendar));
+					var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id);
 					reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
 						if (err)
 							throw err;
 						else {
-							for (var i = 0; i < list.length; i++) {
+							reportModel.getCalendarList('new', function(err, fp_new) {
+								if (err)
+									throw err;
+								else {
+									var calendar_arr_new = fp_new.map(({ calendar_id }) => calendar_id);
+									reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr_new }, function(err, input_new) {
+										if (err)
+											throw err;
+										else {
+											for (var i = 0; i < list.length; i++) {
 
-								if (list[i].status == 'Pending') {
-									list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
-									list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
-									list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+												if (list[i].status == 'Pending') {
+													list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+													list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+													list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
 
-									upcoming.push(list[i]);
+													upcoming.push(list[i]);
+												}
+
+												if (list[i].status == 'Completed') {
+													list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+													list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+													list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');
+													list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+									
+													completed.push(list[i]);
+												}
+											}
+											var fp_obj = {
+												avg: analyzer.processMeanProductivity(fp_overview, input_resources),
+												cur: analyzer.processMeanProductivity(fp_new, input_new),
+												percentage: null,
+												max: 100
+											}
+											fp_obj.percentage = ((fp_obj.cur / fp_obj.avg) * 100).toFixed(2);
+
+											var standard = 100;
+											while (standard < fp_obj.percentage) {
+												standard += 100;
+												fp_obj.max = standard;
+											}
+
+											html_data = { upcomingWoList: upcoming.slice(0, 10), completedWoList: completed.slice(0, 10) };
+											html_data['fp'] = fp_obj;
+											html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+
+											html_data["notifs"] = req.notifs;
+											res.render('home', html_data);
+										}
+									});
 								}
-
-								if (list[i].status == 'Completed') {
-									list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
-									list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
-									list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');
-									list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
-					
-									completed.push(list[i]);
-								}
-							}
-
-							html_data['farm_productivity'] = analyzer.smoothFP(analyzer.calculateProductivity(fp_overview, input_resources));
-							console.log(html_data.farm_productivity);
-
-							html_data = { upcomingWoList: upcoming.slice(0, 10), completedWoList: completed.slice(0, 10) };
-
-							html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
-
-							
-							html_data["notifs"] = req.notifs;
-							html_data["notifs"] = req.notifs;
-							res.render('home', html_data);
+							});
+											
 						}
 					});
 				}

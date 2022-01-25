@@ -44,6 +44,18 @@ function smoothRadarChartData(obj) {
 	return obj;
 }
 
+exports.processMeanProductivity = function(fp, input) {
+	var avg_productivity = 0;
+	var productivity = 0;
+
+	for (var i = 0; i < fp.length; i++) {
+		avg_productivity += (fp[i].harvest_yield.toFixed(2) / input.filter(e => e.calendar_id == fp[i].calendar_id).reduce((a, b) => a + b.total_cost, 0).toFixed(2));
+	}
+
+	avg_productivity /= fp.length;
+	return (Math.round(avg_productivity * 10000) / 10000).toFixed(5);
+}
+
 exports.processHarvestSummary = function(data, harvest, history, fp) {
 	const unique = [...new Map(data.map(item =>
 	  [item.seed_name, item])).values()];
