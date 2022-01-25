@@ -153,9 +153,9 @@ $(document).ready(function() {
 		$('.next_step').on('click', function() {
 			if (currentTab == 3) {
 				// alert("Pestiicde recommendation");
-				$.get('/ajaxGetDiagnoses', {}, function(diagnoses){
+				$.get('/ajaxGetDiagnoses', {farm_id : $("#farm_id").val()}, function(diagnoses){
 					//Get Probabilities from DB
-					$.get("/ajaxGetPastProbabilities", {}, function(probabilities){
+					$.get("/ajaxGetPastProbabilities", {farm_id : $("#farm_id").val()}, function(probabilities){
 						var i, x;
 						var possibilities = [];
 						for(i = 0; i < probabilities.length; i++){
@@ -175,13 +175,13 @@ $(document).ready(function() {
 									// }
 								}
 							}
-							if(probabilities[i].probability >= 50){
+							if(probabilities[i].probability >= 40){
 								// console.log("push");
 								possibilities.push(probabilities[i]);
 							}
 						}
 						// console.log("probabilities");
-						console.log(probabilities);
+						// console.log(probabilities);
 						$.get('/ajaxGetDiagnosisStageFrequency', {}, function(frequency){
 							for(i = 0; i < possibilities.length; i++){
 								var freq_stage = "N/A", stage_count = 0;
