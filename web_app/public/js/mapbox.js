@@ -266,7 +266,7 @@ function appendConsolidatedRecommendations(obj) {
 		string += `</td> <td colspan="1" class="text-center">N/A</td> </tr>`;
 		$('#recommendation_table').append(string);
 	}
-	
+
 	for (var i = 0; i < obj.nutrients.length; i++) {
 		if (obj.nutrients[i].isCreated) {
 			isCreated = 'Yes';
@@ -278,6 +278,16 @@ function appendConsolidatedRecommendations(obj) {
 		$('#recommendation_table').append(string);
 	}
 	
+}
+
+function switchView(view) {
+	if (view) {
+		$("#mntr_card_body").children().children().not('#soil_data, #farm_information').addClass('hide');;
+
+	}
+	else {
+		$("#mntr_card_body").children().children().not('#soil_data, #farm_information').removeClass('hide');;
+	}
 }
 
 $(document).ready(function() {
@@ -360,96 +370,102 @@ $(document).ready(function() {
 				$(".calendar_based").prop("hidden", !this.checked);
 			}
 
-			$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
-				$("#farm_id").text(farm_details.details[0].farm_id);
-				$("#farm_name").text(farm_details.details[0].farm_name);
-				$("#farm_type").text(farm_details.details[0].land_type);
-				$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
-				$("#farm_desc").text(farm_details.details[0].farm_desc);
-				$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 				
-				$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
-				$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
-				
-				$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
-				$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
-				$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
-				$(".calendar_planting").text(farm_details.crop_calendar_details.method);
-				$(".calendar_status").text(farm_details.crop_calendar_details.status);
-				$(".calendar_status").addClass(farm_details.crop_calendar_details.status);
-				$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
-				$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
-				
-				$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
-					
-					$("#ph_lvl").text(soil_data.pH_lvl);
-					$("#n_lvl").text(soil_data.n_val);
-					$("#p_lvl").text(soil_data.p_val);
-					$("#k_lvl").text(soil_data.k_val);
-					
-					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+active_calendar);
-				});
-	
-				var i;
-				//UPDATE ROUSEOURCES
-				$("#seed-table").empty();
-				$("#fertilizer-table").empty();
-				$("#pesticide-table").empty();
-				for(i = 0; i < 5; i++){
-					if(farm_details.seed[i].item_name == null)
-						$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"> <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-					else
-						$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.seed[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.seed[i].current_amount + " " + farm_details.seed[i].units +' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-				}
-				for(i = 0; i < 5; i++){
-					if(farm_details.fertilizer[i].item_name == null)
-						$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-					else
-						$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.fertilizer[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.fertilizer[i].current_amount + " " + farm_details.fertilizer[i].units + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-				}
-				for(i = 0; i < 5; i++){
-					if(farm_details.pesticide[i].item_name == null)
-						$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-					else
-						$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + " " + farm_details.pesticide[i].units + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-				}
-
-				
-				//UPDATE PEST AND DISEASE CARD
-				for(i = 0; i < 3; i++){
-					if(farm_details.probability[i].pd_name == null)
-						$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
-					else
-						$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
-					
-	
-				}
-
-				for(i = 0; i < farm_details.workorders.length; i++){
-					$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
-					var tag_id = "#";
-					if(farm_details.workorders[i].stage == "Land Preparation")
-						tag_id = tag_id + "landprep-wo";
-					else if(farm_details.workorders[i].stage == "Sowing")
-						tag_id = tag_id + "sowing-wo";
-					else if(farm_details.workorders[i].stage == "Vegetation")
-						tag_id = tag_id + "vegetation-wo";
-					else if(farm_details.workorders[i].stage == "Harvest")
-						tag_id = tag_id + "harvest-wo";
-					else if(farm_details.workorders[i].stage == "Reproductive")
-						tag_id = tag_id + "reproduction-wo";
-					else if(farm_details.workorders[i].stage == "Ripening")
-						tag_id = tag_id + "ripening-wo";
-					$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h5 class="card-title">' + farm_details.workorders[i].type +'</h5></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
-				}
-				
-				update_color_meter();
-
+			// If a crop calendar record exists
+			if (calendar_id != null && !Number.isNaN(calendar_id)) {
+				switchView(false);
 				// Get disaster and nutrient recommendations on load
 				$.get('/get_recommendations', { calendar_id: calendar_id }, function(recommendation) {
 					appendConsolidatedRecommendations(recommendation);
 				});
-			});
+				$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
+					$("#farm_id").text(farm_details.details[0].farm_id);
+					$("#farm_name").text(farm_details.details[0].farm_name);
+					$("#farm_type").text(farm_details.details[0].land_type);
+					$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
+					$("#farm_desc").text(farm_details.details[0].farm_desc);
+					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
+					
+					$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+					$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
+					
+					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
+					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
+					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
+					$(".calendar_planting").text(farm_details.crop_calendar_details.method);
+					$(".calendar_status").text(farm_details.crop_calendar_details.status);
+					$(".calendar_status").addClass(farm_details.crop_calendar_details.status);
+					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
+					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
+					
+					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
+						
+						$("#ph_lvl").text(soil_data.pH_lvl);
+						$("#n_lvl").text(soil_data.n_val);
+						$("#p_lvl").text(soil_data.p_val);
+						$("#k_lvl").text(soil_data.k_val);
+						
+						$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+active_calendar);
+					});
+		
+					var i;
+					//UPDATE ROUSEOURCES
+					$("#seed-table").empty();
+					$("#fertilizer-table").empty();
+					$("#pesticide-table").empty();
+					for(i = 0; i < 5; i++){
+						if(farm_details.seed[i].item_name == null)
+							$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"> <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						else
+							$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.seed[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.seed[i].current_amount + " " + farm_details.seed[i].units +' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					}
+					for(i = 0; i < 5; i++){
+						if(farm_details.fertilizer[i].item_name == null)
+							$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						else
+							$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.fertilizer[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.fertilizer[i].current_amount + " " + farm_details.fertilizer[i].units + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					}
+					for(i = 0; i < 5; i++){
+						if(farm_details.pesticide[i].item_name == null)
+							$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						else
+							$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + " " + farm_details.pesticide[i].units + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+					}
+
+					
+					//UPDATE PEST AND DISEASE CARD
+					for(i = 0; i < 3; i++){
+						if(farm_details.probability[i].pd_name == null)
+							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
+						else
+							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
+						
+		
+					}
+
+					for(i = 0; i < farm_details.workorders.length; i++){
+						$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
+						var tag_id = "#";
+						if(farm_details.workorders[i].stage == "Land Preparation")
+							tag_id = tag_id + "landprep-wo";
+						else if(farm_details.workorders[i].stage == "Sowing")
+							tag_id = tag_id + "sowing-wo";
+						else if(farm_details.workorders[i].stage == "Vegetation")
+							tag_id = tag_id + "vegetation-wo";
+						else if(farm_details.workorders[i].stage == "Harvest")
+							tag_id = tag_id + "harvest-wo";
+						else if(farm_details.workorders[i].stage == "Reproductive")
+							tag_id = tag_id + "reproduction-wo";
+						else if(farm_details.workorders[i].stage == "Ripening")
+							tag_id = tag_id + "ripening-wo";
+						$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h5 class="card-title">' + farm_details.workorders[i].type +'</h5></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+					}
+				});
+			}
+			else {
+				console.log('Error handling!!');
+				switchView(true);
+			}
 		});
 
 
@@ -591,115 +607,115 @@ $(document).ready(function() {
 
 				var calendar_id = parseInt($("#crop_calendar_list").val());
 				active_calendar = parseInt($("#crop_calendar_list").val());
+				console.log(calendar_id+' - '+active_calendar);
 				$(".calendar_based").removeAttr('hidden');
 				if($("#crop_calendar_list").children('option').length == 0){
 					$(".calendar_based").prop("hidden", !this.checked);
 				}
 
-				// Get disaster and nutrient recommendations on change farm selected
-				$.get('/get_recommendations',  { calendar_id: calendar_id }, function(recommendation) {
-					appendConsolidatedRecommendations(recommendation);
-				});
-
-				$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
-					$("#farm_id").text(farm_details.details[0].farm_id);
-					$("#farm_name").text(farm_details.details[0].farm_name);
-					$("#farm_type").text(farm_details.details[0].land_type);
-					$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
-					$("#farm_desc").text(farm_details.details[0].farm_desc);
-					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
-					
-					$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
-					$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
-					
-					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
-					$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
-					$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
-					$(".calendar_planting").text(farm_details.crop_calendar_details.method);
-					$(".calendar_status").text(farm_details.crop_calendar_details.status);
-					$(".calendar_status").addClass(farm_details.crop_calendar_details.status);
-					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
-					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
-
-					$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+calendar_id);
-					
-					var i;
-					//UPDATE ROUSEOURCES
-					$("#seed-table").empty();
-					$("#fertilizer-table").empty();
-					$("#pesticide-table").empty();
-					for(i = 0; i < 5; i++){
-						if(farm_details.seed[i].item_name == null)
-							$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"> <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-						else
-							$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.seed[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.seed[i].current_amount + " " + farm_details.seed[i].units +' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-					}
-					for(i = 0; i < 5; i++){
-						if(farm_details.fertilizer[i].item_name == null)
-							$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-						else
-							$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.fertilizer[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.fertilizer[i].current_amount + " " + farm_details.fertilizer[i].units +' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-					}
-					for(i = 0; i < 5; i++){
-						if(farm_details.pesticide[i].item_name == null)
-							$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-						else
-							$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name +  '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + " " + farm_details.pesticide[i].units + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
-					}
-					//UPDATE PEST AND DISEASE CARD
-					for(i = 0; i < 3; i++){
-						if(farm_details.probability[i].pd_name == null)
-							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
-						else
-							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
-						
-
-					}
-					update_color_meter();
-
-					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
-				
-						$("#ph_lvl").text(soil_data.pH_lvl);
-						$("#n_lvl").text(soil_data.n_val);
-						$("#p_lvl").text(soil_data.p_val);
-						$("#k_lvl").text(soil_data.k_val);
-						
-						$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+active_calendar);
+				// If no crop calendars exist
+				if (calendar_id != null && !Number.isNaN(calendar_id)) {
+					switchView(false);
+					// Get disaster and nutrient recommendations on change farm selected
+					$.get('/get_recommendations',  { calendar_id: calendar_id }, function(recommendation) {
+						appendConsolidatedRecommendations(recommendation);
 					});
+					$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
+						$("#farm_id").text(farm_details.details[0].farm_id);
+						$("#farm_name").text(farm_details.details[0].farm_name);
+						$("#farm_type").text(farm_details.details[0].land_type);
+						$("#farm_manager").text(farm_details.details[0].first_name + " " + farm_details.details[0].last_name);
+						$("#farm_desc").text(farm_details.details[0].farm_desc);
+						$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
+						
+						$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+						$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
+						
+						$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
+						$(".farm_name").text(farm_details.crop_calendar_details.farm_name);
+						$(".calendar_seed").text(farm_details.crop_calendar_details.seed_name);
+						$(".calendar_planting").text(farm_details.crop_calendar_details.method);
+						$(".calendar_status").text(farm_details.crop_calendar_details.status);
+						$(".calendar_status").addClass(farm_details.crop_calendar_details.status);
+						$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
+						$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
 
-					$("#landprep-wo, #sowing-wo, #vegetation-wo, #harvest-wo, #reproduction-wo, #ripening-wo").empty();
-					for(i = 0; i < farm_details.workorders.length; i++){
-						$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
-						var tag_id = "#";
-						if(farm_details.workorders[i].stage == "Land Preparation")
-							tag_id = tag_id + "landprep-wo";
-						else if(farm_details.workorders[i].stage == "Sowing")
-							tag_id = tag_id + "sowing-wo";
-						else if(farm_details.workorders[i].stage == "Vegetation")
-							tag_id = tag_id + "vegetation-wo";
-						else if(farm_details.workorders[i].stage == "Harvest")
-							tag_id = tag_id + "harvest-wo";
-						else if(farm_details.workorders[i].stage == "Reproductive")
-							tag_id = tag_id + "reproduction-wo";
-						else if(farm_details.workorders[i].stage == "Ripening")
-							tag_id = tag_id + "ripening-wo";
+						$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+calendar_id);
 						
-						$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h5 class="card-title">' + farm_details.workorders[i].type +'</h5></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
-						
+						var i;
+						//UPDATE ROUSEOURCES
+						$("#seed-table").empty();
+						$("#fertilizer-table").empty();
+						$("#pesticide-table").empty();
+						for(i = 0; i < 5; i++){
+							if(farm_details.seed[i].item_name == null)
+								$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"> <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+							else
+								$("#seed-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.seed[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.seed[i].current_amount + " " + farm_details.seed[i].units +' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
 						}
+						for(i = 0; i < 5; i++){
+							if(farm_details.fertilizer[i].item_name == null)
+								$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+							else
+								$("#fertilizer-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.fertilizer[i].item_name + '</td><td style="padding: 2px;text-align: center;">' + farm_details.fertilizer[i].current_amount + " " + farm_details.fertilizer[i].units +' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						}
+						for(i = 0; i < 5; i++){
+							if(farm_details.pesticide[i].item_name == null)
+								$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;"></td><td style="padding: 2px;text-align: center;"><i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+							else
+								$("#pesticide-table").append('<tr style="min-height: 50px;"><td class="text-center" style="padding: 2px;">' + farm_details.pesticide[i].item_name +  '</td><td style="padding: 2px;text-align: center;">' + farm_details.pesticide[i].current_amount + " " + farm_details.pesticide[i].units + ' <i class="fa fa-warning" data-toggle="tooltip" data-bss-tooltip="" style="margin-left: 5px;color: var(--orange);" title="Low in Stock. Replenish now."></i>&nbsp;</td></tr>');
+						}
+						//UPDATE PEST AND DISEASE CARD
+						for(i = 0; i < 3; i++){
+							if(farm_details.probability[i].pd_name == null)
+								$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
+							else
+								$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
+							
 
+						}
+						update_color_meter();
+
+						$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
 					
-				});
-			});
-			
-			
-		
-			
+							$("#ph_lvl").text(soil_data.pH_lvl);
+							$("#n_lvl").text(soil_data.n_val);
+							$("#p_lvl").text(soil_data.p_val);
+							$("#k_lvl").text(soil_data.k_val);
+							
+							$("#soil-data-btn").attr("href", "/nutrient_management/" + farm_details.details[0].farm_name+'/'+active_calendar);
+						});
+
+						$("#landprep-wo, #sowing-wo, #vegetation-wo, #harvest-wo, #reproduction-wo, #ripening-wo").empty();
+						for(i = 0; i < farm_details.workorders.length; i++){
+							$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
+							var tag_id = "#";
+							if(farm_details.workorders[i].stage == "Land Preparation")
+								tag_id = tag_id + "landprep-wo";
+							else if(farm_details.workorders[i].stage == "Sowing")
+								tag_id = tag_id + "sowing-wo";
+							else if(farm_details.workorders[i].stage == "Vegetation")
+								tag_id = tag_id + "vegetation-wo";
+							else if(farm_details.workorders[i].stage == "Harvest")
+								tag_id = tag_id + "harvest-wo";
+							else if(farm_details.workorders[i].stage == "Reproductive")
+								tag_id = tag_id + "reproduction-wo";
+							else if(farm_details.workorders[i].stage == "Ripening")
+								tag_id = tag_id + "ripening-wo";
+							
+							$(tag_id).append('<div class="card-body ' + farm_details.workorders[i].current +' card aos-init mini-card wo-card details" data-aos="flip-left" data-aos-duration="350"><div class="row" style="height: 40px; margin-top : 0px;"><div class="col card-title"><h5 class="card-title">' + farm_details.workorders[i].type +'</h5></div><div class="col">' + farm_details.workorders[i].status +'</div></div><div class="row" style="height: 30px;"><div class="col">START DATE</div><div class="col">COMPLETE DATE</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].date_start +'</div><div class="col">' + farm_details.workorders[i].date_completed +'</div></div><div class="row" style="height: 30px;"><div class="col">' + farm_details.workorders[i].wo_notes +'</div></div></div>');
+						}
+					});
+				}
+				else {
+					console.log('Error handle no crop calendar!');
+					switchView(true);
+				}	
+			});	
 		});
 
 		$('#toggle_ndvi').on('click', function() {
 			type = 'NDVI';
-
 			//To be removed
 			var query = viewed_farm_name;
 

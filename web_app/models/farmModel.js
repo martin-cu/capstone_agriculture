@@ -52,7 +52,8 @@ exports.addAssignedFarmers = function(data, next) {
 }
 
 exports.filteredFarmDetails = function(data, next) {
-	var sql = 'SELECT * FROM (SELECT ft.*, a.last_name, a.first_name, a.phone_number, a.position FROM farm_table ft INNER JOIN (SELECT et.*, fa.farm_id FROM farm_assignment fa INNER JOIN employee_table et ON et.employee_id = fa.employee_id) a ON ft.farm_id = a.farm_id) a WHERE position = "Farm Manager" &&  ?';
+	var sql = "select * from ( select * from ( select * from farm_table ft cross join (select farm_id, et.* from farm_assignment fa join employee_table et using(employee_id) ) as t using(farm_id) ) as t where position = 'Farm Manager' and ? union select *, null as employee_id, null as position, null as last_name, null as first_name, null as phone_number from farm_table ft ) as t1 where ? group by farm_id";
+	sql = mysql.format(sql, data);
 	sql = mysql.format(sql, data);
 	// console.log(sql);
 	mysql.query(sql, next);

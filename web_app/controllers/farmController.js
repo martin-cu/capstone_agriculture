@@ -92,6 +92,7 @@ exports.getFarmDetails = function(req, res) {
 		if (err)
 			throw err;
 		else {
+			console.log(details);
 			html_data["details"] = details;
 			////console.log(details);
 			farmtypes.push(details[0].land_type);
