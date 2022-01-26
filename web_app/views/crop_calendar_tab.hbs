@@ -7,6 +7,18 @@
         color: #332C1F;
     }
 
+    #seedTable, #fertilizerTable, #pesticideTable {
+    /*margin-left: 0px;*/
+    border-radius: 10px;
+}
+
+#seedTable th, #seedTable td, #seedTable tr, 
+#fertilizerTable th, #fertilizerTable td, #fertilizerTable tr,
+#pesticideTable th, #pesticideTable td, #pesticideTable tr {
+
+    padding: 10px;
+}
+
     @media print {
   body * {
     visibility: hidden;
@@ -23,6 +35,14 @@
     left: 0;
     top: 0;
   }
+
+    html, body {
+      height:100vh; 
+      margin: 0 !important; 
+      padding: 0 !important;
+      overflow: hidden;
+    }
+}
 }
 </style>
 
@@ -296,7 +316,7 @@
             </div>
         </div> --}}
 
-        <h4 style="font-size: 30px; font-weight: bold; margin-top: 30px; margin-bottom: 30px; margin-left: 20px">Required Materials Report</h4>
+        <h4 style="font-size: 30px; font-weight: bold; margin-top: 30px; margin-bottom: 30px; margin-left: 20px; color: #939C1F">Required Materials Summary Report</h4>
         
         {{!-- SEEDS --}}
         <div class="container" style="position: relative;">
@@ -304,10 +324,10 @@
             <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="seedTable">
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
-                        <th style="border-color: #EEEEEE; text-align:left">Seed Name</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Requirement</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
+                        <th style="border-color: #EEEEEE; text-align:left; background-color: #212529 !important; color: white">Seed Name</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Requirement</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Deficient Amount</th>
                     </tr>
                 </thead>
 
@@ -315,10 +335,10 @@
                     {{#if materials.seed.rows}}
                     {{#each materials.seed.rows}}
                     <tr>
-                        <td>{{this.item_name}}</td>
-                        <td class="text-right">{{this.total_req}}</td>
-                        <td class="text-right"></td>
-                        <td class="text-right">{{this.total_deficient}} bags</td>
+                        <td style="background-color: #EEEEEE !important">{{this.item_name}}</td>
+                        <td class="text-right" style="background-color: #EEEEEE !important">{{this.total_req}}</td>
+                        <td class="text-right" style="background-color: #EEEEEE !important"></td>
+                        <td class="text-right" style="background-color: #EEEEEE !important">{{this.total_deficient}} bags</td>
                     </tr>
                         {{#each this.list}}
                         <tr>
@@ -331,7 +351,10 @@
                     {{/each}}
                     {{else}}
                     <tr>
-                        <td class="text-center" colspan="4" style="word-wrap:break-word;">N/A</td>
+                        <td style="word-wrap:break-word;">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
                     </tr>
                     {{/if}}
                                                          
@@ -350,10 +373,10 @@
          <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="fertilizerTable">
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
-                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word;">Fertilizer Name</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Requirement</th>
-                        <th style="border-color: #EEEEEE; text-align:right;">Inventory</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
+                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word; background-color: #212529 !important; color: white">Fertilizer Name</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Requirement</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Deficient Amount</th>
                     </tr>
                 </thead>
 
@@ -361,10 +384,10 @@
                     {{#if materials.fertilizer.rows}}
                     {{#each materials.fertilizer.rows}}
                     <tr>
-                        <td>{{this.item_name}}</td>
-                        <td class="text-right">{{this.total_req}}</td>
-                        <td class="text-right"></td>
-                        <td class="text-right">{{this.total_deficient}} bags</td>
+                        <td style="background-color: #EEEEEE !important">{{this.item_name}}</td>
+                        <td class="text-right" style="background-color: #EEEEEE !important">{{this.total_req}}</td>
+                        <td class="text-right" style="background-color: #EEEEEE !important"></td>
+                        <td class="text-right" style="background-color: #EEEEEE !important">{{this.total_deficient}} bags</td>
                     </tr>
                         {{#each this.list}}
                         <tr>
@@ -377,7 +400,10 @@
                     {{/each}}
                     {{else}}
                     <tr>
-                        <td class="text-center" colspan="4" style="word-wrap:break-word;">N/A</td>
+                        <td style="word-wrap:break-word;">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
                     </tr>
                     {{/if}}
                                                          
@@ -396,10 +422,10 @@
          <table class="table" style="border-style: none; padding: 20px; table-layout:fixed; width: 100%" id="pesticideTable">
                 <thead class="thead" style="max-height: 0px;">
                     <tr>
-                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word;">Pesticide Name</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Requirement</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Inventory</th>
-                        <th style="border-color: #EEEEEE; text-align:right">Deficient Amount</th>
+                        <th style="border-color: #EEEEEE; text-align:left; word-wrap:break-word; background-color: #212529 !important; color: white">Pesticide Name</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Requirement</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Inventory</th>
+                        <th style="border-color: #EEEEEE; text-align:right; background-color: #212529 !important; color: white">Deficient Amount</th>
                     </tr>
                 </thead>
 
@@ -407,10 +433,10 @@
                     {{#if materials.pesticide.rows}}
                     {{#each materials.pesticide.rows}}
                     <tr>
-                        <td>{{this.item_name}}</td>
-                        <td class="text-right">{{this.total_req}}</td>
+                        <td style="background-color: #EEEEEE !important">{{this.item_name}}</td>
+                        <td class="text-right" style="background-color: #EEEEEE !important">{{this.total_req}}</td>
                         <td class="text-right"></td>
-                        <td class="text-right">{{this.total_deficient}} bags</td>
+                        <td class="text-right" style="background-color: #EEEEEE !important">{{this.total_deficient}} bags</td>
                     </tr>
                         {{#each this.list}}
                         <tr>
@@ -423,7 +449,10 @@
                     {{/each}}
                     {{else}}
                     <tr>
-                        <td class="text-center" colspan="4" style="word-wrap:break-word;">N/A</td>
+                        <td style="word-wrap:break-word;">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
+                        <td class="text-right">N/A</td>
                     </tr>
                     {{/if}}
 

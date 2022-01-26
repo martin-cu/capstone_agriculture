@@ -184,8 +184,8 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 	var category_cont;
 	var cont_obj;
 	var obj;
-	var input_types = ['Seed', 'Fertilizer', 'Pesticide', 'Employee Labor'];
-	var input_categories = ['Input Resources', 'Labor']
+	var input_types = ['Seed', 'Fertilizer', 'Pesticide']; //Removed Employee Labor
+	var input_categories = ['Input Resources']; //Removed Labor
 	var temp_arr;
 	var index = 0;
 
