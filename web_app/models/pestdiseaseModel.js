@@ -1654,3 +1654,13 @@ exports.getDiagnosisList = function(pd_id, type, farm_id, year, next){
 };
 
 
+exports.getDiagnosisSymptomsSummarized = function(farm_id, next){
+	var sql = 'SELECT DISTINCT symptom_name, a.*, ds.* FROM (SELECT d.*, pest_name as pd_name, pest_desc as pd_desc FROM diagnosis d INNER JOIN pest_table pt ON pt.pest_id = d.pd_id && d.type = "Pest" UNION SELECT d.*, disease_name as pd_name, disease_desc as pd_desc FROM diagnosis d INNER JOIN disease_table dt ON dt.disease_id = d.pd_id && d.type = "Disease") a INNER JOIN diagnosis_symptom ds ON ds.diagnosis_id = a.diagnosis_id INNER JOIN symptoms_table st ON st.symptom_id = ds.symptom_id WHERE status = "Present";';
+	if(farm_id != null && farm_id != ""){
+		sql = '&& a.farm_id = ' + farm_id;
+	}
+
+	// console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+

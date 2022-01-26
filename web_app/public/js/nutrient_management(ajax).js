@@ -791,7 +791,7 @@ function dynamicSort(property) {
 function reduceDynamicFRItems(arr, db_arr) {
 	arr.sort(dynamicSort('amount'));
 	db_arr.sort(dynamicSort('amount'));
-
+	
 	for(var i = 0; i < arr.length; i++) {
         for (var x = 0; x < db_arr.length; x++) {
         	if (arr[i].description == db_arr[x].description && arr[i].amount == db_arr[x].amount) {
@@ -799,6 +799,9 @@ function reduceDynamicFRItems(arr, db_arr) {
         		i--;
         		if (i < 0)
         			i = 0;
+
+        		if (arr.length == 0)
+        			x = db_arr.length;        		
         	}
         }
     }
@@ -852,7 +855,79 @@ $(document).ready(function() {
 
 	var farm_name = '';
 
-	setInterval(function() {
+	// setInterval(function() {
+	// 	$.get('/get_farm_list', {  }, function(farm_list) {
+	// 		for (var i = 0; i < farm_list.length; i++) {
+	// 			$.get('/get_active_calendar', { farm_id: farm_list[i].farm_id }, function(calendar) {
+	// 				if (calendar.length != 0) {
+	// 					$.get('/get_nutrient_plan_details', { calendar_id: calendar[0].calendar_id}, function(plan) {
+	// 						if (dateDiff(new Date(), new Date(plan[0].last_updated)) >= 7) {
+	// 							var detailed_nutrient_query = {
+	// 								farm_name: farm_list[i].farm_name,
+	// 								calendar_id: calendar[0].calendar_id,
+	// 								type: 'Fertilizer',
+	// 								filter: farm_list[i].farm_id
+	// 							};
+	// 							//*********** Update fertilizer recommendation items START ***********//
+
+	// 							$.get('/filter_nutrient_mgt', detailed_nutrient_query, function(details) {
+									
+	// 								$.get('/get_crop_plans', { status: ['Active','In-Progress'], where: { key: 'calendar_id', val: calendar[0].calendar_id } }, function(curr_calendar) {
+
+	// 									$.get('/getAll_materials', { type: 'Fertilizer', filter: farm_list[i].farm_id }, function(materials) {
+	// 										material_list = materials;
+	// 										$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: farm_list[i].farm_id }, function(list) {
+												
+	// 											var query = {
+	// 												where: {
+	// 													key: ['farm_id'],
+	// 													value: [farm_list[i].farm_id]
+	// 												},
+	// 												order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+	// 											}
+	// 											$.get('/get_work_orders', query, function(work_order_list) {
+	// 												var schedule_arr = createSchedule(materials, details.recommendation, list, farm_list[i].farm_id, calculateDeficientN(details, list), details, curr_calendar[0], work_order_list);
+	// 												var recommendation_list = [];
+													
+	// 												schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, false);
+	// 												schedule_arr = schedule_arr.filter(e => e.fertilizer.nutrient == 'N');
+
+	// 												var fr_db_items = processFRItems(schedule_arr, plan[0].fr_plan_id, 'Dynamic');
+													
+	// 												$.get('/get_nutrient_plan_items', { frp_id: plan[0].fr_plan_id }, function(fr_items) {
+	// 													var db_arr = reduceDynamicFRItems(fr_db_items, fr_items);
+														
+	// 													$.post('/update_nutrient_plan', { update: { last_updated: formatDate(new Date(), 'YYYY-MM-DD') }, filter: { fr_plan_id: plan[0].fr_plan_id } }, function(update_status) {
+	// 														console.log(update_status);
+	// 													});
+
+	// 													for (var i = 0; i < db_arr.length; i++) {
+	// 														$.post('/create_nutrient_item', db_arr[i], function(nutrient_item) {
+	// 															if (i == db_arr.length - 1) {
+	// 																console.log('Updated fr_items for frp_id: '+plan[0].fr_plan_id);
+	// 															}
+	// 														});
+	// 													}
+	// 												});
+														
+	// 											});
+													
+	// 										});
+	// 									});
+	// 								});
+										
+	// 							});
+
+	// 							//*********** Update fertilizer recommendation items END ***********//
+	// 						}
+
+	// 					});
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+	// }, 10000);
+
 		$.get('/get_farm_list', {  }, function(farm_list) {
 			for (var i = 0; i < farm_list.length; i++) {
 				$.get('/get_active_calendar', { farm_id: farm_list[i].farm_id }, function(calendar) {
@@ -889,11 +964,11 @@ $(document).ready(function() {
 													schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, false);
 													schedule_arr = schedule_arr.filter(e => e.fertilizer.nutrient == 'N');
 
-													var fr_db_items = processFRItems(schedule_arr, plan[0].fr_plan_id, 'Dynamic');
+													var fr_db_items = processFRItems(schedule_arr, plan[0].fr_plan_id, 'Single');
 													
 													$.get('/get_nutrient_plan_items', { frp_id: plan[0].fr_plan_id }, function(fr_items) {
 														var db_arr = reduceDynamicFRItems(fr_db_items, fr_items);
-														
+														console.log(fr_db_items);
 														$.post('/update_nutrient_plan', { update: { last_updated: formatDate(new Date(), 'YYYY-MM-DD') }, filter: { fr_plan_id: plan[0].fr_plan_id } }, function(update_status) {
 															console.log(update_status);
 														});
@@ -923,7 +998,6 @@ $(document).ready(function() {
 				});
 			}
 		});
-	}, 600000);
 
 	if (view == 'add_crop_calendar') {
 
