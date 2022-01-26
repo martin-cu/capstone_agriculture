@@ -252,7 +252,7 @@ function loadGeoMap(options) {
 	$('.loader').css('visibility', 'hidden'); //to show
 }
 
-function appendConsolidatedRecommendations(obj) {
+function appendConsolidatedRecommendations(obj, calendar_details , probability, workorders) {
 	console.log(obj);
 	var string, isCreated;
 	
@@ -277,6 +277,83 @@ function appendConsolidatedRecommendations(obj) {
 		string = `<tr class="clickable"> <td colspan="2" class="text-left">Nutrient Recommendation</td> <td colspan="3" class="text-left">Recommended ${obj.nutrients[i].description}</td> <td colspan="4" class="text-left"> Apply ${obj.nutrients[i].amount} bags of ${obj.nutrients[i].fertilizer_name} on ${obj.nutrients[i].target_application_date} </td> <td colspan="1" class="text-center"> ${isCreated} </td> </tr>`;
 		$('#recommendation_table').append(string);
 	}
+
+	
+	$.get('/ajaxGetDiagnoses', {farm_id : $("#farm_id").val()}, function(diagnoses){
+		//Get Probabilities from DB
+		$.get("/ajaxGetPastProbabilities", {farm_id : $("#farm_id").val()}, function(probabilities){
+			var i, x;
+			var possibilities = [];
+			for(i = 0; i < probability.length; i++){
+				// console.log(probabilities[i]);
+				for(x = 0; x < diagnoses.length; x++){
+					if(diagnoses[x].pd_id == probability[i].pd_id && diagnoses[x].type == probability[i].type){
+						probability[i].probability = probability[i].probability * 1.1;
+					}
+				}
+				if(probability[i].probability >= 30){
+					possibilities.push(probability[i]);
+				}
+			}
+			$.get('/ajaxGetDiagnosisStageFrequency',{farm_id : $("#farm_id").val()}, function(frequency){
+				for(i = 0; i < possibilities.length; i++){
+					var freq_stage = "N/A", stage_count = 0;
+					for(x = 0; x < frequency.length; x++){
+						if(possibilities[i].type == frequency[x].type && possibilities[i].pd_id == frequency[x].pd_id){
+							if(frequency[x].count > stage_count){
+								stage_count = frequency[x].count;
+								freq_stage = frequency[x].stage_diagnosed;
+							}
+						}
+						possibilities[i]["frequent_stage"] = freq_stage;
+					}
+				}
+			});
+			for(i = 0; i < possibilities.length; i++){
+				//Add to pesticide application plan
+				$.get("/getPDPreventions", {type : possibilities[i].type, id : possibilities[i].pd_id, possibilities : possibilities[i], land_prep_date : calendar_details.land_prep_date, seed_id : calendar_details.seed_planted, sowing_date : calendar_details.sowing_date, vegetation_date : calendar_details.sowing_date_end}, function(preventions){
+					for(x = 0 ; x < preventions.length; x++){
+						var existing_preventions = document.getElementsByClassName("preventions");
+						var q;
+						var cont = true;
+						for(q = 0; q < $(".preventions").length; q++){
+							console.log(document.getElementsByClassName("preventions")[q].textContent);
+							console.log(preventions[x].detail_name);
+							if(document.getElementsByClassName("preventions")[q].textContent == preventions[x].detail_name){
+								cont = false;
+							}
+						}
+						if(cont){
+							preventions[x]["generated"] = "No";
+							var y;
+							for(y = 0; y < workorders.length; y++){
+								var for_what = workorders[y].wo_notes.split(":");
+								// console.log( preventions[x].detail_name + " - " + workorders[y].type);
+								// console.log( preventions[x].date + " - " + workorders[y].date_start);
+								if(preventions[x].detail_name == workorders[y].type){
+									preventions[x].generated = "Yes";
+								}
+							}
+							
+							//Append
+							string = '<tr class="clickable"> <td colspan="2" class="text-left">Pest/Disease</td> <td colspan="3" class="text-left preventions">' + preventions[x].detail_name + '</td> <td colspan="4" class="text-left"> ' + preventions[x].detail_desc + ' </td> <td colspan="1" class="text-center"> ' + preventions[x].generated + ' </td> </tr>';
+							$('#recommendation_table').append(string);
+						}
+					}
+					//Check and add to reco table
+					
+
+					// var row = '<div class="row"> <div class="col-lg-5 col-xxl-4"> <div class="card shadow mb-4"> <div class="card-header mini py-3" style="background: #212529;"> <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pest/Disease ' + (i + 1) + '<br></h6> </div> <div class="card-body" style="height: 250px;"> <div class="table-responsive" style="border-style: none;"> <table class="table" style="height : 250px;"> <thead> </thead> <tbody> <tr style="border-style: none;"> <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Name<br></span> <span class="d-xxl-flex justify-content-xxl-start" id="">' + possibilities[i].pest_name + '<br></span></td> <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Type<br></span><span class="d-xxl-flex justify-content-xxl-start" id="">' + possibilities[i].pd_type + '<br></span></td> </tr> <tr style="border-style: none;"> <td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Frequent Stage<br></span><span class="d-xxl-flex justify-content-xxl-start"  id="">' + possibilities[i].frequent_stage + '<br></span></td><td style="border-style: none;"><span class="d-xxl-flex justify-content-xxl-start" style="font-weight: bold;">Avg Probability<br></span><span class="d-xxl-flex justify-content-xxl-start"  id="">' + parseFloat(possibilities[i].probability).toFixed(2) + '%<br></span></td> </tr> </tbody> </table> </div> </div> </div> </div> <div class="col-lg-7 col-xxl-8"> <div class="card shadow mb-4"> <div class="card-header mini py-3" style="background: #212529;height: auto;"> <h6 class="fw-bold m-0" style="color: #FFFFFF;">Pesticide Application Plan ' + (i + 1) + ' Information<br></h6> </div> <div class="card-body table-responsive" style="height : 250px; padding-left : 1.5rem; padding-right : 1.5rem;"> <table class="table" id="pd_recommendation_table" style="width: 100%;"> <thead> <tr> <th style="text-align: left; width : 25%">Date</th> <th style="text-align: left; width : 30%">Prevention</th> <th style="text-align: left; width : 40%">Description</th> <th style="text-align: left; width : 5%"></th> </tr> </thead> <tbody style="overflow: auto;"> ';
+					// $("#body_step4").append();
+					// for(x = 0; x < preventions.length; x++){
+					// 	row = row + '<tr> <td style="text-align: left;">' + preventions[x].date + '</td> <td style="text-align: left;overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">' + preventions[x].detail_name + '</td> <td style="text-align: left; overflow: hidden;white-space: nowrap; text-overflow: ellipsis;">' + preventions[x].detail_desc + '</td> <td style="text-align: left;"><input checked class="prevention_wo" type="checkbox" form="" id="" value="' + preventions[x].date + "|" + preventions[x].detail_name + "|" + possibilities[i].pest_name + ": " +  preventions[x].detail_desc + '"></td> </tr>';
+					// }
+					// row = row + '</tbody> </table> </div> </div> </div> </div>'
+					// $("#body_step4").append(row);
+				});
+			}
+		});
+	});
 	
 }
 
@@ -374,11 +451,14 @@ $(document).ready(function() {
 			// If a crop calendar record exists
 			if (calendar_id != null && !Number.isNaN(calendar_id)) {
 				switchView(false);
-				// Get disaster and nutrient recommendations on load
-				$.get('/get_recommendations', { calendar_id: calendar_id }, function(recommendation) {
-					appendConsolidatedRecommendations(recommendation);
-				});
+				
 				$.get("/ajax_farm_details", {farm_id : viewed_farm_id, center : center, coordinates : coordinates, calendar_id : calendar_id}, function(farm_details){
+
+					// Get disaster and nutrient recommendations on load
+					$.get('/get_recommendations', { calendar_id: calendar_id }, function(recommendation) {
+						appendConsolidatedRecommendations(recommendation, farm_details.crop_calendar_details, farm_details.probability, farm_details.workorders);
+					});
+
 					$("#farm_id").text(farm_details.details[0].farm_id);
 					$("#farm_name").text(farm_details.details[0].farm_name);
 					$("#farm_type").text(farm_details.details[0].land_type);
@@ -616,11 +696,15 @@ $(document).ready(function() {
 				// If no crop calendars exist
 				if (calendar_id != null && !Number.isNaN(calendar_id)) {
 					switchView(false);
-					// Get disaster and nutrient recommendations on change farm selected
-					$.get('/get_recommendations',  { calendar_id: calendar_id }, function(recommendation) {
-						appendConsolidatedRecommendations(recommendation);
-					});
+					
 					$.get("ajax_farm_details", {farm_id : viewed_farm_id, center : center, calendar_id : calendar_id}, function(farm_details){
+
+						// Get disaster and nutrient recommendations on change farm selected
+						$.get('/get_recommendations',  { calendar_id: calendar_id }, function(recommendation) {
+							appendConsolidatedRecommendations(recommendation, farm_details.crop_calendar_details, farm_details.probability, farm_details.workorders);
+						});
+
+
 						$("#farm_id").text(farm_details.details[0].farm_id);
 						$("#farm_name").text(farm_details.details[0].farm_name);
 						$("#farm_type").text(farm_details.details[0].land_type);

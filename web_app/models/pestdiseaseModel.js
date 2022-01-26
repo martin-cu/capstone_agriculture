@@ -1271,8 +1271,8 @@ exports.getPDProbabilityPercentage = function(weather, season, farmtype, stage, 
 
 	sql = sql + sql2 + ") ORDER BY probability DESC";
 
-	console.log("probability sql");
-	console.log(sql);
+	// console.log("probability sql");
+	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
