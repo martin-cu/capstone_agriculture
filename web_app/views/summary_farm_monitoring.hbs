@@ -1,90 +1,294 @@
-
-
 <div class="container-fluid">
-	<div class="mx-3">
-		{{#each data.calendars}}
-		<div class="card shadow border-left-warning py-2 my-3" style="max-width: 950px;" href="/farm_monitor_test?farm_id={{this.farm_id}}">
-            <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-warning h4 font-weight-bold text-xl" style="margin-top: -40px;">
-                        	<span>{{this.farm_name}}</span>
-                        	<small style="font-size: 16px;"> ({{this.stage}})</small>
-                        </div>
-                        <div class="text-dark font-weight-bold h5 mb-0"> 
-                        	{{this.seed_name}} {{this.seed_rate}} kg/ha
-                        </div>
-                        <div class="text-dark font-weight-bold mb-0">
-                        	{{this.days_till_harvest}} days till harvest
-                        </div>
-                        <div class="text-dark font-weight-bold mb-0">
-                        	{{this.method}}
-                        </div>
-                     	
-                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column">
-                        	<div class="d-flex" style="height: max-content;">
-                        		<label>NDVI:&nbsp</label>
-                        		<div class="" id="{{this.farm_name}}_ndvi"> -</div>
-                        		<div id="{{this.farm_name}}_ndvi_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
-                        	</div>
-                        	
-                        	<small id="{{this.farm_name}}_ndvi_date">Last updated: -</small>
-                        </div>
-                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column">
-                        	<div class="d-flex">
-                        		<label>Soil Moisture:&nbsp</label>
-                        		<div class="" id="{{this.farm_name}}_soil_moisture"> -</div>
-                        		<div id="{{this.farm_name}}_soil_moisture_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
-                        	</div>
-                        	
-                        	<small id="{{this.farm_name}}_soil_moisture_date">Last updated: -</small>
-                        </div>
-                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column mt-3">
-                        	Upcoming Nutrient Recommendation Applications:
-                        </div>
-                        <table class="table">
-                        	<tr>
-                        		<th>Target Application Date</th>
-                        		<th>Fertilizer</th>
-                        		<th>Description</th>
-                        		<th class="text-right">Amount</th>
-                        		<th>WO Generated?</th>
-                        	</tr>
-                        	{{#each this.nutrients}}
-                        	<tr>
-                        		<td>{{this.target_application_date}}</td>
-                        		<td>{{this.fertilizer_name}}</td>
-                        		<td>{{this.description}}</td>
-                        		<td class="text-right">{{this.amount}}</td>
-                        		<td>
-                        			{{#if this.isCreated}}
-                        			Yes
-                        			{{else}}
-                        			No
-                        			{{/if}}
-                        		</td>
-                        	</tr>
-                        	{{/each}}
-                        </table>
+	<div class="card shadow mb-5" style="max-width: 1150px; margin: 0px auto">
+	    <div class="card-header py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
+	        <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Summarized Farm Monitoring</p>
+	    </div>
+	     <div class="card-body">
+	     	<div class="">
+	     		<div class="ml-4">
+				  <input class="form-check-input" type="checkbox" value="" id="show_nutrients" checked>
+				  <label class="form-check-label" for="flexCheckDefault">
+				    Show Nutrient Recommendations
+				  </label>
+				</div>
+				<div class="ml-4">
+				  <input class="form-check-input" type="checkbox" value="" id="show_pd" checked>
+				  <label class="form-check-label" for="flexCheckChecked">
+				    Show Reported Pest/Disease Symptoms
+				  </label>
+				</div>
+	     	</div>
+	        <div class="row">
+	                <div class="col-12">
+	                    <div style="width: auto;">
+	                        <table class="table table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
+	                            <thead class="thead-dark">
+	                            	<tr>
+	                            		<td colspan="6" class="text-center bg-dark text-white">
+	                            			Active Farms (On-going Crop Calendar)
+	                            		</td>
+	                            	</tr>
+	                                
+	                            </thead>
+	                            <tbody aria-live="polite" aria-relevant="all">
+	                             	{{#each data.calendars}}
 
-                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column mt-3">
-                        	Reported Pest/Disease Symptoms:
-                        </div>
-                        <div class="text-dark font-weight-bold mb-0 d-flex flex-column mt-3">
-                        	N/A
-                        </div>
-                    </div>
-                    <!-- <div class="col-auto">
-                        <i class="fa fa-mobile fa-2x text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
-                    </div> -->
-                </div>
-            </div>
-        </div>
-        {{/each}}
+	                             	<tr>
+	                             		<td colspan="6" style="padding: 0px !important;">
+	                             			<table class="table">
+	                             				<thead class="thead-dark">
+	                             					<tr style="background: #332C1F;">
+					                                    <th style="">FARM</th>
+					                                    <th style="">Crop Details</th>
+					                                    <th style="">DAT</th>
+					                                    <th style="">NDVI</th>
+					                                    <th style="">SOIL MOISTURE</th>
+					                                    <th style=""></th>
+					                                </tr>
+	                             				</thead>
+		                             				
+	                             				<tr role="row">
+				                                    <td>
+				                                    	<div class="d-flex flex-column">
+				                                    		<div>{{this.farm_name}}</div>
+				                                    		<div>{{this.stage}}</div>
+				                                    	</div>
+				                                    </td>
+				                                    <td>
+				                                    	<div class="d-flex flex-column">
+				                                    		<div>{{this.seed_name}}</div>
+				                                    		<div>{{this.method}}</div>
+				                                    		<small>{{this.seed_rate}} kg/ha seed rate</small>
+				                                    	</div>
+				                                    </td>
+				                                    <td>{{this.days_till_harvest}}</td>
+				                                    <td>
+				                                    	<div class="d-flex flex-column">
+				                                    		<div class="d-flex" style="height: max-content;">
+							                        		<label>NDVI:&nbsp</label>
+							                        		<div class="" id="{{this.farm_name}}_ndvi"> -</div>
+							                        		<div id="{{this.farm_name}}_ndvi_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
+							                        	</div>
+							                        	
+							                        	<small id="{{this.farm_name}}_ndvi_date">Last updated: -</small>
+				                                    	</div>
+				                                    </td>
+				                                    <td>
+				                                    	<div class="d-flex flex-column">
+				                                    		<div class="d-flex">
+								                        		<label>Soil Moisture:&nbsp</label>
+								                        		<div class="" id="{{this.farm_name}}_soil_moisture"> -</div>
+								                        		<div id="{{this.farm_name}}_soil_moisture_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
+								                        	</div>
+								                        	
+								                        	<small id="{{this.farm_name}}_soil_moisture_date">Last updated: -</small>
+				                                    	</div>
+				                                    </td>
+				                                    <td class="">
+				                                        <div class="w-100 mx-auto">
+				                                        	<div class="mx-auto dropdown no-arrow" style="">
+				                                                <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+				                                                    <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+				                                                </button>
+				                                                <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+				                                                    <a class="dropdown-item notSidebar" href="/farm_monitor_test?farm_id={{this.farm_id}}">View Details</a>
+				                                                </div>
+				                                            </div>
+				                                        </div>
+				                                    </td>
+				                                </tr>
+				                                <tr>
+				                                	<td colspan="6" style="padding: 0px !important; border: none;">
+				                                		<div class="w-100 d-flex">
+				                                			<div class="mr-auto text-dark font-weight-bold d-flex flex-column" style="padding: 0.5rem;">
+									                        	Upcoming Nutrient Recommendation Applications:
+									                        </div>
+									                        <button onclick="toggleInvert(this)" class="icon_btn invert collapse_btn nutrient_btn" data-toggle="collapse" data-target="#nutrient{{@index}}" aria-expanded="false" aria-controls="">
+									                        	<i class="fas fa-chevron-circle-up fa-lg m-2"></i>
+									                        </button>
+				                                		</div>
+					                                    
+					                                    <div id="nutrient{{@index}}" class="collapse show multi-collapse nutrient_multi_collapse">
+					                                    	<table class="table table-borderless" style="margin-bottom: 0px !important;">
+									                        	<tr style="border: none;">
+									                        		<th style="border: none;">Target Application Date</th>
+									                        		<th style="border: none;">Fertilizer</th>
+									                        		<th style="border: none;">Description</th>
+									                        		<th class="text-right" style="border: none;">Amount</th>
+									                        		<th style="border: none;">WO Generated?</th>
+									                        	</tr>
+									                        	{{#each this.nutrients}}
+									                        	<tr>
+									                        		<td style="border: none;">{{this.target_application_date}}</td>
+									                        		<td style="border: none;">{{this.fertilizer_name}}</td>
+									                        		<td style="border: none;">{{this.description}}</td>
+									                        		<td class="text-right" style="border: none;">{{this.amount}}</td>
+									                        		<td style="border: none;">
+									                        			{{#if this.isCreated}}
+									                        			Yes
+									                        			{{else}}
+									                        			No
+									                        			{{/if}}
+									                        		</td>
+									                        	</tr>
+									                        	{{/each}}
+									                        </table>
+					                                    </div>
+					                                    	
+				                                    </td>
+				                                </tr>
+				                                <tr>
+					                                <td colspan="6" style="padding: 0px !important; border: none;">
+					                                	<div class="d-flex w-100">
+					                                		<div class="text-dark font-weight-bold mb-0 mr-auto d-flex flex-column" style="padding: 0.5rem;">
+									                        	Reported Pest/Disease Symptoms:
+									                        </div>
+									                        <button onclick="toggleInvert(this)" class="icon_btn invert collapse_btn pest_btn" data-toggle="collapse" data-target="#pest{{@index}}" aria-expanded="false" aria-controls="">
+									                        	<i class="fas fa-chevron-circle-up fa-lg m-2"></i>
+									                        </button>
+					                                	</div>
+								                        <div id="pest{{@index}}" class="collapse show multi-collapse pd_multi_collapse">
+								                        	<div class=" text-dark font-weight-bold" style="padding: 0.5rem;">
+								                        		N/A
+								                        	</div>
+								                        </div>
+					                                </td>
+				                                </tr>
+
+	                             			</table>
+	                             		</td>
+	                             	</tr>
+			                        {{/each}}
+	                            </tbody>
+	                            <thead class="thead-dark">
+	                            	<tr>
+	                            		<td colspan="6" class="text-center">
+	                            			Inactive Farms
+	                            		</td>
+	                            	</tr>
+	                            </thead>
+	                            <tbody>
+	                            	<tr>
+	                            		<td colspan="6" style="padding: 0px !important">
+	                            			<table class="table">
+	                            				<thead class="thead-dark">
+	                            					<tr>
+	                            						<th>Farm</th>
+	                            						<th>Previous Crop Details</th>
+	                            						<th colspan="2">Previous Calendar Details</th>
+	                            						<th></th>
+	                            					</tr>
+	                            				</thead>
+
+	                            				{{#each data.inactive}}
+	                            				<tr>
+	                            					<td>
+	                            						<div class="d-flex flex-column">
+	                            							<div>{{this.farm_name}}</div>
+	                            							<div>{{this.farm_area}} ha</div>
+	                            							<div>{{this.land_type}}</div>
+	                            						</div>
+	                            					</td>
+	                            					{{#if this.calendar_id}}
+	                            					<td>
+	                            						<div class="d-flex flex-column">
+	                            							<div>{{this.seed_name}}</div>
+	                            							<div>{{this.method}}</div>
+	                            							<div>{{this.seed_rate}} kg/ha seed rate</div>
+	                            						</div>
+	                            					</td>
+	                            					<td colspan="2">
+	                            						<div class="d-flex flex-column w-100">
+	                            							<div class="d-flex">
+	                            								<div class="d-flex flex-column w-50">
+	                            									<div>Crop Plan: {{this.crop_plan}}</div>
+	                            									<div class="mt-2">Land Prep: {{this.land_prep_date}}</div>
+	                            									<div class="mt-1">Sowing Date: {{this.sowing_date}}</div>
+	                            								</div>
+	                            								<div class="d-flex flex-column w-50">
+	                            									<div>&nbsp</div>
+	                            									<div class="mt-2">Harvest Date: {{this.harvest_date}}</div>
+	                            									<div class="mt-1 font-weight-bold">Harvest: {{this.harvest_yield}} cavans/ha</div>
+	                            								</div>
+	                            							</div>
+	                            							<!-- <div class="w-50">
+	                            								
+	                            							</div>
+	                            							<div class="w-50">
+	                            								
+	                            							</div> -->
+	                            						</div>
+	                            					</td>
+	                            					{{else}}
+	                            					<td colspan="3" class="text-center text-muted">No existing crop calendar records</td>
+	                            					{{/if}}
+	                            					<td class="">
+				                                        <div class="w-100 mx-auto">
+				                                        	<div class="mx-auto dropdown no-arrow" style="">
+				                                                <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+				                                                    <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+				                                                </button>
+				                                                <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+				                                                    <a class="dropdown-item notSidebar" href="/farm_monitor_test?farm_id={{this.farm_id}}">View Details</a>
+				                                                </div>
+				                                            </div>
+				                                        </div>
+				                                    </td>
+	                            				</tr>
+	                            				{{/each}}
+	                            			</table>
+	                            		</td>
+	                            	</tr>
+	                            </tbody>
+	                        </table>
+	                    </div>
+	                </div>
+	            </div>
+	    </div>
 	</div>
 </div>
 
 <script type="text/javascript">
+
+	function toggleShow(type, val) {
+		var target;
+
+		if (type == 'nutrient') {
+			target = '.nutrient_multi_collapse';
+			btn_target = '.nutrient_btn';
+		}
+		else {
+			btn_target = '.pest_btn';
+			target = '.pd_multi_collapse';
+		}
+
+		if (val) {
+			$(btn_target).addClass('invert');
+			$(target).collapse('show');
+		}
+		else {
+			$(btn_target).removeClass('invert');
+			$(target).collapse('hide');
+		}
+	}
+
+	function toggleInvert(target) {
+		if ($(target).hasClass('invert')) {
+			$(target).removeClass('invert');
+		}
+		else {
+			$(target).addClass('invert');
+		}
+	}
+
+	$('#show_nutrients').on('change', function() {
+		toggleShow('nutrient', $(this).is(':checked'));
+	});
+
+	$('#show_pd').on('change', function() {
+		toggleShow('pd', $(this).is(':checked'));
+	});
+
 	$(function () {
 	  $('[data-toggle="tooltip"]').tooltip({
 	  	container: 'body',

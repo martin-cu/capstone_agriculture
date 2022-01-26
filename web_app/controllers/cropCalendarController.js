@@ -3,6 +3,7 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const nutrientModel = require('../models/nutrientModel.js');
+const farmModel = require('../models/farmModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
 var request = require('request');
 
@@ -21,40 +22,61 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 				if (err)
 					throw err;
 				else {
-					for (var i = 0; i < nutrient_reco.length; i++) {
-						nutrient_reco[i].target_application_date = dataformatter.formatDate(nutrient_reco[i].target_application_date, 'mm DD, YYYY');
-					}
-
-
-					var nutrient_reco_arr = [];
-					const unique = [...new Map(nutrient_reco.map(item =>
-	  					[item.fr_plan_id, item])).values()];
-					for (var i = 0; i < unique.length; i++) {
-						for (var x = 0; x < list.length; x++) {
-							if (list[x].farm_id == unique[i].farm_id) {
-								list[x]['nutrients'] = nutrient_reco_arr.concat((nutrient_reco.filter(e => e.fr_plan_id == unique[i].fr_plan_id)).slice(0, 3));
+					farmModel.getAllFarmswCalendar(function(err, calendars) {
+						if (err)
+							throw err;
+						else {
+							
+							calendars = calendars.filter(function(cv) {
+								return !list.find(function(e) {
+									return e.farm_id == cv.farm_id;
+								});
+							});
+							for (var i = 0; i < calendars.length; i++) {
+								if (calendars[i].calendar_id != null) {
+									calendars[i].land_prep_date = dataformatter.formatDate(new Date(calendars[i].land_prep_date), 'mm DD, YYYY');
+									calendars[i].sowing_date = dataformatter.formatDate(new Date(calendars[i].sowing_date), 'mm DD, YYYY');
+									calendars[i].harvest_date = dataformatter.formatDate(new Date(calendars[i].harvest_date), 'mm DD, YYYY');
+								}
 							}
+
+							console.log(calendars);
+							for (var i = 0; i < nutrient_reco.length; i++) {
+								nutrient_reco[i].target_application_date = dataformatter.formatDate(nutrient_reco[i].target_application_date, 'mm DD, YYYY');
+							}
+
+
+							var nutrient_reco_arr = [];
+							const unique = [...new Map(nutrient_reco.map(item =>
+			  					[item.fr_plan_id, item])).values()];
+							for (var i = 0; i < unique.length; i++) {
+								for (var x = 0; x < list.length; x++) {
+									if (list[x].farm_id == unique[i].farm_id) {
+										list[x]['nutrients'] = nutrient_reco_arr.concat((nutrient_reco.filter(e => e.fr_plan_id == unique[i].fr_plan_id)).slice(0, 3));
+									}
+								}
+							}
+							//console.log(nutrient_reco);
+							//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
+							var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
+						    request(url, { json: true }, function(err, response, body) {
+						        if (err)
+						        	throw err;
+						        else {
+						        	var farm_list = [];
+						        	for (var i = 0; i < list.length; i++) {
+						        		farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
+						        		list[i]['days_till_harvest'] = (list[i].maturity_days + 65) - (new Date()).getDate();
+						        	}
+
+						        	html_data['data'] = { calendars: list, farms: farm_list, inactive: calendars };
+						        	html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
+
+						        	res.render('summary_farm_monitoring', html_data);
+						        }
+						    });
 						}
-					}
-					//console.log(nutrient_reco);
-					//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
-					var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
-				    request(url, { json: true }, function(err, response, body) {
-				        if (err)
-				        	throw err;
-				        else {
-				        	var farm_list = [];
-				        	for (var i = 0; i < list.length; i++) {
-				        		farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
-				        		list[i]['days_till_harvest'] = (list[i].maturity_days + 65) - (new Date()).getDate();
-				        	}
-
-				        	html_data['data'] = { calendars: list, farms: farm_list };
-				        	html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
-
-				        	res.render('summary_farm_monitoring', html_data);
-				        }
-				    });
+					});
 				}
 			});
 					
