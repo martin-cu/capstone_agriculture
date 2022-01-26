@@ -5,6 +5,7 @@ const cropCalendarModel = require('../models/cropCalendarModel.js');
 const nutrientModel = require('../models/nutrientModel.js');
 const farmModel = require('../models/farmModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
+const pestDiseaseModel = require('../models/pestdiseaseModel.js');
 var request = require('request');
 
 var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
@@ -59,22 +60,42 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 							//console.log(nutrient_reco);
 							//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
 							var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
-						    request(url, { json: true }, function(err, response, body) {
-						        if (err)
-						        	throw err;
-						        else {
-						        	var farm_list = [];
-						        	for (var i = 0; i < list.length; i++) {
-						        		farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
-						        		list[i]['days_till_harvest'] = (list[i].maturity_days + 65) - (new Date()).getDate();
-						        	}
+							request(url, { json: true }, function(err, response, body) {
+								if (err)
+									throw err;
+								else {
+									var farm_list = [];
+									for (var i = 0; i < list.length; i++) {
+										farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
+										list[i]['days_till_harvest'] = (list[i].maturity_days + 65) - (new Date()).getDate();
+									}
+									// console.log(list);
+									pestDiseaseModel.getDiagnosisSymptomsSummarized(null, function(err, symptoms){
+										if(err)
+											throw err;
+										else{
+											for(i = 0; i < list.length; i++){
+												list[i]["symptoms"] = [];
+												list[i]["empty_symptoms"] = true;
+												for(x = 0; x < symptoms.length; x++){
+													if(symptoms[x].farm_id == list[i].farm_id){
+														list[i].symptoms.push(symptoms[x]);
+														list[i].empty_symptoms = false;
+													}
+												}
 
-						        	html_data['data'] = { calendars: list, farms: farm_list, inactive: calendars };
-						        	html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
+											}
+										}
+										// console.log(list);
+										html_data["notifs"] = req.notifs;
 
-						        	res.render('summary_farm_monitoring', html_data);
-						        }
-						    });
+										html_data['data'] = { calendars: list, farms: farm_list };
+										html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
+										
+										res.render('summary_farm_monitoring', html_data);
+									});
+								}
+							});
 						}
 					});
 				}

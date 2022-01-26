@@ -21,7 +21,7 @@
 	        <div class="row">
 	                <div class="col-12">
 	                    <div style="width: auto;">
-	                        <table class="table table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%">
+	                        <table class="table table-bordered tablesorter" id="ipi-table" style="table-layout: fixed; width: 100%; ">
 	                            <thead class="thead-dark">
 	                            	<tr>
 	                            		<td colspan="6" class="text-center bg-dark text-white">
@@ -147,14 +147,29 @@
 									                        	<i class="fas fa-chevron-circle-up fa-lg m-2"></i>
 									                        </button>
 					                                	</div>
-								                        <div id="pest{{@index}}" class="collapse show multi-collapse pd_multi_collapse">
-								                        	<div class=" text-dark font-weight-bold" style="padding: 0.5rem;">
-								                        		N/A
+								                        <div id="pest{{@index}}" class=" collapse show multi-collapse pd_multi_collapse" style="width: 100%;max-width: 1100px; margin-left: 5px; mergin-right: 5px; overflow-y: hidden; white-space: nowrap;">
+								                        	<div class="flex-container scrollmenu text-dark font-weight-bold" style="display: flex; flex-flow: row; overflow-x: auto; ">
+								                        		{{#if this.empty_symptoms}}No existing symptoms{{/if}}
+																{{#each this.symptoms}}
+																	<div class="card-body card  mini-card details  flex-child" style="font-size: 12px; min-width: 150px;width: 150px; padding: 5px; margin-bottom: 5px; margin-right: 5px;">
+																		<h6>{{this.symptom_name}}</h6><br>
+																		{{this.pd_name}}
+																	</div>
+																{{/each}}
 								                        	</div>
 								                        </div>
+														{{!-- <div class="flex-container scrollmenu " style="display: flex; flex-flow: row; overflow-x: auto;">
+															{{#if this.empty_symptoms}}No existing symptoms{{/if}}
+															{{#each this.symptoms}}
+																<div class="card-body card aos-init mini-card details aos-animate flex-child" data-aos="flip-left" data-aos-duration="350" style="font-size: 12px; min-width: 150px;width: 150px; padding: 5px; margin-bottom: 5px; margin-right: 5px;">
+																	<h6>{{this.symptom_name}}</h6><br>
+																	{{this.pd_name}}
+																</div>
+															{{/each}}
+															
+														</div> --}}
 					                                </td>
 				                                </tr>
-
 	                             			</table>
 	                             		</td>
 	                             	</tr>
