@@ -32,6 +32,16 @@ else if (view == 'pest_and_disease_diagnoses') {
     });
 }
 
+else if (view == 'diagnosis_frequency') {
+    $('#diagnosesTable').DataTable( { //One table only
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "search": {
+            // "caseInsensitive": false
+        },
+        "order": [[ 0, "desc" ]]
+    });
+}
+
 else {
     $('.table.table-striped.table-bordered.tablesorter').DataTable( {
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
