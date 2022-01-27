@@ -26,10 +26,10 @@ function renew(type, farm){
 		for(i = 0; i < freq_list.length; i++){
 			table = "#" + type.toLowerCase() + "_frequency";
 			// alert(freq_list[0].pd_name);
-			$(table).append('<tr> <td><input checked class="frequency_radio" type="radio" id="" name="fav_language" value="' + freq_list[0].pd_id +'|' + freq_list[0].type +'"></td> <td>' + freq_list[0].pd_name +'</td> <td>' + freq_list[0].type +'</td> <td>' + freq_list[0].total +'</td> <td>' + freq_list[0].frequent_stage +'</td> </tr>');
+			$(table).append('<tr> <td><input checked class="frequency_radio" type="radio" id="" name="fav_language" value="' + freq_list[0].pd_id +'|' + freq_list[0].type +'"></td> <td>' + freq_list[0].pd_name +'</td> <td>' + freq_list[0].type +'</td> <td style="text-align: right">' + freq_list[0].total +'</td> <td>' + freq_list[0].frequent_stage +'</td> </tr>');
 
 			for(i = 1; i < freq_list.length; i++){
-				$(table).append('<tr> <td><input class="frequency_radio" type="radio" id="" name="fav_language" value="' + freq_list[i].pd_id +'|' + freq_list[i].type +'"></td> <td>' + freq_list[i].pd_name +'</td> <td>' + freq_list[i].type +'</td> <td>' + freq_list[i].total +'</td> <td>' + freq_list[i].frequent_stage +'</td> </tr>');
+				$(table).append('<tr> <td><input class="frequency_radio" type="radio" id="" name="fav_language" value="' + freq_list[i].pd_id +'|' + freq_list[i].type +'"></td> <td>' + freq_list[i].pd_name +'</td> <td>' + freq_list[i].type +'</td> <td style="text-align: right">' + freq_list[i].total +'</td> <td>' + freq_list[i].frequent_stage +'</td> </tr>');
 			}
 		}
 	});

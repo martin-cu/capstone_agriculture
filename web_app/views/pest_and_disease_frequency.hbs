@@ -7,6 +7,10 @@
     table td, label {
         color: #332c1f;
     }
+
+    .totalOccurences {
+        text-align: right !important;
+    }
     
 </style>
 
@@ -171,7 +175,7 @@
                                                     <th></th>
                                                     <th>Pest/Disease</th>
                                                     <th>Type</th>
-                                                    <th>Total Occurrences</th>
+                                                    <th class="totalOccurences">Total Occurrences</th>
                                                     <th>Common Stage</th>
                                                 </tr>
                                             </thead>
@@ -181,7 +185,7 @@
                                                         <td><input class="frequency_radio" type="radio" id="" name="fav_language" value="{{this.pd_id}}|{{this.type}}" {{#if selected}}checked{{/if}}></td>
                                                         <td>{{this.pd_name}}</td>
                                                         <td>{{this.type}}</td>
-                                                        <td>{{this.total}}</td>
+                                                        <td class="totalOccurences">{{this.total}}</td>
                                                         <td>{{this.frequent_stage}}</td>
                                                     </tr>
 
@@ -233,7 +237,7 @@
                                                     <th></th>
                                                     <th>Pest/Disease</th>
                                                     <th>Type</th>
-                                                    <th>Total Occurrences</th>
+                                                    <th class="totalOccurences">Total Occurrences</th>
                                                     <th>Common Stage</th>
                                                 </tr>
                                             </thead>
@@ -243,7 +247,7 @@
                                                         <td><input class="frequency_radio" type="radio" id="" name="fav_language" value="{{this.pd_id}}|{{this.type}}" {{#if selected}}checked{{/if}}></td>
                                                         <td>{{this.pd_name}}</td>
                                                         <td>{{this.type}}</td>
-                                                        <td>{{this.total}}</td>
+                                                        <td class="totalOccurences">{{this.total}}</td>
                                                         <td>{{this.frequent_stage}}</td>
                                                     </tr>
                                                 {{/each}}
@@ -294,7 +298,7 @@
                                                     <th></th>
                                                     <th>Pest/Disease</th>
                                                     <th>Type</th>
-                                                    <th>Total Occurrences</th>
+                                                    <th class="totalOccurences">Total Occurrences</th>
                                                     <th>Common Stage</th>
                                                 </tr>
                                             </thead>
@@ -304,7 +308,7 @@
                                                         <td><input class="frequency_radio" type="radio" id="" name="fav_language" value="{{this.pd_id}}|{{this.type}}" {{#if selected}}checked{{/if}}></td>
                                                         <td>{{this.pd_name}}</td>
                                                         <td>{{this.type}}</td>
-                                                        <td>{{this.total}}</td>
+                                                        <td class="totalOccurences">{{this.total}}</td>
                                                         <td>{{this.frequent_stage}}</td>
                                                     </tr>
                                                 

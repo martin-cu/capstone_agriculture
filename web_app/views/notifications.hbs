@@ -3,7 +3,7 @@
         color:#332C1F;
     } 
 
-    label {
+    p, label {
         color: #332C1F;
     }
 </style>
@@ -22,8 +22,20 @@
             <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
 
                 <div class="card-header d-flex justify-content-between align-items-center" style="height:auto">
+
+                    <div class="col" style="max-width: 70px; padding-top: 2px">
+
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick="history.back()"> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
+                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+                        </button>        
+
+                    </div>
                     
-                    Notifications
+                    <div class="col" style="margin-right: 650px; padding-top: 15px">
+                        <h6 style="color: white;">Notifications</h6>
+            
+                    </div>
+
                     
                     </div>
 
@@ -46,13 +58,13 @@
                                 {{!-- <button class="btn btn-primary d-flex float-end" role="button" style=" margin-bottom: 20px; background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button> --}}
                                 
                             {{#each notifs}}
-                                <a class="d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="padding: 10px; background: {{#if this.done}}#cccccc{{else}}#ffffff{{/if}};">
+                                <a class="d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="padding: 10px; background: {{#if this.done}}#EEEEEE{{else}}#ffffff{{/if}};">
                                     <div class="mr-3">
                                         <div class="bg-{{this.color}} icon-circle"><i class="fas fa-{{this.icon}} text-white"></i></div>
                                     </div>
                                     <div>
-                                        <span class="small text-gray-500">{{this.date}}</span>
-                                        <p class="small text-dark">{{this.notification_title}}</p>
+                                        <span class="small text-gray-500" {{#if this.done}}style="color: #7D7D7D !important; font-weight 700"{{else}}style="color: #7D7D7D !important"{{/if}}>{{this.date}}</span>
+                                        <p class="small text-dark" {{#if this.done}}style="font-weight: 700"{{else}}{{/if}}>{{this.notification_title}}</p>
                                     </div>
                                 </a>
                             {{/each}}
