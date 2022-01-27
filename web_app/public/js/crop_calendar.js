@@ -27,9 +27,9 @@ function changeFarmDetails(id, farm_list) {
 		}
 
 		$('#land_type').html(farm_list[i].land_type);
-		$('#farm_area').html(farm_list[i].farm_area);
+		$('#farm_area').html(`${farm_list[i].farm_area} ha`);
 
-		$('#farm_area_cont').html(farm_list[i].farm_area);
+		$('#farm_area_cont').html(`${farm_list[i].farm_area} ha`);
 	}
 }
 

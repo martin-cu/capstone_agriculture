@@ -255,8 +255,8 @@ function appendRecommendation(obj) {
 			div.appendChild(lbl);
 		}
 		dates = document.createElement('div');
-		dates.setAttribute('class', 'text-center font-weight-normal');
-		dates.innerHTML = formatDate(new Date(obj.consecutive_rain[i].start), 'YYYY-MM-DD') + ' - ' + formatDate(new Date(obj.consecutive_rain[i].end), 'YYYY-MM-DD');
+		dates.setAttribute('class', 'text-center font-weight-normal weather_list');
+		dates.innerHTML = '• '+formatDate(new Date(obj.consecutive_rain[i].start), 'YYYY-MM-DD') + ' - ' + formatDate(new Date(obj.consecutive_rain[i].end), 'YYYY-MM-DD');
 
 		div.appendChild(dates);
 	}

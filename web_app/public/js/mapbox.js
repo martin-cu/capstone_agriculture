@@ -544,6 +544,7 @@ $(document).ready(function() {
 			}
 			else {
 				console.log('Error handling!!');
+				$('#forecast_yield').html('N/A');
 				switchView(true);
 			}
 		});
@@ -793,6 +794,7 @@ $(document).ready(function() {
 				}
 				else {
 					console.log('Error handle no crop calendar!');
+					$('#forecast_yield').html('N/A');
 					switchView(true);
 				}	
 			});	

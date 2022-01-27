@@ -42,10 +42,12 @@ $(document).ready(function() {
 										console.log(forecast);
 										var forecasted_yield = forecast[0][5];
 										$('#seed_expected_yield').val(Math.round(forecasted_yield));
+										$('#seed_expected_yield1').html(`${Math.round(forecasted_yield)} cavans/ha`);
 									},
 									error: function(err) {
 										console.log('Oops something went wrong!');
 										$('#seed_expected_yield').val('Insufficient data cannot make forecast!!');
+										$('#seed_expected_yield1').html('Insufficient historical data to make forecast');
 									}
 								})
 							});			
@@ -53,6 +55,7 @@ $(document).ready(function() {
 						else {
 							console.log('Insufficient historical data to make forecast');
 							$('#seed_expected_yield').val('Insufficient historical data to make forecast');
+							$('#seed_expected_yield1').html('Insufficient historical data to make forecast');
 						}
 
 					});
@@ -97,7 +100,7 @@ $(document).ready(function() {
 		if (curr_calendar != null && !Number.isNaN(curr_calendar)) {
 			$.get('/get_forecast_records', { calendar_id: [curr_calendar] }, function(forecast_records) {
 				console.log(forecast_records);
-
+				$('#forecast_yield').html('N/A');
 				if (forecast_records.length != 0) {
 					$('#forecast_yield').html((Math.round(forecast_records[0].forecast))+' sacks/ha');
 				}
@@ -105,6 +108,7 @@ $(document).ready(function() {
 		}
 		else {
 			console.log('Error handling!');
+			$('#forecast_yield').html('N/A');
 		}
 
 		//On active farm change
@@ -120,7 +124,7 @@ $(document).ready(function() {
 			if (curr_calendar != null && !Number.isNaN(curr_calendar)) {
 				$.get('/get_forecast_records', { calendar_id: [curr_calendar] }, function(forecast_records) {
 					console.log(forecast_records);
-
+					$('#forecast_yield').html('N/A');
 					if (forecast_records.length != 0) {
 						$('#forecast_yield').html((Math.round(forecast_records[0].forecast))+' sacks/ha');
 					}
@@ -128,6 +132,7 @@ $(document).ready(function() {
 			}
 			else {
 				console.log('No existing crop calendar record cannot make forecast!');
+				$('#forecast_yield').html('N/A');
 			}
 
 		});
@@ -140,7 +145,7 @@ $(document).ready(function() {
 
 			$.get('/get_forecast_records', { calendar_id: [curr_calendar] }, function(forecast_records) {
 				console.log(forecast_records);
-
+				$('#forecast_yield').html('N/A');
 				if (forecast_records.length != 0) {
 					$('#forecast_yield').html((Math.round(forecast_records[0].forecast))+' sacks/ha');
 				}
