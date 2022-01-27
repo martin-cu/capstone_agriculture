@@ -7,8 +7,103 @@ const workOrderModel = require('../models/workOrderModel.js');
 const disasterModel = require('../models/disasterModel.js');
 const nutrientModel = require('../models/nutrientModel.js');
 const notifModel = require('../models/notificationModel.js');
+const js = require('../public/js/session.js');
 
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+exports.getDisasterManagement = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster');
+
+	disasterModel.getDisasterLogs(null, function(err, disasters) {
+		if (err)
+			throw err;
+		else {
+			cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active']}, function(err, active_calendars) {
+				if (err)
+					throw err;
+				else {
+					var active_disasters = disasters.filter(e => e.status == 1), inactive_disasters = disasters.filter(e => e.status == 0);
+					var active_rainfall = active_disasters.filter(e => e.type == 'Heavy Rainfall'), 
+					inactive_rainfall = inactive_disasters.filter(e => e.type == 'Heavy Rainfall');
+					var active_drought = active_disasters.filter(e => e.type == 'Drought'), 
+					inactive_drought = inactive_disasters.filter(e => e.type == 'Drought');
+
+					var active_rainfall_arr = [], inactive_rainfall_arr = [];
+					var active_drought_arr = [], inactive_drought_arr = [];
+
+					for (var i = 0; i < active_rainfall.length; i++) {
+						active_rainfall_arr.push(prepareRainfallDisaster(active_rainfall[i], active_calendars));
+					}
+					for (var i = 0; i < inactive_rainfall.length; i++) {
+						inactive_rainfall_arr.push(prepareRainfallDisaster(inactive_rainfall[i], active_calendars));
+					}
+					//console.log(rainfall_arr);
+					html_data['active_rainfall'] = active_rainfall_arr;
+					html_data['inactive_rainfall'] = inactive_rainfall_arr;
+
+					html_data['active_drought'] = active_drought_arr;
+					html_data['inactive_drought'] = inactive_drought_arr;
+					//console.log(html_data);
+					res.render('disaster_warnings', html_data);					
+				}
+			});
+		}
+	});
+}
+
+exports.ajaxGetRecommendations = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster');
+
+	disasterModel.getDisasterLogs({ status: 1 }, function(err, disasters) {
+		if (err)
+			throw err;
+		else {
+			cropCalendarModel.getCropCalendars({ where: { key: 'calendar_id', val: req.query.calendar_id }, status: [] }, function(err, active_calendars) {
+				if (err)
+					throw err;
+				else {
+					var nutrient_query = active_calendars.map(e => ({ farm_id: e.farm_id, calendar_id: e.calendar_id }));
+					nutrientModel.getUpcomingImportantNutrients(nutrient_query, '', function(err, nutrients) {
+						if (err)
+							throw err;
+						else {
+							var rainfall = disasters.filter(e => e.type == 'Heavy Rainfall'), drought = disasters.filter(e => e.type == 'Drought');
+							var rainfall_arr = [], drought_arr = [];
+
+							for (var i = 0; i < rainfall.length; i++) {
+								rainfall_arr.push(prepareRainfallDisaster(rainfall[i], active_calendars));
+							}
+
+							//console.log(consolidateRecommendations(nutrients, rainfall_arr));
+							res.send(consolidateRecommendations(nutrients, rainfall_arr));
+						}
+					});			
+				}
+			});
+		}
+	});
+}
+
+function consolidateRecommendations(nutrients, rainfall) {
+	var obj = { disasters: [], nutrients: nutrients };
+	var temp_obj;
+
+	for (var i = 0; i < nutrients.length; i++) {
+		nutrients[i].target_application_date = dataformatter.formatDate(new Date(nutrients[i].target_application_date), 'mm DD, YYYY');
+	}
+	obj.nutrients = nutrients;
+	for (var i = 0; i < rainfall.length; i++) {
+		temp_obj = { description: `Weather forecast alert with classification ${rainfall[i].details.classification} expected on ${rainfall[i].details.target_date}`, recommendation: [] };
+		for (var x = 0; x < rainfall[i].farms.length; x++) {
+			temp_obj.recommendation.push(rainfall[i].farms[x].recommendation);
+		}
+		obj.disasters.push(temp_obj);
+	}
+
+	return obj;
+}
 
 function dateDiffInDays(a, b) {
   // Discard the time and time-zone information.
@@ -141,96 +236,4 @@ function prepareRainfallDisaster(rainfall, active_calendars) {
 		rainfall_obj.farms.push(farm_obj);
 	}
 	return rainfall_obj;
-}
-
-exports.getDisasterManagement = function(req, res) {
-	var html_data = {};
-
-	disasterModel.getDisasterLogs(null, function(err, disasters) {
-		if (err)
-			throw err;
-		else {
-			cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active']}, function(err, active_calendars) {
-				if (err)
-					throw err;
-				else {
-					var active_disasters = disasters.filter(e => e.status == 1), inactive_disasters = disasters.filter(e => e.status == 0);
-					var active_rainfall = active_disasters.filter(e => e.type == 'Heavy Rainfall'), 
-					inactive_rainfall = inactive_disasters.filter(e => e.type == 'Heavy Rainfall');
-					var active_drought = active_disasters.filter(e => e.type == 'Drought'), 
-					inactive_drought = inactive_disasters.filter(e => e.type == 'Drought');
-
-					var active_rainfall_arr = [], inactive_rainfall_arr = [];
-					var active_drought_arr = [], inactive_drought_arr = [];
-
-					for (var i = 0; i < active_rainfall.length; i++) {
-						active_rainfall_arr.push(prepareRainfallDisaster(active_rainfall[i], active_calendars));
-					}
-					for (var i = 0; i < inactive_rainfall.length; i++) {
-						inactive_rainfall_arr.push(prepareRainfallDisaster(inactive_rainfall[i], active_calendars));
-					}
-					//console.log(rainfall_arr);
-					html_data['active_rainfall'] = active_rainfall_arr;
-					html_data['inactive_rainfall'] = inactive_rainfall_arr;
-
-					html_data['active_drought'] = active_drought_arr;
-					html_data['inactive_drought'] = inactive_drought_arr;
-					//console.log(html_data);
-					res.render('disaster_warnings', html_data);					
-				}
-			});
-		}
-	});
-}
-
-exports.ajaxGetRecommendations = function(req, res) {
-	var html_data = {};
-
-	disasterModel.getDisasterLogs({ status: 1 }, function(err, disasters) {
-		if (err)
-			throw err;
-		else {
-			cropCalendarModel.getCropCalendars({ where: { key: 'calendar_id', val: req.query.calendar_id }, status: [] }, function(err, active_calendars) {
-				if (err)
-					throw err;
-				else {
-					var nutrient_query = active_calendars.map(e => ({ farm_id: e.farm_id, calendar_id: e.calendar_id }));
-					nutrientModel.getUpcomingImportantNutrients(nutrient_query, '', function(err, nutrients) {
-						if (err)
-							throw err;
-						else {
-							var rainfall = disasters.filter(e => e.type == 'Heavy Rainfall'), drought = disasters.filter(e => e.type == 'Drought');
-							var rainfall_arr = [], drought_arr = [];
-
-							for (var i = 0; i < rainfall.length; i++) {
-								rainfall_arr.push(prepareRainfallDisaster(rainfall[i], active_calendars));
-							}
-
-							//console.log(consolidateRecommendations(nutrients, rainfall_arr));
-							res.send(consolidateRecommendations(nutrients, rainfall_arr));
-						}
-					});			
-				}
-			});
-		}
-	});
-}
-
-function consolidateRecommendations(nutrients, rainfall) {
-	var obj = { disasters: [], nutrients: nutrients };
-	var temp_obj;
-
-	for (var i = 0; i < nutrients.length; i++) {
-		nutrients[i].target_application_date = dataformatter.formatDate(new Date(nutrients[i].target_application_date), 'mm DD, YYYY');
-	}
-	obj.nutrients = nutrients;
-	for (var i = 0; i < rainfall.length; i++) {
-		temp_obj = { description: `Weather forecast alert with classification ${rainfall[i].details.classification} expected on ${rainfall[i].details.target_date}`, recommendation: [] };
-		for (var x = 0; x < rainfall[i].farms.length; x++) {
-			temp_obj.recommendation.push(rainfall[i].farms[x].recommendation);
-		}
-		obj.disasters.push(temp_obj);
-	}
-
-	return obj;
 }

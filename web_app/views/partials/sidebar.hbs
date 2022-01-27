@@ -14,7 +14,7 @@
             <li class="nav-item">
                 <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
                     <a aria-expanded="false" data-toggle="collapse" data-target="#farms" href="#" id="firstDp"
-                        class="dropdown-lbl text-decoration-none {{# if farm_tab}}active{{/if}}{{# if monitor_farms_tab}}active{{/if}}{{# if calendar_tab}}active{{/if}}" style="">
+                        class="dropdown-lbl text-decoration-none {{# if farm_tab}}active{{/if}}{{# if monitor_farms_tab}}active{{/if}}{{# if calendar_tab}}active{{/if}}{{# if disaster}}active{{/if}}" style="">
                         <i class="fas fa-farm" style="font-size: 16px;margin-right: 10px;"></i>Farms &nbsp;&nbsp;
                         <i class="fas fa-caret-down"></i> 
                     </a>
@@ -22,7 +22,8 @@
                     <div class="collapse" style="" id="farms">
                         <a class="dropdown-item {{# if farm_tab}}active{{/if}}" href="/farms" style="">Work Orders</a>
                         <a class="dropdown-item {{# if calendar_tab}}active{{/if}}" href="/crop_calendar" style="">Crop Calendar</a>
-                        <a class="dropdown-item {{# if monitor_farms_tab}}active{{/if}}" href="/summarized" style="">Farm Monitoring</a>
+                        <a class="dropdown-item {{# if monitor_farms_tab}}active{{/if}}" href="/farm_monitoring_summarized" style="">Farm Monitoring</a>
+                        <a class="dropdown-item {{# if disaster}}active{{/if}}" href="/disaster_management" style="">Disaster Warnings</a>
                     </div>
                 </div>
             </li>

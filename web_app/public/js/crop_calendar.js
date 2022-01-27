@@ -493,9 +493,11 @@ $(document).ready(function() {
 			var fr_plan_id;
 
 			// Create forecast record
-			$.get('/create_forecast_record', { calendar_id: crop_plan.insertId, seed_id: form_data.seed_id, forecast: form_data.seed_expected_yield }, function(forecast_record) {
+			if (form_data.seed_expected_yield != 'Insufficient historical data to make forecast') {
+				$.get('/create_forecast_record', { calendar_id: crop_plan.insertId, seed_id: form_data.seed_id, forecast: form_data.seed_expected_yield }, function(forecast_record) {
 
-			});
+				});
+			}
 
 			// Check if FR Plan already exists!
 			$.get('/get_nutrient_plan_details', { farm_id: form_data.farm_id }, function(fr_plans) {

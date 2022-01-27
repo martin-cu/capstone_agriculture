@@ -45,7 +45,7 @@ router.get('/get_soil_records', environmentController.ajaxGetSoilRecord);
 router.post('/update_soil_records', environmentController.ajaxUpdateSoilRecord);
 router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
 
-router.get('/farm_monitor_test', notifController.getNotification ,farmController.getMonitorFarms);
+router.get('/farm_monitoring', notifController.getNotification ,farmController.getMonitorFarms);
 router.get('/filter_farm_details', farmController.getFarmDetails);
 router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
 
@@ -237,7 +237,7 @@ router.get('/get_climate_forecast', openWeatherController.climateForecast);
 
 //Martin Testing
 router.get('/forecast_yield', farmController.forecastYield);
-router.get('/summarized', notifController.getNotification, cropCalendarController.getSummarizedFarmMonitoring);
+router.get('/farm_monitoring_summarized', notifController.getNotification, cropCalendarController.getSummarizedFarmMonitoring);
 
 
 //Y2 TESTING

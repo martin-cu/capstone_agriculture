@@ -10,9 +10,20 @@ var request = require('request');
 
 var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+function dateDiffInDays(a, b) {
+  // Discard the time and time-zone information.
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+}
+
+
 exports.getSummarizedFarmMonitoring = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
 
 	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
 		if (err)
@@ -41,7 +52,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 								}
 							}
 
-							console.log(calendars);
+							//console.log(calendars);
 							for (var i = 0; i < nutrient_reco.length; i++) {
 								nutrient_reco[i].target_application_date = dataformatter.formatDate(nutrient_reco[i].target_application_date, 'mm DD, YYYY');
 							}
@@ -67,7 +78,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 									var farm_list = [];
 									for (var i = 0; i < list.length; i++) {
 										farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
-										list[i]['days_till_harvest'] = (list[i].maturity_days + 65) - (new Date()).getDate();
+										list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays(new Date(list[i].sow_date_completed), new Date());
 									}
 									// console.log(list);
 									pestDiseaseModel.getDiagnosisSymptomsSummarized(null, function(err, symptoms){
@@ -89,7 +100,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 										// console.log(list);
 										html_data["notifs"] = req.notifs;
 
-										html_data['data'] = { calendars: list, farms: farm_list };
+										html_data['data'] = { calendars: list, farms: farm_list, inactive: calendars };
 										html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
 										
 										res.render('summary_farm_monitoring', html_data);

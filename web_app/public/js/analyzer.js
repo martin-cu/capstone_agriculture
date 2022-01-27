@@ -328,7 +328,8 @@ exports.weatherForecast14D = function(dataset, testing, length) {
 	});
 
 	const trainingData = dataset.data_arr;
-
+	console.log(trainingData);
+	console.log(testing.data_arr);
 	net.train(trainingData, { 
 		//log: true 
 	});
