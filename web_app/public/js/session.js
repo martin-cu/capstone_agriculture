@@ -1,5 +1,5 @@
 exports.init_session = function(obj, role, name, username, tab) {
-	obj['name'] = name;
+	obj['name'] = 'Ramon Gabio';
 	obj['role'] = role;
 	obj['username'] = username;
 	obj['session'] = true;

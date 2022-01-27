@@ -77,7 +77,7 @@ exports.getDetailedWO = function(req, res) {
 
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
 			html_data['status_editable'] = true;
-			html_data['harvest_editable'] = details.type == 'Harvest' ? false : true;
+			html_data['harvest_editable'] = details.type == 'Harvest' ? true : false;
 			html_data['isCancellable'] = true;
 			switch (details.type) {
 				case 'Sow Seed':

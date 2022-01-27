@@ -196,6 +196,9 @@
                 <div id="btn_cont">
         
                 </div>
+                <div class="w-100">
+                    <div class="mr-5 text-right hide text-danger" id="general_err" style="margin-top: 100px;"></div>
+                </div>
             </form>
         </div>
     </div>
@@ -205,7 +208,7 @@
     var resource = '{{resources.lbl.name}}';
     var status_editable = {{status_editable}};
     var harvest = {{harvest_editable}};
-
+    console.log(`${resource} - ${status_editable} - ${harvest}`);
     function addHarvestDetails() {
         var last = $("[name='harvest_type']").last();
         var parent = $('#harvest_details_row');
@@ -227,9 +230,9 @@
             value: null
         };
 
-        div = createDOM({ type: 'div', class: '', style: '', html: '' });
-        sack_inp = createDOM({ type: 'input', class: 'mt-2', style: '', html: '', attr: sack_attr });
-        select_inp = createDOM({ type: 'select', class: 'mt-2 ml-3', style: '', html: '', attr: select_attr });
+        div = createDOM({ type: 'div', class: 'd-flex', style: 'max-width: 919.97px !important;', html: '' });
+        sack_inp = createDOM({ type: 'input', class: 'mt-2 form-control', style: 'max-width: 221.77px !important', html: '', attr: sack_attr });
+        select_inp = createDOM({ type: 'select', class: 'mt-2 ml-3 form-control', style: 'max-width: 135.1px !imporant;', html: '', attr: select_attr });
 
         for (var i = 0; i < opts.length; i++) {
             if (i != 0)
@@ -281,7 +284,7 @@
         if (!status_editable)
             editable = editable.filter(ele => ele != '#status');
 
-        if (!harvest) {
+        if (harvest) {
             editable.push('#sacks_harvested');
             editable.push('#harvest_type');
             addHarvestDetailButton(show);
@@ -336,7 +339,8 @@
 
         $('#edit_wo_form').on('submit', function(e) {
             e.preventDefault();
-
+            $('#general_err').addClass('hide');
+            $('#general_err').html('');
             if (resource == 'Seed') {
                 var qtys = $('[name="Seed_qty"]');
                 var qty_arr = [];
@@ -353,7 +357,38 @@
                 }
             }
             else {
-                e.currentTarget.submit();
+                if (harvest) {
+                    $('#general_err').removeClass('hide');
+                    var sacks_harvested = [];
+                    var types = [];
+                    var err = '';
+                    $(`[name='sacks_harvested']`).each(function() {
+                       sacks_harvested.push($(this).val());
+                    });
+                    $(`[name='harvest_type']`).each(function() {
+                       types.push($(this).val());
+                    });
+                    if (sacks_harvested.filter(e => e == '').length != 0 && types.filter(e => e == 'null' || e == null || e == '...').length != 0) {
+                        err += `Fill in cavans harvested and harvest type!`;
+                    }
+                    else if (sacks_harvested.filter(e => e == '').length != 0) {
+                        err += `Missing cavans harvested!`;
+                    }
+                    else if (types.filter(e => e == 'null' || e == null || e == '...').length != 0) {
+                        err += 'Please select harvest type!';
+                    }
+
+                    if (err != '') {
+                        $('#general_err').html(err);
+                    }
+                    else {
+                        e.currentTarget.submit();
+                    }
+                }
+                else {
+                    //console.log('Error handling!!');
+                    e.currentTarget.submit();
+                }
             }
 
         });
