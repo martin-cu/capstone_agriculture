@@ -2938,12 +2938,26 @@ exports.getPDFrequency = function(req, res){
 						html_data["middle"] = highest / 2;
 						
 					}
-					html_data["total"] = new_total;
-					html_data["month_frequency"] = month_frequency;
-					// html_data["pest"] = pest;
-					// html_data["disease"] = disease;
-					html_data["notifs"] = req.notifs;
-					res.render("pest_and_disease_frequency", html_data);
+					pestdiseaseModel.getPestDiseaseList("Pest", function(err, pests){
+						if(err)
+							throw err;
+						else{
+							var i;
+							// console.log(pests);
+							for(i = 0; i < pests.length; i++){
+								pests[i]["pd_type"] = "Pest";
+								if(pests[i].last_diagnosed != null)
+								pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'YYYY-MM-DD');
+							}
+							html_data["pests"] = pests;
+						}
+						html_data["total"] = new_total;
+						html_data["month_frequency"] = month_frequency;
+						// html_data["pest"] = pest;
+						// html_data["disease"] = disease;
+						html_data["notifs"] = req.notifs;
+						res.render("pest_and_disease_frequency", html_data);
+					});
 				});
 			});
 		});
@@ -2965,7 +2979,7 @@ exports.ajaxUpdateChart = function(req, res){
 	if(pd_id == "" || pd_id == null){
 		pd_id = null;
 	}
-	if(year == "" || year == null){
+	if(year == "" || year == null || year == "all"){
 		year = null;
 	}
 
@@ -3016,7 +3030,7 @@ exports.ajaxDiagnosisPDFrequency = function(req, res){
 	if(farm_id == "all"){
 		farm_id = null;
 	}
-	if(year == "" || year == null){
+	if(year == "" || year == "all" || year == null){
 		year = null;
 	}
 	if(pd_id == "" || pd_id == null){
@@ -3105,7 +3119,7 @@ exports.ajaxDiagnosisListPerPD = function(req,res){
 	if(type == "")
 		type = null;
 	
-	if(year == "")
+	if(year == "" || year == "all")
 		year = null;
 	
 	pestdiseaseModel.getDiagnosisList(pd_id, type, farm_id, year, function(err, diagnosis_list){
