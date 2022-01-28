@@ -165,7 +165,7 @@ $(document).ready(function() {
 									// console.log(probabilities[i].pd_name);
 									// console.log(probabilities[i].probability);
 									// console.log("-------------------");
-									probabilities[i].probability = probabilities[i].probability * 1.1;
+											// probabilities[i].probability = probabilities[i].probability * 1.1;
 									// if($("#farm_id").val() == diagnoses[x].farm_id){
 									// 	console.log("same farm " + diagnoses[x].farm_name);
 									// 	probabilities[i].probability = probabilities[i].probability * 1.2;

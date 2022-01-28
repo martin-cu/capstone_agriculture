@@ -288,7 +288,7 @@ function appendConsolidatedRecommendations(obj, calendar_details , probability, 
 				// console.log(probabilities[i]);
 				for(x = 0; x < diagnoses.length; x++){
 					if(diagnoses[x].pd_id == probability[i].pd_id && diagnoses[x].type == probability[i].type){
-						probability[i].probability = probability[i].probability * 1.1;
+						// probability[i].probability = probability[i].probability * 1.1;
 					}
 				}
 				if(probability[i].probability >= 30){
@@ -519,9 +519,8 @@ $(document).ready(function() {
 							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;"></td><td class="probability_value"></td></tr>');
 						else
 							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
-						
-		
 					}
+					update_color_meter();
 
 					for(i = 0; i < farm_details.workorders.length; i++){
 						$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
