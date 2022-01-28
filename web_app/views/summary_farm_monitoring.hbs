@@ -13,19 +13,30 @@
             </div>
 	    </div>
 	     <div class="card-body">
-	     	<div class="">
-	     		<div class="ml-4">
-				  <input class="form-check-input" type="checkbox" value="" id="show_nutrients" checked>
-				  <label class="form-check-label" for="flexCheckDefault">
-				    Show Nutrient Recommendations
-				  </label>
-				</div>
-				<div class="ml-4">
-				  <input class="form-check-input" type="checkbox" value="" id="show_pd" checked>
-				  <label class="form-check-label" for="flexCheckChecked">
-				    Show Reported Pest/Disease Symptoms
-				  </label>
-				</div>
+	     	<div class="d-flex mb-2" style="font-size: 12px !important;">
+	     		<div class="mr-auto">
+	     			<div class="ml-4">
+					  <input class="form-check-input" type="checkbox" value="" id="show_nutrients" checked>
+					  <label class="form-check-label" for="flexCheckDefault">
+					    Show Nutrient Recommendations
+					  </label>
+					</div>
+					<div class="ml-4">
+					  <input class="form-check-input" type="checkbox" value="" id="show_pd" checked>
+					  <label class="form-check-label" for="flexCheckChecked">
+					    Show Reported Pest/Disease Symptoms
+					  </label>
+					</div>
+	     		</div>
+		     	<div class="">
+		     		Legend:
+		     		<div class="d-flex flex-column">
+		     			<div class="cursor" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Days After Transplant		&emsp;&nbsp;How long the crop has been growing">DAT</div>
+		     			<div class="cursor" data-html="true" data-toggle="tooltip" data-placement="top" title="Normalized Difference Vegetation Index 
+		     				&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;&nbsp;&nbsp;Measures plant health based on leaf color &emsp;">NDVI</div>
+		     			<div class="cursor" data-html="true" data-toggle="tooltip" data-placement="top" title="Ideal ranges for each stage: Early Vegetation (DAT < 40) - 62%&emsp;Mid to Late Vegetation (55 < DAT > 85) - 59%		&emsp;Reproductive - 45%		&emsp;&emsp;Ripening - 35%">Soil Moisture</div>
+		     		</div>
+		     	</div>
 	     	</div>
 	        <div class="row">
 	                <div class="col-12">
@@ -75,7 +86,7 @@
 				                                    	<div class="d-flex flex-column">
 				                                    		<div class="d-flex" style="height: max-content;">
 							                        		<label>NDVI:&nbsp</label>
-							                        		<div class="" id="{{this.farm_name}}_ndvi"> -</div>
+							                        		<div class="yes" id="{{this.farm_name}}_ndvi"> -</div>
 							                        		<div id="{{this.farm_name}}_ndvi_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
 							                        	</div>
 							                        	
@@ -86,7 +97,7 @@
 				                                    	<div class="d-flex flex-column">
 				                                    		<div class="d-flex">
 								                        		<label>Soil Moisture:&nbsp</label>
-								                        		<div class="" id="{{this.farm_name}}_soil_moisture"> -</div>
+								                        		<div class="yes" id="{{this.farm_name}}_soil_moisture"> -</div>
 								                        		<div id="{{this.farm_name}}_soil_moisture_help" style="font-size: 14px; margin-top: 3px;" class="text-muted ml-2"></div>
 								                        	</div>
 								                        	
@@ -100,7 +111,9 @@
 				                                                    <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
 				                                                </button>
 				                                                <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-				                                                    <a class="dropdown-item notSidebar" href="/farm_monitoring?farm_id={{this.farm_id}}">View Details</a>
+				                                                    <a class="dropdown-item notSidebar" href="/farm_monitoring?farm_id={{this.farm_id}}">Detailed Farm Monitoring</a>
+				                                                    <div class="dropdown-divider"></div>
+				                                                    <a class="dropdown-item notSidebar" href="/nutrient_management/{{this.farm_name}}/{{this.calendar_id}}">Nutrient Management</a>
 				                                                </div>
 				                                            </div>
 				                                        </div>
@@ -253,7 +266,7 @@
 				                                                    <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
 				                                                </button>
 				                                                <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-				                                                    <a class="dropdown-item notSidebar" href="/farm_monitoring?farm_id={{this.farm_id}}">View Details</a>
+				                                                    <a class="dropdown-item notSidebar" href="/farm_monitoring?farm_id={{this.farm_id}}">Detailed Farm Monitoring</a>
 				                                                </div>
 				                                            </div>
 				                                        </div>
@@ -403,6 +416,109 @@
 		return date;
 	}
 
+	function appendSoilMoisture(target, soil, farm_data) {
+		var moisture = soil.moisture == ' N/A' ? 'N/A' : ' '+Math.round(soil.moisture * 100) / 100 + '%';
+		if (moisture != ' N/A') {
+			var num = parseInt(moisture.replace('%', ''));
+			var ideal, stage = farm_data.stage;
+			var matrix = [62, 59, 45, 35];
+			var color = 'text-muted';
+			if (stage == 'Vegetation') {
+				if (farm_data.dat < 40) {
+					ideal = 62;
+				}
+				else {
+					ideal = 59;
+				}
+			}
+			else if (stage == 'Reproductive') {
+				ideal = 45;
+			}
+			else if (stage == 'Ripening') {
+				ideal = 35;
+			}
+			else if (stage == 'Harvest') {
+				ideal = 40;
+			}
+			else {
+				ideal = 'N/A';
+			}
+
+			if (ideal != 'N/A') {
+				if (num > ideal) {
+					color = 'text-success';
+				}
+				else if (num + 15 >= ideal) {
+					color = 'text-warning';
+				}
+				else {
+					color = 'text-danger';
+				}
+
+			}
+
+			$(`[${target}_help']`).html(`Ideal value: ${ideal}`);		
+		}
+		
+		$(`[${target}']`).html(moisture);
+		$(`[${target}']`).addClass(color);
+		$(`[${target}_date']`).html('Last updated: '+formatDate(new Date(soil.dt), 'mm DD, YYYY'));
+		$(`[${target}]`).attr('class', color);
+	}
+
+	function appendNDVI(target, imagery, stats, farm_data) {
+		var ndvi = (' '+Math.round(stats.max * 100) / 100);
+
+		if (ndvi != ' ') {
+			var num = parseFloat(ndvi.replace(' ', ''));
+			var ideal, stage = farm_data.stage, str;
+			var range = [];
+			var color = 'text-muted';
+			if (stage == 'Vegetation') {
+				if (farm_data.dat < 40) {
+					range = [.55, .79];
+				}
+				else {
+					range = [.55, .79];
+				}
+			}
+			else if (stage == 'Reproductive') {
+				range = [.55, .79];
+			}
+			else if (stage == 'Ripening') {
+				range = [.55, .79];
+			}
+			else if (stage == 'Harvest') {
+				range = [.55, .79];
+			}
+			else {
+				range = 'N/A';
+			}
+
+			if (range != 'N/A') {
+				if (range[0] <= num >= range[1]) {
+					color = 'text-success';
+				}
+				else if (range[0] - .10 < num || num > range[1] + .10) {
+					color = 'text-warning';
+				}
+				else {
+					color = 'text-danger';
+				}
+				str = `Ideal range: ${range[0]} to ${range[1]}`;
+			}
+			else {
+				str = `Ideal range: N/A`;
+			}
+
+			$(`[${target}_help']`).html(str);		
+		}
+		
+		$(`[${target}']`).html(ndvi);
+		$(`[${target}']`).addClass(color);
+		$(`[${target}_date']`).html('Last updated: '+formatDate(new Date(imagery.dt), 'mm DD, YYYY'));
+	}
+
 	jQuery.ajaxSetup({async: false });
 	var view = 'summary monitoring';
 	var obj = {{{JSON_data.farms}}};
@@ -417,9 +533,10 @@
 		$.get('/agroapi/ndvi/imagery', query, function(imagery) {
 			if (imagery.length != 0) {
 				$.get(imagery[0].stats.ndvi, {}, function(stats) {
-					$(`[id='${obj[i].name}_ndvi']`).html(' '+Math.round(stats.max * 100) / 100);
-					$(`[id='${obj[i].name}_ndvi_date']`).html('Last updated: '+formatDate(new Date(imagery[0].dt), 'mm DD, YYYY'));
-					$(`[id='${obj[i].name}_ndvi_help']`).html(`N/A`);
+					// $(`[id='${obj[i].name}_ndvi']`).html(' '+Math.round(stats.max * 100) / 100);
+					// $(`[id='${obj[i].name}_ndvi_date']`).html('Last updated: '+formatDate(new Date(imagery[0].dt), 'mm DD, YYYY'));
+					// $(`[id='${obj[i].name}_ndvi_help']`).html(`N/A`);
+					appendNDVI(`id='${obj[i].name}_ndvi`, imagery[0], stats, obj[i].data);
 				});
 			}
 			else {
@@ -429,9 +546,7 @@
 		console.log(obj[i].id);
 		$.get('/agroapi/soil/current', { polyid: obj[i].id }, function(soil) {
 			console.log(soil);
-			$(`[id='${obj[i].name}_soil_moisture']`).html(soil.moisture == ' N/A' ? 'N/A' : ' '+Math.round(soil.moisture * 100) / 100 + '%');
-			$(`[id='${obj[i].name}_soil_moisture_date']`).html('Last updated: '+formatDate(new Date(soil.dt), 'mm DD, YYYY'));
-			$(`[id='${obj[i].name}_soil_moisture_help']`).html(`N/A`);
+			appendSoilMoisture(`id='${obj[i].name}_soil_moisture`, soil, obj[i].data);
 		});
 	}
 </script>

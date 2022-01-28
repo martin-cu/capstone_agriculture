@@ -142,23 +142,29 @@
 
   <script type="text/javascript">
     jQuery.ajaxSetup({async: false });
-    $('*[href]').on('click',function (event) {
-      console.log('!');
-      window.location = $(this).attr('href');
-    });
+    $(document).ready(function() {
+      $('*[href]').on('click',function (event) {
+        console.log('!');
+        window.location = $(this).attr('href');
+      });
 
-    $('.link').on('click', function(e) {
-      window.location = $(this).attr('data-href');
-    });
+      $('.link').on('click', function(e) {
+        window.location = $(this).attr('data-href');
+      });
 
-    $('#work_order_table').on('click', '.link', function() {
-      window.location = $(this).attr('data-href');
-    });
+      $('#work_order_table').on('click', '.link', function() {
+        window.location = $(this).attr('data-href');
+      });
 
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
+      // var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+      // var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      //   return new bootstrap.Tooltip(tooltipTriggerEl)
+      // });
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+    });
+      
 
   </script>
 

@@ -35,10 +35,16 @@
 
 .tooltip-inner {
 	white-space:  pre-wrap !!important;
+	/*min-width:  max-content !important;*/
 }
 
 .fp_hover:hover {
 	cursor:  pointer;
+}
+
+.cursor:hover {
+	cursor:  pointer;
+	font-size: 12px !important;
 }
 
 .icon_btn {

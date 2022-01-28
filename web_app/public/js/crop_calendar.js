@@ -450,6 +450,20 @@ $(document).ready(function() {
 	var farm_list, seed_list;
 	var wo_arr = [];
 	var calendar_id;
+	var now = new Date();
+	var first_season_range = [new Date('2022-06-01'), new Date('2022-10-01')];
+	var season_name;
+
+	console.log(first_season_range[0].getMonth() >= now.getMonth());
+	if (first_season_range[0].getMonth() >= now.getMonth() && now.getMonth() < first_season_range[1].getMonth()) {
+		season_name = `Early ${now.getFullYear()}`;
+	}
+	else {
+		season_name = `Late ${now.getFullYear()+1}`;
+	}
+
+	console.log(season_name);
+	$('#crop_plan').val(season_name);
 
 	//Event listeners
 	$("#method").on("change", function(){

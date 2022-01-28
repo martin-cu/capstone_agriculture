@@ -97,7 +97,14 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 
 											}
 										}
-										// console.log(list);
+
+										//Append stage to list
+										var filtered;
+										for (var i = 0; i < farm_list.length; i++) {
+											filtered = list.filter(e => e.farm_name == farm_list[i].name)[0];
+
+											farm_list[i]['data'] = { dat: filtered.days_till_harvest, stage: filtered.stage };
+										}
 										html_data["notifs"] = req.notifs;
 
 										html_data['data'] = { calendars: list, farms: farm_list, inactive: calendars };
