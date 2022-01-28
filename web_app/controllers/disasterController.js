@@ -13,6 +13,7 @@ const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 exports.getDisasterManagement = function(req, res) {
 	var html_data = {};
+
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster');
 
 	disasterModel.getDisasterLogs(null, function(err, disasters) {
@@ -41,7 +42,7 @@ exports.getDisasterManagement = function(req, res) {
 					//console.log(rainfall_arr);
 					html_data['active_rainfall'] = active_rainfall_arr;
 					html_data['inactive_rainfall'] = inactive_rainfall_arr;
-
+					html_data['notifs'] = req.notifs;
 					html_data['active_drought'] = active_drought_arr;
 					html_data['inactive_drought'] = inactive_drought_arr;
 					//console.log(html_data);
@@ -115,7 +116,7 @@ function dateDiffInDays(a, b) {
 
 function prepareRainfallDisaster(rainfall, active_calendars) {
 	var rainfall_obj = {};
-	var stage = null, recommendation, damages, risk_lvl, text_color, damage_color;
+	var stage = null, recommendation, damages, risk_lvl, text_color, damage_color, risk_n;
 	rainfall['mph'] = Math.round(rainfall.wind_speed * 2.237 * 100)/100;
 	rainfall['classification'] = rainfall.mph < 38 ? 
 	'Heavy Rain' : rainfall.mph < 73 ?
@@ -181,25 +182,29 @@ function prepareRainfallDisaster(rainfall, active_calendars) {
 				damages = 'Low';
 				risk_lvl = 'Low';
 				text_color = 'text-dark';
-				damage_color = 'text-dark'; 
+				damage_color = 'text-dark';
+				risk_n = 1; 
 			}
 			else if (stage == 'Ripening') {
 				damages = 'Low';
 				risk_lvl = 'Low';
 				text_color = 'text-dark';
 				damage_color = 'text-warning';
+				risk_n = 1;
 			}
 			else if (stage == 'Reproductive') {
 				damages = 'Medium';
 				risk_lvl = 'Medium';
 				text_color = 'text-warning';
 				damage_color = 'text-warning';
+				risk_n = 2;
 			}
 			else {
 				damages = 'Medium';
 				risk_lvl = 'Medium';
 				text_color = 'text-warning';
-				damage_color = 'text-warning';									
+				damage_color = 'text-warning';
+				risk_n = 2;									
 			}
 		}
 		else if (rainfall.classification == 'Tropical Depression') {
@@ -207,33 +212,39 @@ function prepareRainfallDisaster(rainfall, active_calendars) {
 			text_color = 'text-danger';
 			damages = 'Medium'
 			damage_color = 'text-warning';
+			risk_n = 2;
 		}
 		else if (rainfall.classification == 'Tropical Storm') {
 			risk_lvl = 'High';
 			text_color = 'text-danger';
 			damages = 'High'
 			damage_color = 'text-danger';
+			risk_n = 3;
 		}
 		else if (rainfall.classification == 'Hurricane') {
 			risk_lvl = 'High';
 			text_color = 'text-danger';
 			damages = 'Critical'
 			damage_color = 'text-danger';
+			risk_n = 3;
 		}
 		else if (rainfall.classification == 'Major Hurricane') {
 			risk_lvl = 'High';
 			text_color = 'text-danger';
 			damages = 'Critical'
 			damage_color = 'text-danger';
+			risk_n = 3;
 		}
 
 		farm_obj = { farm_name: active_calendars[x].farm_name, seed_name: active_calendars[x].seed_name, 
 			dat: dat, stage: stage, severity: { val: risk_lvl, color: text_color, 
-				damage: damages, damage_color: damage_color }, recommendation: recommendation };
+				damage: damages, damage_color: damage_color, risk_n: risk_n }, recommendation: recommendation };
 
 		stage = null;
 		//console.log(farm_obj);
 		rainfall_obj.farms.push(farm_obj);
 	}
+	rainfall_obj.farms.sort((a, b) => b.severity.risk_n - a.severity.risk_n);
+	
 	return rainfall_obj;
 }

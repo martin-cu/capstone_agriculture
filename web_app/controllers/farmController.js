@@ -1156,6 +1156,7 @@ exports.getCurrentSoilData = function(req, res){
         if (err)
         	throw err;
         else {
+        	console.log(body);
 			body.dt = dataformatter.unixtoDate(body.dt);
 			body.moisture *= 100;
 			body = dataformatter.kelvinToCelsius(body, 'Soil');

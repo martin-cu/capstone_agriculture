@@ -149,7 +149,13 @@ exports.get14DWeatherForecast = function(req, res) {
 						});
 					}
 					else {
-						res.send(body);
+						disasterModel.updateLog({ status: 0 }, null, function(err, update_status) {
+							if (err)
+								throw err;
+							else {
+								res.send(body);
+							}
+						});
 					}
 				}
 			});

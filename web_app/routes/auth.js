@@ -22,7 +22,7 @@ router.get('/create_wo_test', (req, res) => {
 	res.render('create_wo_test', html_data);
 });
 
-
+// router.get('/due_wo', notifController.checkDueWorkOrders);
 /*** Database Ajax Start ***/
 
 router.get('/get_farm_list', farmController.ajaxGetFarmList);
@@ -89,12 +89,13 @@ router.post('/assign_farmers', farmController.assignFarmers);
 router.get('/', notifController.getNotification ,workOrderController.getWorkOrdersDashboard); 
 
 router.get('/farms', notifController.getNotification ,workOrderController.getWorkOrdersPage); 
-router.get('/farms/add', farmController.getAddFarm);
+router.get('/farms/add', notifController.getNotification ,farmController.getAddFarm);
 
-router.get('/materials', materialController.getMaterials);
+router.get('/materials', notifController.getNotification ,materialController.getMaterials);
 
 //Disaster Tab
-router.get('/disaster_management', disasterController.getDisasterManagement);
+router.get('/disaster_management', notifController.getNotification ,disasterController.getDisasterManagement);
+router.get('/farm_monitoring_summarized', notifController.getNotification, cropCalendarController.getSummarizedFarmMonitoring);
 
 //Farms Tab
 router.get("/farm_resources",notifController.getNotification , environmentController.getFarmResources);
@@ -185,10 +186,10 @@ router.post('/create_work_order', workOrderController.createWorkOrder);
 router.post('/edit_work_order', workOrderController.editWorkOrder);
 
 //Report
-router.get('/farm_productivity_report', reportController.getFarmProductivityReport);
-router.get('/farm_productivity/detailed', reportController.getDetailedReport);
-router.get('/harvest_report/:crop_plan/summary', reportController.getSummaryHarvestReport);
-router.get('/harvest_report/:crop_plan/detailed', reportController.getDetailedHarvestReport);
+router.get('/farm_productivity_report', notifController.getNotification ,reportController.getFarmProductivityReport);
+router.get('/farm_productivity/detailed', notifController.getNotification ,reportController.getDetailedReport);
+router.get('/harvest_report/:crop_plan/summary', notifController.getNotification ,reportController.getSummaryHarvestReport);
+router.get('/harvest_report/:crop_plan/detailed', notifController.getNotification ,reportController.getDetailedHarvestReport);
 
 
 /*** Agro API Start ***/
@@ -237,7 +238,6 @@ router.get('/get_climate_forecast', openWeatherController.climateForecast);
 
 //Martin Testing
 router.get('/forecast_yield', farmController.forecastYield);
-router.get('/farm_monitoring_summarized', notifController.getNotification, cropCalendarController.getSummarizedFarmMonitoring);
 
 
 //Y2 TESTING

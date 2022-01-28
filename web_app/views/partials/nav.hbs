@@ -24,13 +24,14 @@
                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in" style="background-color: #7D7D7D !important; overflow:auto !important; max-height: 450px">
                         <h6 class="dropdown-header" style="background: #7D7D7D;border-style: none;">Notifications</h6>
                             {{#each notifs}}
-                                <a class="dropdown-item d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}">
+                                <a class="w-100 dropdown-item d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}">
                                     <div class="mr-3">
                                         <div class="bg-{{this.color}} icon-circle" style="color: white !important;"><i class="fas fa-{{this.icon}} text-white" style="color: white !important;"></i></div>
                                     </div>
-                                    <div>
-                                        <span class="small text-gray-500" style="color: #EEEEEE !important;">{{this.date}}</span>
-                                        <p class="small text-dark" style="color: white !important; font-weight:bold">{{this.notification_title}}</p>
+                                    <div class="" style="max-width: 80% !important;">
+                                        <span class="w-100 small text-gray-500" style="color: #EEEEEE !important;">{{this.date}}</span>
+                                        <p class="w-100 small text-dark" style="color: white !important; font-weight:bold">{{this.notification_title}}</p>
+                                        <div class="text-truncate d-block w-100" style="">{{this.notification_desc}}</div>
                                     </div>
                                 </a>
                                 <div class="dropdown-divider"></div>

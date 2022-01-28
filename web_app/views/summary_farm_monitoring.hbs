@@ -1,7 +1,16 @@
 <div class="container-fluid">
 	<div class="card shadow mb-5" style="max-width: 1150px; margin: 0px auto">
-	    <div class="card-header py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
+	    <div class="card-header d-flex py-3" style="background: #939C1F;padding: 16px 20px;height: auto;">
 	        <p class="m-0 font-weight-bold" style="color: rgb(255,255,255);">Summarized Farm Monitoring</p>
+		        
+            <div class="ml-auto dropdown no-arrow" style="">
+                <button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                    <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                </button>
+                <div class="ml-auto dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+	                <a class="dropdown-item notSidebar" href="/farms/add">Create New Farm</a>
+	            </div>
+            </div>
 	    </div>
 	     <div class="card-body">
 	     	<div class="">
@@ -417,8 +426,9 @@
 
 			}
 		});
-
+		console.log(obj[i].id);
 		$.get('/agroapi/soil/current', { polyid: obj[i].id }, function(soil) {
+			console.log(soil);
 			$(`[id='${obj[i].name}_soil_moisture']`).html(soil.moisture == ' N/A' ? 'N/A' : ' '+Math.round(soil.moisture * 100) / 100 + '%');
 			$(`[id='${obj[i].name}_soil_moisture_date']`).html('Last updated: '+formatDate(new Date(soil.dt), 'mm DD, YYYY'));
 			$(`[id='${obj[i].name}_soil_moisture_help']`).html(`N/A`);

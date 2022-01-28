@@ -67,22 +67,35 @@ exports.getGroupedWO = function(type, filter, next) {
 }
 
 exports.getWorkOrders = function(query, next) {
-	var sql = 'select crop_plan, work_order_table.*, case when notes is null then "N/A" else notes end as wo_notes , farm_table.farm_name, farm_table.farm_id from work_order_table join crop_calendar_table on crop_calendar_id = calendar_id join farm_table using (farm_id) ';
+	var sql = 'select case when now() > date_due then "Overdue" when date_add(now(), interval 3 day) >= date_due then "Due soon" else  "Due in a week" end as notif_type, crop_plan, work_order_table.*, case when notes is null then "N/A" else notes end as wo_notes , farm_table.farm_name, farm_table.farm_id from work_order_table join crop_calendar_table on crop_calendar_id = calendar_id join farm_table using (farm_id) ';
 	if (JSON.stringify(query) != '{ }') {
 		if (query.hasOwnProperty('where') && query.where != null) {
 			for (var i = 0; i < query.where.key.length; i++) {
 				if (i == 0) {
-					sql += ' where '+query.where.key[i]+' = ?';
+					sql += ' where '+query.where.key[i];
 				}
 				else {
 					if (query.where.key[i-1] == query.where.key[i]) {
-						sql += ' or '+query.where.key[i]+' = ?';
+						sql += ' or '+query.where.key[i];
 					}
 					else {
-						sql += ' and '+query.where.key[i]+' = ?';
-					}
+						sql += ' and '+query.where.key[i];
+					}	
 				}
-				sql = mysql.format(sql, query.where.value[i]);
+
+				if (query.where.key[i] != '') {
+					if(query.where.value[i][0] != '!') {
+						sql += ' = ?';
+					}
+					else {
+						sql += ' != ?';
+						query.where.value[i] = query.where.value[i].replace('!', '');
+					}
+					sql = mysql.format(sql, query.where.value[i]);
+				}
+				else {
+					sql += query.where.value[i];
+				}
 			}
 		}
 
@@ -107,7 +120,7 @@ exports.getWorkOrders = function(query, next) {
 			
 		}
 	}
-	//console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

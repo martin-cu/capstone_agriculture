@@ -19,7 +19,7 @@
                     
                     <div class="col" style="max-width: 70px; padding-top: 2px">
 
-                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/farm_monitor_test"'> <!-- Replace later to window.location -->
+                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='history.back()'> <!-- Replace later to window.location -->
                             <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
                         </button>        
 
@@ -52,7 +52,7 @@
                             <h5 for="" style="font-weight: bold; padding-bottom: 20px; padding-top: 10px">Step 1: Add Farm Details</h5>
 
                             <div class="form-group">
-                                <label for="farmName">Name <span style="color: #CA4E0C;">*</span></label>
+                                <label for="farmName">Farm Name <span style="color: #CA4E0C;">*</span></label>
                                 <input type="text" class="form-control" id="farmName" placeholder="Name" name="farm_name" oninput="this.className = 'form-control'" required>
                             </div>
                            
