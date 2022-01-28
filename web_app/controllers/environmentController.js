@@ -1374,9 +1374,9 @@ exports.getFarmPestDiseases = function(req, res){
 																
 																for(x = 0 ; x < possible_pests.length; x++){
 																	if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
-																		possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																		// possible_pests[x].probability = possible_pests[x].probability * 1.1;
 																		if(diagnosis[i].farm_id == farm_id.farm_id){
-																			possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																			// possible_pests[x].probability = possible_pests[x].probability * 1.1;
 																		}
 																	}
 																	
@@ -1606,9 +1606,9 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
 														for(x = 0 ; x < possible_pests.length; x++){
 															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
-																possible_pests[x].probability = possible_pests[x].probability * 1.1;
-																if(diagnosis[i].farm_id == farm_id.farm_id)
-																	possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																// possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																if(diagnosis[i].farm_id == farm_id.farm_id){}
+																	// possible_pests[x].probability = possible_pests[x].probability * 1.1;
 															}
 															
 														}
@@ -1660,9 +1660,9 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 														diagnosis[i].date_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(diagnosis[i].date_diagnosed)), 'YYYY-MM-DD');
 														for(x = 0 ; x < possible_pests.length; x++){
 															if(possible_pests[x].type == diagnosis[i].type && possible_pests[x].pd_id == diagnosis[i].pd_id){
-																possible_pests[x].probability = possible_pests[x].probability * 1.1;
-																if(diagnosis[i].farm_id == farm_id.farm_id)
-																	possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																// possible_pests[x].probability = possible_pests[x].probability * 1.1;
+																if(diagnosis[i].farm_id == farm_id.farm_id){}
+																	// possible_pests[x].probability = possible_pests[x].probability * 1.1;
 															}
 														}
 													}
