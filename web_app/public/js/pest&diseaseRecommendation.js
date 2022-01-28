@@ -10,9 +10,11 @@ function renew(type, farm){
 		else{
 			farm_name = $("#farm_selected option:selected").text();
 		}
-		if(year == "all" || year == ""){
-			year_name = "All-time";
+		if(year == ""){
+			year_name = "Past 5 years";
 		}
+		else if(year == "all")
+			year_name = "All-time";
 		else{
 			year_name = $("#year_selected option:selected").text();;
 		}
@@ -26,10 +28,10 @@ function renew(type, farm){
 		for(i = 0; i < freq_list.length; i++){
 			table = "#" + type.toLowerCase() + "_frequency";
 			// alert(freq_list[0].pd_name);
-			$(table).append('<tr> <td><input checked class="frequency_radio" type="radio" id="" name="fav_language" value="' + freq_list[0].pd_id +'|' + freq_list[0].type +'"></td> <td>' + freq_list[0].pd_name +'</td> <td>' + freq_list[0].type +'</td> <td style="text-align: right">' + freq_list[0].total +'</td> <td>' + freq_list[0].frequent_stage +'</td> </tr>');
+			$(table).append('<tr> <td>' + freq_list[0].pd_name +'</td> <td>' + freq_list[0].type +'</td> <td style="text-align: right">' + freq_list[0].total +'</td> <td>' + freq_list[0].frequent_stage +'</td> </tr>');
 
 			for(i = 1; i < freq_list.length; i++){
-				$(table).append('<tr> <td><input class="frequency_radio" type="radio" id="" name="fav_language" value="' + freq_list[i].pd_id +'|' + freq_list[i].type +'"></td> <td>' + freq_list[i].pd_name +'</td> <td>' + freq_list[i].type +'</td> <td style="text-align: right">' + freq_list[i].total +'</td> <td>' + freq_list[i].frequent_stage +'</td> </tr>');
+				$(table).append('<tr><td>' + freq_list[i].pd_name +'</td> <td>' + freq_list[i].type +'</td> <td style="text-align: right">' + freq_list[i].total +'</td> <td>' + freq_list[i].frequent_stage +'</td> </tr>');
 			}
 		}
 	});
@@ -56,62 +58,64 @@ function renew(type, farm){
 		});
 	});	
 
-	var farm_id = $("#farm_selected").val();
-	var pd = $(".frequency_radio:checked").val();
-	pd = pd.split("|");
-	var pd_id = pd[0];
-	var type = pd[1];
+	// var farm_id = $("#farm_selected").val();
+	// var pd = $("#frequency_pd_id").val();
+	// pd = pd.split("|");
+	// var pd_id = pd[0];
+	// var type = pd[1];
 
-	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
-		$("#diagnoses_list_table").empty();
-		var i;
-		$("#pd_name").text(list[0].pd_name);
-		$("#pd_type").text(list[0].type);
-		$("#pd_desc").text(list[0].pd_desc);
-		for(i = 0; i < list.length; i++){
-			$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
-		}
-	});	
+	// $.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
+	// 	$("#diagnoses_list_table").empty();
+	// 	var i;
+	// 	// $("#pd_name").text(list[0].pd_name);
+	// 	// $("#pd_type").text(list[0].type);
+	// 	// $("#pd_desc").text(list[0].pd_desc);
+	// 	for(i = 0; i < list.length; i++){
+	// 		$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
+	// 	}
+	// });	
 
-	//For chart 2
-	$.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
-		var i, table;
+	// //For chart 2
+	// $.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
+	// 	var i, table;
 
-		var farm_name, year_name;
-		if(farm_id == "all"){
-			farm_name = "All Farms";
-		}
-		else{
-			farm_name = $("#farm_selected option:selected").text();
-		}
-		if(year == "all" || year == ""){
-			year_name = "All-time";
-		}
-		else{
-			year_name = $("#year_selected option:selected").text();
-		}
-		$("#chart_title").text(year_name + " " + $("#pd_name").text() + " Occurrences for " + farm_name);
+	// 	var farm_name, year_name;
+	// 	if(farm_id == "all"){
+	// 		farm_name = "All Farms";
+	// 	}
+	// 	else{
+	// 		farm_name = $("#farm_selected option:selected").text();
+	// 	}
+	// 	if(year == ""){
+	// 		year_name = "Past 5 Years";
+	// 	}
+	// 	else if(year == "all")
+	// 		year_name = "All-time";
+	// 	else{
+	// 		year_name = $("#year_selected option:selected").text();
+	// 	}
+	// 	$("#chart_title").text(year_name + " " + $("#pd_name").text() + " Occurrences for " + farm_name);
 
 
 
-		table = "#diagnoses_chart"; 
-		$(table).empty();
-		for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
-			$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
-		}
+	// 	table = "#diagnoses_chart"; 
+	// 	$(table).empty();
+	// 	for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
+	// 		$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
+	// 	}
 
-		table = "#diagnoses_numbers"; 
-		$(table).empty();
-		$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
-		$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
+	// 	table = "#diagnoses_numbers"; 
+	// 	$(table).empty();
+	// 	$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
+	// 	$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
 
-		$('.bars li .bar').each(function(key, bar){
-			var percentage = $(this).data('percentage');
-			$(this).animate({
-				'height' : percentage + '%'
-			},1000)
-		});
-	});
+	// 	$('.bars li .bar').each(function(key, bar){
+	// 		var percentage = $(this).data('percentage');
+	// 		$(this).animate({
+	// 			'height' : percentage + '%'
+	// 		},1000)
+	// 	});
+	// });
 }
 
 $(document).ready(function() {
@@ -217,7 +221,7 @@ $(document).ready(function() {
 	}
 	else if(view == "diagnosis_frequency"){
 
-		var pd = $(".frequency_radio:checked").val();
+		var pd = $("#frequency_pd_id").val();
 		pd = pd.split("|");
 		var pd_id = pd[0];
 		var type = pd[1];
@@ -227,9 +231,9 @@ $(document).ready(function() {
 			var i;
 			// alert(list.length);
 
-			$("#pd_name").text(list[0].pd_name);
-			$("#pd_type").text(list[0].type);
-			$("#pd_desc").text(list[0].pd_desc);
+			// $("#pd_name").text(list[0].pd_name);
+			// $("#pd_type").text(list[0].type);
+			// $("#pd_desc").text(list[0].pd_desc);
 			for(i = 0; i < list.length; i++){
 				$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
 			}
@@ -237,8 +241,8 @@ $(document).ready(function() {
 		});	
 
 		$.get("/ajaxUpdateChart",  {type : type, farm_id : "all", year : null, pd_id: pd_id}, function(diagnosis_chart){
-			$("#all_chart_title").text("All-time Pest/Disease Occurrences for All Farms");
-			$("#chart_title").text("All-time " + $("#pd_name").text() + " Occurrences for All Farms");
+			$("#all_chart_title").text("Past 5 Years Pest/Disease Occurrences for All Farms");
+			$("#chart_title").text("Past 5 Years " + $("#frequency_pd_id option:selected").text() + " Occurrences for All Farms");
 
 			var i, table;
 
@@ -286,21 +290,64 @@ $(document).ready(function() {
 				renew("Disease", farm_id);
 			}
 
-			var pd = $(".frequency_radio:checked").val();
-			pd = pd.split("|");
-			var pd_id = pd[0];
-			var type = pd[1];
+			// var pd = $(".frequency_radio:checked").val();
+			// pd = pd.split("|");
+			// var pd_id = pd[0];
+			// var type = pd[1];
+
+			// //For chart 2
+			// $.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
+			// 	var i, table;
+
+			// 	var farm_name, year_name;
+			// 	if(farm_id == "all"){
+			// 		farm_name = "All Farms";
+			// 	}
+			// 	else{
+			// 		farm_name = $("#farm_selected option:selected").text();
+			// 	}
+			// 	if(year == ""){
+			// 		year_name = "Past 5 Years";
+			// 	}
+			// 	else if(year == "all")
+			// 		year_name = "All-time";
+			// 	else{
+			// 		year_name = $("#year_selected option:selected").text();
+			// 	}
+			// 	$("#chart_title").text(year_name + " " + $("#pd_name").text() + " Occurrences for " + farm_name);
+
+
+
+			// 	table = "#diagnoses_chart"; 
+			// 	$(table).empty();
+			// 	for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
+			// 		$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
+			// 	}
+
+			// 	table = "#diagnoses_numbers"; 
+			// 	$(table).empty();
+			// 	$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
+			// 	$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
+
+			// 	$('.bars li .bar').each(function(key, bar){
+			// 		var percentage = $(this).data('percentage');
+			// 		$(this).animate({
+			// 			'height' : percentage + '%'
+			// 		},1000)
+			// 	});
+			// });
 			
-			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
-				$("#diagnoses_list_table").empty();
-				var i;
-				$("#pd_name").text(list[0].pd_name);
-				$("#pd_type").text(list[0].type);
-				$("#pd_desc").text(list[0].pd_desc);
-				for(i = 0; i < list.length; i++){
-					$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
-				}
-			});	
+			
+			// $.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
+			// 	$("#diagnoses_list_table").empty();
+			// 	var i;
+			// 	// $("#pd_name").text(list[0].pd_name);
+			// 	// $("#pd_type").text(list[0].type);
+			// 	// $("#pd_desc").text(list[0].pd_desc);
+			// 	for(i = 0; i < list.length; i++){
+			// 		$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
+			// 	}
+			// });	
 		});
 
 
@@ -323,30 +370,162 @@ $(document).ready(function() {
 				renew("Disease", farm_id);
 			}
 
-			var pd = $(".frequency_radio:checked").val();
+			// var pd = $("#frequency_pd_id").val();
+			// pd = pd.split("|");
+			// var pd_id = pd[0];
+			// var type = pd[1];
+			// $.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
+			// 	$("#diagnoses_list_table").empty();
+			// 	var i;
+			// 	// $("#pd_name").text(list[0].pd_name);
+			// 	// $("#pd_type").text(list[0].type);
+			// 	// $("#pd_desc").text(list[0].pd_desc);
+			// 	for(i = 0; i < list.length; i++){
+			// 		$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
+			// 	}
+			// });	
+
+			var farm_id = $("#farm_selected").val();
+			var year = $("#year_selected").val();
+			var pd = $("#frequency_pd_id").val();
 			pd = pd.split("|");
 			var pd_id = pd[0];
 			var type = pd[1];
+			
 			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 				$("#diagnoses_list_table").empty();
 				var i;
-				$("#pd_name").text(list[0].pd_name);
-				$("#pd_type").text(list[0].type);
-				$("#pd_desc").text(list[0].pd_desc);
+				// $("#pd_name").text(list[0].pd_name);
+				// $("#pd_type").text(list[0].type);
+				// $("#pd_desc").text(list[0].pd_desc);
 				for(i = 0; i < list.length; i++){
 					$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
 				}
 			});	
+
+
+			//For chart 2
+			$.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
+				var i, table;
+				var farm_name, year_name;
+				if(farm_id == "all"){
+					farm_name = "All Farms";
+				}
+				else{
+					farm_name = $("#farm_selected option:selected").text();
+				}
+				if(year == ""){
+					year_name = "Past 5 years";
+				}
+				else if(year == "all")
+					year_name = "All-time";
+				else{
+					year_name = $("#year_selected option:selected").text();
+				}
+				$("#chart_title").text(year_name + " " + $("#frequency_pd_id option:selected").text() + " Occurrences for " + farm_name);
+
+
+				table = "#diagnoses_chart"; 
+				$(table).empty();
+				for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
+					$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
+				}
+
+				table = "#diagnoses_numbers"; 
+				$(table).empty();
+				$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
+				$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
+
+				$('.bars li .bar').each(function(key, bar){
+					var percentage = $(this).data('percentage');
+					$(this).animate({
+						'height' : percentage + '%'
+					},1000)
+				});
+			});
+		});
+
+
+
+		$("#frequency_type").on("change", function(){
+        
+			var type = $(this).val();
+			$("#frequency_pd_id").empty();
+			$.get("/ajaxGetPestandDisease", {type : type}, function(pd_list){
+				var i; 
+				for(i = 0; i < pd_list.length; i++){
+					$("#frequency_pd_id").append('<option value="' + pd_list[i].pd_id +'|' + type + '">' + pd_list[i].pd_name +'</option>');
+				}
+			});
+
+			var farm_id = $("#farm_selected").val();
+			var year = $("#year_selected").val();
+			var pd = $("#frequency_pd_id").val();
+			pd = pd.split("|");
+			var pd_id = pd[0];
+			var type = pd[1];
+			
+			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
+				$("#diagnoses_list_table").empty();
+				var i;
+				// $("#pd_name").text(list[0].pd_name);
+				// $("#pd_type").text(list[0].type);
+				// $("#pd_desc").text(list[0].pd_desc);
+				for(i = 0; i < list.length; i++){
+					$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
+				}
+			});	
+
+
+			//For chart 2
+			$.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
+				var i, table;
+				var farm_name, year_name;
+				if(farm_id == "all"){
+					farm_name = "All Farms";
+				}
+				else{
+					farm_name = $("#farm_selected option:selected").text();
+				}
+				if(year == ""){
+					year_name = "Past 5 years";
+				}
+				else if(year == "all")
+					year_name = "All-time";
+				else{
+					year_name = $("#year_selected option:selected").text();
+				}
+				$("#chart_title").text(year_name + " " + $("#frequency_pd_id option:selected").text() + " Occurrences for " + farm_name);
+
+
+				table = "#diagnoses_chart"; 
+				$(table).empty();
+				for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
+					$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
+				}
+
+				table = "#diagnoses_numbers"; 
+				$(table).empty();
+				$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
+				$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
+
+				$('.bars li .bar').each(function(key, bar){
+					var percentage = $(this).data('percentage');
+					$(this).animate({
+						'height' : percentage + '%'
+					},1000)
+				});
+			});
 		});
 	}
 });
 
 
-$(document).on("change",".frequency_radio", function(){
+$(document).on("change","#frequency_pd_id", function(){
 	// alert("sad");
 	var farm_id = $("#farm_selected").val();
 	var year = $("#year_selected").val();
-	var pd = $(".frequency_radio:checked").val();
+	var pd = $("#frequency_pd_id").val();
 	pd = pd.split("|");
 	var pd_id = pd[0];
 	var type = pd[1];
@@ -354,9 +533,9 @@ $(document).on("change",".frequency_radio", function(){
 	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 		$("#diagnoses_list_table").empty();
 		var i;
-		$("#pd_name").text(list[0].pd_name);
-		$("#pd_type").text(list[0].type);
-		$("#pd_desc").text(list[0].pd_desc);
+		// $("#pd_name").text(list[0].pd_name);
+		// $("#pd_type").text(list[0].type);
+		// $("#pd_desc").text(list[0].pd_desc);
 		for(i = 0; i < list.length; i++){
 			$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
 		}
@@ -373,13 +552,15 @@ $(document).on("change",".frequency_radio", function(){
 		else{
 			farm_name = $("#farm_selected option:selected").text();
 		}
-		if(year == "all" || year == ""){
-			year_name = "All-time";
+		if(year == ""){
+			year_name = "Past 5 years";
 		}
+		else if(year == "all")
+			year_name = "All-time";
 		else{
 			year_name = $("#year_selected option:selected").text();
 		}
-		$("#chart_title").text(year_name + " " + $("#pd_name").text() + " Occurrences for " + farm_name);
+		$("#chart_title").text(year_name + " " + $("#frequency_pd_id option:selected").text() + " Occurrences for " + farm_name);
 
 
 		table = "#diagnoses_chart"; 
