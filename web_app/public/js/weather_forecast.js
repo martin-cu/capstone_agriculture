@@ -70,7 +70,7 @@ function processIcons(desc) {
 		icon = 'fas fa-cloud-rain';
 	}
 	else {
-		console.log('Unknown desc please add in js file!');
+		//console.log('Unknown desc please add in js file!');
 		//console.log(desc);
 	}
 	return desc;
@@ -115,7 +115,6 @@ function createForecastCards(data) {
 	img.setAttribute('style', 'width: 88px; height: 60px;');
 
 	img_cont.appendChild(img);
-	console.log(data);
 	desc = document.createElement('div');
 	desc.setAttribute('class', 'w-100 text-center');
 	desc.innerHTML = data.desc;
@@ -351,22 +350,22 @@ function generateRecommendation(arr) {
 		}
 	}
 
-	var date;
+	var date = new Date();
 	if (m_stats.heavy_rain.length != 0) {
 		date = new Date(m_stats.heavy_rain[m_stats.heavy_rain.length - 1].date);
 		date.setDate(date.getDate() + 1);
-		m_stats.suggested_date = date;
 	}
 	else {
 		if (m_stats.ideal_days.length != 0) {
 			date = new Date(m_stats.ideal_days[m_stats.ideal_days.length - 1].date);
-			m_stats.suggested_date = date;
 		}
 		else {
-			date = new Date(m_stats.consecutive_rain[0].date);
-			m_stats.suggested_date = date;
+			if (m_stats.consecutive_rain.length != 0) {
+				date = new Date(m_stats.consecutive_rain[0].date);
+			}
 		}
 	}
+	m_stats.suggested_date = date;
 	m_stats.suggested_date = formatDate(m_stats.suggested_date, 'YYYY-MM-DD');
 
 	appendRecommendation(m_stats);
@@ -826,6 +825,9 @@ $(document).ready(function() {
 				switchWeek(0);
 
 				generateRecommendation(forecast_records);
+			}
+			else {
+				console.log('err');
 			}
 		});
 		if (forecast_records != null) {

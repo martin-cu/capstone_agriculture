@@ -130,6 +130,8 @@ exports.processNPKValues = function(obj, area, applied, msg, wo_list) {
 			obj.n_lvl -= applied[i].N * applied[i].resources_used;
 		}
 	}
+	console.log()
+	console.log(wo_list);
 	count_applied = wo_list.length;
 	for (var  i = 0; i < keys.length; i++) {
 		obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;

@@ -67,6 +67,7 @@ exports.getDetailedWO = function(req, res) {
 			details['date_start'] = dataformatter.formatDate(new Date(details['date_start']), 'YYYY-MM-DD');
 			details['date_due'] = dataformatter.formatDate(new Date(details['date_due']), 'YYYY-MM-DD');
 			details['date_created'] = dataformatter.formatDate(new Date(details['date_created']), 'YYYY-MM-DD');
+			console.log(details);
 			if (details.date_completed != null || details.date_completed != undefined)
 				details['date_completed'] = dataformatter.formatDate(new Date(details['date_completed']), 'YYYY-MM-DD');
 
@@ -124,15 +125,17 @@ exports.getDetailedWO = function(req, res) {
 								if (err)
 									throw err;
 								else {
-									harvestModel.readHarvestDetail({ cct_id: details.crop_calendar_id }, function(err, details) {
+									harvestModel.readHarvestDetail({ cct_id: details.crop_calendar_id }, function(err, harvest_details) {
 										if (err)
 											throw err;
 										else {
-											//console.log(details);
-											if (details.length == 0) 
-												details.push({});
+
+											if (harvest_details.length == 0) 
+												harvest_details.push({});
+
+											html_data['stage'] = crop_calendar.filter(e => e.calendar_id == details.crop_calendar_id)[0].stage;
 											html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
-											html_data['harvest_details'] = details;
+											html_data['harvest_details'] = harvest_details;
 											html_data["notifs"] = req.notifs;
 											html_data["notifs"] = req.notifs;
 											res.render('detailed_work_order', html_data);
@@ -450,6 +453,10 @@ exports.ajaxEditStatus = function(req, res) {
 						res.send('Crop Calendar ID: '+req.query.calendar_id+' - began harvest stage!');
 					}
 				});
+			}
+			else {
+				console.log(wo_list);
+				res.send('err');
 			} 
 		}
 	});

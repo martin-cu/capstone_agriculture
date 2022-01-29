@@ -57,76 +57,78 @@ $(document).ready(function() {
             // need to be filtered with current list of farms (compared to agro api's list)
             // Ideally, it should be the same once (delete functionalities are added next time?)
         $.get('/get_farm_list', { group: 'farm_id' }, function(farms) {
-			
-        // Start getting list of polygons
-        $.get('/agroapi/polygon/readAll', {}, function(polygons) {
-	
-            // Initialize geojson object that stores an array of features
-                geojson = {
-                    "name":"MyPolygons",
-                    "type":"FeatureCollection",
-                    "features":[]
-                };
+            // Start getting list of polygons
+            $.get('/agroapi/polygon/readAll', {}, function(polygons) {
+    	       console.log(polygons);
+                // Initialize geojson object that stores an array of features
+                if (polygons.length != 0) {
+                    geojson = {
+                        "name":"MyPolygons",
+                        "type":"FeatureCollection",
+                        "features":[]
+                    };
 
-                // Loop through polygons and push coordinates to the array of features (One feature object per farm)
-                for (var i = 0; i < farms.length; i++) {
-                for (var j = 0; j < polygons.length; j++) {
+                    // Loop through polygons and push coordinates to the array of features (One feature object per farm)
+                    for (var i = 0; i < farms.length; i++) {
+                    for (var j = 0; j < polygons.length; j++) {
 
-                    
-                    if (polygons[j].name == farms[i].farm_name) {     
-                    
-                    // Get other farm details
-                    $.get("/ajax_farm_detailsDashboard", {farm_id : farms[i].farm_id}, function(farm_details){
-                    
-                    // Load environment details
-                    $.get('/agroapi/soil/current', { polyid: polygons[j].id }, function(soil) {
                         
-                    for (var k = 0; k < farm_details.length; k++) {
+                        if (polygons[j].name == farms[i].farm_name) {     
+                        
+                        // Get other farm details
+                        $.get("/ajax_farm_detailsDashboard", {farm_id : farms[i].farm_id}, function(farm_details){
+                        
+                        // Load environment details
+                        $.get('/agroapi/soil/current', { polyid: polygons[j].id }, function(soil) {
+                            
+                        for (var k = 0; k < farm_details.length; k++) {
 
-                    var farm_manager = farm_details[k].first_name + " " + farm_details[k].last_name;
+                        var farm_manager = farm_details[k].first_name + " " + farm_details[k].last_name;
 
-                    coordinates.push(polygons[j].geo_json.geometry.coordinates[0]);
-                 
-                    geojson.features.push   ({ "type": "Feature",
-                                            "geometry": {
-                                                "type": "Polygon","coordinates": coordinates
-                                            },
-                                            'properties': {
-                                                'name': '<strong>' + farms[i].farm_name + "</strong>", //alternative html text
-                                                'description': 
-                                                '<strong style="color: #939C1F; font-size: 16px">' + farms[i].farm_name + '</strong><br>'
-                                                    + '<strong> Area Size: </strong>' + farms[i].farm_area + 'ha<br>'
-                                                    + '<strong> Land Type: </strong>' + farms[i].land_type + '<br>'
-                                                    + '<strong> Farm Manager: </strong>' + farm_manager + '<br>'
-                                                    + '<strong> Soil Moisture: </strong>' + Math.round(soil.moisture * 100) / 100 + '%' + '<br>',
+                        coordinates.push(polygons[j].geo_json.geometry.coordinates[0]);
+                     
+                        geojson.features.push   ({ "type": "Feature",
+                                                "geometry": {
+                                                    "type": "Polygon","coordinates": coordinates
                                                 },
-                                            
-                                            });
+                                                'properties': {
+                                                    'name': '<strong>' + farms[i].farm_name + "</strong>", //alternative html text
+                                                    'description': 
+                                                    '<strong style="color: #939C1F; font-size: 16px">' + farms[i].farm_name + '</strong><br>'
+                                                        + '<strong> Area Size: </strong>' + farms[i].farm_area + 'ha<br>'
+                                                        + '<strong> Land Type: </strong>' + farms[i].land_type + '<br>'
+                                                        + '<strong> Farm Manager: </strong>' + farm_manager + '<br>'
+                                                        + '<strong> Soil Moisture: </strong>' + Math.round(soil.moisture * 100) / 100 + '%' + '<br>',
+                                                    },
+                                                
+                                                });
 
-                    // Empty coordinates array at the end of the loop to filter coordinates per farm and feature on every push
-                    coordinates = [];
-                }
+                        // Empty coordinates array at the end of the loop to filter coordinates per farm and feature on every push
+                        coordinates = [];
+                    }
 
-                });
-                // END OF GET FARM DETAILS AJAX
+                    });
+                    // END OF GET FARM DETAILS AJAX
 
-                });
-                // END OF ENVIRONMENT DETAILS AJAX
-                    
-                }
-               
+                    });
+                    // END OF ENVIRONMENT DETAILS AJAX
                         
-                }     
-            
+                    }
+                   
+                            
+                    }     
+                
+                    }
+                    //alert(geojson.features);
                 }
-                   //alert(geojson.features);
+                else {
+                    console.log('err');
+                }
 
-    });
-
-    // END OF GET POLYGONS AJAX
-
-    });
-    // END OF GET FARMS AJAX
+            });
+            // END OF GET POLYGONS AJAX
+        });
+        // END OF GET FARMS AJAX
 
     // ADD POLYGON SOURCE AND LAYERS ON MAP LOAD
     map.on('load', function () {

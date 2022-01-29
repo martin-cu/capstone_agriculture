@@ -853,8 +853,8 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 				        				result[0]['default_soil'] = true;
 									}
 									//console.log(result);
-									console.log('asdasd');
-		        					result = dataformatter.processNPKValues(result, result[0].farm_area, applied)
+									// console.log(result, applied);
+		        					result = dataformatter.processNPKValues(result, result[0].farm_area, applied, '', applied);
 						            result['recommendation'] = recommendFertilizerPlan(result, materials);
 						            result['calendar_id'] = crop_calendar.calendar_id;
 
@@ -1810,7 +1810,7 @@ exports.getFarmSoilData = function(req,res){
         				result[0].p_lvl = p_lvl;
         				result[0].k_lvl = k_lvl;
 					}
-					var soil_data = dataformatter.processNPKValues(result, result.farm_area, applied);
+					var soil_data = dataformatter.processNPKValues(result, result[0].farm_area, applied, '', applied);
 					res.send(soil_data);
         		}
         	});

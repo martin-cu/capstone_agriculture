@@ -150,7 +150,6 @@
                                             <select class="form-control" name="harvest_type" class="ml-3" readonly id="harvest_type">
                                                 <option>...</option>
                                                 <option value="Full Harvest" {{#compareTwoValues this.type 'Full Harvest' operator='==='}}selected{{/compareTwoValues}}>Full Harvest</option>
-                                                <option value="Partial Harvest" {{#compareTwoValues this.type 'Partial Harvest' operator='==='}}selected{{/compareTwoValues}}>Partial Harvest</option>
                                                 <option value="Early Harvest" {{#compareTwoValues this.type 'Early Harvest' operator='==='}}selected{{/compareTwoValues}}>Early Harvest</option>
                                             </select>
                                         </div> 
@@ -208,11 +207,12 @@
     var resource = '{{resources.lbl.name}}';
     var status_editable = {{status_editable}};
     var harvest = {{harvest_editable}};
+    var stage = '{{stage}}';
     console.log(`${resource} - ${status_editable} - ${harvest}`);
     function addHarvestDetails() {
         var last = $("[name='harvest_type']").last();
         var parent = $('#harvest_details_row');
-        var opts = ['...','Full Harvest','Partial Harvest','Early Harvest'];
+        var opts = ['...','Full Harvest','Early Harvest'];
         var sack_inp, select_inp, option, div;
         var sack_attr = {
             type: 'number',
@@ -280,14 +280,14 @@
     }
 
     function toggleEditState(show) {
-        var editable = ['#status', '#date_start', '#date_due', '#notes', '#'+resource+'_qty'];
+        var editable = ['#status', '#date_due', '#notes', '#'+resource+'_qty'];
         if (!status_editable)
             editable = editable.filter(ele => ele != '#status');
 
         if (harvest) {
             editable.push('#sacks_harvested');
             editable.push('#harvest_type');
-            addHarvestDetailButton(show);
+            //addHarvestDetailButton(show);
         }
 
         var eles = $(editable.join()).attr('readonly', !show);
@@ -337,59 +337,100 @@
             window.top.location = window.top.location
         });
 
+        $('#harvest_type').on('change', function() {
+            var status_form = $('#status').val();
+            if ($(this).val() != '...') {
+                $('#status').val('Completed');
+            }
+            else {
+                $('#status').val(status_form);
+            }
+        });
+
+        if (stage != 'Harvesting') {
+            $('#harvest_type option[value="Full Harvest"]').remove();
+        }
+        else {
+            $('#harvest_type option[value="Early Harvest"]').remove();
+        }
+
         $('#edit_wo_form').on('submit', function(e) {
             e.preventDefault();
             $('#general_err').addClass('hide');
             $('#general_err').html('');
-            if (resource == 'Seed') {
-                var qtys = $('[name="Seed_qty"]');
-                var qty_arr = [];
-                for (var i = 0; i < qtys.length; i++) {
-                    qty_arr.push($(qtys[i]).val());
-                }
-                qty_arr = qty_arr.filter(e => e > 0);
+            var err = '';
 
-                if (qty_arr.length > 1) {
-                    $('#err_msg').html('Only one seed item with quantity > 0 is allowed!');
-                }
-                else {
-                    e.currentTarget.submit();
-                }
+            if ($('#date_start').val() > $('#date_due').val()) {
+                err += `Due date must be after start date!`;
             }
             else {
-                if (harvest) {
-                    $('#general_err').removeClass('hide');
-                    var sacks_harvested = [];
-                    var types = [];
-                    var err = '';
-                    $(`[name='sacks_harvested']`).each(function() {
-                       sacks_harvested.push($(this).val());
-                    });
-                    $(`[name='harvest_type']`).each(function() {
-                       types.push($(this).val());
-                    });
-                    if (sacks_harvested.filter(e => e == '').length != 0 && types.filter(e => e == 'null' || e == null || e == '...').length != 0) {
-                        err += `Fill in cavans harvested and harvest type!`;
+                if (resource == 'Seed') {
+                    var qtys = $('[name="Seed_qty"]');
+                    var qty_arr = [];
+                    for (var i = 0; i < qtys.length; i++) {
+                        qty_arr.push($(qtys[i]).val());
                     }
-                    else if (sacks_harvested.filter(e => e == '').length != 0) {
-                        err += `Missing cavans harvested!`;
-                    }
-                    else if (types.filter(e => e == 'null' || e == null || e == '...').length != 0) {
-                        err += 'Please select harvest type!';
-                    }
+                    qty_arr = qty_arr.filter(e => e > 0);
 
-                    if (err != '') {
-                        $('#general_err').html(err);
+                    if (qty_arr.length > 1) {
+                        err += ` Only one seed item with quantity > 0 is allowed!`;
                     }
                     else {
                         e.currentTarget.submit();
                     }
                 }
-                else {
-                    //console.log('Error handling!!');
-                    e.currentTarget.submit();
+                else if (resource == 'Fertilizer') {
+                    var item_qty = [];
+
+                    $(`[name='Fertilizer_qty']`).each(function() {
+                       item_qty.push($(this).val());
+                    });
+                    
+                    if (item_qty.filter(e => e == '').length == 0) {
+                        e.currentTarget.submit();
+                    }
                 }
-            }
+                else {
+                    if (harvest) {
+                        var sacks_harvested = [];
+                        var types = [];
+                        
+                        $(`[name='sacks_harvested']`).each(function() {
+                           sacks_harvested.push($(this).val());
+                        });
+                        $(`[name='harvest_type']`).each(function() {
+                           types.push($(this).val());
+                        });
+                        if (sacks_harvested.filter(e => e == '').length != 0 && types.filter(e => e == 'null' || e == null || e == '...').length != 0) {
+                            err += `Fill in cavans harvested and harvest type!`;
+                        }
+                        else if (sacks_harvested.filter(e => e == '').length != 0) {
+                            err += `Missing cavans harvested!`;
+                        }
+                        else if (types.filter(e => e == 'null' || e == null || e == '...').length != 0) {
+                            err += 'Please select harvest type!';
+                        }
+
+                        if (err != '') {
+                            
+                        }
+                        else {
+                            e.currentTarget.submit();
+                        }
+                    }
+                    else {
+                        //console.log('Error handling!!');
+                        e.currentTarget.submit();
+                    }
+                }
+
+                if (err != '') {
+                    $('#general_err').html(err);
+                    $('#general_err').removeClass('hide');
+                }
+            }           
+
+                
 
         });
     });
