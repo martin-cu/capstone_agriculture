@@ -1888,14 +1888,21 @@ exports.getDiagnoses = function(req, res) {
 											// console.log(symptoms);
 										}
 										// console.log(pest_diagnoses);
-										html_data["symptom"] = symptoms;
-										html_data["pest_list"] = pd_list;
-										html_data["pest_diagnoses"] = pest_diagnoses;
-										html_data["disease_diagnoses"] = disease_diagnoses;
-										html_data["diagnoses"] = diagnoses;
-										html_data["farms"] = farms;
-										html_data["notifs"] = req.notifs;
-										res.render('pest_and_disease_diagnoses', html_data);
+										pestdiseaseModel.getPossibilitiesBasedOnSymptoms([], function(err, possibilities){
+											if(err)
+												throw err;
+											else{
+												html_data["possibilities"] = possibilities;
+												html_data["symptom"] = symptoms;
+												html_data["pest_list"] = pd_list;
+												html_data["pest_diagnoses"] = pest_diagnoses;
+												html_data["disease_diagnoses"] = disease_diagnoses;
+												html_data["diagnoses"] = diagnoses;
+												html_data["farms"] = farms;
+												html_data["notifs"] = req.notifs;
+												res.render('pest_and_disease_diagnoses', html_data);
+											}
+										});
 									});
 								});
 							});
@@ -2199,11 +2206,12 @@ exports.addDiagnosis = function(req,res){
 	var i;
 	for(i = 0; i < req.body.solution.length; i++)
 		workorders.push(req.body.solution[i].split("|"));
-	
+	var pd = req.body.pd;
+	pd = pd.split("|");
 	var diagnosis = {
-		type : req.body.type,
+		type : pd[1],
 		farm_id : req.body.farm_id,
-		pd_id : req.body.pd_id,
+		pd_id : pd[0],
 		date_diagnosed : req.body.date_diagnosed
 	}
 	var query = { where: { key: 'farm_id', value: diagnosis.farm_id } };
@@ -2401,6 +2409,33 @@ exports.addDiagnosis = function(req,res){
 	
 	
 }
+
+
+exports.ajaxGetPossibilitiesBasedOnSymptoms = function(req,res){
+	console.log(req.query);
+	var symptoms = req.query.symptoms;
+	if(symptoms != null){
+		var symptoms_count = symptoms.length;
+	}
+	else{
+		console.log("null");
+		var symptoms_count = 0;
+		symptoms = [];
+	}
+	console.log(symptoms);
+	console.log(symptoms_count);
+	
+	pestdiseaseModel.getPossibilitiesBasedOnSymptoms(symptoms, function(err, possibilities){
+		if(err)
+			throw err;
+		else{
+			console.log(possibilities);
+			//filter
+			res.send(possibilities);
+		}
+	});
+
+};
 
 
 exports.getRecommendationDiagnosis = function(req,res){
