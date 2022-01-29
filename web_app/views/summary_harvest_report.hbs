@@ -93,7 +93,7 @@
 						<tr style="background: #212529;">
 							<th style="">Farm Name</th>
 							<th style="">Seed Name</th>
-							<th style="text-align:right" class="">Historical Yield (Avg)</th>
+							<th style="text-align:right" class="">Forecasted Yield </th>
 							<th style="text-align:right">Actual Yield</th>
 						</tr>
 					</thead>
@@ -103,7 +103,13 @@
 						<tr role="row">
 							<td>{{this.farm_name}}</td>
 							<td>{{this.seed_name}}</td>
-							<td class="text-right">{{this.historical_yield}} cavans/ha</td>
+							<td class="text-right">
+								{{#if forecast_yield_id}}
+								{{this.forecast_yield_id}} cavans/ha
+								{{else}}
+								N/A
+								{{/if}}
+							</td>
 							<td class="text-right d-flex">
 								<div class="ml-auto mr-3 d-flex">
 									<div class="">{{this.harvested}} cavans/ha</div>
@@ -112,7 +118,7 @@
 									</div>
 								</div>
 								
-								<span>
+								<!-- <span>
 									<div class="dropdown no-arrow" style="display:inline-block; float: right">
 										<button id="more" class="btn btn-primary btn-sm dropdown-toggle dropdown no-arrow" aria-expanded="false" data-bs-toggle="dropdown" type="button">
 											<i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
@@ -121,7 +127,7 @@
 											<a class="dropdown-item notSidebar" href="/harvest_report/{{this.crop_plan}}/detailed?id={{this.calendar_id}}">View Details</a>
 										</div>
 									</div>
-								</span> 
+								</span> --> 
 							</td>
 
 						</tr>

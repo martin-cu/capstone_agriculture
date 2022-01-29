@@ -56,19 +56,20 @@ exports.processMeanProductivity = function(fp, input) {
 	return (Math.round(avg_productivity * 10000) / 10000).toFixed(5);
 }
 
-exports.processHarvestSummary = function(data, harvest, history, fp) {
+exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 	const unique = [...new Map(data.map(item =>
 	  [item.seed_name, item])).values()];
-	var obj_keys = ['seed_rate', 'temp', 'humidity', 'pressure', 'rainfall', 'N', 'P', 'K', 'forecast', 'harvested'];
+	var obj_keys = ['seed_rate', 'temp', 'humidity', 'pressure', 'rainfall', 'forecast', 'harvested'];
 	var chart_arr = [];
 	var dataset_obj;
 	var summary = '';
 	var total_harvest = 0, count_avg = 0;
 	var printable = [];
-	var og_pressure = [];	
+	var og_pressure = [];
+	var filtered_nutrients;
 	for (var i = 0; i < unique.length; i++) {
 		var chart_data = { labels: ['Seed Rate', 'Avg Temp', 'Avg Humidity', 'Avg Pressure', 'Avg Rainfall',
-		'N', 'P', 'K', 'Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
+		 'User Nutrient Application', 'Recommended Nutrient Application', 'Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
 		chart_data.datasets = [];
 		chart_data.title = unique[i].seed_name;
 		//console.log(chart_data.title);
@@ -94,6 +95,12 @@ exports.processHarvestSummary = function(data, harvest, history, fp) {
 						count_avg++;
 					}
 				}
+				filtered_nutrients = nutrient.filter(e => e.calendar_id == data[x].calendar_id);
+				
+				dataset_obj.data.splice(5, 0, filtered_nutrients.filter(e => e.record_type == 'Nutrient User Generated').length);
+				dataset_obj.data.splice(6, 0, filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation').length);
+
+
 				chart_data.datasets.push(dataset_obj);
 			}
 
@@ -154,23 +161,24 @@ exports.processHarvestSummary = function(data, harvest, history, fp) {
 				data[i]['historical_yield'] = Math.round(history[x].avg_yield * 100)/100;
 			}
 		}
+		data[i].forecast_yield_id > data[i].harvested ? 
+				data[i].forecast_yield_id / data[i].harvested : 
+				data[i].forecast_yield_id / data[i].harvested
 		data[i]['change'] = { 
-			val: data[i].historical_yield != 'N/A' ? 
-				data[i].historical_yield > data[i].harvested ? 
-				data[i].harvested / data[i].historical_yield :
-				data[i].historical_yield / data[i].harvested : 0,
-			arrow: data[i].historical_yield != 'N/A' ? 
-				data[i].harvested >= data[i].historical_yield ? 
+			val: data[i].forecast_yield_id != 'N/A' ? 
+				(data[i].harvested - data[i].forecast_yield_id) / data[i].forecast_yield_id : 0,
+			arrow: data[i].forecast_yield_id != 'N/A' ? 
+				data[i].harvested >= data[i].forecast_yield_id ? 
 				'up' :
 				'down'
 				: 'up'
 		};
 
-		data[i].change.val = data[i].change.val != 0 ? Math.abs(parseInt((data[i].change.val * 100) - 100)) : 0;
+		data[i].change.val = data[i].change.val != 0 ? (parseInt((data[i].change.val * 100))) : 0;
 		data[i].change.color = data[i].change.arrow == 'up' ? 
 		data[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 	}
-
+	//console.log(data);
 	return { chart_data: chart_arr, json_chart_data: JSON.stringify(chart_arr), detailed_list: data, overview: summary, printable: printable };
 }
 
@@ -252,10 +260,7 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 		
 		fp_overview[i]['change'] = { 
 			val: fp_overview[i].current_productivity != 'N/A' ? 
-				fp_overview[i].current_productivity > fp_overview[i].prev_productivity ? 
-				fp_overview[i].current_productivity / fp_overview[i].prev_productivity :
-				fp_overview[i].prev_productivity / fp_overview[i].current_productivity
-				: 0,
+				(fp_overview[i].current_productivity - fp_overview[i].prev_productivity) / fp_overview[i].prev_productivity : 0,
 			arrow: fp_overview[i].current_productivity != 'N/A' ? 
 				fp_overview[i].current_productivity >= fp_overview[i].prev_productivity ? 
 				'up' :
@@ -263,7 +268,7 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 				: 'up'
 		};
 
-		fp_overview[i].change.val = fp_overview[i].change.val != 0 ? parseInt((fp_overview[i].change.val * 100) - 100) : '0';
+		fp_overview[i].change.val = fp_overview[i].change.val != 0 ? parseInt((fp_overview[i].change.val * 100)) : '0';
 		fp_overview[i].change.color = fp_overview[i].change.arrow == 'up' ? 
 		fp_overview[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 
@@ -328,8 +333,8 @@ exports.weatherForecast14D = function(dataset, testing, length) {
 	});
 
 	const trainingData = dataset.data_arr;
-	console.log(trainingData);
-	console.log(testing.data_arr);
+	// console.log(trainingData);
+	// console.log(testing.data_arr);
 	net.train(trainingData, { 
 		//log: true 
 	});

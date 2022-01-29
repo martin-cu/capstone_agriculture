@@ -67,41 +67,48 @@ exports.getSummaryHarvestReport = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			reportModel.getEarlyHarvestDetails({ calendar_ids: req.query.id.split(',') }, function(err, early_harvest) {
+			reportModel.getNutrientRecommendationDetails(req.params.crop_plan, function(err, nutrient_reco_details) {
 				if (err)
 					throw err;
 				else {
-					reportModel.getHistoricalYieldQuery({ calendar_ids: req.query.id.split(',') }, function(err, query) {
+					reportModel.getEarlyHarvestDetails({ calendar_ids: req.query.id.split(',') }, function(err, early_harvest) {
 						if (err)
 							throw err;
 						else {
-							reportModel.getHistoricalYield(query, function(err, historical_yield) {
+							reportModel.getHistoricalYieldQuery({ calendar_ids: req.query.id.split(',') }, function(err, query) {
 								if (err)
 									throw err;
 								else {
-									reportModel.getFarmProductivity(function(err, fp_overview) {
+									reportModel.getHistoricalYield(query, function(err, historical_yield) {
 										if (err)
 											throw err;
 										else {
-											var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id).concat(fp_overview.map(({ max_prev_calendar }) => max_prev_calendar));
-											reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
+											reportModel.getFarmProductivity(function(err, fp_overview) {
 												if (err)
 													throw err;
 												else {
-													html_data['data'] = analyzer.processHarvestSummary(chart_data, early_harvest, historical_yield, analyzer.calculateProductivity(fp_overview, input_resources));
-													//console.log(html_data.data.printable);
-													html_data["notifs"] = req.notifs;
-													res.render('summary_harvest_report', html_data);
+													var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id).concat(fp_overview.map(({ max_prev_calendar }) => max_prev_calendar));
+													reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
+														if (err)
+															throw err;
+														else {
+															html_data['data'] = analyzer.processHarvestSummary(chart_data, early_harvest, historical_yield, analyzer.calculateProductivity(fp_overview, input_resources), nutrient_reco_details);
+															//console.log(html_data.data.printable);
+															html_data["notifs"] = req.notifs;
+															res.render('summary_harvest_report', html_data);
+														}
+													});
 												}
 											});
 										}
 									});
 								}
-							});
+							})
 						}
-					})
+					});
 				}
 			});
+					
 		}
 	});
 }

@@ -48,6 +48,13 @@ exports.getHarvestSummaryChart = function(data, next) {
 	mysql.query(sql, next);
 }
 
+exports.getNutrientRecommendationDetails = function(data, next) {
+	var sql = "select count(*) as count, t.*, date_add(target_application_date, interval 7 day) as target_date_end, case when target_application_date is not null then case when (date_completed >= target_application_date and date_completed <= date_add(target_application_date, interval 7 day)) then 'Followed' else 'Unfollowed' end else 'N/A' end as followed from ( SELECT case when work_order_id in (select wo_id from fertilizer_recommendation_items where wo_id = work_order_id) then 'Nutrient Generated Recommendation' else 'Nutrient User Generated' end as record_type, (select target_application_date from fertilizer_recommendation_items where wo_id = work_order_id) as target_application_date, wot.date_completed, wot.status, cct.calendar_id, wot.work_order_id FROM work_order_table wot JOIN crop_calendar_table cct on wot.crop_calendar_id = cct.calendar_id join wo_resources_table wrt USING (work_order_id) JOIN fertilizer_table ft ON wrt.item_id = ft.fertilizer_id WHERE cct.crop_plan = ? AND wot.type = 'Fertilizer Application' and wot.status = 'Completed') as t group by calendar_id, record_type, followed, status";
+	sql = mysql.format(sql, data);
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
 exports.getEarlyHarvestDetails = function(data, next) {
 	var sql = "SELECT t.* FROM (SELECT farm_name, COUNT(*) AS frequency, SUM(sacks_harvested) AS harvest, stage_harvested, type, cct_id FROM harvest_details join crop_calendar_table on calendar_id = cct_id join farm_table using(farm_id) WHERE ? ";
 	for (var i = 0; i < data.calendar_ids.length; i++) {
