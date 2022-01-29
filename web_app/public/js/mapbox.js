@@ -6,11 +6,26 @@ $(document).on("click", ".farm_li", function(){
 function update_color_meter(){
     $(".probability_value").each(function(){
         var value = $(this).text().slice(0,-1);
-        var val = 214 - (parseInt(value) * 2);
+		var meter;
+		var text_val;
+		if(parseInt(value) <= 35){
+			meter = 5;
+			text_val = "Low";
+		}
+		else if(parseInt(value) <= 65){
+			text_val = "Medium";
+			meter = 40;
+		}
+		else{
+			meter = 90;
+			text_val = "High";
+		}
+        var val = 214 - (meter * 2);
         var rgb = "color : rgb(214, " + val + ", 19)";
         $(this).attr("style",rgb);
         if(value != ""){
             $(this).text(parseInt(value) + " %");
+            // $(this).text(text_val);
         }
     });
 }
@@ -252,6 +267,7 @@ function loadGeoMap(options) {
 	$('.loader').css('visibility', 'hidden'); //to show
 }
 
+//MODIFIED: Only NOT created recommendations are added
 function appendConsolidatedRecommendations(obj, calendar_details , probability, workorders) {
 	console.log(obj);
 	var string, isCreated;
@@ -273,9 +289,10 @@ function appendConsolidatedRecommendations(obj, calendar_details , probability, 
 		}
 		else {
 			isCreated = 'No';
+			string = `<tr class="clickable"> <td colspan="2" class="text-left">Nutrient Recommendation</td> <td colspan="3" class="text-left">Recommended ${obj.nutrients[i].description}</td> <td colspan="4" class="text-left"> Apply ${obj.nutrients[i].amount} bags of ${obj.nutrients[i].fertilizer_name} on ${obj.nutrients[i].target_application_date} </td> <td colspan="1" class="text-center"> ${isCreated} </td> </tr>`;
+			$('#recommendation_table').append(string);
 		}
-		string = `<tr class="clickable"> <td colspan="2" class="text-left">Nutrient Recommendation</td> <td colspan="3" class="text-left">Recommended ${obj.nutrients[i].description}</td> <td colspan="4" class="text-left"> Apply ${obj.nutrients[i].amount} bags of ${obj.nutrients[i].fertilizer_name} on ${obj.nutrients[i].target_application_date} </td> <td colspan="1" class="text-center"> ${isCreated} </td> </tr>`;
-		$('#recommendation_table').append(string);
+		
 	}
 
 	
@@ -337,7 +354,8 @@ function appendConsolidatedRecommendations(obj, calendar_details , probability, 
 							
 							//Append
 							string = '<tr class="clickable"> <td colspan="2" class="text-left">Pest/Disease</td> <td colspan="3" class="text-left preventions">' + preventions[x].detail_name + '</td> <td colspan="4" class="text-left"> ' + preventions[x].detail_desc + ' </td> <td colspan="1" class="text-center"> ' + preventions[x].generated + ' </td> </tr>';
-							$('#recommendation_table').append(string);
+							if(preventions[x].generated == "No")
+								$('#recommendation_table').append(string);
 						}
 					}
 					//Check and add to reco table

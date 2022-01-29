@@ -228,6 +228,8 @@ $(document).ready(function() {
 		
 		$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type}, function(list){
 			$("#diagnoses_list_table").empty();
+			$("#pd_common_stage").text(list[0].common_stage);
+			$("#pd_stage_count").text(list[0].count);
 			var i;
 			// alert(list.length);
 
@@ -246,6 +248,9 @@ $(document).ready(function() {
 
 			var i, table;
 
+
+			$("#pd_highest_month").text(diagnosis_chart.highest_month);
+			$("#pd_highest_month_count").text(diagnosis_chart.highest_month_count);
 			table = "#diagnoses_chart"; 
 			$(table).empty();
 			for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
@@ -271,6 +276,15 @@ $(document).ready(function() {
 				'height' : percentage + '%'
 			},1000)
 		});
+
+
+		$.get('/generateRecommendationDiagnosis',{farm_name : "all", type : type, pd_id : pd_id}, function(result){
+			$("#symptom_table").empty();
+			for(i = 0; i < result.symptoms.length; i++){
+				$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
+			}
+		});
+
 
 
 		$("#all-tab, #pests-tab, #diseases-tab").on("click", function(){
@@ -394,6 +408,9 @@ $(document).ready(function() {
 			
 			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 				$("#diagnoses_list_table").empty();
+				$("#pd_common_stage").text(list[0].common_stage);
+				$("#pd_stage_count").text(list[0].count);
+
 				var i;
 				// $("#pd_name").text(list[0].pd_name);
 				// $("#pd_type").text(list[0].type);
@@ -424,7 +441,8 @@ $(document).ready(function() {
 				}
 				$("#chart_title").text(year_name + " " + $("#frequency_pd_id option:selected").text() + " Occurrences for " + farm_name);
 
-
+				$("#pd_highest_month").text(diagnosis_chart.highest_month);
+				$("#pd_highest_month_count").text(diagnosis_chart.highest_month_count);
 				table = "#diagnoses_chart"; 
 				$(table).empty();
 				for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
@@ -443,6 +461,8 @@ $(document).ready(function() {
 					},1000)
 				});
 			});
+
+			
 		});
 
 
@@ -467,6 +487,8 @@ $(document).ready(function() {
 			
 			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 				$("#diagnoses_list_table").empty();
+				$("#pd_common_stage").text(list[0].common_stage);
+				$("#pd_stage_count").text(list[0].count);
 				var i;
 				// $("#pd_name").text(list[0].pd_name);
 				// $("#pd_type").text(list[0].type);
@@ -497,7 +519,8 @@ $(document).ready(function() {
 				}
 				$("#chart_title").text(year_name + " " + $("#frequency_pd_id option:selected").text() + " Occurrences for " + farm_name);
 
-
+				$("#pd_highest_month").text(diagnosis_chart.highest_month);
+				$("#pd_highest_month_count").text(diagnosis_chart.highest_month_count);
 				table = "#diagnoses_chart"; 
 				$(table).empty();
 				for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
@@ -516,6 +539,13 @@ $(document).ready(function() {
 					},1000)
 				});
 			});
+
+			$.get('/generateRecommendationDiagnosis',{farm_name : "all", type : type, pd_id : pd_id}, function(result){
+				$("#symptom_table").empty();
+				for(i = 0; i < result.symptoms.length; i++){
+					$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
+				}
+			});
 		});
 	}
 });
@@ -532,6 +562,8 @@ $(document).on("change","#frequency_pd_id", function(){
 	
 	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 		$("#diagnoses_list_table").empty();
+		$("#pd_common_stage").text(list[0].common_stage);
+		$("#pd_stage_count").text(list[0].count);
 		var i;
 		// $("#pd_name").text(list[0].pd_name);
 		// $("#pd_type").text(list[0].type);
@@ -539,7 +571,10 @@ $(document).on("change","#frequency_pd_id", function(){
 		for(i = 0; i < list.length; i++){
 			$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
 		}
+		
 	});	
+
+	
 
 
 	//For chart 2
@@ -562,7 +597,8 @@ $(document).on("change","#frequency_pd_id", function(){
 		}
 		$("#chart_title").text(year_name + " " + $("#frequency_pd_id option:selected").text() + " Occurrences for " + farm_name);
 
-
+		$("#pd_highest_month").text(diagnosis_chart.highest_month);
+		$("#pd_highest_month_count").text(diagnosis_chart.highest_month_count);
 		table = "#diagnoses_chart"; 
 		$(table).empty();
 		for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
@@ -580,5 +616,12 @@ $(document).on("change","#frequency_pd_id", function(){
 				'height' : percentage + '%'
 			},1000)
 		});
+	});
+
+	$.get('/generateRecommendationDiagnosis',{farm_name : "all", type : type, pd_id : pd_id}, function(result){
+		$("#symptom_table").empty();
+		for(i = 0; i < result.symptoms.length; i++){
+			$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
+		}
 	});
 });

@@ -401,8 +401,8 @@
                                             <td style="width: 170px;border-style: none;text-align: left;">No. of Occurrences</td>
                                         </tr>
                                         <tr style="border-style: none;">
-                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;">Reproduction</td>
-                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;">3</td>
+                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;" id="pd_common_stage"></td>
+                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;" id="pd_stage_count"></td>
                                         </tr>
                                         <tr>
                                         </tr>
@@ -411,15 +411,35 @@
                                             <td style="width: 170px;border-style: none;text-align: left;">No. of Occurrences</td>
                                         </tr>
                                         <tr style="border-style: none;">
-                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;">March</td>
-                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;">3</td>
+                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;" id="pd_highest_month">March</td>
+                                            <td style="width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;" id="pd_highest_month_count">3</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         
-                        
+                            <div class="card shadow mb-4">
+                                <div class="card-header" style="height: auto;background: rgba(255,165,0,0); background-color:#b1b1b1 !important">
+                                    Symptoms
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="scrollmenu" id="symptom_table" style="padding-bottom: 20px;">
+                                                {{#each symptoms}}
+                                                    <div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" >
+                                                            <h4 class="card-title" style="color: #657429 !important;">{{this.detail_name}}</h4>
+                                                            <p>{{this.detail_desc}}</p>
+                                                    </div>
+                                                {{/each}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                             <div>
                                 <table class="table table-striped table-bordered tablesorter" id="diagnosesTable">
                                     <thead class="thead-dark">

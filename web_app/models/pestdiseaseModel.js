@@ -1426,7 +1426,7 @@ exports.getDiagnosisFrequentStage = function(farm_id,year, next){
 
 exports.getDiagnosisFrequentStage2 = function(farm_id, year, pd_id, type, next){
 	var pest = "SELECT pd_id, pest_name as pd_name, type, date_diagnosed, farm_id, calendar_id, stage_diagnosed, COUNT(stage_diagnosed) as count FROM pest_table pt INNER JOIN diagnosis d ON d.pd_id = pt.pest_id && d.type = 'Pest' ";
-	var disease = "SELECT pd_id, disease_name as pd_name, type, date_diagnosed, farm_id, calendar_id, stage_diagnosed, COUNT(stage_diagnosed) as count FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = 'disease' ";
+	var disease = "SELECT pd_id, disease_name as pd_name, type, date_diagnosed, farm_id, calendar_id, stage_diagnosed, COUNT(stage_diagnosed) as count FROM disease_table pt INNER JOIN diagnosis d ON d.pd_id = pt.disease_id && d.type = 'Disease' ";
 	var end_query = ' GROUP BY pd_id, stage_diagnosed';
 	var sql;
 	var first = true;
@@ -1471,7 +1471,6 @@ exports.getDiagnosisFrequentStage2 = function(farm_id, year, pd_id, type, next){
 		pest = pest + " pd_id = " + pd_id;
 		disease = disease + " pd_id = " + pd_id;
 	}
-
 	if(type == null || type == ""){
 		sql = pest + end_query + " UNION " + disease + end_query;
 	}
@@ -1483,7 +1482,7 @@ exports.getDiagnosisFrequentStage2 = function(farm_id, year, pd_id, type, next){
 		sql = disease + end_query;
 	}
 
-	sql = pest + end_query + " UNION " + disease + end_query;
+	//sql = pest + end_query + " UNION " + disease + end_query;
 
 
 
@@ -1652,6 +1651,7 @@ exports.getDiagnosisList = function(pd_id, type, farm_id, year, next){
 	// console.log(sql);
 	mysql.query(sql, next); return(sql);
 };
+
 
 
 exports.getDiagnosisSymptomsSummarized = function(farm_id, next){
