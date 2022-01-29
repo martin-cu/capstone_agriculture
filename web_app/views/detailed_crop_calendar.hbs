@@ -568,7 +568,7 @@ label {
                     {{#each materials.seed}}
                     <tr>
                         <td style="word-wrap:break-word;">{{this.item_name}}</td>
-                        <td class="text-right">{{this.current_amount}} bags</td>
+                        <td class="text-right">{{this.inventory}} bags</td>
                         <td class="text-right">{{this.deficient_qty}}</td>
                     </tr>
                     {{/each}}
@@ -606,7 +606,7 @@ label {
                     {{#each materials.fertilizer}}
                     <tr>
                         <td>{{this.item_name}}</td>
-                        <td class="text-right">{{this.current_amount}} bags</td>
+                        <td class="text-right">{{this.inventory}} bags</td>
                         <td class="text-right">{{this.deficient_qty}} {{#compareTwoValues this.deficient_qty 'N/A' operator='!='}} bags{{/compareTwoValues}}</td>
                     </tr>
                     {{/each}}
@@ -644,7 +644,7 @@ label {
                     {{#each materials.pesticide}}
                         <tr>
                             <td>{{this.item_name}}</td>
-                            <td class="text-right">{{this.current_amount}} bags</td>
+                            <td class="text-right">{{this.inventory}} bags</td>
                             <td class="text-right">{{this.deficient_qty}}</td>
                         </tr>
                     {{/each}}

@@ -228,7 +228,7 @@ exports.getCropCalendarTab = function(req, res) {
 		  												{ 
 		  													farm: item.farm_name,
 		  													item: item.item_name, 
-		  													inventory: item.current_amount,
+		  													inventory: item.inventory,
 		  													requirement: item.qty,
 		  													deficient: item.deficient_qty
 		  												}) 
