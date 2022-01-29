@@ -496,7 +496,7 @@ $(document).ready(function() {
 					$(".calendar_start").text(farm_details.crop_calendar_details.land_prep_date);
 					$(".calendar_harvest").text(farm_details.crop_calendar_details.expected_harvest);
 					
-					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
+					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name, calendar_id: calendar_id }, function(soil_data){
 						
 						$("#ph_lvl").text(soil_data.pH_lvl);
 						$("#n_lvl").text(soil_data.n_val);
@@ -633,7 +633,7 @@ $(document).ready(function() {
 					}
 					update_color_meter();
 
-					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
+					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name, calendar_id: calendar_id}, function(soil_data){
 				
 						$("#ph_lvl").text(soil_data.pH_lvl);
 						$("#n_lvl").text(soil_data.n_val);
@@ -778,7 +778,7 @@ $(document).ready(function() {
 						}
 						update_color_meter();
 
-						$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name}, function(soil_data){
+						$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name, calendar_id: calendar_id}, function(soil_data){
 					
 							$("#ph_lvl").text(soil_data.pH_lvl);
 							$("#n_lvl").text(soil_data.n_val);

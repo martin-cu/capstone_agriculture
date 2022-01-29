@@ -931,6 +931,7 @@ $(document).ready(function() {
 		$.get('/get_farm_list', {  }, function(farm_list) {
 			for (var i = 0; i < farm_list.length; i++) {
 				$.get('/get_active_calendar', { farm_id: farm_list[i].farm_id }, function(calendar) {
+
 					if (calendar.length != 0) {
 						$.get('/get_nutrient_plan_details', { calendar_id: calendar[0].calendar_id}, function(plan) {
 							if (dateDiff(new Date(), new Date(plan[0].last_updated)) >= 7) {
@@ -943,12 +944,12 @@ $(document).ready(function() {
 								//*********** Update fertilizer recommendation items START ***********//
 
 								$.get('/filter_nutrient_mgt', detailed_nutrient_query, function(details) {
-									
+
 									$.get('/get_crop_plans', { status: ['Active','In-Progress'], where: { key: 'calendar_id', val: calendar[0].calendar_id } }, function(curr_calendar) {
 
 										$.get('/getAll_materials', { type: 'Fertilizer', filter: farm_list[i].farm_id }, function(materials) {
 											material_list = materials;
-											$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: farm_list[i].farm_id }, function(list) {
+											$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: farm_list[i].farm_id, calendar_id: calendar[0].calendar_id }, function(list) {
 												
 												var query = {
 													where: {
@@ -1014,7 +1015,7 @@ $(document).ready(function() {
 
 					//Create fertilizer schedule
 					$.get('/getAll_materials', { type: 'Fertilizer', filter: $('#farm_id').val() }, function(materials) {
-						$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: $('#farm_id').val() }, function(list) {
+						$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: $('#farm_id').val(), calendar_id: calendar[0].calendar_id }, function(list) {
 							var crop_calendar = {
 								harvest_date: $('#harvest_date_start').val(),
 								land_prep_date: $('#land_prep_date_start').val(),
@@ -1102,7 +1103,7 @@ $(document).ready(function() {
 
 										$.get('/getAll_materials', { type: 'Fertilizer', filter: form_data.farm_id }, function(materials) {
 											material_list = materials;
-											$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: form_data.farm_id }, function(list) {
+											$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: form_data.farm_id, calendar_id: calendar[0].calendar_id }, function(list) {
 												
 												var query = {
 													where: {

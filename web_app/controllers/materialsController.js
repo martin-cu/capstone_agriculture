@@ -64,7 +64,7 @@ exports.getAllMaterials = function(req, res) {
 }
 
 exports.ajaxGetResourcesUsed = function(req, res) {
-    materialModel.readResourcesUsed(req.query.type, req.query.farm_id, function(err, result) {
+    materialModel.readResourcesUsed(req.query.type, req.query.farm_id, req.query.calendar_id, function(err, result) {
         if (err)
             throw err;
         else {

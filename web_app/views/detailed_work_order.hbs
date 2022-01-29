@@ -143,9 +143,11 @@
                                         <div class="d-flex flex-column" style="padding-right: 10px;">
                                             <label class="text-center">Cavans Harvested</label>
                                             <input class="form-control" type="number" name="sacks_harvested" id="sacks_harvested" value="{{this.sacks_harvested}}" readonly min="0">
+                                            <input type="hidden" name="true_sacks" id="true_sacks">
+                                            <label id="true_harvest_lbl" class="text-muted ml-3" style="font-size: 12px;"></label>
                                         </div>
                                         
-                                        <div class="d-flex flex-column">
+                                        <div class="d-flex flex-column" style="min-width: 150px;">
                                             <label class="text-center">Harvest Type</label>
                                             <select class="form-control" name="harvest_type" class="ml-3" readonly id="harvest_type">
                                                 <option>...</option>
@@ -208,6 +210,8 @@
     var status_editable = {{status_editable}};
     var harvest = {{harvest_editable}};
     var stage = '{{stage}}';
+    var farm_area = {{farm_area}};
+    var true_harvest;
     console.log(`${resource} - ${status_editable} - ${harvest}`);
     function addHarvestDetails() {
         var last = $("[name='harvest_type']").last();
@@ -347,6 +351,11 @@
             }
         });
 
+        $('#sacks_harvested').on('change', function() {
+            true_harvest = ($('#sacks_harvested').val() / farm_area);
+            $('#true_harvest_lbl').html(`${true_harvest.toFixed(2)} cavans/ha`);
+        });
+
         if (stage != 'Harvesting') {
             $('#harvest_type option[value="Full Harvest"]').remove();
         }
@@ -415,6 +424,7 @@
                             
                         }
                         else {
+                            $('#true_sacks').val(true_harvest);
                             e.currentTarget.submit();
                         }
                     }

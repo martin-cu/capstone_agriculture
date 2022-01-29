@@ -67,7 +67,7 @@ exports.getDetailedWO = function(req, res) {
 			details['date_start'] = dataformatter.formatDate(new Date(details['date_start']), 'YYYY-MM-DD');
 			details['date_due'] = dataformatter.formatDate(new Date(details['date_due']), 'YYYY-MM-DD');
 			details['date_created'] = dataformatter.formatDate(new Date(details['date_created']), 'YYYY-MM-DD');
-			console.log(details);
+
 			if (details.date_completed != null || details.date_completed != undefined)
 				details['date_completed'] = dataformatter.formatDate(new Date(details['date_completed']), 'YYYY-MM-DD');
 
@@ -78,6 +78,8 @@ exports.getDetailedWO = function(req, res) {
 			};
 
 			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+			html_data['stage'] = '';
+			html_data['farm_area'] = 0;
 			html_data['status_editable'] = true;
 			html_data['harvest_editable'] = details.type == 'Harvest' ? true : false;
 			html_data['isCancellable'] = true;
@@ -129,14 +131,17 @@ exports.getDetailedWO = function(req, res) {
 										if (err)
 											throw err;
 										else {
-
+											html_data["farm_area"] = crop_calendar.filter(e => e.calendar_id == details.crop_calendar_id)[0].farm_area;
+											for (var i = 0; i < harvest_details.length; i++) {
+												harvest_details[i].sacks_harvested *= html_data.farm_area;
+											}
 											if (harvest_details.length == 0) 
 												harvest_details.push({});
-
+											console.log(harvest_details);
 											html_data['stage'] = crop_calendar.filter(e => e.calendar_id == details.crop_calendar_id)[0].stage;
 											html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
 											html_data['harvest_details'] = harvest_details;
-											html_data["notifs"] = req.notifs;
+											
 											html_data["notifs"] = req.notifs;
 											res.render('detailed_work_order', html_data);
 										}
@@ -495,7 +500,7 @@ exports.editWorkOrder = function(req, res) {
 	var update_forecast = false;
 
 	if (!Array.isArray(req.body.sacks_harvested))
-		req.body.sacks_harvested = [req.body.sacks_harvested];
+		req.body.sacks_harvested = [req.body.true_sacks];
 	if (!Array.isArray(req.body.harvest_type))
 		req.body.harvest_type = [req.body.harvest_type];
 

@@ -832,7 +832,7 @@ exports.ajaxGetDetailedNutrientMgt = function(req, res) {
 		        else {
 		        	var type;
 		        	var farm_id;
-		        	materialModel.readResourcesUsed(req.query.type, req.query.filter, function(err, applied) {
+		        	materialModel.readResourcesUsed(req.query.type, req.query.filter, req.query.calendar_id, function(err, applied) {
 		        		if (err)
 		        			throw err;
 		        		else {
@@ -874,7 +874,10 @@ function processInventory(arr, recommendation, applied) {
 	var temp_obj = {};
 	var qty, recommendation_amt, applied_fertilizer, deficiency;
 	var mat;
-
+	//console.log(arr);
+	//console.log(recommendation);
+	console.log('1');
+	console.log(applied);
 	//Fertilizer - Current Stock - Recommendation - Applied - Deficiency
 	for (var i = 0; i < arr.length; i++) {
 		mat = applied.filter(ele => ele.fertilizer_name == arr[i].fertilizer_name)[0];
@@ -940,7 +943,7 @@ exports.detailedNutrientManagement = function(req, res) {
 								if (err)
 									throw err;
 								else {
-									materialModel.readResourcesUsed('Fertilizer', query.farm_name, function(err, applied) {
+									materialModel.readResourcesUsed('Fertilizer', query.farm_name, req.params.calendar_id, function(err, applied) {
 						        		if (err)
 						        			throw err;
 						        		else {
@@ -996,7 +999,7 @@ exports.detailedNutrientManagement = function(req, res) {
 																				html_data['yield_forecast'] = forecast[0].forecast;
 																			}
 																			fr_items = fr_items.filter(e => e.isCreated == 0);
-																			console.log(fr_items);
+																			//console.log(fr_items);
 																			html_data['recommendation'] = recommendFertilizerPlan(result[0], material_list);
 																			html_data['detailed_data']['calendar_id'] = req.params.calendar_id;
 																			html_data['fr_items'] = fr_items;
@@ -1798,7 +1801,7 @@ exports.getFarmSoilData = function(req,res){
 			throw err;
 		}
 		else {
-			materialModel.readResourcesUsed('Fertilizer', query.farm_name, function(err, applied) {
+			materialModel.readResourcesUsed('Fertilizer', query.farm_name, req.query.calendar_id, function(err, applied) {
         		if (err)
         			throw err;
         		else {
