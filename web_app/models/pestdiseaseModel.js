@@ -1359,6 +1359,32 @@ exports.getDiagnosisSymptoms = function(diagnosis_id, next){
 	mysql.query(sql, next); return(sql);
 }
 
+exports.getPossibilitiesBasedOnSymptoms = function(symptom_ids, next){
+	var pest_qry = 'SELECT st.symptom_id, st.symptom_name as detail_name, st.symptom_desc as detail_desc, p.pest_id as pd_id, p.pest_name as pd_name, "Pest" as pd_type, COUNT(st.symptom_id) as count FROM pest_table p INNER JOIN symptoms_pest sp ON p.pest_id = sp.pest_id INNER JOIN symptoms_table st ON sp.symptom_id = st.symptom_id '; 
+	var disease_qry = 'SELECT st.symptom_id, st.symptom_name as detail_name, st.symptom_desc as detail_desc, d.disease_id as pd_id, d.disease_name as pd_name, "Disease" as pd_type, COUNT(st.symptom_id) as count FROM disease_table d INNER JOIN symptoms_disease sd ON d.disease_id = sd.disease_id INNER JOIN symptoms_table st ON sd.symptom_id = st.symptom_id ';
+
+	var i;
+	console.log(symptom_ids);
+	for(i = 0; i < symptom_ids.length; i++){
+		if(i == 0){
+			pest_qry = pest_qry + " WHERE ";
+			disease_qry = disease_qry + " WHERE ";
+		}
+		else{
+			pest_qry = pest_qry + " || ";
+			disease_qry = disease_qry + " || ";
+		}
+
+		pest_qry = pest_qry + " st.symptom_id = " + symptom_ids[i]; 
+		disease_qry = disease_qry + " st.symptom_id = " + symptom_ids[i]; 
+	}
+
+	var sql = pest_qry + " GROUP BY pd_name UNION " + disease_qry + " GROUP BY pd_name";
+	console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+
 exports.getPDProbability = function(date, type, id, farm_id, next){
 	sql = "SELECT * FROM pd_probabilities WHERE ? && pd_type = ? && pd_id = ? && farm_id = ?";
 	// console.log(date);
