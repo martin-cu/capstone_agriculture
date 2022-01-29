@@ -57,7 +57,7 @@ exports.smoothDailyData = function(arr, type) {
 	return temp_arr;
 }
 
-exports.processNPKValues = function(obj, area, applied, msg) {
+exports.processNPKValues = function(obj, area, applied, msg, wo_list) {
 	obj = obj[0];
 	var keys = ['n_lvl', 'p_lvl', 'k_lvl'];
 	var new_keys = ['n_val', 'p_val', 'k_val'];
@@ -128,10 +128,9 @@ exports.processNPKValues = function(obj, area, applied, msg) {
 			obj.p_lvl -= applied[i].P * applied[i].resources_used;
 			obj.k_lvl -= applied[i].K * applied[i].resources_used;
 			obj.n_lvl -= applied[i].N * applied[i].resources_used;
-			count_applied++;
 		}
 	}
-
+	count_applied = wo_list.length;
 	for (var  i = 0; i < keys.length; i++) {
 		obj[keys[i]] = Math.round(obj[keys[i]] * 100) / 100;
 

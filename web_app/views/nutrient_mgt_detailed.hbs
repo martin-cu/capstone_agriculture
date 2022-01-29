@@ -263,12 +263,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <label>Summary</label>
-                                        <div class="">
-                                            {{detailed_data.summary}}
-                                        </div>
-
-                                        <label class="mt-2">Nutrient Guidelines</label>
+                                        <label class="">Nutrient Guidelines</label>
                                         <div class="">
                                             <ul class="list-group">
                                                 <li class="list-group-item"><span>Nitrogen</span><span class="float-end" id=""></span></li>
@@ -291,6 +286,8 @@
                                             </ul>
                                         </div>
                                     </div>
+
+                                    
                                     <table class="table" id="schedule_table">
                                         <tr>
                                             <th>Application Date</th>
@@ -299,8 +296,10 @@
                                             <th>Amount</th>
                                             <th></th>
                                         </tr>
-
+                                        {{#if fr_items}}
                                         {{#each fr_items}}
+                                        {{#if this.isCreated}}
+                                        {{else}}
                                         <tr class="fr_item" name="fr_item">
                                             <td>
                                                 {{this.target_application_date}}
@@ -325,8 +324,13 @@
                                                 <input type="checkbox" class="form-check-input" name="fr_item" value="{{@index}}" {{#if this.isCreated}}disabled{{/if}}>
                                             </td>
                                         </tr>
+                                        {{/if}}
                                         {{/each}}
-
+                                        {{else}}
+                                        <td colspan="5" rowspan="3" class="text-center text-dark">
+                                            No unselected generated recommendations
+                                        </td>
+                                        {{/if}}
                                     </table>
 
                                     <button class="btn btn-primary float-right hide mb-3" type="button" id="generate_wo">Create Work Order</button>
@@ -342,10 +346,15 @@
                                     <h6 class="fw-bold m-0" style="color: #FFFFFF;">Fertilizer Application Records<br></h6>
                                 </div>
                                 <div class="card-body">
+                                        <label>Summary</label>
+                                        <div class="mb-3">
+                                            {{detailed_data.summary}}
+                                        </div>
                                         <div class="table-responsive">
                                             <table class="table" id="fertilizer_history">
                                                 <tr>
-                                                    <th>Target Date</th>
+                                                    <th>Type</th>
+                                                    <th>Date Completed</th>
                                                     <th>Fertilizer</th>
                                                     <th>Description</th>
                                                     <th>Amount</th>
@@ -354,7 +363,30 @@
 
                                                 {{#each wo_list}}
                                                 <tr>
-                                                    <td>{{this.date_due}}</td>
+                                                    <td>{{this.record_type}}</td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span>{{this.date_due}}</span>
+                                                            {{#if this.target_application_date}}
+                                                            <small>
+                                                                <div class="d-flex">
+                                                                    <div>
+                                                                        Recommended date: 
+                                                                        {{this.target_application_date}} to {{this.target_date_end}}
+                                                                    </div>
+                                                                    <div class="ml-auto mr-3">
+                                                                        {{#if this.followed}}
+                                                                        <i class="fa fa-check"></i>
+                                                                        {{else}}
+                                                                        <i class="fa fa-times"></i>
+                                                                        {{/if}}
+                                                                    </div>   
+                                                                </div>
+
+                                                            </small>
+                                                            {{/if}}
+                                                        </div>
+                                                    </td>
                                                     <td>{{this.fertilizer_name}}</td>
                                                     <td>{{this.notes}}</td>
                                                     <td>{{this.qty}} bags</td>

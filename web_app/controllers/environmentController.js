@@ -971,8 +971,12 @@ exports.detailedNutrientManagement = function(req, res) {
 																if (err)
 																	throw err;
 																else {
+																	var range;
 																	for (var i = 0; i < wo_list.length; i++) {
+																		wo_list[i].followed = wo_list[i].followed == 'Followed' ? 1 : 0;
 																		wo_list[i].date_due = dataformatter.formatDate(new Date(wo_list[i].date_due), 'YYYY-MM-DD');
+																		wo_list[i].target_application_date = dataformatter.formatDate(new Date(wo_list[i].target_application_date), 'YYYY-MM-DD');
+																		wo_list[i].target_date_end = dataformatter.formatDate(new Date(wo_list[i].target_date_end), 'YYYY-MM-DD');
 																	}
 																	materialModel.getAllMaterials('Fertilizer', farm_id, function(err, material_list) {
 																		if (err)
@@ -987,11 +991,12 @@ exports.detailedNutrientManagement = function(req, res) {
 																			// console.log(fr_items);
 																			// console.log(result);
 																			html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
-																			html_data['detailed_data'] = dataformatter.processNPKValues(result, result[0].farm_area, applied, summary);
+																			html_data['detailed_data'] = dataformatter.processNPKValues(result, result[0].farm_area, applied, summary, wo_list);
 																			if (forecast != 0) {
 																				html_data['yield_forecast'] = forecast[0].forecast;
 																			}
-																			
+																			fr_items = fr_items.filter(e => e.isCreated == 0);
+																			console.log(fr_items);
 																			html_data['recommendation'] = recommendFertilizerPlan(result[0], material_list);
 																			html_data['detailed_data']['calendar_id'] = req.params.calendar_id;
 																			html_data['fr_items'] = fr_items;
