@@ -2409,7 +2409,9 @@ exports.getRecommendationDiagnosis = function(req,res){
 	var type = req.query.type;
 	var id = req.query.pd_id;
 	var recommended_solutions = [];
-	
+	if(farm_id == "all" || farm_id == "" || farm_id == null){
+		farm_id = null;
+	}
 	if(type == "Pest"){
 		pestdiseaseModel.getPestSolutions(id, function(err, solutions){
 			if(err)
@@ -2430,7 +2432,7 @@ exports.getRecommendationDiagnosis = function(req,res){
 				}
 				pestdiseaseModel.getPestSymptoms(id, function(err, symptoms){
 					// console.log(recommended_solutions);
-					// console.log(symptoms);
+					console.log(symptoms);
 					res.send({recommended_solutions: recommended_solutions, symptoms : symptoms});
 				});
 			}
@@ -2993,11 +2995,13 @@ exports.ajaxUpdateChart = function(req, res){
 		if(err)
 			throw err;
 		else{
-			var i, highest = 0;
+			var i, highest = 0, highest_index = 0;
 			for(i = 0; i < month_frequency.length; i++){
 				//get highest
-				if(month_frequency[i].frequency > highest)
+				if(month_frequency[i].frequency > highest){
 					highest = month_frequency[i].frequency;
+					highest_index = i;
+				}
 			}
 			highest = Math.ceil(highest / 5) * 5;
 			for(i = 0; i < month_frequency.length; i++){
@@ -3020,6 +3024,9 @@ exports.ajaxUpdateChart = function(req, res){
 
 			html_data["highest"] = highest;
 			html_data["middle"] = highest / 2;
+
+			html_data["highest_month"] = month_frequency[highest_index].month;
+			html_data["highest_month_count"] = month_frequency[highest_index].frequency;
 			
 		}
 		html_data["month_frequency"] = month_frequency;
@@ -3041,7 +3048,7 @@ exports.ajaxDiagnosisPDFrequency = function(req, res){
 	if(pd_id == "" || pd_id == null){
 		pd_id = null;
 	}
-	if(type == "" || type == null){
+	if(type == "" || type == null || type =="all"){
 		type = null;
 	}
 	pestdiseaseModel.getTotalDiagnosesPerPD2(farm_id, year, function(err, total){
@@ -3139,7 +3146,23 @@ exports.ajaxDiagnosisListPerPD = function(req,res){
 				else
 				diagnosis_list[i].date_solved = "N/A";
 			}
-			res.send(diagnosis_list);
+			pestdiseaseModel.getDiagnosisFrequentStage2(farm_id, year, pd_id, type, function(err, frequency){
+				if(err)
+					throw err;
+				else{
+					if(frequency.length != 0){
+						console.log(frequency[0].stage_diagnosed);
+						console.log(frequency[0].count);
+						diagnosis_list[0]["count"] = frequency[0].count;
+						diagnosis_list[0]["common_stage"] = frequency[0].stage_diagnosed;
+					}
+					else{
+						diagnosis_list[0]["count"] = 0;
+						diagnosis_list[0]["common_stage"] = "N/A";
+					}
+				}
+				res.send(diagnosis_list);
+			});
 		}
 	});
 }
