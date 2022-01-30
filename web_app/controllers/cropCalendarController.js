@@ -183,11 +183,10 @@ exports.getCropCalendarTab = function(req, res) {
 			list_obj.reproductive = list.filter(ele => ele.stage2 == 'Reproductive');
 			list_obj.ripening = list.filter(ele => ele.stage2 == 'Ripening');
 			list_obj.harvesting = list.filter(ele => ele.stage2 == 'Harvesting');
-
 			var query = {
 				where: {
-					key: ['work_order_table.status', 'work_order_table.status'],
-					value: ['Pending', 'In-Progress']
+					key: ['work_order_table.status', 'work_order_table.status'],//list.map( ({ calendar_id }) => 'work_order_table.crop_calendar_id').concat(['work_order_table.status', 'work_order_table.status']),
+					value: ['Pending', 'In-Progress']//list.map( ({ calendar_id }) => calendar_id).concat(['Pending', 'In-Progress'])
 				},
 				order: ['work_order_table.status ASC', 'work_order_table.date_due asc', 'farm_table.farm_id']
 			}

@@ -64,6 +64,37 @@ exports.getFarmProductivityReport = function(req, res) {
 						if (err)
 							throw err;
 						else {
+							//console.log(harvest_reports);
+							var years = harvest_reports.map( ({crop_plan}) => crop_plan.replace(/\D/g, "") );
+							years = years.filter((x, i, a) => a.indexOf(x) == i)
+							var lbl = ['Late', 'Early'];
+							var arr;
+							
+							// for (var y = 0; y < harvest_reports.length; y++) {
+							// 	for (var i = 0; i < years.length; i++) {
+							// 		for (var x = lbl.length; x > 0; x--) {
+							// 			if (`${lbl[x]} ${years[i]}` == harvest_reports[y].crop_plan) {
+							// 				console.log(harvest_reports[i].crop_plan);
+							// 			}
+							// 		}
+							// 	}
+
+							// }
+							// var filtered;
+							// for (var i = 0; i < harvest_reports.length; i++) {
+							// 	for (var x = 0; x < years.length; x++) {
+							// 		filtered = harvest_reports.filter(e => (e.crop_plan.replace(/\D/g, "")) == years[x]);
+							// 		console.log(years[x]);
+
+							// 		filtered.sort((a,b) => a.crop_plan < b.crop_plan);
+							// 		console.log(filtered);
+							// 	}
+							// }
+
+							// harvest_reports.sort((a,b) => a.crop_plan.replace(/\D/g, "") > b.crop_plan.replace(/\D/g, ""));
+							// console.log(harvest_reports);
+
+							//console.log(years);
 							html_data['harvest_reports'] = harvest_reports;
 							html_data['farm_productivity'] = analyzer.smoothFP(analyzer.calculateProductivity(fp_overview, input_resources));
 							//console.log(html_data.farm_productivity);

@@ -73,14 +73,26 @@ exports.getWorkOrders = function(query, next) {
 		if (query.hasOwnProperty('where') && query.where != null) {
 			for (var i = 0; i < query.where.key.length; i++) {
 				if (i == 0) {
-					sql += ' where '+query.where.key[i];
+					if (query.where.key[i] == 'work_order_table.crop_calendar_id') {
+						sql += ' where ('+query.where.key[i];
+					}
+					else {
+						sql += ' where '+query.where.key[i];
+					}
+					
 				}
 				else {
 					if (query.where.key[i-1] == query.where.key[i]) {
 						sql += ' or '+query.where.key[i];
 					}
 					else {
-						sql += ' and '+query.where.key[i];
+						if (query.where.key[i-1] == 'work_order_table.crop_calendar_id') {
+							sql += ' and '+query.where.key[i]+'****';
+						}
+						else {
+							sql += ' and '+query.where.key[i];
+						}
+						
 					}	
 				}
 
@@ -92,6 +104,7 @@ exports.getWorkOrders = function(query, next) {
 						sql += ' != ?';
 						query.where.value[i] = query.where.value[i].replace('!', '');
 					}
+					
 					sql = mysql.format(sql, query.where.value[i]);
 				}
 				else {
