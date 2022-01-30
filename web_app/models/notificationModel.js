@@ -13,13 +13,13 @@ exports.updateNotif = function(notification_id, next){
 }
 
 exports.getAllNotifs = function(next){
-    var sql = "SELECT * FROM notification_table ORDER BY notification_id DESC";
+    var sql = "SELECT * FROM notification_table ORDER BY date desc, notification_id DESC";
     mysql.query(sql, next);
 };
 
 exports.createNotif = function(notif, next){
     if (Array.isArray(notif)) {
-        console.log(notif.length);
+        //console.log(notif.length);
         var sql = "insert into notification_table (date, notification_title, notification_desc, farm_id, url, icon, color, status) values ";
         for (var i = 0; i < notif.length; i++) {
             if (i != 0) {

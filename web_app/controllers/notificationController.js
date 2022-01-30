@@ -10,8 +10,8 @@ exports.getNotification = function(req, res, next) {
 
     var wo_list_query = {
         where: {
-            key: ['work_order_table.status', ''],
-            value: ['!Completed', 'date_due < date_add(now(), interval 7 day)']
+            key: ['work_order_table.status', 'work_order_table.status', ''],
+            value: ['Pending', 'In-Progress', 'date_due < date_add(now(), interval 7 day)']
         },
         order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
     };
@@ -48,7 +48,7 @@ exports.getNotification = function(req, res, next) {
                     url: `"/farms/work_order&id=${wo_list[i].work_order_id}"`,
                     icon: '"exclamation-triangle"',
                     color: color,
-                    status: 0
+                    status: 1
                 });
             }
             notifModel.getAllNotifs(function(err, notif_list) {
@@ -71,22 +71,15 @@ exports.getNotification = function(req, res, next) {
                                 throw err;
                         });
                     }
+                    notif_list = notif_list.slice(0, 10);
 
-                    //Process notif list
-                    notifModel.getNotifs(function(err, notif_tab) {
-                        if (err)
-                            throw err;
-                        else {
-                            for (var i = 0; i < notif_tab.length; i++) {
-                                notif_tab[i].date = dataformatter.formatDate(new Date(notif_tab[i].date), 'mm DD, YYYY');
-                            }
+                    for (var i = 0; i < notif_list.length; i++) {
+                        notif_list[i].date = dataformatter.formatDate(new Date(notif_list[i].date), 'mm DD, YYYY');
+                    }
 
-                            //console.log(notif_tab);
-                            req.notifs = notif_tab;
+                    req.notifs = notif_list;
 
-                            return next();
-                        }
-                    });
+                    return next();
                 }
             });
                     

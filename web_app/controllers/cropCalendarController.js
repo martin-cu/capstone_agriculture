@@ -114,6 +114,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 
 											farm_list[i]['data'] = { dat: filtered.days_till_harvest, stage: filtered.stage };
 										}
+
 										html_data["notifs"] = req.notifs;
 
 										html_data['data'] = { calendars: list, farms: farm_list, inactive: calendars };

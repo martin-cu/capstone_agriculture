@@ -419,12 +419,14 @@
 	}
 
 	function appendSoilMoisture(target, soil, farm_data) {
-		var moisture = soil.moisture == ' N/A' ? 'N/A' : ' '+Math.round(soil.moisture * 100) / 100 + '%';
+		var moisture = soil.moisture == ' N/A' ? 'N/A' : ' '+(Math.round(soil.moisture * 100) / 100 )+ '%';
+		var color = 'text-muted';
+
 		if (moisture != ' N/A') {
-			var num = parseInt(moisture.replace('%', ''));
+			var num = moisture;
+			num = parseFloat(num.replace('%', ''));
 			var ideal, stage = farm_data.stage;
 			var matrix = [62, 59, 45, 35];
-			var color = 'text-muted';
 			if (stage == 'Vegetation') {
 				if (farm_data.dat < 40) {
 					ideal = 62;
@@ -439,18 +441,19 @@
 			else if (stage == 'Ripening') {
 				ideal = 35;
 			}
-			else if (stage == 'Harvest') {
+			else if (stage == 'Harvesting') {
 				ideal = 40;
 			}
 			else {
 				ideal = 'N/A';
 			}
-
+			console.log(ideal +' - '+num);
 			if (ideal != 'N/A') {
-				if (num > ideal) {
-					color = 'text-success';
+				ideal = parseFloat(ideal);
+				if (ideal - 7 <= num && ideal + 7 >= num) {
+					color = 'text-success'
 				}
-				else if (num + 15 >= ideal) {
+				else if (ideal - 15 <= num && ideal + 15 >= num) {
 					color = 'text-warning';
 				}
 				else {
@@ -461,11 +464,10 @@
 
 			$(`[${target}_help']`).html(`Ideal value: ${ideal}`);		
 		}
-		
+		console.log(color);
 		$(`[${target}']`).html(moisture);
 		$(`[${target}']`).addClass(color);
 		$(`[${target}_date']`).html('Last updated: '+formatDate(new Date(soil.dt), 'mm DD, YYYY'));
-		$(`[${target}]`).attr('class', color);
 	}
 
 	function appendNDVI(target, imagery, stats, farm_data) {
@@ -490,7 +492,7 @@
 			else if (stage == 'Ripening') {
 				range = [.55, .79];
 			}
-			else if (stage == 'Harvest') {
+			else if (stage == 'Harvesting') {
 				range = [.55, .79];
 			}
 			else {
