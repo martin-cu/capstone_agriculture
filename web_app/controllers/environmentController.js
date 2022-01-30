@@ -1943,7 +1943,7 @@ exports.getDiagnosisDetails = function(req, res){
 			html_data["details"] = diagnosis_details[0];
 			
 		}
-
+		console.log(diagnosis_details[0]);
 		//Get Symptoms
 		pestdiseaseModel.getDiagnosisSymptoms(html_data.details.diagnosis_id, function(err, symptoms){
 			if(err)
@@ -1951,9 +1951,77 @@ exports.getDiagnosisDetails = function(req, res){
 			else{
 				html_data["symptoms"] = symptoms;
 			}
-			html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
-			html_data["notifs"] = req.notifs;
-			res.render('pest_disease_diagnose_details', html_data);
+			//GET SOLUTION WORKORDERS
+			var wo_query = {
+				where : { key : ["calendar_id"], value : [diagnosis_details[0].calendar_id]}
+			}
+			var solution_wos = [];
+			workOrderModel.getWorkOrders(wo_query, function(err, wos){
+				if(err)
+					throw err;
+				else{
+					var i;
+					for(i = 0; i < wos.length; i++){
+						wos[i].date_start = dataformatter.formatDate(new Date(wos[i].date_start), 'YYYY-MM-DD');
+						if(wos[i].date_completed != null)
+							wos[i].date_completed = dataformatter.formatDate(new Date(wos[i].date_completed), 'YYYY-MM-DD');
+						else
+							wos[i].date_completed = "N/A" //Not yet completed (changed to reduce conflict with case insensitive search, e.g., "Completed")
+						
+						if(wos[i].type != "Land Preparation" && wos[i].type != "Sow Seed" && wos[i].type != "Fertilizer Application" && wos[i].type != "Harvest")
+							solution_wos.push(wos[i]);
+					}
+				}
+				//Get pest/disease solutions
+				var solutions_made = [];
+				if(diagnosis_details[0].type == "Pest"){
+					pestdiseaseModel.getPestSolutions(diagnosis_details[0].pd_id, function(err, solutions){
+						if(err)
+							throw err;
+						else{
+							//Get workorders
+								//Match with workorders
+							var i,x;
+							for(i = 0; i < solutions.length; i++){
+								//if match then push
+								for(x = 0; x < solution_wos.length; x++){
+									if(solution_wos[x].type == solutions[i].detail_name){
+										solutions_made.push(solution_wos[x]);
+									}
+								}
+							}
+						}
+						html_data["wos"] = solutions_made;
+						html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
+						html_data["notifs"] = req.notifs;
+						res.render('pest_disease_diagnose_details', html_data);
+					});
+				}
+				else if(diagnosis_details[0].type == "Disease"){
+					pestdiseaseModel.getDiseaseSolutions(diagnosis_details[0].pd_id, function(err, solutions){
+						if(err)
+							throw err;
+						else{
+							//Get workorders
+								//Match with workorders
+							var i,x;
+							for(i = 0; i < solutions.length; i++){
+								//if match then push
+								for(x = 0; x < solution_wos.length; x++){
+									if(solution_wos[x].type == solutions[i].detail_name){
+										solutions_made.push(solution_wos[x]);
+									}
+								}
+							}
+						}
+						html_data["wos"] = solutions_made;
+						html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
+						html_data["notifs"] = req.notifs;
+						res.render('pest_disease_diagnose_details', html_data);
+					});
+				}
+				
+			});
 		});
 	});
 
