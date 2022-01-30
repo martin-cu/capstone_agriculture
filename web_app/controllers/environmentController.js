@@ -2390,11 +2390,12 @@ exports.addDiagnosis = function(req,res){
 									pestdiseaseModel.getPestSolutions(pd[0], function(err, solutions){
 										var i;
 										for(i = 0; i < solutions.length; i++){
-											
+											// console.log("-----------------" + solutions[i].detail_name);
 											var x;
+											var create = true;
+
 											for(x = 0;x < workorders.length; x++){
-												var create = true;
-												console.log(solutions[i].detail_name + " --------- " + workorders[x][1]);
+												// console.log(solutions[i].detail_name + " --------- " + workorders[x][1]);
 												if(solutions[i].detail_name == workorders[x][1] && solutions[i].detail_desc == workorders[x][2]){
 													//Do not create
 													create = false;
@@ -2422,11 +2423,11 @@ exports.addDiagnosis = function(req,res){
 									pestdiseaseModel.getDiseaseSolutions(pd[0], function(err, solutions){
 										var i;
 										for(i = 0; i < solutions.length; i++){
-											
+											var create = true;
 											var x;
 											for(x = 0;x < workorders.length; x++){
-												var create = true;
-												console.log(solutions[i].detail_name + " --------- " + workorders[x][1]);
+												
+												// console.log(solutions[i].detail_name + " --------- " + workorders[x][1]);
 												if(solutions[i].detail_name == workorders[x][1] && solutions[i].detail_desc == workorders[x][2]){
 													//Do not create
 													create = false;
