@@ -472,7 +472,7 @@ $(document).ready(function() {
 				});
 			});
 
-			$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
+			$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : farm_id}, function(probability){
 				$("#pd_probability").text(probability.probability + "%");
 				update_color_meter();
 			});
@@ -571,7 +571,7 @@ $(document).ready(function() {
 				}
 			});
 
-			$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
+			$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : farm_id}, function(probability){
 				$("#pd_probability").text(probability.probability + "%");
 				update_color_meter();
 			});
@@ -663,7 +663,7 @@ $(document).on("change","#frequency_pd_id", function(){
 		}
 	});
 
-	$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
+	$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : farm_id}, function(probability){
 		$("#pd_probability").text(probability.probability + "%");
 		update_color_meter();
 	});

@@ -3,7 +3,7 @@ $(document).on("click", ".farm_li", function(){
 	$('.loader').css('visibility', 'hidden'); //to show
 	
 });
-function update_color_meter(){
+function update_color_meter2(){
     $(".probability_value").each(function(){
         var value = $(this).text().slice(0,-1);
 		var meter;
@@ -484,7 +484,7 @@ $(document).ready(function() {
 					$("#farm_desc").text(farm_details.details[0].farm_desc);
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 					
-					$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+					$("#view_more_pd").attr("href", "/pest_and_disease/frequency");
 					$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
 					
 					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
@@ -538,7 +538,7 @@ $(document).ready(function() {
 						else
 							$("#probability_table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.probability[i].pd_name + '</td><td>' + farm_details.probability[i].type + '</td><td class="probability_value">' + farm_details.probability[i].probability + '%</td></tr>');
 					}
-					update_color_meter();
+					update_color_meter2();
 
 					for(i = 0; i < farm_details.workorders.length; i++){
 						$("#land-prep-table").append('<tr class="clickable"><td style="text-align: left;">' + farm_details.workorders[i].status +'</td><td>' + farm_details.workorders[i].type +'</td><td>' + farm_details.workorders[i].date_start +'</td><td>' + farm_details.workorders[i].date_completed +'</td><td>' + farm_details.workorders[i].wo_notes +'</td></tr>');
@@ -585,7 +585,7 @@ $(document).ready(function() {
 					$("#farm_desc").text(farm_details.details[0].farm_desc);
 					$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 					
-					$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+					$("#view_more_pd").attr("href", "/pest_and_disease/frequency");
 					$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
 
 					$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
@@ -631,7 +631,7 @@ $(document).ready(function() {
 						
 
 					}
-					update_color_meter();
+					update_color_meter2();
 
 					$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name, calendar_id: calendar_id}, function(soil_data){
 				
@@ -730,7 +730,7 @@ $(document).ready(function() {
 						$("#farm_desc").text(farm_details.details[0].farm_desc);
 						$("#farm_area").text(farm_details.details[0].farm_area + " sqm");
 						
-						$("#view_more_pd").attr("href", "/farm_pestdisease?farm_id=" + farm_details.details[0].farm_id);
+						$("#view_more_pd").attr("href", "/pest_and_disease/frequency");
 						$("#vmore_resources").attr("href", "/farm_resources?farm_id=" + farm_details.details[0].farm_id);
 						
 						$(".calendar_name").text(farm_details.crop_calendar_details.crop_plan);
@@ -776,7 +776,7 @@ $(document).ready(function() {
 							
 
 						}
-						update_color_meter();
+						update_color_meter2();
 
 						$.get("/ajaxGetSoilData", {farm_name : farm_details.details[0].farm_name, calendar_id: calendar_id}, function(soil_data){
 					

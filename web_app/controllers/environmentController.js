@@ -1943,7 +1943,7 @@ exports.getDiagnosisDetails = function(req, res){
 			html_data["details"] = diagnosis_details[0];
 			
 		}
-		console.log(diagnosis_details[0]);
+		// console.log(diagnosis_details[0]);
 		//Get Symptoms
 		pestdiseaseModel.getDiagnosisSymptoms(html_data.details.diagnosis_id, function(err, symptoms){
 			if(err)
