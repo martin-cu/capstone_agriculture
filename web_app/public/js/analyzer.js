@@ -44,6 +44,164 @@ function smoothRadarChartData(obj) {
 	return obj;
 }
 
+// data: {
+//     datasets: [{
+//             label: 'Population', // Name the series
+//             data: [{
+// 			        x: 5,
+// 			        y: 4
+// 			    }, {
+// 			        x: 2,
+// 			        y: 14
+// 			    },
+// 			    {
+// 			        x: 4,
+// 			        y: 12
+// 			    },
+// 			    {
+// 			        x: 2,
+// 			        y: 10
+// 			    },
+// 			    {
+// 			        x: 3,
+// 			        y: 4
+// 			    },
+// 			    {
+// 			        x: 3,
+// 			        y: 5
+// 			    },
+// 			    {
+// 			        x: 3,
+// 			        y: 8
+// 			    },
+// 			    {
+// 			        x: 6,
+// 			        y: 12
+
+// 			 }]; // Specify the data values array
+//       borderColor: '#2196f3', // Add custom color border            
+//       backgroundColor: '#2196f3', // Add custom color background (Points and Fill)
+//         }]
+// },
+
+exports.processNutrientChart = function(nutrients, pd) {
+	var type = ['Applied', 'Recommended'];
+	var nutrient_arr = ['N', 'P', 'K'];
+	var datasets = ['Applied - N', 'Recommended - N', 'Applied - P', 'Recommended - P', 'Applied - K', 'Recommended - K'];
+	var color_arr = ['#6996b3', '#2d6484', '#74adad', '#588b8b', '#ffa59d', '#ff807b'];
+	var color_index = 0;
+	var filtered;
+	var dataset = [];
+	var data_arr = [];
+	var coords = [];
+	var max = 0, min = 0;
+
+	for (var x = 0; x < nutrient_arr.length; x++) {
+		for (var i = 0; i < type.length; i++) {
+			data_arr = [];
+			//console.log(`${type[i]} - ${nutrient_arr[x]}`);
+			filtered = nutrients.filter(e => e.nutrient_type == nutrient_arr[x] && e.application_type == type[i]);
+
+			for (var n = 0; n < filtered.length; n++) {
+				//console.log(filtered[n]);
+				data_arr.push({
+					x: filtered[n].dat, y: filtered[n].qty * filtered[n][nutrient_arr[x]]
+				});
+				if (filtered[n].qty * filtered[n][nutrient_arr[x]] > max) {
+					max = filtered[n].qty * filtered[n][nutrient_arr[x]];
+				}
+
+				if (filtered[n].qty * filtered[n][nutrient_arr[x]] < min || n == 0) {
+					min = filtered[n].qty * filtered[n][nutrient_arr[x]];
+				}
+			}
+			for (var y = 0; y < datasets.length; y++) {
+				if (`${type[i]} - ${nutrient_arr[x]}` == datasets[y]) {
+
+					dataset.push({
+						label: datasets[y],
+						borderColor: color_arr[color_index],
+						backgroundColor: color_arr[color_index],
+						pointRadius: 10,
+						data: data_arr
+					});
+					color_index++;
+				}
+			}
+				
+		}
+	}
+	//console.log(dataset);
+	var type = ['Pest', 'Disease'];
+	var pd_color = ['rgba(165, 42, 42, 0.2)',, 'rgba(75,0,130, 0.2)',];
+	color_index = 0;
+	
+	for (var x = 0; x < type.length; x++) {
+		data_arr = [];
+		filtered = pd.filter(e => e.type == type[x]);
+		for (var i = 0; i < filtered.length; i++) {
+			data_arr.push({
+				x: filtered[i].dat, y: (max+min)/2
+			});
+		}
+		dataset.push({
+			label: type[x],
+			borderColor: pd_color[color_index],
+			backgroundColor: pd_color[color_index],
+			pointRadius: 25,
+			data: data_arr
+		});
+		color_index++;
+	}
+
+	return dataset;
+}
+
+exports.processSeedChartData = function(calendars, seeds) {
+	var obj_data = { labels: [], datasets: [] };
+	var color, lbl, data;
+	var color_arr = ['#caf270', '#45c490', '#008d93', '#2e5468', '#2e5468'];
+	for (var i = 0; i < calendars.length; i++) {
+		obj_data.labels.push(calendars[i].crop_plan);
+	}
+	// console.log(seeds)
+	// console.log(calendars);
+	var seed_obj = { seed: [], avg_yield: [] }, avg, count;
+	for (var x = 0; x < seeds.length; x++) {
+		lbl = seeds[x].name;
+		data = [];
+		seed_obj.seed.push(lbl);
+		avg = 0;
+		count = 0;
+		for (var i = 0; i < calendars.length; i++) {
+			if (calendars[i].seed_planted == seeds[x].id) {
+				avg += parseInt(calendars[i].harvest_yield * calendars[i].farm_area);
+				data.push(parseInt(calendars[i].harvest_yield * calendars[i].farm_area));
+				count++;
+			}
+			else {
+				data.push(0);
+			}
+		}
+		obj_data.datasets.push({
+			label: lbl,
+			backgroundColor: color_arr[x],
+			data: data
+		});
+
+		if (avg == 0 && count == 0) {
+			avg = 1;
+			count = 1;
+		}
+
+		seed_obj.avg_yield.push(parseInt(avg / count));
+	}
+	var max = (Math.max(...seed_obj.avg_yield));
+	var index = seed_obj.avg_yield.indexOf(max);
+
+	return { seed: seed_obj.seed[index], avg: seed_obj.avg_yield[index], data: obj_data };
+}
+
 exports.processMeanProductivity = function(fp, input) {
 	var avg_productivity = 0;
 	var productivity = 0;

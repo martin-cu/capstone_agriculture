@@ -269,6 +269,10 @@ exports.dateToUnix = function(date) {
 		date = Date.parse(date);
 	}
 
+	if (date > new Date()) {
+		date = (new Date());
+	}
+
 	return parseInt((new Date(date).getTime() / 1000).toFixed(0));
 }
 

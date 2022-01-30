@@ -1,6 +1,27 @@
 var mysql = require('./connectionModel');
 mysql = mysql.connection;
 
+exports.getPDOccurence = function(data, next) {
+	var sql = "select *, case when type = 'Pest' then (select pest_name from pest_table where pest_id = pd_id) else (select disease_name from disease_table where disease_id = pd_id) end as pd_name, case when type = 'Pest' then (select pest_desc from pest_table where pest_id = pd_id) else (select disease_desc from disease_table where disease_id = pd_id) end as pd_desc, case when type = 'Pest' then (select scientific_name from pest_table where pest_id = pd_id) else (select scientific_name from disease_table where disease_id = pd_id) end as scientific_name from diagnosis where ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+}
+
+exports.getNutrientChart = function(data1, data2, next) {
+	var sql = "select * from ( SELECT 'Applied' as application_type, case when fertilizer_name = 'Fertilizer 16-20-0' then 'P' when fertilizer_name = 'Potash 0-0-60' then 'K' when fertilizer_name = 'Urea 46-0-0' then 'N' end as nutrient_type, wot.date_completed, wrt.qty, ft.fertilizer_name, N, P, K FROM work_order_table wot JOIN wo_resources_table wrt USING (work_order_id) JOIN fertilizer_table ft ON wrt.item_id = ft.fertilizer_id WHERE ? AND wot.type = 'Fertilizer Application' union SELECT 'Applied', case when fertilizer_name = 'Fertilizer 16-20-0' then 'N' when fertilizer_name = 'Potash 0-0-60' then 'K' when fertilizer_name = 'Urea 46-0-0' then 'N' end as type, wot.date_completed, wrt.qty, ft.fertilizer_name, N, P, K FROM work_order_table wot JOIN wo_resources_table wrt USING (work_order_id) JOIN fertilizer_table ft ON wrt.item_id = ft.fertilizer_id WHERE ? AND wot.type = 'Fertilizer Application' and fertilizer_name = 'Fertilizer 16-20-0' union SELECT 'Recommended', CASE WHEN fertilizer_name = 'Fertilizer 16-20-0' THEN 'P' WHEN fertilizer_name = 'Potash 0-0-60' THEN 'K' WHEN fertilizer_name = 'Urea 46-0-0' THEN 'N' END AS nutrient_type, fri.target_application_date, fri.amount, ft.fertilizer_name, N, P, K FROM fertilizer_recommendation_plan frp JOIN fertilizer_recommendation_items fri USING (fr_plan_id) JOIN fertilizer_table ft USING (fertilizer_id) WHERE ? ) as t group by application_type, date_completed, nutrient_type";
+	sql = mysql.format(sql, data1);
+	sql = mysql.format(sql, data1);
+	sql = mysql.format(sql, data2);
+	mysql.query(sql, next);
+}
+
+exports.getSeedChart = function(farm,data, next) {
+	var sql = "select * from crop_calendar_table join seed_table on seed_id = seed_planted join farm_table ft using(farm_id) where ? and harvest_date > ? order by harvest_date asc, calendar_id asc";
+	sql = mysql.format(sql, farm);
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+}
+
 exports.getFarmProductivity = function(next) {
 	var sql = "select *, max(prev_calendar) as max_prev_calendar, max(previous_yield) as max_previous_yield from ( select st.seed_name, ft.farm_area, fy.forecast_yield_id, cct.calendar_id, null as prev_calendar, cct.status, ft.farm_id, ft.farm_name, cct.crop_plan, fy.forecast as forecast_yield, cct.harvest_yield as current_yield, null as previous_yield from crop_calendar_table cct left join crop_calendar_table as cct1 on (cct.farm_id = cct1.farm_id and cct.harvest_date < cct1.harvest_date) join seed_table st on cct.seed_planted = st.seed_id join forecasted_yield fy on (cct.calendar_id = fy.calendar_id and cct.seed_planted = fy.seed_id) join farm_table ft on cct.farm_id = ft.farm_id where cct1.harvest_date is null union select null, null, null, null, t1.calendar_id, null, t1.farm_id, null, null, null, null, t1.harvest_yield from ( select *, @rn := if(@prev = farm_id, @rn + 1, 1) as rn, @prev := farm_id from crop_calendar_table join (select @prev := null, @rn := 0) as vars order by farm_id, harvest_date desc ) as t1 where rn = 2 ) as t2 group by t2.farm_id ";
 	//console.log(sql);
@@ -70,7 +91,7 @@ exports.getNutrientRecommendationDetails = function(data, next) {
 	while(sql.includes('cct_calendar_id')) {
 		sql = sql.replace('cct_calendar_id', 'cct.calendar_id');
 	}
-	console.log(sql);
+	//console.log(sql);
 	mysql.query(sql, next);
 }
 

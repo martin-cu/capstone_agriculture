@@ -215,7 +215,7 @@ exports.createNotif = function(req,res) {
 
 exports.updateNotif = function(req,res){
     var id = req.query.notification_id;
-    console.log(id);
+    //console.log(id);
     notifModel.updateNotif(id, function(err, success){});
     res.send("ok");
 };

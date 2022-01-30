@@ -1,0 +1,91 @@
+
+
+<div class="container-fluid" style="color: #332C1F;">
+
+	<div class="d-sm-flex justify-content-between align-items-center mb-4">
+	    <h3 class="text-dark mb-0">Detailed Harvest Report: {{farm_name}}</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
+	</div>
+
+	<div class="w-100 m-3">
+		<div class="" style="width: 450px; max-width: 850px !important;">
+			<label class="text-center text-dark font-weight-bold">{{farm_name}} Harvests ({{range.start}} to {{range.end}})</label>
+			<div class="wrapper card rounded">
+				
+				<canvas id="seed_chart"></canvas>
+			</div>
+			<div class="d-flex">
+				Consistently highest yield: {{seed_chart.obj.seed}} with mean produce of {{seed_chart.obj.avg}} per harvest
+			</div>
+		</div>
+	</div>
+	<!-- style="width: 950px; max-width: 1150px !important;" -->
+	<div class="w-100 m-3">
+		<div class="" style="width: 750px;">
+			<label class="text-center text-dark font-weight-bold">Nutrient Application Timing</label>
+			<div class="wrapper card rounded">
+				
+				<canvas id="nutrient_chart"></canvas>
+			</div>
+			<div class="d-flex">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript">
+	
+	var seed_obj = {{{seed_chart.stringify}}};
+	console.log(seed_obj);
+
+	var seed_ctx = document.getElementById("seed_chart").getContext('2d');
+	var myChart = new Chart(seed_ctx, {
+	  type: 'bar',
+	  data: seed_obj,
+	options: {
+	    tooltips: {
+	      displayColors: true,
+	      callbacks:{
+	        mode: 'x',
+	      },
+	    },
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    legend: { position: 'bottom' },
+	  }
+	});
+
+	var nutrient_obj = {{{nutrient_chart}}};
+	console.log(nutrient_obj);
+	var nutrient_ctx = document.getElementById("nutrient_chart").getContext('2d');
+	var options = {responsive: true, // Instruct chart js to respond nicely.
+	    maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+	    scales: {
+	    	y: {
+	    		title: {
+	    			display: true, 
+	    			text: 'Amount'
+	    		},
+	    	},
+	    	x: {
+	    		title: {
+	    			display: true, 
+	    			text: 'Date of Application based on (DAT)'
+	    		},
+	    	}
+	    }
+	};
+
+	// End Defining data
+	var myChart = new Chart(nutrient_ctx, {
+	    type: 'scatter',
+	    data: {
+		    datasets: nutrient_obj
+		},
+	    options: options
+	});
+	//console.log(myChart);
+
+</script>

@@ -1,7 +1,25 @@
 const dataformatter = require('../public/js/dataformatter.js');
 const reportModel = require('../models/reportModel.js');
+const farmModel = require('../models/farmModel.js');
+const workOrderModel = require('../models/workOrderModel.js');
+const cropCalendarModel = require('../models/cropCalendarModel.js');
+const materialModel = require('../models/materialModel.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
+var request = require('request');
+
+var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
+
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+// a and b are javascript Date objects
+function dateDiffInDays(a, b) {
+  // Discard the time and time-zone information.
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+}
 
 exports.getDetailedReport = function(req, res) {
 	var html_data = {};
@@ -116,6 +134,139 @@ exports.getSummaryHarvestReport = function(req, res) {
 exports.getDetailedHarvestReport = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+	html_data["notifs"] = req.notifs;
+	html_data["farm_name"] = req.query.farm;
+	html_data['range'] = { start: "2019-01-01", end: dataformatter.formatDate(new Date(), 'YYYY-MM-DD') };
 
-	res.render('detailed_harvest_report', html_data);
+	farmModel.filteredFarmDetails({ farm_name: req.query.farm }, function(err, farm) {
+		if (err)
+			throw err
+		else {
+
+			reportModel.getSeedChart({ farm_name: req.query.farm },"2019-01-01", function(err, seed_chart) {
+				if (err)
+					throw err;
+				else {
+					materialModel.getMaterialsList('Seed', null, function(err, seed_materials) {
+						if (err)
+							throw err;
+						else {
+							const calendar_list = seed_chart;
+							//console.log(calendar_list);
+							const calendar = calendar_list.filter(e => e.calendar_id == req.query.id)[0];
+							seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
+							html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
+							//console.log(html_data);
+
+							reportModel.getNutrientChart({ crop_calendar_id: req.query.id }, { calendar_id: req.query.id }, function(err, nutrient_chart) {
+								if (err)
+									throw err;
+								else {
+									reportModel.getPDOccurence({ calendar_id: req.query.id }, function(err, pd_chart) {
+										if (err)
+											throw err;
+										else {
+											//console.log(calendar);
+											var len = dateDiffInDays(new Date(calendar.sowing_date), new Date(calendar.harvest_date));
+											for (var i = 0; i < nutrient_chart.length; i++) {
+												nutrient_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(nutrient_chart[i].date_completed));
+												
+												if (calendar.method == 'Transplanting')
+													nutrient_chart[i].dat += 15;
+
+												//console.log(nutrient_chart[i].dat);
+											}
+
+											for (var i = 0; i < pd_chart.length; i++) {
+												pd_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(pd_chart[i].date_diagnosed));
+
+												if (calendar.method == 'Transplanting')
+													pd_chart[i].dat += 15;
+											}
+
+											nutrient_chart = analyzer.processNutrientChart(nutrient_chart, pd_chart);
+											html_data['nutrient_chart'] = JSON.stringify(nutrient_chart);
+											//console.log(nutrient_chart);
+											res.render('detailed_harvest_report', html_data);
+										}
+									});
+												
+								}
+							});
+							// Trial for getting ndvi data
+							// if (true) {
+							// 	const calendar = calendar_list.filter(e => e.calendar_id == req.query.id)[0];
+
+							// 	var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
+							//     request(url, { json: true }, function(err, response, farm_body) {
+							//         if (err)
+							//         	throw err;
+							//         else {
+							//         	var start_date = dataformatter.dateToUnix(calendar.sowing_date), end_date = dataformatter.dateToUnix(calendar.harvest_date);
+							// 			var obj;
+							// 			var polygon_id = ((farm_body.filter(e => e.name == calendar.farm_name)[0]).id);
+
+							// 			var data = {
+							// 				polygon_id: polygon_id,
+							// 				start: start_date,
+							// 				end: end_date,
+							// 				clouds_max: 1
+							// 			};
+							// 			var options = {
+							// 				url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key+'&clouds_max='+60,
+							// 				method: 'GET',
+							// 				headers: {
+							// 					'Content-type':'application/json'
+							// 				},
+							// 				body: JSON.stringify(data)
+							// 			};
+							// 			console.log(options.url);
+							// 			request(options, function(err, response, body) {
+							// 				if (err)
+							// 					throw err;
+							// 				else {
+
+							// 					body = JSON.parse(body);
+							// 					var arr = [];
+							// 					for (var i = 0; i < body.length; i++) {
+							// 		        		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
+							// 		        		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+
+							// 		        		console.log(body[i].stats.ndvi);
+
+							// 		        		var stats_options = {
+							// 		        			url: body[i].stats.ndvi,
+							// 		        			method: 'GET',
+							// 		        			headers: {
+							// 		        				'Content-type':'application/json'
+							// 		        			}
+							// 		        		}
+							// 		        		request(stats_options, function(err, response, stats) {
+							// 		        			if (err)
+							// 		        				throw err;
+
+							// 		        			arr.push(stats.max);
+							// 		        			console.log(stats);
+							// 		        		});
+							// 		        	}
+							// 		        	console.log(arr);
+							// 		        	//console.log(body);
+							// 					//var result = body[body.length-1];
+							// 					//result.dt = dataformatter.unixtoDate(result.dt);
+							// 					////console.log(body);
+							// 					res.render('detailed_harvest_report', html_data);
+							// 				}
+							// 			});
+							//         }
+							//     });
+							// }
+
+														
+						}
+					});
+							
+				}
+			});
+		}
+	});
 }

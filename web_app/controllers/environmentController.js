@@ -980,6 +980,7 @@ exports.detailedNutrientManagement = function(req, res) {
 																		wo_list[i].date_due = dataformatter.formatDate(new Date(wo_list[i].date_due), 'YYYY-MM-DD');
 																		wo_list[i].target_application_date = dataformatter.formatDate(new Date(wo_list[i].target_application_date), 'YYYY-MM-DD');
 																		wo_list[i].target_date_end = dataformatter.formatDate(new Date(wo_list[i].target_date_end), 'YYYY-MM-DD');
+																		wo_list[i].date_completed = dataformatter.formatDate(new Date(wo_list[i].date_completed), 'YYYY-MM-DD');
 																	}
 																	materialModel.getAllMaterials('Fertilizer', farm_id, function(err, material_list) {
 																		if (err)
