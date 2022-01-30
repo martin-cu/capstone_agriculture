@@ -265,6 +265,33 @@ $(document).ready(function(){
             }
         });
     });
+
+    $(document).on("click",".diagnosis_radio", function(){
+        if($(".symptom-checkbox:checkbox:checked").length == 0 || $(this).parent().prev().text() == "N/A"){
+            var value = $(".diagnosis_radio:checked").val();
+            value = value.split("|");
+            var pd_id = value[0];
+            var type = value[1];
+            $.get('/generateRecommendationDiagnosis',{farm_name : $("#farm_id option:selected").text(), type : type, pd_id : pd_id}, function(result){
+                var i, x;
+                var symptoms = $(".symptom-checkbox").val();
+                //unchecks all
+                $(".symptom-checkbox").each(function(){
+                    $(this).prop("checked", false);
+                });
+                //Checks all same symptoms
+                for(i = 0; i < result.symptoms.length; i++){
+                    console.log(result.symptoms[i]);
+                    $(".symptom-checkbox").each(function(){
+                        if($(this).val() == result.symptoms[i].symptom_id){
+                            //check
+                            $(this).prop("checked", true);
+                        }    
+                    });
+                }
+            });
+        }
+    });
 });
 
 

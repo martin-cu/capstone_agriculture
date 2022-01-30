@@ -168,6 +168,7 @@ router.get('/ajaxGetDiagnosisList', environmentController.ajaxDiagnosisListPerPD
 router.get('/ajaxGetDiagnosisPDFrequency', environmentController.ajaxDiagnosisPDFrequency);
 router.get('/ajaxUpdateChart', environmentController.ajaxUpdateChart);
 router.get('/ajaxSymptomPossibilities', environmentController.ajaxGetPossibilitiesBasedOnSymptoms);
+router.get('/ajaxGetSingleProbability', environmentController.getSinglePDProbabilitity);
 
 
 //Nutrient Management

@@ -1392,14 +1392,28 @@ exports.getPDProbability = function(date, type, id, farm_id, next){
 	sql = mysql.format(sql, type);
 	sql = mysql.format(sql, id);
 	sql = mysql.format(sql, farm_id);
-	// console.log(sql);
+	console.log(sql);
+	mysql.query(sql, next); return(sql);
+}
+
+exports.getSinglePDProbability = function(pd_id, pd_type, farm_id, next){
+	sql = "SELECT * FROM pd_probabilities WHERE pd_type = ? && pd_id = ? ";
+	sql = mysql.format(sql, pd_type);
+	sql = mysql.format(sql, pd_id);
+
+	if(farm_id != null){
+		sql = sql + " && farm_id = ? ";
+		sql = mysql.format(sql, farm_id);
+	}
+	sql = sql + " ORDER BY date DESC";
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 }
 
 exports.addPDProbability = function(data, next){
 	sql = "INSERT INTO pd_probabilities SET ?";
 	sql = mysql.format(sql, data);
-	// console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 };
 

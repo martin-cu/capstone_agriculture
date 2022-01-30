@@ -38,9 +38,9 @@ exports.getPestDiseaseManagement = function(req, res) {
 							throw err;
 						}
 						else{
-							console.log(symptoms.length);
+							// console.log(symptoms.length);
 							if(symptoms.length == 0){
-								console.log("sdkljahdsf");
+								// console.log("sdkljahdsf");
 							}
 							else{
 								
@@ -401,8 +401,8 @@ exports.getPestFactors = function(req,res){
 				
 									}
 									else{
-										console.log(details[0].pest_name);
-										console.log(factors);
+										// console.log(details[0].pest_name);
+										// console.log(factors);
 										html_data['pest_name'] =  details[0].pest_name;
 										html_data["symptoms"] = symptoms;
 										html_data["factors"] = factors;
@@ -2442,7 +2442,7 @@ exports.ajaxGetPossibilitiesBasedOnSymptoms = function(req,res){
 
 
 exports.getRecommendationDiagnosis = function(req,res){
-	console.log(req.query);
+	// console.log(req.query);
 	var farm_id = req.query.farm_id;
 	var type = req.query.type;
 	var id = req.query.pd_id;
@@ -2455,7 +2455,7 @@ exports.getRecommendationDiagnosis = function(req,res){
 			if(err)
 				throw err;
 			else{
-				console.log(solutions);
+				// console.log(solutions);
 				var i;
 				for(i = 0; i < solutions.length; i++){
 					var solution = {
@@ -2470,7 +2470,7 @@ exports.getRecommendationDiagnosis = function(req,res){
 				}
 				pestdiseaseModel.getPestSymptoms(id, function(err, symptoms){
 					// console.log(recommended_solutions);
-					console.log(symptoms);
+					// console.log(symptoms);
 					res.send({recommended_solutions: recommended_solutions, symptoms : symptoms});
 				});
 			}
@@ -2522,7 +2522,7 @@ exports.getPDProbability = function(req, res){
 		if (err)
 			throw err;
 		else {
-			console.log(details);
+			// console.log(details);
 			farmtypes.push(details[0].land_type);
 		}
 
@@ -2697,6 +2697,7 @@ exports.storePDRecommendation = function(req, res){
 	var i;
 	date = new Date();
 	date = dataformatter.formatDate(date, 'YYYY-MM-DD');
+	
 	pestdiseaseModel.getPDProbability({date : date},possibility.type, possibility.pd_id, req.query.farm_id, function(err, recommendations){
 		if(err)
 			throw err;
@@ -2733,7 +2734,7 @@ exports.storePDRecommendation = function(req, res){
 //ajax
 exports.getDiagnosisList = function(req,res){
 	var farm_id = req.query.farm_id;
-	console.log(farm_id);
+	// console.log(farm_id);
 
 	if(farm_id == "" || farm_id == null){
 		farm_id = null;
@@ -3014,7 +3015,7 @@ exports.ajaxUpdateChart = function(req, res){
 	var pd_id = req.query.pd_id;
 	var farm_id = req.query.farm_id;
 	var year = req.query.year;
-	console.log(req.query);
+	// console.log(req.query);
 	if(farm_id == "all"){
 		farm_id = null;
 	}
@@ -3189,8 +3190,8 @@ exports.ajaxDiagnosisListPerPD = function(req,res){
 					throw err;
 				else{
 					if(frequency.length != 0){
-						console.log(frequency[0].stage_diagnosed);
-						console.log(frequency[0].count);
+						// console.log(frequency[0].stage_diagnosed);
+						// console.log(frequency[0].count);
 						diagnosis_list[0]["count"] = frequency[0].count;
 						diagnosis_list[0]["common_stage"] = frequency[0].stage_diagnosed;
 					}
@@ -3201,6 +3202,44 @@ exports.ajaxDiagnosisListPerPD = function(req,res){
 				}
 				res.send(diagnosis_list);
 			});
+		}
+	});
+}
+
+
+exports.getSinglePDProbabilitity = function(req,res){
+	var pd_id = req.query.pd_id;
+	var type = req.query.type;
+	var farm_id = req.query.farm_id;
+	console.log("GET PROBABILITIY OF SINGLE");
+	console.log(farm_id);
+	if(farm_id == null || farm_id == "all" || farm_id == ""){
+		farm_id = null;
+	}
+
+	pestdiseaseModel.getSinglePDProbability(pd_id, type, farm_id, function(err, probability){
+		if(err)
+			throw err;
+		else{
+			if(probability.length != 0){
+				if(farm_id == null){
+					var date = dataformatter.formatDate(new Date(probability[0].date), 'YYYY-MM-DD');
+					var i, ctr = 0, sum = 0; 
+					for(i =0; i < probability.length; i++){
+						// console.log(date + " = " + probability[i].date);
+						if(date == dataformatter.formatDate(new Date(probability[i].date), 'YYYY-MM-DD')){
+							console.log("same");
+							ctr++;
+							sum = sum + probability[i].probability;
+						}
+					}
+					probability[0].probability = sum * 1.0 / ctr;
+				}
+				res.send(probability[0]);
+			}
+			else{
+				res.send({});
+			}
 		}
 	});
 }
