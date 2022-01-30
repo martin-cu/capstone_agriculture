@@ -71,7 +71,7 @@
 				                                    <td>
 				                                    	<div class="d-flex flex-column">
 				                                    		<div>{{this.farm_name}}</div>
-				                                    		<div>{{this.stage}}</div>
+				                                    		<div>{{this.stage2}}</div>
 				                                    	</div>
 				                                    </td>
 				                                    <td>
@@ -79,6 +79,7 @@
 				                                    		<div>{{this.seed_name}}</div>
 				                                    		<div>{{this.method}}</div>
 				                                    		<small>{{this.seed_rate}} kg/ha seed rate</small>
+				                                    		<div>{{this.forecast}}</div>
 				                                    	</div>
 				                                    </td>
 				                                    <td>{{this.days_till_harvest}}</td>
@@ -479,7 +480,7 @@
 			var color = 'text-muted';
 			if (stage == 'Vegetation') {
 				if (farm_data.dat < 40) {
-					range = [.55, .79];
+					range = [.3, .54];
 				}
 				else {
 					range = [.55, .79];
@@ -489,10 +490,10 @@
 				range = [.55, .79];
 			}
 			else if (stage == 'Ripening') {
-				range = [.55, .79];
+				range = [.4, .7];
 			}
 			else if (stage == 'Harvesting') {
-				range = [.55, .79];
+				range = [.45, .79];
 			}
 			else {
 				range = 'N/A';

@@ -7,9 +7,9 @@ function numberWithCommas(x) {
 
 exports.smoothFP = function(arr) {
 	for (var i = 0; i < arr.length; i++) {
-		arr[i]['forecast_yield'] = arr[i]['forecast_yield'] == 'N/A' ? 'N/A' : arr[i]['forecast_yield'].toFixed(2)+' cavans/ha';
-		arr[i]['current_yield'] = arr[i]['current_yield'] == 'N/A' ? 'N/A' : arr[i]['current_yield'].toFixed(2)+' cavans/ha';
-		arr[i]['total_harvest'] = arr[i]['total_harvest'] == 0 ? 'N/A' : arr[i]['total_harvest'].toFixed(2)+' cavans';
+		arr[i]['forecast_yield'] = arr[i]['forecast_yield'] == 'N/A' || arr[i].forecast_yield == null ? 'N/A' : arr[i]['forecast_yield'].toFixed(2)+' cavans/ha';
+		arr[i]['current_yield'] = arr[i]['current_yield'] == 'N/A' || arr[i].current_yield == null  ? 'N/A' : arr[i]['current_yield'].toFixed(2)+' cavans/ha';
+		arr[i]['total_harvest'] = arr[i]['total_harvest'] == 0 || arr[i].total_harvest == null ?   'N/A' : arr[i]['total_harvest'].toFixed(2)+' cavans';
 		arr[i]['net_spend'] = numberWithCommas(arr[i]['net_spend'].toFixed(2));
 	}
 	return arr;
@@ -382,6 +382,7 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 		current_yield: fp[0].current_yield != null ? fp[0].current_yield+' cavans/ha' : 'N/A',
 		total: fp[0].current_yield != null ? Math.round(fp[0].current_yield * fp[0].farm_area * 100)/100+' cavans': 'N/A'
 	}
+	
 	fp_obj.yield.arr.push(input_obj);
 	fp_obj.yield.total = input_obj.total;
 
@@ -419,10 +420,17 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 	fp_obj['cost_per_cavan'] = fp_obj.yield.total != 'N/A' ? (Math.round(fp_obj.inputs.total / parseInt(fp_obj.yield.total.replace(' cavans','')) * 1000) / 1000)+' pesos per cavan per' : '&nbsp';
 	fp_obj.inputs.total = numberWithCommas((Math.round(fp_obj.inputs.total * 100)/100).toFixed(2));
 
+	//console.log(fp);
+	if (fp[0].current_yield == 0 || fp[0].current_yield == null) {
+		fp_obj['cost_per_cavan'] = 'N/A';
+		fp_obj.productivity = 'N/A';
+	}
+
 	return fp_obj;
 }
 
 exports.calculateProductivity = function(fp_overview, input_resources) {
+	//console.log(fp_overview);
 	for (var i = 0; i < fp_overview.length; i++) {
 		fp_overview[i]['input_items'] = input_resources.filter(e => fp_overview[i].calendar_id == e.calendar_id);
 		fp_overview[i]['net_spend'] = fp_overview[i]['input_items'].reduce((a, b) => a + b.total_cost, 0);
@@ -430,25 +438,36 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 		fp_overview[i]['prev_net_spend'] = fp_overview[i]['prev_input_items'].reduce((a, b) => a + b.total_cost, 0);
 
 		fp_overview[i]['current_productivity'] = 'N/A';
-		fp_overview[i]['prev_productivity'] = (Math.round((fp_overview[i].max_previous_yield / fp_overview[i].prev_net_spend) * 100000) / 100000).toFixed(5);
+		if (fp_overview[i].max_previous_yield == null) {
+			fp_overview[i]['prev_productivity'] = 'N/A'
+		}
+		else
+			fp_overview[i]['prev_productivity'] = (Math.round((fp_overview[i].max_previous_yield / fp_overview[i].prev_net_spend) * 100000) / 100000).toFixed(5);
 		
 		fp_overview[i]['total_harvest'] = fp_overview[i]['current_yield'] != 'N/A' ? fp_overview[i].farm_area * fp_overview[i].current_yield : 'N/A';
 
 		fp_overview[i].current_yield = fp_overview[i].current_yield != null ? fp_overview[i].current_yield
 			 : fp_overview[i].current_yield = 'N/A';
+
 		fp_overview[i]['current_productivity'] = fp_overview[i].current_yield != 'N/A' ? (Math.round((fp_overview[i].current_yield / fp_overview[i].net_spend) * 100000) / 100000).toFixed(5) : `N/A`;
 		
 		fp_overview[i]['change'] = { 
 			val: fp_overview[i].current_productivity != 'N/A' ? 
-				(fp_overview[i].current_productivity - fp_overview[i].prev_productivity) / fp_overview[i].prev_productivity : 0,
+				fp_overview[i].prev_productivity != 'N/A' ?
+				(fp_overview[i].current_productivity - fp_overview[i].prev_productivity) / fp_overview[i].prev_productivity : 'N/A'
+				: 0,
 			arrow: fp_overview[i].current_productivity != 'N/A' ? 
 				fp_overview[i].current_productivity >= fp_overview[i].prev_productivity ? 
 				'up' :
 				'down'
 				: 'up'
 		};
-
-		fp_overview[i].change.val = fp_overview[i].change.val != 0 ? parseInt((fp_overview[i].change.val * 100)) : '0';
+		if (fp_overview[i].change.val) {
+			//console.log(fp_overview[i]);
+		}
+		fp_overview[i].change.val = fp_overview[i].change.val != 'N/A' ?
+								fp_overview[i].change.val != 0 ? parseInt((fp_overview[i].change.val * 100)) : 'N/A'
+								: '0';
 		fp_overview[i].change.color = fp_overview[i].change.arrow == 'up' ? 
 		fp_overview[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 
@@ -457,6 +476,9 @@ exports.calculateProductivity = function(fp_overview, input_resources) {
 			'Attained' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.4) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 1.2) ?
 			'Met' : fp_overview[i].current_productivity < (fp_overview[i].prev_productivity * 1.2) && fp_overview[i].current_productivity >= (fp_overview[i].prev_productivity * 0.8) ?
 			'Acceptable' : 'Unmet' : 'N/A';
+
+		if (fp_overview[i].change.val == 'N/A')
+			fp_overview[i].change.color = 'text-muted';
 		//console.log(fp_overview[i].current_productivity+' - '+fp_overview[i].prev_productivity+'-'+fp_overview[i].outlook);
 	}
 

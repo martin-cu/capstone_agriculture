@@ -19,6 +19,18 @@ exports.getForecastedYieldRecord = function(data, next) {
 	mysql.query(sql, next);
 }
 
+exports.getForecastedYieldRecord1 = function(data, next) {
+	var sql = "SELECT calendar_id, temp, humidity, pressure, rainfall, seed_id, harvested, N, P, K, seed_rate, forecast FROM forecasted_yield where ";
+	for (var i = 0; i < data.calendar_id.length; i++) {
+		sql += 'calendar_id = '+data.calendar_id[i];
+		if (i != data.calendar_id.length-1) {
+			sql +=' or ';
+		}
+	}
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
 exports.getAllFarmswCalendar = function(next) {
 	var sql = "select t1.*, farm_name, farm_area, land_type from ( select t.*, seed_name from ( SELECT *, @rn:=IF(@prev = farm_id, @rn + 1, 1) AS rn, @prev:=farm_id FROM crop_calendar_table cct JOIN (SELECT @prev:=NULL, @rn:=0) AS vars where status = 'Completed' ORDER BY farm_id , harvest_date DESC ) as t join seed_table on seed_planted = seed_id where rn =1 union select null, farm_id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null from farm_table ) as t1 join farm_table using(farm_id) group by farm_id";
 	mysql.query(sql, next);

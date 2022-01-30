@@ -38,92 +38,113 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 						if (err)
 							throw err;
 						else {
-							
-							calendars = calendars.filter(function(cv) {
-								return !list.find(function(e) {
-									return e.farm_id == cv.farm_id;
-								});
-							});
-							for (var i = 0; i < calendars.length; i++) {
-								if (calendars[i].calendar_id != null) {
-									calendars[i].land_prep_date = dataformatter.formatDate(new Date(calendars[i].land_prep_date), 'mm DD, YYYY');
-									calendars[i].sowing_date = dataformatter.formatDate(new Date(calendars[i].sowing_date), 'mm DD, YYYY');
-									calendars[i].harvest_date = dataformatter.formatDate(new Date(calendars[i].harvest_date), 'mm DD, YYYY');
-								}
-							}
-
-							//console.log(calendars);
-							for (var i = 0; i < nutrient_reco.length; i++) {
-								nutrient_reco[i].target_application_date = dataformatter.formatDate(nutrient_reco[i].target_application_date, 'mm DD, YYYY');
-							}
-
-
-							var nutrient_reco_arr = [];
-							const unique = [...new Map(nutrient_reco.map(item =>
-			  					[item.fr_plan_id, item])).values()];
-							for (var i = 0; i < unique.length; i++) {
-								for (var x = 0; x < list.length; x++) {
-									if (list[x].farm_id == unique[i].farm_id) {
-										list[x]['nutrients'] = nutrient_reco_arr.concat((nutrient_reco.filter(e => e.fr_plan_id == unique[i].fr_plan_id)).slice(0, 3));
-									}
-								}
-							}
-							//console.log(nutrient_reco);
-							//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
-							var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
-							request(url, { json: true }, function(err, response, body) {
-								if (err)
+							farmModel.getForecastedYieldRecord1({ calendar_id : list.map(({ calendar_id }) => calendar_id) } , function(err, forecast_record) {
+								if(err)
 									throw err;
 								else {
-									var farm_list = [];
+									console.log(forecast_record);
+									calendars = calendars.filter(function(cv) {
+										return !list.find(function(e) {
+											return e.farm_id == cv.farm_id;
+										});
+									});
+
 									for (var i = 0; i < list.length; i++) {
-										farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
+										var forecast = forecast_record.filter(e => e.calendar_id == calendars[i].calendar_id);
 
-										// if (list[i].sow_date_completed != null) {
-										// 	list[i].sow_date_completed = new Date(list[i].sow_date_completed);
-										// 	if (list[i].method == 'Transplanting') {
-										// 		list[i].sow_date_completed.setDate((list[i].sow_date_completed).getDate() - 15);											
-										// 	}
+											if (forecast.length == 0) {
+												forecast = 'Forecasted Yield: N/A';
+											}
+											else {
+												forecast = 'Forecasted Yield: '+forecast[0].forecast+' cavans/ha';
+											}
 
-										// }
-										
-										list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays((list[i].sow_date_completed), new Date());
+										list[i]['forecast'] = forecast; 
 									}
-									// console.log(list);
-									pestDiseaseModel.getDiagnosisSymptomsSummarized(null, function(err, symptoms){
-										if(err)
+
+									for (var i = 0; i < calendars.length; i++) {
+										if (calendars[i].calendar_id != null) {
+											calendars[i].land_prep_date = dataformatter.formatDate(new Date(calendars[i].land_prep_date), 'mm DD, YYYY');
+											calendars[i].sowing_date = dataformatter.formatDate(new Date(calendars[i].sowing_date), 'mm DD, YYYY');
+											calendars[i].harvest_date = dataformatter.formatDate(new Date(calendars[i].harvest_date), 'mm DD, YYYY');
+										}
+									}
+
+									//console.log(calendars);
+									for (var i = 0; i < nutrient_reco.length; i++) {
+										nutrient_reco[i].target_application_date = dataformatter.formatDate(nutrient_reco[i].target_application_date, 'mm DD, YYYY');
+									}
+
+
+									var nutrient_reco_arr = [];
+									const unique = [...new Map(nutrient_reco.map(item =>
+					  					[item.fr_plan_id, item])).values()];
+									for (var i = 0; i < unique.length; i++) {
+										for (var x = 0; x < list.length; x++) {
+											if (list[x].farm_id == unique[i].farm_id) {
+												list[x]['nutrients'] = nutrient_reco_arr.concat((nutrient_reco.filter(e => e.fr_plan_id == unique[i].fr_plan_id)).slice(0, 3));
+											}
+										}
+									}
+									//console.log(nutrient_reco);
+									//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
+									var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
+									request(url, { json: true }, function(err, response, body) {
+										if (err)
 											throw err;
-										else{
-											for(i = 0; i < list.length; i++){
-												list[i]["symptoms"] = [];
-												list[i]["empty_symptoms"] = true;
-												for(x = 0; x < symptoms.length; x++){
-													if(symptoms[x].farm_id == list[i].farm_id){
-														list[i].symptoms.push(symptoms[x]);
-														list[i].empty_symptoms = false;
+										else {
+											var farm_list = [];
+											for (var i = 0; i < list.length; i++) {
+												farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
+
+												// if (list[i].sow_date_completed != null) {
+												// 	list[i].sow_date_completed = new Date(list[i].sow_date_completed);
+												// 	if (list[i].method == 'Transplanting') {
+												// 		list[i].sow_date_completed.setDate((list[i].sow_date_completed).getDate() - 15);											
+												// 	}
+
+												// }
+												
+												list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays((list[i].sow_date_completed), new Date());
+											}
+											// console.log(list);
+											pestDiseaseModel.getDiagnosisSymptomsSummarized(null, function(err, symptoms){
+												if(err)
+													throw err;
+												else{
+													for(i = 0; i < list.length; i++){
+														list[i]["symptoms"] = [];
+														list[i]["empty_symptoms"] = true;
+														for(x = 0; x < symptoms.length; x++){
+															if(symptoms[x].farm_id == list[i].farm_id){
+																list[i].symptoms.push(symptoms[x]);
+																list[i].empty_symptoms = false;
+															}
+														}
+
 													}
 												}
 
-											}
+												//Append stage to list
+												var filtered;
+												for (var i = 0; i < farm_list.length; i++) {
+													filtered = list.filter(e => e.farm_name == farm_list[i].name)[0];
+
+													farm_list[i]['data'] = { dat: filtered.days_till_harvest, stage: filtered.stage };
+												}
+
+												html_data["notifs"] = req.notifs;
+
+												html_data['data'] = { calendars: list, farms: farm_list, inactive: calendars };
+												html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
+												
+												res.render('summary_farm_monitoring', html_data);
+											});
 										}
-
-										//Append stage to list
-										var filtered;
-										for (var i = 0; i < farm_list.length; i++) {
-											filtered = list.filter(e => e.farm_name == farm_list[i].name)[0];
-
-											farm_list[i]['data'] = { dat: filtered.days_till_harvest, stage: filtered.stage };
-										}
-
-										html_data["notifs"] = req.notifs;
-
-										html_data['data'] = { calendars: list, farms: farm_list, inactive: calendars };
-										html_data['JSON_data'] = { calendars: JSON.stringify(list), farms: JSON.stringify(farm_list) };
-										
-										res.render('summary_farm_monitoring', html_data);
 									});
 								}
 							});
+									
 						}
 					});
 				}
@@ -151,13 +172,13 @@ exports.getCropCalendarTab = function(req, res) {
 				harvesting: []
 			};
 
-			list_obj.land_prep = list.filter(ele => ele.stage == 'Land Preparation');
+			list_obj.land_prep = list.filter(ele => ele.stage2 == 'Land Preparation');
 			//console.log(list_obj.land_prep);
-			list_obj.sowing = list.filter(ele => ele.stage == 'Sowing');
-			list_obj.vegetation = list.filter(ele => ele.stage == 'Vegetation');
-			list_obj.reproductive = list.filter(ele => ele.stage == 'Reproductive');
-			list_obj.ripening = list.filter(ele => ele.stage == 'Ripening');
-			list_obj.harvesting = list.filter(ele => ele.stage == 'Harvesting');
+			list_obj.sowing = list.filter(ele => ele.stage2 == 'Sowing');
+			list_obj.vegetation = list.filter(ele => ele.stage2 == 'Vegetation');
+			list_obj.reproductive = list.filter(ele => ele.stage2 == 'Reproductive');
+			list_obj.ripening = list.filter(ele => ele.stage2 == 'Ripening');
+			list_obj.harvesting = list.filter(ele => ele.stage2 == 'Harvesting');
 
 			var query = {
 				where: {
