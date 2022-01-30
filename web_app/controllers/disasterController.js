@@ -165,7 +165,7 @@ function prepareRainfallDisaster(rainfall, active_calendars) {
 				recommendation = 'Monitor fields closely and drain fields before, during, and after the target date.';
 			}
 			else {
-				recommendation = 'N/A';
+				recommendation = 'N/A - no suitable action';
 			}
 		}
 		else {

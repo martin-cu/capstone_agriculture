@@ -303,7 +303,8 @@
                         {{#each farm_productivity.yield.arr}}
                         <tr>
                             <td class="pl-3" style="text-align: left;color: rgb(0,0,0);">{{this.name}}</td>
-                            <td style="text-align: right;color: rgb(0,0,0);">{{this.forecasted_yield}}</td>
+                            <td style="text-align: right;color: rgb(0,0,0);">{{#compareTwoValues this.forecasted_yield null operator='=='}}N/A{{/compareTwoValues}}
+                            {{#compareTwoValues this.forecasted_yield null operator='!='}}{{this.forecasted_yield}}{{/compareTwoValues}}</td>
                             <td style="text-align: right;color: rgb(0,0,0);">{{this.current_yield}}</td>
                             <td style="text-align: right;color: rgb(0,0,0);">{{this.total}}</td>
                         </tr>

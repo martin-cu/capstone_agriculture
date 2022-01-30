@@ -978,6 +978,7 @@ exports.detailedNutrientManagement = function(req, res) {
 																	for (var i = 0; i < wo_list.length; i++) {
 																		wo_list[i].followed = wo_list[i].followed == 'Followed' ? 1 : 0;
 																		wo_list[i].date_due = dataformatter.formatDate(new Date(wo_list[i].date_due), 'YYYY-MM-DD');
+																		if (wo_list[i].target_application_date != null)
 																		wo_list[i].target_application_date = dataformatter.formatDate(new Date(wo_list[i].target_application_date), 'YYYY-MM-DD');
 																		wo_list[i].target_date_end = dataformatter.formatDate(new Date(wo_list[i].target_date_end), 'YYYY-MM-DD');
 																		wo_list[i].date_completed = dataformatter.formatDate(new Date(wo_list[i].date_completed), 'YYYY-MM-DD');
@@ -2208,6 +2209,7 @@ exports.ajaxGetPD = function(req, res){
 exports.addDiagnosis = function(req,res){
 	var workorders = [];
 	var i;
+
 	for(i = 0; i < req.body.solution.length; i++)
 		workorders.push(req.body.solution[i].split("|"));
 	var pd = req.body.pd;

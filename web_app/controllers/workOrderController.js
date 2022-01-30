@@ -137,8 +137,9 @@ exports.getDetailedWO = function(req, res) {
 											}
 											if (harvest_details.length == 0) 
 												harvest_details.push({});
-											console.log(harvest_details);
-											html_data['stage'] = crop_calendar.filter(e => e.calendar_id == details.crop_calendar_id)[0].stage;
+											console.log(details);
+											console.log(crop_calendar);
+											html_data['stage'] = crop_calendar.filter(e => e.calendar_id == details.crop_calendar_id)[0].stage2;
 											html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
 											html_data['harvest_details'] = harvest_details;
 											
@@ -709,14 +710,15 @@ exports.editWorkOrder = function(req, res) {
 									throw err;
 								else {
 									// Get current stage of crop calendar
-									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
+									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress', 'Completed'],
 									where: { key: 'calendar_id', val: req.body.crop_calendar_id } }, function(err, calendar) {
 											if (err)
 												throw err;
 											else {
+												console.log(calendar)
 												// Process query data here
 												var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
-													req.body.harvest_type, calendar[0].stage, query.crop_calendar_id);
+													req.body.harvest_type, calendar[0].stage2, query.crop_calendar_id);
 												harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
 													if (err)
 														throw err;

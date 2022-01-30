@@ -85,6 +85,7 @@ exports.getSummaryHarvestReport = function(req, res) {
 		if (err)
 			throw err;
 		else {
+			
 			reportModel.getNutrientRecommendationDetails({ calendar_ids: req.query.id.split(',') }, function(err, nutrient_reco_details) {
 				if (err)
 					throw err;
