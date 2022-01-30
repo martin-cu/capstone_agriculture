@@ -447,7 +447,6 @@
 			else {
 				ideal = 'N/A';
 			}
-			console.log(ideal +' - '+num);
 			if (ideal != 'N/A') {
 				ideal = parseFloat(ideal);
 				if (ideal - 7 <= num && ideal + 7 >= num) {
@@ -464,7 +463,7 @@
 
 			$(`[${target}_help']`).html(`Ideal value: ${ideal}`);		
 		}
-		console.log(color);
+
 		$(`[${target}']`).html(moisture);
 		$(`[${target}']`).addClass(color);
 		$(`[${target}_date']`).html('Last updated: '+formatDate(new Date(soil.dt), 'mm DD, YYYY'));
@@ -536,20 +535,24 @@
 
 		$.get('/agroapi/ndvi/imagery', query, function(imagery) {
 			if (imagery.length != 0) {
-				$.get(imagery[0].stats.ndvi, {}, function(stats) {
+				if (obj[i].name == 'Soccoro Farm 2') {
+					imagery[imagery.length-1] = imagery.filter(e => e.dt == '2022-01-05')[0];
+				}
+				
+				$.get(imagery[imagery.length-1].stats.ndvi, {}, function(stats) {
 					// $(`[id='${obj[i].name}_ndvi']`).html(' '+Math.round(stats.max * 100) / 100);
 					// $(`[id='${obj[i].name}_ndvi_date']`).html('Last updated: '+formatDate(new Date(imagery[0].dt), 'mm DD, YYYY'));
 					// $(`[id='${obj[i].name}_ndvi_help']`).html(`N/A`);
-					appendNDVI(`id='${obj[i].name}_ndvi`, imagery[0], stats, obj[i].data);
+					appendNDVI(`id='${obj[i].name}_ndvi`, imagery[imagery.length-1], stats, obj[i].data);
 				});
 			}
 			else {
 
 			}
 		});
-		console.log(obj[i].id);
+
 		$.get('/agroapi/soil/current', { polyid: obj[i].id }, function(soil) {
-			console.log(soil);
+
 			appendSoilMoisture(`id='${obj[i].name}_soil_moisture`, soil, obj[i].data);
 		});
 	}
