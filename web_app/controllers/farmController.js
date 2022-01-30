@@ -798,8 +798,8 @@ exports.completeYieldForecast = function(req, res) {
 										testing_set.shift();
 									}
 
-									console.log(training_set);
-									console.log(testing_set);
+									// console.log(training_set);
+									// console.log(testing_set);
 									// If there is existing crop cycle - Get current env variables
 									if (current_calendar != null) {
 										console.log(current_calendar);
@@ -834,14 +834,25 @@ exports.completeYieldForecast = function(req, res) {
 												        	}
 												        	rainfall /= body_rainfall.length
 											        	}
-												        	
-														var stat_obj = {
-											        		avg_temp: body.reduce((total, next) => total + next.main.temp, 0) / body.length,
-												        	avg_humidity: body.reduce((total, next) => total + next.main.humidity, 0) / body.length,
-												        	avg_pressure: body.reduce((total, next) => total + next.main.pressure, 0) / body.length,
-											        		avg_rainfall: rainfall
-											        	}
+												        //console.log(body.length);
+												        if (body.length == 0) {
+												        	var stat_obj = {
+												        		avg_temp: 0,
+													        	avg_humidity: 0,
+													        	avg_pressure: 0,
+												        		avg_rainfall: rainfall
+												        	}
+												        }
+												        else {
+												        	var stat_obj = {
+												        		avg_temp: body.reduce((total, next) => total + next.main.temp, 0) / body.length,
+													        	avg_humidity: body.reduce((total, next) => total + next.main.humidity, 0) / body.length,
+													        	avg_pressure: body.reduce((total, next) => total + next.main.pressure, 0) / body.length,
+												        		avg_rainfall: rainfall
+												        	}
 
+												        }
+															
 											        	// Replace last data of testing set with current env variables
 														nutrientModel.getNutrientDetails({ specific: { calendar_id: current_calendar.calendar_id } }, function(err, curr_nutrient_details) {
 															if (err)

@@ -49,18 +49,21 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 										});
 									});
 
-									for (var i = 0; i < list.length; i++) {
-										var forecast = forecast_record.filter(e => e.calendar_id == calendars[i].calendar_id);
+									if (list.length != 0) {
+										for (var i = 0; i < list.length; i++) {
+											var forecast = forecast_record.filter(e => e.calendar_id == list[i].calendar_id);
 
-											if (forecast.length == 0) {
-												forecast = 'Forecasted Yield: N/A';
-											}
-											else {
-												forecast = 'Forecasted Yield: '+forecast[0].forecast+' cavans/ha';
-											}
+												if (forecast.length == 0) {
+													forecast = 'Forecasted Yield: N/A';
+												}
+												else {
+													forecast = 'Forecasted Yield: '+forecast[0].forecast+' cavans/ha';
+												}
 
-										list[i]['forecast'] = forecast; 
+											list[i]['forecast'] = forecast; 
+										}
 									}
+										
 
 									for (var i = 0; i < calendars.length; i++) {
 										if (calendars[i].calendar_id != null) {
@@ -94,6 +97,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 											throw err;
 										else {
 											var farm_list = [];
+											//console.log(body);
 											for (var i = 0; i < list.length; i++) {
 												farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
 

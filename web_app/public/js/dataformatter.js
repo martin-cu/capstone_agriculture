@@ -268,10 +268,11 @@ exports.dateToUnix = function(date) {
 	if (!x instanceof Date) {
 		date = Date.parse(date);
 	}
-
-	if (date > new Date()) {
+	if (new Date(date) >= new Date()) {
 		date = (new Date());
+		date.setDate(date.getDate() - 1);
 	}
+	console.log(date);
 
 	return parseInt((new Date(date).getTime() / 1000).toFixed(0));
 }
