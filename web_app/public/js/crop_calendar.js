@@ -339,9 +339,9 @@ function adjustDates(seed_list, event) {
 	var planting_method;
 	planting_method = $("#method").val();
 	if(planting_method == "Transplanting")
-		sowing_days = 2;
+		sowing_days = -15;
 	else if(planting_method == "Direct Seeding")
-		sowing_days = 10;
+		sowing_days = 0;
 	sowing_end = addDays(sowing_end, sowing_days);
 	$('#sowing_date_end').val(formatDate(sowing_end, 'YYYY-MM-DD'));
 

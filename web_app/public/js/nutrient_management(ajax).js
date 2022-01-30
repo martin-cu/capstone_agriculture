@@ -376,6 +376,12 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 	return result_arr;
 }
 
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 function createSchedule(materials, recommendation, applied, farm_id, N_recommendation, details, crop_calendar, work_order_list) {
 	var schedule_arr = [];
 	var fertilizer = {  };
@@ -416,17 +422,17 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 	console.log(method);
 
 	if (method == 'Transplanting') {
+		sowing.date_completed = sowing.date_completed == null || sowing.date_completed == undefined ? addDays(sowing.date_due, -15) : addDays(sowing.date_completed, -15);
 		temp_d = land_prep.date_completed == null || land_prep.date_completed == undefined ? land_prep.date_due : land_prep.date_completed;
 		target_date = new Date(temp_d);
 	}
 	else if (method == 'Direct Seeding') {
-		temp_d = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
+		temp_d = sowing.date_completed == null || sowing.date_completed == undefined ? new Date(sowing.date_due) : new Date(sowing.date_completed);
 		target_date = new Date(temp_d);
 		target_date = target_date.setDate(target_date.getDate() + 12);
 	}
 
 	var temp_date = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
-	var temp_date = new Date(temp_date);
 	var now = new Date();
 
 	var diffTime = (now - temp_date);
@@ -1005,7 +1011,7 @@ $(document).ready(function() {
 		$('.next_step').on('click', function() {
 			if (currentTab == 2) {
 				//Create fertilizer recommendation schedule
-				$.get('/filter_nutrient_mgt', { farm_id: $('#farm_id').val(), type: 'Fertilizer', filter: $('#farm_id').val() }, function(nutrient_details) {
+				$.get('/filter_nutrient_mgt', { farm_id: $('#farm_id').val(), type: 'Fertilizer', filter: $('#farm_id').val(), calendar_id: null }, function(nutrient_details) {
 					console.log(nutrient_details);
 					var target_arr = ['#n_lvl', '#p_lvl', '#k_lvl', '#n_val', '#p_val', '#k_val', '#ph_lvl'];
 					var planting_details = { seed_name: $('#seed_id').find(':selected').text(), method: $('#method').find(':selected').text() };
@@ -1015,7 +1021,7 @@ $(document).ready(function() {
 
 					//Create fertilizer schedule
 					$.get('/getAll_materials', { type: 'Fertilizer', filter: $('#farm_id').val() }, function(materials) {
-						$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: $('#farm_id').val(), calendar_id: calendar[0].calendar_id }, function(list) {
+						$.get('/get_cycle_resources_used', { type: 'Fertilizer', farm_id: $('#farm_id').val(), calendar_id: null }, function(list) {
 							var crop_calendar = {
 								harvest_date: $('#harvest_date_start').val(),
 								land_prep_date: $('#land_prep_date_start').val(),

@@ -5,7 +5,7 @@ const js = require('../public/js/session.js');
 var request = require('request');
 
 
-exports.loadNotifs = function(req, res, next) {
+exports.getNotification = function(req, res, next) {
     var html_data = {};
 
     var wo_list_query = {
@@ -81,7 +81,7 @@ exports.loadNotifs = function(req, res, next) {
                                 notif_tab[i].date = dataformatter.formatDate(new Date(notif_tab[i].date), 'mm DD, YYYY');
                             }
 
-                            console.log(notif_tab);
+                            //console.log(notif_tab);
                             req.notifs = notif_tab;
 
                             return next();
@@ -125,100 +125,100 @@ exports.createNotif = function(req,res) {
         res.send("ok");
     });
 }
-exports.getNotification = function(req, res, next){
-    console.log("test");
-    notifModel.getNotifs(function(err, prenotifs){
-        if(err)
-            throw err;
-        else{
-            workOrderModel.getDueWorkorders(function(err, due){
-                if(err)
-                    throw err;
-                else{
-                    //loop through
-                    var i,x;
-                    console.log("due");
-                    console.log(due.length);
+// exports.getNotification = function(req, res, next){
+//     console.log("test");
+//     notifModel.getNotifs(function(err, prenotifs){
+//         if(err)
+//             throw err;
+//         else{
+//             workOrderModel.getDueWorkorders(function(err, due){
+//                 if(err)
+//                     throw err;
+//                 else{
+//                     //loop through
+//                     var i,x;
+//                     console.log("due");
+//                     console.log(due.length);
 
-                    for(i = 0; i < due.length; i++){
-                        var create = true;
-                        for(x = 0; x < prenotifs.length; x++){
-                            var id = prenotifs[x].notification_title.split('-');
-                            console.log(due[i].work_order_id + "-" + id[1]);
-                            if(due[i].work_order_id == id[1]){
-                                console.log("Do not create notif");
-                                create = false;
-                            }
-                        }
-                        if(create){
-                            var notif = {
-                                date : new Date(),
-                                farm_id : due[i].farm_id,
-                                notification_title : "Work Order due today: WO-"+due[i].work_order_id,
-                                url : "/farms/work_order&id=" + due[i].work_order_id,
-                                icon : "exclamation-triangle",
-                                color : "warning"
-                            };
-                            notifModel.createNotif(notif, function(err, success){
-                            });
-                        }
-                    }
+//                     for(i = 0; i < due.length; i++){
+//                         var create = true;
+//                         for(x = 0; x < prenotifs.length; x++){
+//                             var id = prenotifs[x].notification_title.split('-');
+//                             console.log(due[i].work_order_id + "-" + id[1]);
+//                             if(due[i].work_order_id == id[1]){
+//                                 console.log("Do not create notif");
+//                                 create = false;
+//                             }
+//                         }
+//                         if(create){
+//                             var notif = {
+//                                 date : new Date(),
+//                                 farm_id : due[i].farm_id,
+//                                 notification_title : "Work Order due today: WO-"+due[i].work_order_id,
+//                                 url : "/farms/work_order&id=" + due[i].work_order_id,
+//                                 icon : "exclamation-triangle",
+//                                 color : "warning"
+//                             };
+//                             notifModel.createNotif(notif, function(err, success){
+//                             });
+//                         }
+//                     }
 
-                    workOrderModel.getOverdueWorkorders(function(err, overdue){
-                        if(err)
-                            throw err;
-                        else{
-                            //loop through
-                            var i,x;
-                            for(i = 0; i < overdue.length; i++){
-                                var create = true;
-                                for(x = 0; x < prenotifs.length; x++){
-                                    var id = prenotifs[x].notification_title.split('-');
-                                    if(overdue[i].work_order_id == id[1]){
-                                        console.log("Do not create notif OVERDUE");
-                                        create = false;
-                                    }
-                                }
-                                if(create){
-                                    var notif = {
-                                        date : new Date(),
-                                        farm_id : overdue[i].farm_id,
-                                        notification_title : "Work Order Overdue: WO-"+overdue[i].work_order_id,
-                                        url : "/farms/work_order&id=" + overdue[i].work_order_id,
-                                        icon : "exclamation-triangle",
-                                        color : "danger"
-                                    };
-                                    notifModel.createNotif(notif, function(err, success){
-                                    });
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    });
+//                     workOrderModel.getOverdueWorkorders(function(err, overdue){
+//                         if(err)
+//                             throw err;
+//                         else{
+//                             //loop through
+//                             var i,x;
+//                             for(i = 0; i < overdue.length; i++){
+//                                 var create = true;
+//                                 for(x = 0; x < prenotifs.length; x++){
+//                                     var id = prenotifs[x].notification_title.split('-');
+//                                     if(overdue[i].work_order_id == id[1]){
+//                                         console.log("Do not create notif OVERDUE");
+//                                         create = false;
+//                                     }
+//                                 }
+//                                 if(create){
+//                                     var notif = {
+//                                         date : new Date(),
+//                                         farm_id : overdue[i].farm_id,
+//                                         notification_title : "Work Order Overdue: WO-"+overdue[i].work_order_id,
+//                                         url : "/farms/work_order&id=" + overdue[i].work_order_id,
+//                                         icon : "exclamation-triangle",
+//                                         color : "danger"
+//                                     };
+//                                     notifModel.createNotif(notif, function(err, success){
+//                                     });
+//                                 }
+//                             }
+//                         }
+//                     });
+//                 }
+//             });
+//         }
+//     });
     
     
-    notifModel.getNotifs(function(err, notifs){
-        if(err)
-            throw err;
-        else{
-            // console.log(notifs);
+//     notifModel.getNotifs(function(err, notifs){
+//         if(err)
+//             throw err;
+//         else{
+//             // console.log(notifs);
 
 
-            for(i = 0; i < notifs.length; i++){
-				notifs[i].date = dataformatter.formatDate(new Date(notifs[i].date), 'mm DD, YYYY');
-			}
+//             for(i = 0; i < notifs.length; i++){
+// 				notifs[i].date = dataformatter.formatDate(new Date(notifs[i].date), 'mm DD, YYYY');
+// 			}
 
-            req.notifs = notifs;
-            // res.send
-            return next();
-        }
+//             req.notifs = notifs;
+//             // res.send
+//             return next();
+//         }
        
-    });
+//     });
     
-}
+// }
 
 exports.updateNotif = function(req,res){
     var id = req.query.notification_id;

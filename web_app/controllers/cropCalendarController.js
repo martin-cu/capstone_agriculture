@@ -78,7 +78,16 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 									var farm_list = [];
 									for (var i = 0; i < list.length; i++) {
 										farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
-										list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays(new Date(list[i].sow_date_completed), new Date());
+
+										// if (list[i].sow_date_completed != null) {
+										// 	list[i].sow_date_completed = new Date(list[i].sow_date_completed);
+										// 	if (list[i].method == 'Transplanting') {
+										// 		list[i].sow_date_completed.setDate((list[i].sow_date_completed).getDate() - 15);											
+										// 	}
+
+										// }
+										
+										list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays((list[i].sow_date_completed), new Date());
 									}
 									// console.log(list);
 									pestDiseaseModel.getDiagnosisSymptomsSummarized(null, function(err, symptoms){
