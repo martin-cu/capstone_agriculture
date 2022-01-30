@@ -2208,8 +2208,10 @@ exports.ajaxGetPD = function(req, res){
 exports.addDiagnosis = function(req,res){
 	var workorders = [];
 	var i;
-	for(i = 0; i < req.body.solution.length; i++)
-		workorders.push(req.body.solution[i].split("|"));
+	if(req.body.solution != null)
+		for(i = 0; i < req.body.solution.length; i++)
+			workorders.push(req.body.solution[i].split("|"));
+	
 	var pd = req.body.pd;
 	pd = pd.split("|");
 	var diagnosis = {
@@ -2381,6 +2383,77 @@ exports.addDiagnosis = function(req,res){
 									workOrderModel.createWorkOrder(temp_wo, function(err, success){});
 								}
 								
+								//Create Cancelled Workorders
+								var recommended_solutions = [];
+								//Get pest/disease solutions
+								if(pd[1] == "Pest"){
+									pestdiseaseModel.getPestSolutions(pd[0], function(err, solutions){
+										var i;
+										for(i = 0; i < solutions.length; i++){
+											
+											var x;
+											for(x = 0;x < workorders.length; x++){
+												var create = true;
+												console.log(solutions[i].detail_name + " --------- " + workorders[x][1]);
+												if(solutions[i].detail_name == workorders[x][1] && solutions[i].detail_desc == workorders[x][2]){
+													//Do not create
+													create = false;
+												}
+											}
+											if(create){
+												//Create cancelled workorder
+												var temp_wo = {
+													type : solutions[i].detail_name,
+													notes : "Recommendation Not Followed",
+													date_created : dataformatter.formatDate(new Date(), 'MM-DD-YYYY'),
+													date_start : dataformatter.formatDate(new Date(), 'MM-DD-YYYY'),
+													date_due : today,
+													crop_calendar_id : diagnosis.calendar_id,
+													status : "Cancelled"
+												}
+												//Add cancelled work order
+												console.log("Add cancelled wo");
+												workOrderModel.createWorkOrder(temp_wo, function(err, success){});
+											}
+										}
+									});
+								}
+								else if(pd[1] == "Disease"){
+									pestdiseaseModel.getDiseaseSolutions(pd[0], function(err, solutions){
+										var i;
+										for(i = 0; i < solutions.length; i++){
+											
+											var x;
+											for(x = 0;x < workorders.length; x++){
+												var create = true;
+												console.log(solutions[i].detail_name + " --------- " + workorders[x][1]);
+												if(solutions[i].detail_name == workorders[x][1] && solutions[i].detail_desc == workorders[x][2]){
+													//Do not create
+													create = false;
+												}
+											}
+											if(create){
+												//Create cancelled workorder
+												var temp_wo = {
+													type : solutions[i].detail_name,
+													notes : "Recommendation Not Followed",
+													date_created : dataformatter.formatDate(new Date(), 'MM-DD-YYYY'),
+													date_start : dataformatter.formatDate(new Date(), 'MM-DD-YYYY'),
+													date_due : today,
+													crop_calendar_id : diagnosis.calendar_id,
+													status : "Cancelled"
+												}
+												//Add cancelled work order
+												console.log("Add cancelled wo");
+												workOrderModel.createWorkOrder(temp_wo, function(err, success){});
+											}
+										}
+									});
+								}
+								//Set cancelled work orders
+
+
+
 								//Create new PD_Recommendation
 								//pestdiseaseModel.addNewPDRecommendation()
 								// res.redirect("/pest_and_disease/diagnose");

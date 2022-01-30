@@ -375,7 +375,8 @@ exports.getDetailedCropCalendar = function(req, res) {
 					if(wos[i].type != "Land Preparation" && wos[i].type != "Sow Seed" && wos[i].type != "Fertilizer Application" && wos[i].type != "Harvest")
 						pd_wos.push(wos[i]);
 				}
-				
+				console.log("pd_wos");
+				console.log(pd_wos);
 			}
 
 			var fertilizer_query = {}
