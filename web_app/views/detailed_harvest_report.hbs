@@ -3,34 +3,89 @@
 <div class="container-fluid" style="color: #332C1F;">
 
 	<div class="d-sm-flex justify-content-between align-items-center mb-4">
-	    <h3 class="text-dark mb-0">Detailed Harvest Report: {{farm_name}}</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
+	    <h3 class="text-dark mb-0">Farm Productivity Reports</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>Date<br><br></a>
 	</div>
 
-	<div class="w-100 m-3">
-		<div class="" style="width: 450px; max-width: 850px !important;">
-			<label class="text-center text-dark font-weight-bold">{{farm_name}} Harvests ({{range.start}} to {{range.end}})</label>
-			<div class="wrapper card rounded">
-				
-				<canvas id="seed_chart"></canvas>
-			</div>
-			<div class="d-flex">
-				Consistently highest yield: {{seed_chart.obj.seed}} with mean produce of {{seed_chart.obj.avg}} per harvest
+	<div class="row">
+		<div class="col-lg-12 col-lg-12 col-xxl-12">
+			<div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto;">
+
+				{{!-- START CARD HEADER --}}
+				<div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
+					<div class="col" style="max-width: 70px; padding-top: 2px">
+				        <button type="submit" class="btn btn-primary btn-md" id="back" onclick='window.location="/farm_productivity_report"'> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
+				        	<i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
+				        </button>        
+				    </div>
+
+				    <div class="col" style="margin-right: 650px; padding-top: 15px">
+				    	<h6>Detailed Harvest Report: {{farm_name}}</h6> <!-- Change to handlebar later -->
+				    </div>
+
+				    <i class="fas fa-print" style="color: rgb(255,255,255);" value="print" id="print" type="button"></i>
+				</div>
+
+				<div class="card-body" style="color: #332C1F;">
+					<div class="row">
+						<div class="col" style="padding-top: 5px;">
+							<div class="m-3">
+								<div class="d-flex w-100 flex-column">
+									<div class="w-100">
+										<div class="w-100 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+											<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
+												{{farm_name}} Harvests ({{range.start}} to {{range.end}})
+											</div>
+											<div class="wrapper mx-3">
+												<canvas id="seed_chart" style="width: 450px; max-width: 850px !important;"></canvas>	
+											</div>
+										</div>
+									</div>
+									<div class="mt-3 w-100">
+										Consistently highest yield: {{seed_chart.obj.seed}} with mean produce of {{seed_chart.obj.avg}} per harvest
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col" style="padding-top: 5px;">
+							<div class="m-3">
+								<div class="d-flex w-100 flex-column">
+									<!-- style="width: 950px; max-width: 1150px !important;" -->
+									<div class="w-100">
+										<div class="w-100 mr-5 border border-secondary d-flex flex-column rounded" style="">
+											<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
+												Nutrient Application Timing
+											</div>
+											<div class="wrapper mx-3 w-100 pr-5" style="">
+												<canvas class="mt-2" id="nutrient_chart" style="width: 750px; height: 400px;"></canvas>
+											</div>
+										</div>
+									</div>
+									<div class="mt-3 w-100">
+										<div class="d-flex flex-column" style="font-size: 14px;">
+											<div class="text-muted mx-4">
+												* The chart aims to show the relationship between the timing and amount of recommended nutrient applications vs actual applications. It presents the data linearly by days in the x-axis. 
+											</div>
+											<div class="text-muted mx-4">
+												* Data concerning pests and diseases implies its diagnosis in accordance with its date of appearance 
+											</div>
+											<div class="text-muted mx-4">
+												* Notice relationship between pests and disease occurence with K nutrient application
+											</div>
+										</div>
+											
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
-	</div>
-	<!-- style="width: 950px; max-width: 1150px !important;" -->
-	<div class="w-100 m-3">
-		<div class="" style="width: 750px;">
-			<label class="text-center text-dark font-weight-bold">Nutrient Application Timing</label>
-			<div class="wrapper card rounded">
-				
-				<canvas id="nutrient_chart"></canvas>
-			</div>
-			<div class="d-flex">
-				
-			</div>
-		</div>
-	</div>
+	</div>							
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

@@ -133,7 +133,7 @@ exports.processNutrientChart = function(nutrients, pd) {
 	}
 	//console.log(dataset);
 	var type = ['Pest', 'Disease'];
-	var pd_color = ['rgba(165, 42, 42, 0.2)',, 'rgba(75,0,130, 0.2)',];
+	var pd_color = ['rgba(165, 42, 42, 0.3)', 'rgba(0,0,0, .3)',];
 	color_index = 0;
 	
 	for (var x = 0; x < type.length; x++) {
