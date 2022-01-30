@@ -67,9 +67,10 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 	var printable = [];
 	var og_pressure = [];
 	var filtered_nutrients;
+	var temp_nutrients;
 	for (var i = 0; i < unique.length; i++) {
 		var chart_data = { labels: ['Seed Rate', 'Avg Temp', 'Avg Humidity', 'Avg Pressure', 'Avg Rainfall',
-		 'User Nutrient Application', 'Recommended Nutrient Application', 'Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
+		 'User Nutrient Application', 'Recommended Nutrient Application', 'Total','Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
 		chart_data.datasets = [];
 		chart_data.title = unique[i].seed_name;
 		//console.log(chart_data.title);
@@ -95,10 +96,21 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 						count_avg++;
 					}
 				}
+
 				filtered_nutrients = nutrient.filter(e => e.calendar_id == data[x].calendar_id);
-				
-				dataset_obj.data.splice(5, 0, filtered_nutrients.filter(e => e.record_type == 'Nutrient User Generated').length);
-				dataset_obj.data.splice(6, 0, filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation').length);
+
+				temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient User Generated');
+				temp_nutrients = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
+				dataset_obj.data.splice(5, 0, temp_nutrients);
+
+				temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation' && e.followed == 'Followed');
+				temp_nutrients = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
+				dataset_obj.data.splice(6, 0, temp_nutrients);
+
+				temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation' && e.followed == 'Unfollowed');
+				temp_nutrients = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
+				temp_nutrients += dataset_obj.data[6];
+				dataset_obj.data.splice(7, 0, temp_nutrients);
 
 
 				chart_data.datasets.push(dataset_obj);
@@ -112,21 +124,31 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 	for (var i = 0; i < chart_arr.length; i++) {
 		printable = printable.concat(JSON.parse(JSON.stringify(chart_arr[i])));
 	}
-	
+		
 	var index = 0;
 
 	for (var i = 0; i < printable.length; i++) {
+		printable[i].labels.splice(7,1);
 		for (var x = 0; x < printable[i].datasets.length; x++) {
+			
 			for (var y = 0; y < og_pressure.length; y++) {
 				printable[i].datasets[x].data[2] = og_pressure[index];
 			}
 			index++;
+			printable[i].datasets[x].data[6] = `${printable[i].datasets[x].data[6]} / ${printable[i].datasets[x].data[6]}`;
+			printable[i].datasets[x].data.splice(7,1);
 		}
 	}
-
 	printable['total_harvest'] = total_harvest;
 	printable['avg'] = Math.round(total_harvest / count_avg * 100) / 100;
-	
+
+	for (var x = 0; x < chart_arr.length; x++) {
+		chart_arr[x].labels.splice(7, 1);
+		for (var i = 0; i < chart_arr[x].datasets.length; i++) {
+			chart_arr[x].datasets[i].data.splice(7, 1);
+		}
+	}
+			
 	if (harvest.filter(e => e.farm_name).length != 0) {
 		summary += `A total of ${harvest.filter(e => e.farm_name).length} farms conducted special/early harvest. `;
 		for (var i = 0; i < harvest.length; i++) {
@@ -161,14 +183,14 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 				data[i]['historical_yield'] = Math.round(history[x].avg_yield * 100)/100;
 			}
 		}
-		data[i].forecast_yield_id > data[i].harvested ? 
-				data[i].forecast_yield_id / data[i].harvested : 
-				data[i].forecast_yield_id / data[i].harvested
+		data[i].forecast > data[i].harvested ? 
+				data[i].forecast / data[i].harvested : 
+				data[i].forecast / data[i].harvested
 		data[i]['change'] = { 
-			val: data[i].forecast_yield_id != 'N/A' ? 
-				(data[i].harvested - data[i].forecast_yield_id) / data[i].forecast_yield_id : 0,
-			arrow: data[i].forecast_yield_id != 'N/A' ? 
-				data[i].harvested >= data[i].forecast_yield_id ? 
+			val: data[i].forecast != 'N/A' ? 
+				(data[i].harvested - data[i].forecast) / data[i].forecast : 0,
+			arrow: data[i].forecast != 'N/A' ? 
+				data[i].harvested >= data[i].forecast ? 
 				'up' :
 				'down'
 				: 'up'

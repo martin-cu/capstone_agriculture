@@ -63,11 +63,11 @@ exports.getSummaryHarvestReport = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
 
-	reportModel.getHarvestSummaryChart({ crop_plan: req.params.crop_plan }, function(err, chart_data) {
+	reportModel.getHarvestSummaryChart({ calendar_ids: req.query.id.split(',') }, function(err, chart_data) {
 		if (err)
 			throw err;
 		else {
-			reportModel.getNutrientRecommendationDetails(req.params.crop_plan, function(err, nutrient_reco_details) {
+			reportModel.getNutrientRecommendationDetails({ calendar_ids: req.query.id.split(',') }, function(err, nutrient_reco_details) {
 				if (err)
 					throw err;
 				else {

@@ -43,15 +43,34 @@ exports.getHarvestReports = function(next) {
 
 exports.getHarvestSummaryChart = function(data, next) {
 	var sql = "select cct.crop_plan, ft.farm_name, st.seed_name, fy.* from crop_calendar_table cct join seed_table st on st.seed_id = cct.seed_planted join farm_table ft using(farm_id) join forecasted_yield fy using(calendar_id) where ?";
-	sql = mysql.format(sql, data);
+	for (var i = 0; i < data.calendar_ids.length; i++) {
+		sql = mysql.format(sql, { 'cct.calendar_id': data.calendar_ids[i] });
+		if (i != data.calendar_ids.length - 1) {
+			sql += " or ?";
+		}
+		else {
+			sql += " ";
+		}
+	}
 	//console.log(sql);
 	mysql.query(sql, next);
 }
 
 exports.getNutrientRecommendationDetails = function(data, next) {
-	var sql = "select count(*) as count, t.*, date_add(target_application_date, interval 7 day) as target_date_end, case when target_application_date is not null then case when (date_completed >= target_application_date and date_completed <= date_add(target_application_date, interval 7 day)) then 'Followed' else 'Unfollowed' end else 'N/A' end as followed from ( SELECT case when work_order_id in (select wo_id from fertilizer_recommendation_items where wo_id = work_order_id) then 'Nutrient Generated Recommendation' else 'Nutrient User Generated' end as record_type, (select target_application_date from fertilizer_recommendation_items where wo_id = work_order_id) as target_application_date, wot.date_completed, wot.status, cct.calendar_id, wot.work_order_id FROM work_order_table wot JOIN crop_calendar_table cct on wot.crop_calendar_id = cct.calendar_id join wo_resources_table wrt USING (work_order_id) JOIN fertilizer_table ft ON wrt.item_id = ft.fertilizer_id WHERE cct.crop_plan = ? AND wot.type = 'Fertilizer Application' and wot.status = 'Completed') as t group by calendar_id, record_type, followed, status";
-	sql = mysql.format(sql, data);
-	//console.log(sql);
+	var sql = "select count(*) as count, t.*, date_add(target_application_date, interval 7 day) as target_date_end, case when target_application_date is not null then case when (date_completed >= target_application_date and date_completed <= date_add(target_application_date, interval 7 day)) then 'Followed' else 'Unfollowed' end else 'N/A' end as followed from ( SELECT case when work_order_id in (select wo_id from fertilizer_recommendation_items where wo_id = work_order_id) then 'Nutrient Generated Recommendation' else 'Nutrient User Generated' end as record_type, (select target_application_date from fertilizer_recommendation_items where wo_id = work_order_id) as target_application_date, wot.date_completed, wot.status, cct.calendar_id, wot.work_order_id FROM work_order_table wot JOIN crop_calendar_table cct on wot.crop_calendar_id = cct.calendar_id join wo_resources_table wrt USING (work_order_id) JOIN fertilizer_table ft ON wrt.item_id = ft.fertilizer_id WHERE ? AND wot.type = 'Fertilizer Application' and wot.status = 'Completed') as t group by calendar_id, record_type, followed, status";
+	for (var i = 0; i < data.calendar_ids.length; i++) {
+		sql = mysql.format(sql, { 'calendar_id': data.calendar_ids[i] });
+		if (i != data.calendar_ids.length - 1) {
+			sql += " or ?";
+		}
+		else {
+			sql += " ";
+		}
+	}
+	while(sql.includes('cct_calendar_id')) {
+		sql = sql.replace('cct_calendar_id', 'cct.calendar_id');
+	}
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

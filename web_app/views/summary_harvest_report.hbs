@@ -76,7 +76,40 @@
 			<canvas id="{{this.title}}" class="px-3 py-3" style="max-width: 100% !important; max-height: 400px !important;"></canvas>	
 		</div>
 		{{/each}}
+
 	</div>
+	<div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table">
+                    {{#each data.printable}}
+                		{{#if @first}}
+                		<th class="text-left">Farm Name</th>
+                        	<th class="text-left">Seed Name</th>
+                            {{#each this.labels}}
+                            <th class="text-center">{{this}}</th>
+                            {{/each}}
+                            {{/if}}
+
+                    	{{#each this.datasets}}
+                    	<tr>
+                    		<td class="text-left">{{this.label}}</td>
+                    		{{#if @first}}
+                    		<td class="text-left align-middle" rowspan="{{../datasets.length}}">{{../title}}</td>
+
+                    		{{/if}}
+                    		{{#each this.data}}
+                    		<td class="text-center">{{this}}</td>
+                    		{{/each}}
+                    	</tr>
+                    	{{/each}}
+
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+    </div>
+
 
 	<div class="row my-3">
 		 <div style="font-weight: bold;">
@@ -104,8 +137,8 @@
 							<td>{{this.farm_name}}</td>
 							<td>{{this.seed_name}}</td>
 							<td class="text-right">
-								{{#if forecast_yield_id}}
-								{{this.forecast_yield_id}} cavans/ha
+								{{#if forecast}}
+								{{this.forecast}} cavans/ha
 								{{else}}
 								N/A
 								{{/if}}
