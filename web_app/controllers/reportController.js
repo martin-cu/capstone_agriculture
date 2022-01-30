@@ -201,16 +201,26 @@ exports.getDetailedHarvestReport = function(req, res) {
 											//console.log(calendar);
 											var len = dateDiffInDays(new Date(calendar.sowing_date), new Date(calendar.harvest_date));
 											for (var i = 0; i < nutrient_chart.length; i++) {
-												nutrient_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(nutrient_chart[i].date_completed));
+												if (new Date(calendar.sowing_date > new Date(nutrient_chart[i].date_completed))) {
+													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(nutrient_chart[i].date_completed), new Date(calendar.sowing_date));
+												}
+												else {
+													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(nutrient_chart[i].date_completed));
+												}
 												
 												if (calendar.method == 'Transplanting')
 													nutrient_chart[i].dat += 15;
 
 												//console.log(nutrient_chart[i].dat);
 											}
-
+											console.log(pd_chart);
 											for (var i = 0; i < pd_chart.length; i++) {
-												pd_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(pd_chart[i].date_diagnosed));
+												if (new Date(calendar.sowing_date > new Date(nutrient_chart[i].date_completed))) {
+													pd_chart[i]['dat'] = dateDiffInDays(new Date(pd_chart[i].date_diagnosed), new Date(calendar.sowing_date));
+												}
+												else {
+													pd_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(pd_chart[i].date_diagnosed));
+												}
 
 												if (calendar.method == 'Transplanting')
 													pd_chart[i].dat += 15;

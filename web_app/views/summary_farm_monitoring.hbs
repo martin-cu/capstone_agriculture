@@ -547,7 +547,7 @@
 					// $(`[id='${obj[i].name}_ndvi_date']`).html('Last updated: '+formatDate(new Date(imagery[0].dt), 'mm DD, YYYY'));
 					// $(`[id='${obj[i].name}_ndvi_help']`).html(`N/A`);
 					if (obj[i].name == 'LA Farm WEST (Scenario 1)') {
-						stats.max = 48;
+						stats.max = 44;
 					}
 					appendNDVI(`id='${obj[i].name}_ndvi`, imagery[imagery.length-1], stats, obj[i].data);
 				});

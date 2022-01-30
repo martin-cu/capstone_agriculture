@@ -826,6 +826,8 @@ exports.completeYieldForecast = function(req, res) {
 											        	throw err;
 											        else {
 
+											        	
+											        	
 											        	var rainfall = 0;
 											             body_rainfall = body.filter(e => e.rain != undefined || e.rain != null);
 											        	if (body_rainfall.length != 0) {

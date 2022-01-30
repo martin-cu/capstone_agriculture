@@ -173,7 +173,7 @@ function prepareRainfallDisaster(rainfall, active_calendars) {
 				recommendation = "Monitor fields closely and drain fields before, during, and after the target date. Early harvest up to owner's discretion.";
 			}
 			else {
-				recommendation = 'Conduct early harvest before '+rainfaill.target_date;
+				recommendation = 'Conduct early harvest before '+rainfall.target_date;
 			}
 		}
 
