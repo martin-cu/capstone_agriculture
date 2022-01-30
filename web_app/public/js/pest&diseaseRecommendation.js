@@ -58,98 +58,68 @@ function renew(type, farm){
 		});
 	});	
 
-	// var farm_id = $("#farm_selected").val();
-	// var pd = $("#frequency_pd_id").val();
-	// pd = pd.split("|");
-	// var pd_id = pd[0];
-	// var type = pd[1];
-
-	// $.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id}, function(list){
-	// 	$("#diagnoses_list_table").empty();
-	// 	var i;
-	// 	// $("#pd_name").text(list[0].pd_name);
-	// 	// $("#pd_type").text(list[0].type);
-	// 	// $("#pd_desc").text(list[0].pd_desc);
-	// 	for(i = 0; i < list.length; i++){
-	// 		$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
-	// 	}
-	// });	
-
-	// //For chart 2
-	// $.get("/ajaxUpdateChart",  {type : type, farm_id : farm_id, year : year, pd_id: pd_id}, function(diagnosis_chart){
-	// 	var i, table;
-
-	// 	var farm_name, year_name;
-	// 	if(farm_id == "all"){
-	// 		farm_name = "All Farms";
-	// 	}
-	// 	else{
-	// 		farm_name = $("#farm_selected option:selected").text();
-	// 	}
-	// 	if(year == ""){
-	// 		year_name = "Past 5 Years";
-	// 	}
-	// 	else if(year == "all")
-	// 		year_name = "All-time";
-	// 	else{
-	// 		year_name = $("#year_selected option:selected").text();
-	// 	}
-	// 	$("#chart_title").text(year_name + " " + $("#pd_name").text() + " Occurrences for " + farm_name);
+}
 
 
-
-	// 	table = "#diagnoses_chart"; 
-	// 	$(table).empty();
-	// 	for(i = 0; i < diagnosis_chart.month_frequency.length; i++){
-	// 		$(table).append('<li><div class="bar" value="' + diagnosis_chart.month_frequency[i].frequency + '" data-percentage="' + diagnosis_chart.month_frequency[i].percent + '"></div><span>' + diagnosis_chart.month_frequency[i].month_label + '</span></li>');
-	// 	}
-
-	// 	table = "#diagnoses_numbers"; 
-	// 	$(table).empty();
-	// 	$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
-	// 	$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
-
-	// 	$('.bars li .bar').each(function(key, bar){
-	// 		var percentage = $(this).data('percentage');
-	// 		$(this).animate({
-	// 			'height' : percentage + '%'
-	// 		},1000)
-	// 	});
-	// });
+function update_color_meter(){
+    $(".probability_value").each(function(){
+        var value = $(this).text().slice(0,-1);
+		var meter;
+		var text_val;
+		if(parseInt(value) <= 35){
+			meter = 5;
+			text_val = "Low";
+		}
+		else if(parseInt(value) <= 65){
+			text_val = "Medium";
+			meter = 40;
+		}
+		else{
+			meter = 90;
+			text_val = "High";
+		}
+        var val = 214 - (meter * 2);
+        var rgb = "color : rgb(214, " + val + ", 19); width: 170px;border-style: none;padding: 0px 12px;font-size: 25px;line-height: 40px;text-align: left;";
+        $(this).attr("style",rgb);
+        if(value != ""){
+            $(this).text(parseInt(value) + " %");
+            // $(this).text(text_val);
+        }
+    });
 }
 
 $(document).ready(function() {
-	// console.log('Pest and disease recommendation');
+	
 	// setInterval(function() {
 	// 	//Store recommendation to db
-	// $.get('/get_crop_plans', {status : ["Active", "In-Progress"]}, function(plans){
-	// 	//Loop through each active crop calendar
-	// 	var i; 
-	// 	$.get('/agroapi/polygon/readAll', {}, function(polygons) {
-	// 		var center = [];
-	// 		for(i =0 ; i < plans.length; i++){
-	// 			for (var x = 0; x < polygons.length; x++) {
-	// 				console.log(polygons[x].name);
-	// 				if (plans[i].farm_name == polygons[x].name) {
-	// 					center = polygons[x].center;
-	// 					console.log(plans[i].calendar_id);
-	// 					$.get("/getPossiblePD", {center:center, calendar_id : plans[i].calendar_id, farm_id : plans[i].farm_id}, function(possibilities){
-	// 						// alert(plans[i].farm_name);
-	// 						//Store in recommendated db
-	// 						console.log(possibilities);
-	// 						var y; 
-	// 						for(y = 0; y < possibilities.length; y++){
-	// 							$.get("/storePDRecommendation", {calendar_id : plans[i].calendar_id, possibilities : possibilities[y], farm_id : plans[i].farm_id}, function(recommendation){
-
-	// 							});
-	// 						}
-	// 					});
+	// 	$.get('/get_crop_plans', {status : ["Active", "In-Progress"]}, function(plans){
+	// 		//Loop through each active crop calendar
+	// 		var i; 
+	// 		$.get('/agroapi/polygon/readAll', {}, function(polygons) {
+	// 			var center = [];
+	// 			for(i =0 ; i < plans.length; i++){
+	// 				for (var x = 0; x < polygons.length; x++) {
+	// 					// console.log(polygons[x].name);
+	// 					if (plans[i].farm_name == polygons[x].name) {
+	// 						center = polygons[x].center;
+	// 						// console.log(plans[i].calendar_id);
+	// 						$.get("/getPossiblePD", {center:center, calendar_id : plans[i].calendar_id, farm_id : plans[i].farm_id}, function(possibilities){
+	// 							// alert(plans[i].farm_name);
+	// 							//Store in recommendated db
+	// 							// console.log(possibilities);
+	// 							var y; 
+	// 							for(y = 0; y < possibilities.length; y++){
+	// 								$.get("/storePDRecommendation", {calendar_id : plans[i].calendar_id, possibilities : possibilities[y], farm_id : plans[i].farm_id}, function(recommendation){
+	
+	// 								});
+	// 							}
+	// 						});
+	// 					}
 	// 				}
 	// 			}
-	// 		}
+	// 		});
 	// 	});
-	// });
-	// }, 100000);
+	// }, 1000000);
 
 	//CROP CALENDAR CREATION
 	if (view == 'add_crop_calendar') {
@@ -219,6 +189,35 @@ $(document).ready(function() {
 			}
 		});
 	}
+	else if(view == "home"){
+		$.get('/get_crop_plans', {status : ["Active", "In-Progress"]}, function(plans){
+			//Loop through each active crop calendar
+			var i; 
+			$.get('/agroapi/polygon/readAll', {}, function(polygons) {
+				var center = [];
+				for(i =0 ; i < plans.length; i++){
+					for (var x = 0; x < polygons.length; x++) {
+						// console.log(polygons[x].name);
+						if (plans[i].farm_name == polygons[x].name) {
+							center = polygons[x].center;
+							// console.log(plans[i].calendar_id);
+							$.get("/getPossiblePD", {center:center, calendar_id : plans[i].calendar_id, farm_id : plans[i].farm_id}, function(possibilities){
+								// alert(plans[i].farm_name);
+								//Store in recommendated db
+								// console.log(possibilities);
+								var y; 
+								for(y = 0; y < possibilities.length; y++){
+									$.get("/storePDRecommendation", {calendar_id : plans[i].calendar_id, possibilities : possibilities[y], farm_id : plans[i].farm_id}, function(recommendation){
+	
+									});
+								}
+							});
+						}
+					}
+				}
+			});
+		});
+	}
 	else if(view == "diagnosis_frequency"){
 
 		var pd = $("#frequency_pd_id").val();
@@ -285,7 +284,10 @@ $(document).ready(function() {
 			}
 		});
 
-
+		$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
+			$("#pd_probability").text(probability.probability + "%");
+			update_color_meter();
+		});
 
 		$("#all-tab, #pests-tab, #diseases-tab").on("click", function(){
 			var id = $(this).attr("id");
@@ -406,8 +408,17 @@ $(document).ready(function() {
 			var pd_id = pd[0];
 			var type = pd[1];
 			
+			//empty tables and chart
+			$("#diagnoses_list_table").empty();
+			$("#diagnoses_numbers").empty();
+			$("#pd_probability").text("0");
+			$("#pd_common_stage").text("N/A");
+			$("#pd_stage_count").text("0")
+			$("#pd_highest_month").text("N/A");
+			$("#pd_highest_month_count").text("0");
+			
 			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
-				$("#diagnoses_list_table").empty();
+				
 				$("#pd_common_stage").text(list[0].common_stage);
 				$("#pd_stage_count").text(list[0].count);
 
@@ -450,7 +461,6 @@ $(document).ready(function() {
 				}
 
 				table = "#diagnoses_numbers"; 
-				$(table).empty();
 				$(table).append("<li><span>" + diagnosis_chart.highest + "</span></li>");
 				$(table).append("<li><span>" + diagnosis_chart.middle + "</span></li>");
 
@@ -462,6 +472,10 @@ $(document).ready(function() {
 				});
 			});
 
+			$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
+				$("#pd_probability").text(probability.probability + "%");
+				update_color_meter();
+			});
 			
 		});
 
@@ -485,6 +499,16 @@ $(document).ready(function() {
 			var pd_id = pd[0];
 			var type = pd[1];
 			
+			//empty tables and chart
+			$("#diagnoses_list_table").empty();
+			$("#diagnoses_numbers").empty();
+			$("#pd_probability").text("0");
+			$("#pd_common_stage").text("N/A");
+			$("#pd_stage_count").text("0")
+			$("#pd_highest_month").text("N/A");
+			$("#pd_highest_month_count").text("0");
+
+
 			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 				$("#diagnoses_list_table").empty();
 				$("#pd_common_stage").text(list[0].common_stage);
@@ -546,6 +570,11 @@ $(document).ready(function() {
 					$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
 				}
 			});
+
+			$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
+				$("#pd_probability").text(probability.probability + "%");
+				update_color_meter();
+			});
 		});
 	}
 });
@@ -559,6 +588,15 @@ $(document).on("change","#frequency_pd_id", function(){
 	pd = pd.split("|");
 	var pd_id = pd[0];
 	var type = pd[1];
+	
+	//empty tables and chart
+	$("#diagnoses_list_table").empty();
+	$("#diagnoses_numbers").empty();
+	$("#pd_probability").text("0");
+	$("#pd_common_stage").text("N/A");
+	$("#pd_stage_count").text("0")
+	$("#pd_highest_month").text("N/A");
+	$("#pd_highest_month_count").text("0");
 	
 	$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
 		$("#diagnoses_list_table").empty();
@@ -623,5 +661,10 @@ $(document).on("change","#frequency_pd_id", function(){
 		for(i = 0; i < result.symptoms.length; i++){
 			$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
 		}
+	});
+
+	$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
+		$("#pd_probability").text(probability.probability + "%");
+		update_color_meter();
 	});
 });
