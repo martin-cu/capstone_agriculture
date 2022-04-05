@@ -187,6 +187,9 @@ router.get('/farms/work_order&id=:work_order_id', notifController.getNotificatio
 router.post('/create_work_order', workOrderController.createWorkOrder);
 router.post('/edit_work_order', workOrderController.editWorkOrder);
 
+//User Management
+router.get('/user_management', notifController.getNotification , employeeController.getUsers);
+
 //Report
 router.get('/farm_productivity_report', notifController.getNotification ,reportController.getFarmProductivityReport);
 router.get('/farm_productivity/detailed', notifController.getNotification ,reportController.getDetailedReport);
