@@ -1688,7 +1688,7 @@ exports.getDiagnosisList = function(pd_id, type, farm_id, year, next){
 		sql = sql + " && YEAR(a.date_diagnosed) = " + year;
 
 	sql = sql + " ORDER BY date_diagnosed DESC";
-	// console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next); return(sql);
 };
 
@@ -1704,3 +1704,12 @@ exports.getDiagnosisSymptomsSummarized = function(farm_id, next){
 	mysql.query(sql, next); return(sql);
 }
 
+
+exports.getDBProbabilities = function(farm_id, next){
+	var sql = "SELECT * FROM capstone_agriculture_db.pd_probabilities pp WHERE NOT EXISTS(SELECT 1 FROM pd_probabilities pp2 WHERE pp.date < pp2.date) AND farm_id = ?;";
+	if(farm_id != null && farm_id != ""){
+		sql = mysql.format(sql, farm_id);
+	}
+
+	mysql.query(sql, next); return(sql);
+}

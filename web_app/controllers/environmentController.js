@@ -1897,15 +1897,35 @@ exports.getDiagnoses = function(req, res) {
 											if(err)
 												throw err;
 											else{
-												html_data["possibilities"] = possibilities;
-												html_data["symptom"] = symptoms;
-												html_data["pest_list"] = pd_list;
-												html_data["pest_diagnoses"] = pest_diagnoses;
-												html_data["disease_diagnoses"] = disease_diagnoses;
-												html_data["diagnoses"] = diagnoses;
-												html_data["farms"] = farms;
-												html_data["notifs"] = req.notifs;
-												res.render('pest_and_disease_diagnoses', html_data);
+												//INSERT PERCENTAGE HERE
+												pestdiseaseModel.getDBProbabilities(farms[0].farm_id, function(err, percentage){
+													if(err){
+														console.log(err);
+													}
+													else{
+														if(percentage.length > 0){
+															for(i = 0; i < possibilities.length; i++){
+																possibilities[i]["percent"] = "N/A";
+																for(x = 0; x < percentage.length; x++)
+																	if(possibilities[i].pd_type == percentage[x].pd_type && possibilities[i].pd_id == percentage[x].pd_id)
+																		possibilities[i]["percent"] = percentage[x].probability + "%";
+															}
+														}
+														else{
+															for(i = 0; i < possibilities.length; i++)
+															possibilities[i]["percent"] = "N/A"
+														}
+													}
+													html_data["possibilities"] = possibilities;
+													html_data["symptom"] = symptoms;
+													html_data["pest_list"] = pd_list;
+													html_data["pest_diagnoses"] = pest_diagnoses;
+													html_data["disease_diagnoses"] = disease_diagnoses;
+													html_data["diagnoses"] = diagnoses;
+													html_data["farms"] = farms;
+													html_data["notifs"] = req.notifs;
+													res.render('pest_and_disease_diagnoses', html_data);
+												});
 											}
 										});
 									});
@@ -2560,6 +2580,7 @@ exports.addDiagnosis = function(req,res){
 
 exports.ajaxGetPossibilitiesBasedOnSymptoms = function(req,res){
 	console.log(req.query);
+	var farm_id = req.query.farm_id;
 	var symptoms = req.query.symptoms;
 	if(symptoms != null){
 		var symptoms_count = symptoms.length;
@@ -2578,7 +2599,27 @@ exports.ajaxGetPossibilitiesBasedOnSymptoms = function(req,res){
 		else{
 			console.log(possibilities);
 			//filter
-			res.send(possibilities);
+
+			pestdiseaseModel.getDBProbabilities(farm_id, function(err, percentage){
+				if(err){
+					console.log(err);
+				}
+				else{
+					if(percentage.length > 0){
+						for(i = 0; i < possibilities.length; i++){
+							possibilities[i]["percent"] = "N/A";
+							for(x = 0; x < percentage.length; x++)
+								if(possibilities[i].pd_type == percentage[x].pd_type && possibilities[i].pd_id == percentage[x].pd_id)
+									possibilities[i]["percent"] = percentage[x].probability + "%";
+						}
+					}
+					else{
+						for(i = 0; i < possibilities.length; i++)
+						possibilities[i]["percent"] = "N/A"
+					}
+				}
+				res.send(possibilities);
+			});
 		}
 	});
 
@@ -2615,7 +2656,11 @@ exports.getRecommendationDiagnosis = function(req,res){
 				pestdiseaseModel.getPestSymptoms(id, function(err, symptoms){
 					// console.log(recommended_solutions);
 					// console.log(symptoms);
-					res.send({recommended_solutions: recommended_solutions, symptoms : symptoms});
+
+					pestdiseaseModel.getPestPreventions(id, function(err, preventions){
+						
+						res.send({recommended_solutions: recommended_solutions, symptoms : symptoms, preventions : preventions});
+					});
 				});
 			}
 		});
@@ -2639,7 +2684,10 @@ exports.getRecommendationDiagnosis = function(req,res){
 				pestdiseaseModel.getDiseaseSymptoms(id, function(err, symptoms){
 					// console.log(recommended_solutions);
 					// console.log(symptoms);
-					res.send({recommended_solutions: recommended_solutions, symptoms : symptoms});
+
+					pestdiseaseModel.getDiseasePreventions(id, function(err, preventions){
+						res.send({recommended_solutions: recommended_solutions, symptoms : symptoms, preventions: preventions});
+					});
 				});
 
 			}
@@ -3340,8 +3388,11 @@ exports.ajaxDiagnosisListPerPD = function(req,res){
 						diagnosis_list[0]["common_stage"] = frequency[0].stage_diagnosed;
 					}
 					else{
-						diagnosis_list[0]["count"] = 0;
-						diagnosis_list[0]["common_stage"] = "N/A";
+						if(diagnosis_list.length > 0){
+							
+						}
+						// diagnosis_list[0]["count"] = 0;
+						// diagnosis_list[0]["common_stage"] = "N/A";
 					}
 				}
 				res.send(diagnosis_list);
@@ -3386,4 +3437,70 @@ exports.getSinglePDProbabilitity = function(req,res){
 			}
 		}
 	});
+}
+
+
+
+
+
+//APRIL 07, 2022
+exports.checkExistingPreventionWo = function(req, res){
+	var preventions = req.query.preventions;
+	var farm_name = req.query.farm_name;
+
+	cropCalendarModel.getCurrentCropCalendar({farm_id : farm_name}, function(err, crop_calendar){
+		if(crop_calendar.length > 0){
+			var wo_query = {
+				where : { key : ["calendar_id"], value : [crop_calendar[0].calendar_id]}
+			}
+			workOrderModel.getWorkOrders(wo_query, function(err, wos){
+				var i,x;
+				
+				for(i = 0; i < preventions.length; i++){
+					for(x = 0; x < wos.length; x++){
+						if(wos[x].type == preventions[i].detail_name){
+							preventions[i]["made"] = true;
+						}
+					}
+				}
+				console.log(preventions);
+				res.send({preventions : preventions, calendar_id : crop_calendar[0].calendar_id});
+			});
+		}
+		else{
+			res.send({active_calendar : true}); //no existing calendar active
+		}
+	});
+}
+
+
+exports.createPreventionWo = function(req, res){
+	console.log(req.body);
+	var calendar_id = req.body.calendar_id;
+	var workorders = [];
+	var preventions = req.body.preventions;
+	var i;
+	for(i = 0; i < preventions.length; i++)
+		workorders.push(preventions[i].split('|'));
+	
+	//Create new WorkOrders
+	var today = new Date(); 
+	today.setDate(today.getDate() + 7);	
+	// console.log(workorders[0][1]);
+	for(i = 0;i < workorders.length; i++){
+
+		var temp_wo = {
+			type : workorders[i][1],
+			notes : workorders[i][2],
+			date_created : new Date(),
+			date_start : new Date(),
+			date_due : today,
+			crop_calendar_id : calendar_id
+		}
+		console.log(temp_wo);
+		console.log("Create work order from diagnosis");
+		workOrderModel.createWorkOrder(temp_wo, function(err, success){});
+	}
+
+	res.redirect("/pest_and_disease/frequency");
 }

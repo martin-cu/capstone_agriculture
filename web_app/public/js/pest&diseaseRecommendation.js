@@ -282,6 +282,10 @@ $(document).ready(function() {
 			for(i = 0; i < result.symptoms.length; i++){
 				$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
 			}
+			
+			for(i = 0; i < result.preventions.length; i++){
+				$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray; " hidden> <span style="color: gray;" hidden>Create work order</span> </row> </div>');
+			}
 		});
 
 		$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : "all"}, function(probability){
@@ -418,9 +422,11 @@ $(document).ready(function() {
 			$("#pd_highest_month_count").text("0");
 			
 			$.get("/ajaxGetDiagnosisList", {pd_id: pd_id, type : type, farm_id : farm_id, year : year}, function(list){
+				if(list.length > 0){
+					$("#pd_common_stage").text(list[0].common_stage);
+					$("#pd_stage_count").text(list[0].count);
+				}
 				
-				$("#pd_common_stage").text(list[0].common_stage);
-				$("#pd_stage_count").text(list[0].count);
 
 				var i;
 				// $("#pd_name").text(list[0].pd_name);
@@ -429,6 +435,7 @@ $(document).ready(function() {
 				for(i = 0; i < list.length; i++){
 					$("#diagnoses_list_table").append('<tr><td>' + list[i].date_diagnosed + '</td> <td>' + list[i].date_solved + '</td> <td>' + list[i].farm_name + '</td> <td>' + list[i].crop_plan + '</td> <td>' + list[i].stage_diagnosed + '</td> <td> <div class="dropdown no-arrow" style="width : 50px;"> <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"> <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i> </button> <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in"> <a class="dropdown-item notSidebar" href="/pest_and_disease/diagnose_details?id=' + list[i].diagnosis_id + '" >&nbsp;View Details</a> </div> </div> </td> </tr>');
 				}
+				
 			});	
 
 
@@ -470,8 +477,51 @@ $(document).ready(function() {
 						'height' : percentage + '%'
 					},1000)
 				});
+
+
+
+				$.get('/generateRecommendationDiagnosis',{farm_name : farm_id, type : type, pd_id : pd_id}, function(result){
+					//ADD THIS TO CHANGE OF CROP CALENDAR AND FARM TYPE
+					if(farm_id == "all"){
+						var radio = "hidden";
+						var checked = "";
+						for(i = 0; i < result.preventions.length; i++){
+							$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+						}
+					}
+					else{
+						$("#prevention_table").empty();
+						//Check if WO are existing
+						$.get('/checkExistingPreventionWo', {preventions : result.preventions, farm_name : farm_id}, function(res2){
+							var checked = "";
+							var radio;
+							if(res2.active_calendar){
+								//NO EXISTING ID
+								radio = "hidden";
+								for(i = 0; i < result.preventions.length; i++){
+									$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+								}
+							}
+							else{
+								$("#prevention_calendar_id").val(res2.calendar_id);
+								radio = "";
+								var i;
+								for(i = 0; i < res2.preventions.length; i++){
+									if(res2.preventions[i].made){
+										checked = "checked disabled";
+									}
+									else
+										checked = " ";
+									$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+								}
+							}
+						});
+					}
+				});
+
 			});
 
+			
 			$.get('/ajaxGetSingleProbability', {pd_id : pd_id, type : type, farm_id : farm_id}, function(probability){
 				$("#pd_probability").text(probability.probability + "%");
 				update_color_meter();
@@ -564,10 +614,47 @@ $(document).ready(function() {
 				});
 			});
 
-			$.get('/generateRecommendationDiagnosis',{farm_name : "all", type : type, pd_id : pd_id}, function(result){
+			$.get('/generateRecommendationDiagnosis',{farm_name : farm_id, type : type, pd_id : pd_id}, function(result){
 				$("#symptom_table").empty();
 				for(i = 0; i < result.symptoms.length; i++){
 					$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
+				}
+				
+				//ADD THIS TO CHANGE OF CROP CALENDAR AND FARM TYPE
+				if(farm_id == "all"){
+					var radio = "hidden";
+					var checked = "";
+					for(i = 0; i < result.preventions.length; i++){
+						$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+					}
+				}
+				else{
+					$("#prevention_table").empty();
+					//Check if WO are existing
+					$.get('/checkExistingPreventionWo', {preventions : result.preventions, farm_name : farm_id}, function(res2){
+						var checked = "";
+						var radio;
+						if(res2.active_calendar){
+							//NO EXISTING ID
+							radio = "hidden";
+							for(i = 0; i < result.preventions.length; i++){
+								$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+							}
+						}
+						else{
+							$("#prevention_calendar_id").val(res2.calendar_id);
+							radio = "";
+							var i;
+							for(i = 0; i < res2.preventions.length; i++){
+								if(res2.preventions[i].made){
+									checked = "checked disabled";
+								}
+								else
+									checked = " ";
+								$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+							}
+						}
+					});
 				}
 			});
 
@@ -660,6 +747,44 @@ $(document).on("change","#frequency_pd_id", function(){
 		$("#symptom_table").empty();
 		for(i = 0; i < result.symptoms.length; i++){
 			$("#symptom_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card details" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.symptoms[i].detail_name + '</h4> <p style="color: gray;">' + result.symptoms[i].detail_desc + '</p> </div>');
+		}
+
+
+		//ADD THIS TO CHANGE OF CROP CALENDAR AND FARM TYPE
+		if(farm_id == "all"){
+			var radio = "hidden";
+			var checked = "";
+			for(i = 0; i < result.preventions.length; i++){
+				$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+			}
+		}
+		else{
+			$("#prevention_table").empty();
+			//Check if WO are existing
+			$.get('/checkExistingPreventionWo', {preventions : result.preventions, farm_name : farm_id}, function(res2){
+				var checked = "";
+				var radio;
+				if(res2.active_calendar){
+					//NO EXISTING ID
+					radio = "hidden";
+					for(i = 0; i < result.preventions.length; i++){
+						$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+					}
+				}
+				else{
+					$("#prevention_calendar_id").val(res2.calendar_id);
+					radio = "";
+					var i;
+					for(i = 0; i < res2.preventions.length; i++){
+						if(res2.preventions[i].made){
+							checked = "checked disabled";
+						}
+						else
+							checked = " ";
+						$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+					}
+				}
+			});
 		}
 	});
 

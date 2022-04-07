@@ -120,6 +120,7 @@
                                                                             <th colspan="3">Pest/Disease</th>
                                                                             <th colspan="2">Type</th>
                                                                             <th colspan="1">Matched Symptoms</th>
+                                                                            <th colspan="1">Probability</th>
                                                                             <th colspan="1"></th>
                                                                         </tr>
                                                                     </thead>
@@ -129,6 +130,7 @@
                                                                                 <td colspan="3">{{this.pd_name}}</td>
                                                                                 <td colspan="2">{{this.pd_type}}</td>
                                                                                 <td colspan="1">N/A</td>
+                                                                                <td colspan="1">{{this.percent}}</td>
                                                                                 <td colspan="1"><input form="add_diagnosis_form" class="diagnosis_radio" type="radio" id="" name="pd" value="{{this.pd_id}}|{{this.pd_type}}"></td>
                                                                             </tr>
                                                                         {{/each}}
