@@ -425,7 +425,46 @@ li > span {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
+                                                                <tr class="">
+                                                                    <td colspan="4" class="my-3">
+                                                                        <div class="d-flex justify-content-center w-100">
+                                                                            <div class="text-muted text-center">
+                                                                                or manually create work order:
+                                                                            </div>
+                                                                            <div class="float-right">
+                                                                                <button type="button" onclick="appendManualWO('#fertilizer_recommendation_table', 0)" class="btn btn-primary" id="add_order">Add Order</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
 
+                                                                <tr>
+                                                                    <td class="align-bottom">
+                                                                        <div class="col">
+                                                                            <input class="form-control" type="date" name="manual_date" id="manual_date">       
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="align-bottom">
+                                                                        <div class="col">
+                                                                            <select class="form-select" name="manual_fertilizer" id="manual_fertilizer">
+                                                                                <option value=""></option>
+                                                                            </select>    
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="align-bottom">
+                                                                        <div class="col">
+                                                                            <textarea type="text" class="form-control" id="manual_desc" name="manual_desc" rows="2" style="resize: none;" placeholder="User generated work order..."></textarea>    
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="align-bottom">
+                                                                        <div class="d-flex">
+                                                                            <div class="col">
+                                                                                <input class="form-control mr-3" type="number" name="manual_amt" id="manual_amt" min="1" step="1" value="1" style="width: 100px;">
+                                                                            </div>
+                                                                            <button type="button" onclick="removeManualWO(this)" class="icon-btn-trash"><i class="fas fa-trash"></i></button>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -557,6 +596,8 @@ li > span {
                                                         <td style="text-align: left;">Description</td>
                                                         <td style="text-align: left;"><input type="checkbox" form="" id="" value=""></td>
                                                     </tr>
+                                                    
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -633,6 +674,7 @@ function goBack() {
 // MULTI-STEP FROM INDICATORS
 
 var currentTab = 0; // Current tab is set to be the first tab (0)
+var loaded = 0;
 showTab(currentTab); // Display the current tab
 
 function showTab(n) {
@@ -648,7 +690,6 @@ function nextPrev(n) {
   // This function will figure out which tab to display
   var x = document.getElementsByClassName("tab");
 
-  
   // Exit the function if any field in the current tab is invalid:
   if (!dataValidation(currentTab+2)) return false;
   // Hide the current tab:
@@ -658,7 +699,6 @@ document.getElementsByClassName("step")[currentTab].className += " finish";
 
   // Increase or decrease the current tab by 1:
   currentTab = currentTab + n;
-
   // if you have reached the end of the form...
   if (currentTab >= x.length) {
     // ... the form gets submitted:

@@ -64,10 +64,7 @@
 <div class="col" style="padding-top: 5px;">
 
 <div class="m-3">
-	<div class="d-flex w-100">
-		<!-- <canvas id="canvas" style="width: 250px !important; height: 250px !important;">
-			
-		</canvas> -->
+	<!-- <div class="d-flex w-100">
 		{{#each data.chart_data}}
 		<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
 			<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
@@ -76,8 +73,40 @@
 			<canvas id="{{this.title}}" class="px-3 py-3" style="max-width: 100% !important; max-height: 400px !important;"></canvas>	
 		</div>
 		{{/each}}
+	</div> -->
 
+	<div class="row">
+		<div class="d-flex w-100">
+			<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+				<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
+					Temperature (Avg)
+				</div>
+				<canvas id="Temperature" class="px-3 py-3" style="max-width: 100% !important; max-height: 400px !important;"></canvas>	
+			</div>
+			<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+				<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
+					Humidity (Avg)
+				</div>
+				<canvas id="Humidity" class="px-3 py-3" style="max-width: 100% !important; max-height: 400px !important;"></canvas>	
+			</div>
+		</div>
+
+		<div class="d-flex w-100 mt-3">
+			<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+				<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
+					Pressure (Avg)
+				</div>
+				<canvas id="Pressure" class="px-3 py-3" style="max-width: 100% !important; max-height: 400px !important;"></canvas>	
+			</div>
+			<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+				<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
+					Rainfall (Avg)
+				</div>
+				<canvas id="Rainfall" class="px-3 py-3" style="max-width: 100% !important; max-height: 400px !important;"></canvas>	
+			</div>
+		</div>
 	</div>
+
 	<div class="row">
         <div class="col">
             <div class="table-responsive">
@@ -328,9 +357,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
-	var obj = {{{data.json_chart_data}}};
-	console.log(obj);
-
+	// var obj = {{{data.json_chart_data}}};
+	// console.log(obj);
+	var env_obj = {{{data.env_chart}}};
+	console.log(env_obj);
 	var default_opt = {
 			legend: {
 			position: 'bottom',
@@ -416,24 +446,52 @@
 	var color_arr = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 
 	'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(231,233,237)'];
 
-	for (var i = 0; i < obj.length; i++) {
-		var target = document.getElementById(obj[i].title);
-		var options = {
-			type: 'radar', data: { labels: obj[i].labels, datasets: [], options: default_opt }
-		}
+	var env_options;
+	for (var key in env_obj) {
+		if (env_obj.hasOwnProperty(key)) {
+			env_options = {
+				type: 'bar',
+				data: {
+					labels: [key],
+					datasets: []
+				},
+				options: {
+					indexAxis: 'y'
+				}
+			}
 
-		for (var x = 0; x < obj[i].datasets.length; x++) {
-			options.data.datasets.push({
-				label: obj[i].datasets[x].label,
-				backgroundColor: color(color_arr[x]).alpha(0.2).rgbString(),
-				borderColor: color_arr[x],
-				pointBackgroundColor: color_arr[x],
-				data: obj[i].datasets[x].data
-			});
+			for (var i = 0; i < env_obj[key].data.length; i++) {
+				env_options.data.datasets.push({
+					axis: 'y',
+					label: env_obj.labels[i],
+					data: [env_obj[key].data[i]],
+					backgroundColor: color(color_arr[i]).alpha(0.8).rgbString(),
+					borderColor: color_arr[i]
+				});
+			}
+			//console.log(env_options);
+			new Chart(document.getElementById(key), env_options);
 		}
-
-		new Chart(target, options);
 	}
+
+	// for (var i = 0; i < obj.length; i++) {
+	// 	var target = document.getElementById(obj[i].title);
+	// 	var options = {
+	// 		type: 'radar', data: { labels: obj[i].labels, datasets: [], options: default_opt }
+	// 	}
+
+	// 	for (var x = 0; x < obj[i].datasets.length; x++) {
+	// 		options.data.datasets.push({
+	// 			label: obj[i].datasets[x].label,
+	// 			backgroundColor: color(color_arr[x]).alpha(0.2).rgbString(),
+	// 			borderColor: color_arr[x],
+	// 			pointBackgroundColor: color_arr[x],
+	// 			data: obj[i].datasets[x].data
+	// 		});
+	// 	}
+
+	// 	new Chart(target, options);
+	// }
 
 	document.querySelector("#print").addEventListener("click", function() {
 	$('.section-to-print').toggle(); //removes the display:none
@@ -441,6 +499,23 @@
     $('.section-to-print').hide(); //brings back the display:none
     
 	});
+
+	// var options1 = {
+	// 	type: 'bar',
+	// 	data: {
+	// 		labels: ['jan', 'febb', 'mar', 'apr', 'may', 'june'],
+	// 		datasets: [{
+	// 			axis: 'y',
+	// 			label: 'Dsdas',
+	// 			data: [65, 59, 80, 81, 56, 55, 40]
+	// 		}]
+	// 	},
+	// 	options: {
+	// 		indexAxis: 'y'
+	// 	}
+	// }
+
+	// var horizontalBarChart = new Chart(document.getElementById('temp'), options1);
 
 
 	var view = '';

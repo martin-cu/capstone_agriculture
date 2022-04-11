@@ -32,9 +32,10 @@ function dataValidation(step) {
 	var inp = [];
 	var val;
 	$('.inp-error').remove();
+
 	if (view == 'add_farm') {
 		if (step == 2) {
-			inp = ['farmName', 'farm_mngr_cont'];
+			inp = ['#farmName', '#farm_mngr_cont'];
 		}
 		else if (step == 3) {
 			pass = validatePolygon();
@@ -47,22 +48,27 @@ function dataValidation(step) {
 
 	else if (view == 'add_crop_calendar') {
 		if (step == 2) {
-			inp = ['crop_plan', 'farm_id', 'land_prep_date_start', 'land_prep_date_end'];
+			inp = ['#crop_plan', '#farm_id', '#land_prep_date_start', '#land_prep_date_end'];
 		}
 
 		else if (step == 3) {
-			inp = ['seed_id', 'seed_rate', 'method', 'sowing_date_start', 'sowing_date_end', 'harvest_date_start', 'harvest_date_end'];
+			inp = ['#seed_id', '#seed_rate', '#method', '#sowing_date_start', '#sowing_date_end', '#harvest_date_start', '#harvest_date_end'];
 		}
 
+		else if (step == 4) {
+			inp = ["input[name='manual_date']", "select[name='manual_fertilizer']", "textarea[name='manual_desc']", "input[name='manual_amt']"];
+		}
 	}
 
 	for (var i = 0; i < inp.length; i++) {
-		var m = $('#'+inp[i]).val();
+		var m = $(inp[i]).map(function(){return $(this).val();}).get();
 
-		if (m == '' || m == undefined) {
-			var parent = $('#'+inp[i]).parent().append('<label class="inp-error">This field is required</label>');
-			pass = false;
-		}
+		for (var x = 0; x < m.length; x++) {
+			if (m[x] == '' || m[x] == undefined) {
+				var parent = $(inp[i]).eq(x).parent().append('<label class="inp-error">This field is required</label>');
+				pass = false;
+			}
+		}	
 	}
 
 	return pass;

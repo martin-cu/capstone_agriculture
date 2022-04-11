@@ -226,6 +226,19 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 	var og_pressure = [];
 	var filtered_nutrients;
 	var temp_nutrients;
+
+	var env_obj = { Temperature: { data: [] }, Humidity: { data: [] }, Pressure: { data: [ ] }, Rainfall: { data: [] }, labels: [] };
+	console.log(data);
+	for (var i = 0; i < data.length; i++) {
+		env_obj.labels.push(data[i].farm_name);
+		env_obj.Temperature.data.push((Math.round((data[i].temp - 273.15) * 100)/100).toFixed(2));
+		env_obj.Humidity.data.push(Math.round(data[i].humidity * 100)/100);
+		env_obj.Pressure.data.push(Math.round(data[i].pressure * 100)/100);
+		env_obj.Rainfall.data.push((Math.round(data[i].rainfall * 100)/100).toFixed(2));
+	}
+
+
+
 	for (var i = 0; i < unique.length; i++) {
 		var chart_data = { labels: ['Seed Rate', 'Avg Temp', 'Avg Humidity', 'Avg Pressure', 'Avg Rainfall',
 		 'User Nutrient Application', 'Recommended Nutrient Application', 'Total','Forecasted Yield', 'Actual Yield'], datasets: [], title: null };
@@ -244,7 +257,7 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 				data[x].pressure = Math.round(data[x].pressure * 100)/100;
 				data[x].rainfall = (Math.round(data[x].rainfall * 100)/100).toFixed(2);
 
-				data[x] = smoothRadarChartData(data[x]);
+				//data[x] = smoothRadarChartData(data[x]);
 				
 				for (var y = 0; y < obj_keys.length; y++) {
 					dataset_obj.data.push(data[x][obj_keys[y]]);
@@ -289,9 +302,7 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 		printable[i].labels.splice(7,1);
 		for (var x = 0; x < printable[i].datasets.length; x++) {
 			
-			for (var y = 0; y < og_pressure.length; y++) {
-				printable[i].datasets[x].data[2] = og_pressure[index];
-			}
+			
 			index++;
 			printable[i].datasets[x].data[6] = `${printable[i].datasets[x].data[6]} / ${printable[i].datasets[x].data[6]}`;
 			printable[i].datasets[x].data.splice(7,1);
@@ -359,7 +370,7 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 		data[i].change.val != 0 ? 'text-success' : 'text-muted' : 'text-danger';
 	}
 	//console.log(data);
-	return { chart_data: chart_arr, json_chart_data: JSON.stringify(chart_arr), detailed_list: data, overview: summary, printable: printable };
+	return { chart_data: chart_arr, env_chart: JSON.stringify(env_obj), json_chart_data: JSON.stringify(chart_arr), detailed_list: data, overview: summary, printable: printable };
 }
 
 exports.processDetailedFarmProductivity = function(fp, resources) {

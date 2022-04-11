@@ -202,10 +202,10 @@ exports.getDetailedHarvestReport = function(req, res) {
 											var len = dateDiffInDays(new Date(calendar.sowing_date), new Date(calendar.harvest_date));
 											for (var i = 0; i < nutrient_chart.length; i++) {
 												if (new Date(calendar.sowing_date > new Date(nutrient_chart[i].date_completed))) {
-													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(nutrient_chart[i].date_completed), new Date(calendar.sowing_date));
+													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(nutrient_chart[i].date_completed));
 												}
 												else {
-													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(nutrient_chart[i].date_completed));
+													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(nutrient_chart[i].date_completed), new Date(calendar.sowing_date));
 												}
 												
 												if (calendar.method == 'Transplanting')

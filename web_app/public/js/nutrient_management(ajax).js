@@ -1,3 +1,11 @@
+var opts = '';
+$.get("/ajaxGetMaterials", {type : "Fertilizer"}, function(result){
+    var i;
+    for(i = 0; i < result.length; i++){
+    	opts += `<option value="${result[i].id}">${result[i].name}</option>`;
+    }
+});
+
 function appendDetails(obj_details, target_arr, planting_details) {
 	var obj_keys = ['n_lvl', 'p_lvl', 'k_lvl', 'n_val', 'p_val', 'k_val', 'pH_lvl'];
 	for (var i = 0; i < target_arr.length; i++) {
@@ -559,8 +567,19 @@ function normalizeSchedule(arr, origin, material_list, isChecked) {
 	return cont_arr;
 }
 
+function appendManualWO(target, type) {
+	if (type) {
+		$(target).find('tbody').append(`<tr> <td colspan="4"><div class="d-flex w-100"> <div class="w-100 text-muted text-center" style="margin-left: 105px;"> or manually create work order: </div><button type="button" onclick="appendManualWO('#fertilizer_recommendation_table', 0)" class="btn btn-primary float-right" id="add_order">Add Order</button> <div class="float-right"> </div> </div></td></tr>`);
+	}
+	$(target).find('tbody').append(`<tr> <td class="align-top"> <div class=""> <input class="form-control" type="date" name="manual_date" id="manual_date"> </div> </td> <td class="align-top"> <div class=""> <select class="form-select" name="manual_fertilizer" id="manual_fertilizer"> ${opts} </select> </div> </td> <td class="align-top"> <div class=""> <textarea type="text" class="form-control" id="manual_desc" name="manual_desc" rows="3" style="resize: none;" placeholder="User generated work order..."></textarea> </div> </td> <td class="align-top"> <div class="d-flex"> <div class=""> <input class="form-control mr-3" type="number" name="manual_amt" id="manual_amt" min="1" step="1" value="1" style="width: 100px;"> </div> <button type="button" onclick="removeManualWO(this)" class="icon-btn-trash"><i class="fas fa-trash"></i></button> </div> </td> </tr>`);
+}
+
+function removeManualWO(target) {
+	$(target).parent().parent().parent().remove();
+}
+
 function appendScheduleTable(schedule_arr, target) {
-	$(target).empty();
+	$(target).find('tbody').empty();
 	var schedule_arr_keys = ['date', 'fertilizer', 'desc', 'amount'];
 	var tr, td;
 	var hidden_atr = {
@@ -1009,7 +1028,8 @@ $(document).ready(function() {
 	if (view == 'add_crop_calendar') {
 
 		$('.next_step').on('click', function() {
-			if (currentTab == 2) {
+			if (currentTab == 2 && loaded == 0) {
+				loaded = 1;
 				//Create fertilizer recommendation schedule
 				$.get('/filter_nutrient_mgt', { farm_id: $('#farm_id').val(), type: 'Fertilizer', filter: $('#farm_id').val(), calendar_id: null }, function(nutrient_details) {
 					console.log(nutrient_details);
@@ -1048,11 +1068,14 @@ $(document).ready(function() {
 							schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, true);
 							//console.log(schedule_arr);
 							appendScheduleTable(schedule_arr, '#fertilizer_recommendation_table');
+
+							appendManualWO('#fertilizer_recommendation_table', 1);
 						});
 					});
 				});
 
 			}
+
 		});
 	}
 	else if (view == 'Soil Detailed') {
