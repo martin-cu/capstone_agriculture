@@ -28,7 +28,7 @@ exports.ajaxFilterFarmers = function(req, res) {
 exports.getUsers = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "User Management";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'user_management');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'user_management', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('user_management', html_data);
 }

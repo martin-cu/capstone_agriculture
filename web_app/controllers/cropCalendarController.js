@@ -23,7 +23,7 @@ function dateDiffInDays(a, b) {
 
 exports.getSummarizedFarmMonitoring = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
 
 	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
 		if (err)
@@ -160,7 +160,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 
 exports.getCropCalendarTab = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar', req.session);
 	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
 		if (err)
 			throw err;
@@ -352,7 +352,7 @@ exports.ajaxGetCropPlanDetails = function(req, res) {
 exports.getAddCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Crop Calendar";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_crop_calendar', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('add_crop_calendar', html_data);
 }
@@ -360,7 +360,7 @@ exports.getAddCropCalendar = function(req, res) {
 exports.getDetailedCropCalendar = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Crop Calendar";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'detailed_crop_calendar');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'detailed_crop_calendar', req.session);
 	
 	var query = { status: ['In-Progress', 'Active', 'Completed']};
 	cropCalendarModel.getCropCalendarByID(query, req.query.id, function(err, crop_calendar){

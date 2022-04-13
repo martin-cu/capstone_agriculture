@@ -15,7 +15,7 @@ function initializeSessionInfo(session, obj) {
 
 exports.loadRegistration = function(req, res) {
 	var html_data = {};
-	//html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+	//html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
 
 	employeeModel.queryEmployee(null, function(err, result) {
 		if (err)

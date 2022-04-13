@@ -23,7 +23,7 @@ function dateDiffInDays(a, b) {
 
 exports.getDetailedReport = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
 
 	reportModel.getFarmProductivity(function(err, fp_overview) {
 		if (err)
@@ -50,7 +50,7 @@ exports.getDetailedReport = function(req, res) {
 
 exports.getFarmProductivityReport = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
 	reportModel.getFarmProductivity(function(err, fp_overview) {
 		if (err)
 			throw err;
@@ -110,7 +110,7 @@ exports.getFarmProductivityReport = function(req, res) {
 
 exports.getSummaryHarvestReport = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
 
 	reportModel.getHarvestSummaryChart({ calendar_ids: req.query.id.split(',') }, function(err, chart_data) {
 		if (err)
@@ -165,7 +165,7 @@ exports.getSummaryHarvestReport = function(req, res) {
 
 exports.getDetailedHarvestReport = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
 	html_data["notifs"] = req.notifs;
 	html_data["farm_name"] = req.query.farm;
 	html_data['range'] = { start: "2019-01-01", end: dataformatter.formatDate(new Date(), 'YYYY-MM-DD') };

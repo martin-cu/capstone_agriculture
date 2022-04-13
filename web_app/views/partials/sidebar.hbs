@@ -27,7 +27,8 @@
                     </div>
                 </div>
             </li>
-
+            {{#if office_role}}
+            {{else}}
             <li class="nav-item">
                 <div class="nav-item dropdown show text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
                     <a aria-expanded="false" data-toggle="collapse" data-target="#materials" href="#" class="dropdown-lbl text-decoration-none {{# if inventory_tab}}active{{/if}}{{# if orders_tab}}active{{/if}}" href="#" style="font-size: 16px" id="secondDp">
@@ -40,7 +41,7 @@
                     </div>
                 </div>
             </li>
-
+            {{/if}}
             <li class="nav-item" style="">
                 <div class="nav-item dropdown " style="margin-bottom: 0px;padding: 16px;">
                     <a aria-expanded="false" data-toggle="collapse" data-target="#pestAndDisease" href="#" class="dropdown-lbl text-decoration-none {{# if pest_and_disease_discover}}active{{/if}}{{# if pest_and_disease_frequency}}active{{/if}} {{# if pest_and_disease_diagnoses}}active{{/if}}"id="thirdDp"><i class="dropdown-lbl fas fa-bug" 
@@ -68,7 +69,8 @@
                 </div>
             </li> --}}
 
-            
+            {{#if purchasing_role}}
+            {{else}}
             <li class="nav-item">
                 <div class="nav-item dropdown text-decoration-none" style="text-decoration: none;padding: 16px;margin-bottom: 0px;">
                     <a aria-expanded="false" data-toggle="collapse" data-target="#smsManagement" href="#" class="dropdown-lbl text-decoration-none {{# if subscriptions_tab}}active{{/if}}{{# if messages_tab}}active{{/if}}" href="#" id="fifthDp">
@@ -81,11 +83,14 @@
                     </div>
                 </div>
             </li>
+            {{/if}}
 
+            {{#if admin_role}}
             <li class="nav-item" style="padding:16px">
                 <a class="dropdown-lbl text-decoration-none {{# if users_tab}}active{{/if}}" href="/user_management" style="font-size: 16px;"><i class="fas fa-user-circle" style="font-size: 16px; margin-right: 10px"></i>User Management
                 </a>
             </li>
+            {{/if}}
 
             <li class="nav-item" style="padding:16px">
                 <a class="dropdown-lbl text-decoration-none {{# if reports_tab}}active{{/if}}" href="/farm_productivity_report" style=""><i class="fas fa-chart-bar" style="font-size: 16px; margin-right: 10px"></i>Farm Productivity Reports

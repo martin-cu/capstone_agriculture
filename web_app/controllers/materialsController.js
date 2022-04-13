@@ -16,7 +16,7 @@ exports.getMaterials = function(req,res){
         else{
             if(seeds.length != 0){
                 html_data["seed"] = seeds;
-                html_data = js.init_session(html_data, 'role', 'name', 'username', 'farm');
+                html_data = js.init_session(html_data, 'role', 'name', 'username', 'farm', req.session);
 				html_data["notifs"] = req.notifs;
                 res.render('materials', html_data);
             }
@@ -270,7 +270,7 @@ exports.getWeather = function(req, res){
 
 exports.getOrders = function(req, res){
     var html_data = {};
-    html_data = js.init_session(html_data, 'role', 'name', 'username', 'orders_tab');
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'orders_tab', req.session);
     materialModel.getAllPurchases(null,null, function(err, purchases){
         if(err)
             throw err;
@@ -363,7 +363,7 @@ exports.getMaterialsAjax = function(req, res){
 
 exports.getInventory = function(req, res){
     var html_data = {};
-    html_data = js.init_session(html_data, 'role', 'name', 'username', 'inventory_tab');
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'inventory_tab', req.session);
 
     materialModel.getFarmMaterials(null, function(err, materials){
         if(err)
@@ -562,7 +562,7 @@ exports.addPurchase = function(req,res){
 
 exports.getPurchaseDetails = function(req,res){
     var html_data = {};
-    html_data = js.init_session(html_data, 'role', 'name', 'username', 'orders_tab');
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'orders_tab', req.session);
     var purchase_id = req.query.id;
 
     materialModel.getDetailsPurchase({purchase_id : purchase_id}, function(err, details){

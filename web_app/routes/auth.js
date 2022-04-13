@@ -69,7 +69,10 @@ router.post('/createFarmRecord', farmController.createFarmRecord);
 router.post('/assign_farmers', farmController.assignFarmers);
 // router.get('/getPestDiseasePerFarm', environmentController.ajaxGetPossiblePD);
 
-
+router.get("/ajax_farm_details", farmController.getFarmDetails);
+router.get("/ajax_farm_detailsDashboard", farmController.getFarmDetailsDashboard);
+router.get("/ajaxGetSoilData", environmentController.getFarmSoilData);
+router.get("/ajaxGetWorkOrders", workOrderController.ajaxGetWorkOrders);
 /*** Database Ajax End ***/
 
 //Account Management
@@ -104,12 +107,6 @@ router.get('/farm_monitoring_summarized', isPrivate, notifController.getNotifica
 //Farms Tab
 router.get("/farm_resources",notifController.getNotification , environmentController.getFarmResources);
 router.get("/farm_pestdisease", isPrivate, notifController.getNotification ,environmentController.getFarmPestDiseases);
-//ajax
-router.get("/ajax_farm_details", farmController.getFarmDetails);
-router.get("/ajax_farm_detailsDashboard", farmController.getFarmDetailsDashboard);
-router.get("/ajaxGetSoilData", environmentController.getFarmSoilData);
-
-router.get("/ajaxGetWorkOrders", workOrderController.ajaxGetWorkOrders);
 
 //Crop Calendar
 router.get('/crop_calendar', isPrivate, notifController.getNotification ,cropCalendarController.getCropCalendarTab);

@@ -1,18 +1,16 @@
-exports.init_session = function(obj, role, name, username, tab) {
-	obj['name'] = 'Ramon Gabio';
-	obj['role'] = role;
-	obj['username'] = username;
+exports.init_session = function(obj, role, name, username, tab, session) {
+	var role = session.authority;
+	obj['name'] = session.username;
+	obj['username'] = session.username;
 	obj['session'] = true;
 
-	if (role === 'System Admin') 
+	if (role === 0) 
 		obj['admin_role'] = true;
-	else if (role === 'Sales Employee')
-		obj['sales_role'] = true;
-	else if (role === 'Purchasing Employee')
+	else if (role === 1)
+		obj['office_role'] = true;
+	else if (role === 2)
 		obj['purchasing_role'] = true;
-	else if (role === 'Logistics Employee')
-		obj['logistics_role'] = true;
-
+	console.log(obj);
 	if (tab === 'dashboard')
 		obj['home_tab'] = true;
 	else if (tab === 'farms') 
@@ -87,7 +85,6 @@ exports.init_session = function(obj, role, name, username, tab) {
 	// Reports
 	else if (tab === 'reports') 
 	obj['reports_tab'] = true;
-
 
 	return obj;
 }

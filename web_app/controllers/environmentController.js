@@ -199,7 +199,7 @@ exports.getPestDiseaseManagement = function(req, res) {
 														html_data["pests"] = pests;
 														html_data["diseases"] = diseases;
 														html_data["symptoms"] = symptoms;
-														html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+														html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease', req.session);
 														html_data["notifs"] = req.notifs;
 														res.render('pest_disease', html_data);
 														
@@ -406,7 +406,7 @@ exports.getPestFactors = function(req,res){
 										html_data['pest_name'] =  details[0].pest_name;
 										html_data["symptoms"] = symptoms;
 										html_data["factors"] = factors;
-										js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+										js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease', req.session);
 										html_data["notifs"] = req.notifs;
 										res.render('pest_disease2', html_data);
 									}
@@ -437,7 +437,7 @@ exports.getPestFactors = function(req,res){
 							console.log(factors);
 							html_data['pest_name'] =  details[0].disease_name;
 							html_data["factors"] = factors;
-							js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease');
+							js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease', req.session);
 							html_data["notifs"] = req.notifs;
 							res.render('pest_disease2', html_data);
 						}
@@ -598,7 +598,7 @@ exports.addDisease = function(req,res){
 
 exports.getNurientManagement = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_discover');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_discover', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('nutrient_mgt', html_data);
 }
@@ -995,7 +995,7 @@ exports.detailedNutrientManagement = function(req, res) {
 																			if (result)
 																			// console.log(fr_items);
 																			// console.log(result);
-																			html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+																			html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
 																			html_data['detailed_data'] = dataformatter.processNPKValues(result, result[0].farm_area, applied, summary, wo_list);
 																			if (forecast != 0) {
 																				html_data['yield_forecast'] = forecast[0].forecast;
@@ -1109,7 +1109,7 @@ exports.getFarmResources = function(req, res){
 					else{
 						html_data["processing"] = processing;
 					}
-					html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+					html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms', req.session);
 					materialModel.getPurchasesPerFarm(type, {farm_id : farm_id}, null, function(err, orders){
 						if(err)
 							throw err;
@@ -1173,7 +1173,7 @@ exports.ajaxGetResources = function(req,res){
 exports.getFarmPestDiseases = function(req, res){
 	var html_data = {};
 	var farmtypes = [];
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
 	
 	if(req.query.farm_id != null){
 		var farm_id = {
@@ -1749,7 +1749,7 @@ exports.getPestDiseaseDetails = function(req, res){
 										html_data["symptoms"] = symptoms;
 										html_data['type'] = "Pest";
 										// html_data["factors"] = factors;
-										js.init_session(html_data, 'role', 'name', 'username', tab_name);
+										js.init_session(html_data, 'role', 'name', 'username', tab_name, req.session);
 										html_data["notifs"] = req.notifs;
 										res.render('pest_disease_details', html_data);
 									}
@@ -1780,7 +1780,7 @@ exports.getPestDiseaseDetails = function(req, res){
 							html_data['pd'] =  details[0];
 							html_data['type'] = "Disease";
 							html_data["symptoms"] = symptoms;
-							js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+							js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
 							html_data["notifs"] = req.notifs;
 							res.render('pest_disease_details', html_data);
 						}
@@ -1840,7 +1840,7 @@ exports.updatePDDetails = function(req,res){
 exports.getDiagnoses = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses', req.session);
 
 	pestdiseaseModel.getDiagnosis(null, null, function(err, diagnoses){
 		if(err)
@@ -1946,7 +1946,7 @@ exports.getDiagnoses = function(req, res) {
 exports.getDiagnosisDetails = function(req, res){
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_diagnoses', req.session);
 	var id = req.query.id;
 	pestdiseaseModel.getDiagnosisDetails(id, function(err, diagnosis_details){
 		if(err)
@@ -2068,7 +2068,7 @@ exports.updateDiagnosis = function(req,res){
 exports.getAddDiagnosis = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_diagnosis');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_diagnosis', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('add_diagnosis', html_data);
 }
@@ -2076,7 +2076,7 @@ exports.getAddDiagnosis = function(req, res) {
 exports.getAddPest = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_pest');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_pest', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('add_pest', html_data);
 }
@@ -2084,7 +2084,7 @@ exports.getAddPest = function(req, res) {
 exports.getAddDisease = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_disease');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_add_disease', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('add_disease', html_data);
 }
@@ -2092,7 +2092,7 @@ exports.getAddDisease = function(req, res) {
 exports.getDetailedDiagnosis = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_diagnosis');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_diagnosis', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('detailed_diagnosis', html_data);
 }
@@ -2100,7 +2100,7 @@ exports.getDetailedDiagnosis = function(req, res) {
 exports.getDetailedPest = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_pest');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_pest', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('detailed_pest', html_data);
 }
@@ -2108,7 +2108,7 @@ exports.getDetailedPest = function(req, res) {
 exports.getDetailedDisease = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Diagnose";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_disease');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_detailed_disease', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('detailed_disease', html_data);
 }
@@ -2118,7 +2118,7 @@ exports.getDetailedDisease = function(req, res) {
 exports.getPestandDiseaseDiscover = function(req,res){
 	var html_data = {};
 	html_data["title"] = "Discover";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_discover');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_discover', req.session);
 
 	pestdiseaseModel.getPestDiseaseList("Pest", function(err, pests){
 		if(err)
@@ -3075,7 +3075,7 @@ exports.getPreventions = function(req, res){
 
 exports.getPDFrequency = function(req, res){
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_frequency');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'pest_and_disease_frequency', req.session);
 	html_data["title"] = "Diagnose";
 
 	pestdiseaseModel.getTotalDiagnosesPerPD2(null,null, function(err, total){

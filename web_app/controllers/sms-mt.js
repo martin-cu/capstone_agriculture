@@ -41,7 +41,7 @@ exports.test_globe2 = function(req,res){
 exports.getSubscriptions = function(req, res) {
 	var html_data = {};
   html_data["title"] = "SMS Management > Subscriptions";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_subscriptions');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_subscriptions', req.session);
   html_data["notifs"] = req.notifs;
 	res.render('sms_subscriptions', html_data);
 }
@@ -49,7 +49,7 @@ exports.getSubscriptions = function(req, res) {
 exports.getAddSubscription = function(req, res) {
 	var html_data = {};
   html_data["title"] = "SMS Management > Subscriptions";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_add_subscription');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_add_subscription', req.session);
   html_data["notifs"] = req.notifs;
 	res.render('add_subscription', html_data);
 }
@@ -57,7 +57,7 @@ exports.getAddSubscription = function(req, res) {
 exports.getMessages = function(req, res) {
 	var html_data = {};
   html_data["title"] = "SMS Management > Messages";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_messages');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_messages', req.session);
   html_data["notifs"] = req.notifs;
 	res.render('sms_messages', html_data);
 }

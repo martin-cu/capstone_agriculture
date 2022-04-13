@@ -77,7 +77,7 @@ exports.getDetailedWO = function(req, res) {
 				editable: details.status == 'Completed' || details.status == 'Cancelled' ? false : true
 			};
 
-			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms', req.session);
 			html_data['stage'] = '';
 			html_data['farm_area'] = 0;
 			html_data['status_editable'] = true;
@@ -343,7 +343,7 @@ exports.getWorkOrdersPage = function(req, res) {
 
 			var html_data = { wo_list: list };
 			// console.log(html_data);
-			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms', req.session);
 			html_data["notifs"] = req.notifs;
 			html_data["notifs"] = req.notifs;
 			res.render('farms', html_data);
@@ -418,7 +418,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 
 											html_data = { upcomingWoList: upcoming.slice(0, 10), completedWoList: completed.slice(0, 10) };
 											html_data['fp'] = fp_obj;
-											html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+											html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard', req.session);
 
 											html_data["notifs"] = req.notifs;
 											res.render('home', html_data);

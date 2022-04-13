@@ -42,7 +42,7 @@ exports.ajaxGetFarmList = function(req, res) {
 exports.getDashboard = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Dashboard";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard', req.session);
 
 	html_data["notifs"] = req.notifs;
 	res.render('home', html_data);
@@ -54,7 +54,7 @@ exports.getFarms = function(req, res) {
 			throw err;
 		else {
 			var html_data = { farm_list: farm_list };
-			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms');
+			html_data = js.init_session(html_data, 'role', 'name', 'username', 'farms', req.session);
 			html_data["notifs"] = req.notifs;
 			res.render('farms', html_data);
 		}
@@ -65,7 +65,7 @@ exports.getFarms = function(req, res) {
 exports.getAddFarm = function(req, res) {
 	var html_data = {};
 	html_data["title"] = "Farm Monitoring";
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_farm');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'add_farm', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('add_farm', html_data);
 }
@@ -492,7 +492,7 @@ exports.getFarmDetailsDashboard = function(req, res) {
 
 exports.getMonitorFarms = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
 	html_data["farm_id"] = req.query.farm_id;
 	html_data["notifs"] = req.notifs;
 	res.render('farm_monitoring', html_data);
@@ -551,7 +551,7 @@ exports.retireFarm = function(req, res) {
 
 exports.getHarvestCycle = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'harvest_cycle');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'harvest_cycle', req.session);
 	html_data["notifs"] = req.notifs;
 	res.render('harvest_cycle', html_data);
 }

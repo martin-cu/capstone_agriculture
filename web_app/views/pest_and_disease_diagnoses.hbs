@@ -56,9 +56,12 @@
                                 {{!-- ADD DIAGNOSIS --}}
                                 <div role="tablist" id="accordion-diagnosis" style="margin-bottom: 20px;">
                                     <div class="card shadow mb-4">
+                                        {{#if writeable}}
                                         <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
                                             <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-diagnosis .item-diagnosis" href="#accordion-diagnosis .item-diagnosis" style="font-size: 16px;color: #584C33!important;font-weight: bold;">Create New Diagnosis</a></h5>
+
                                         </div>
+                                        {{/if}}
                                         <div class="collapse item-diagnosis" role="tabpanel" data-parent="#accordion-diagnosis">
                                             
                                         <div class="card-body" style="color: #332c1f;">

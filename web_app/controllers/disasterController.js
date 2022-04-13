@@ -14,7 +14,7 @@ const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 exports.getDisasterManagement = function(req, res) {
 	var html_data = {};
 
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster', req.session);
 
 	disasterModel.getDisasterLogs(null, function(err, disasters) {
 		if (err)
@@ -55,7 +55,7 @@ exports.getDisasterManagement = function(req, res) {
 
 exports.ajaxGetRecommendations = function(req, res) {
 	var html_data = {};
-	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster');
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster', req.session);
 
 	disasterModel.getDisasterLogs({ status: 1 }, function(err, disasters) {
 		if (err)

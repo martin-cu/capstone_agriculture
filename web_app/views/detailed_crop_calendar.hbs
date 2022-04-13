@@ -114,7 +114,9 @@ label {
                         </button>
                         <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
                             <a class="dropdown-item notSidebar" href="#" type="button" value="print" id="print">&nbsp;View Required Materials</a>
+                            {{#if writeable}}
                             <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a>
+                            {{/if}}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item notSidebar" href="#">&nbsp;Cancel Crop Calendar</a>
                         </div>
