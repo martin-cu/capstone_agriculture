@@ -1,0 +1,106 @@
+<!-- User Registration Page -->
+<!-- <div class="hide">
+  <!-- Section: Design Block -->
+  <section class="text-center">
+    <!-- Background image -->
+    <div class="p-5 bg-image" style="
+          background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
+          height: 300px;
+          "></div>
+    <!-- Background image -->
+
+    <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+          margin-top: -100px;
+          background: hsla(0, 0%, 100%, 0.8);
+          backdrop-filter: blur(30px);
+          ">
+      <div class="card-body py-5 px-md-5">
+
+        <div class="row d-flex justify-content-center">
+          
+          <form action="/account_registration" method="post">
+            <table class="table">
+              <tr>
+                <th class="text-left">Name</th>
+                <th class="text-left">Position</th>
+                <th>Contact #</th>
+                <th>Access Level</th>
+                <th></th>
+              </tr>
+              {{#each employee_list}}
+                <tr>
+                  <td class="text-left">
+                    {{this.last_name}}, {{this.first_name}}
+                    <!-- <input type="hidden" name="register_id" value="{{this.employee_id}}"> -->
+                  </td>
+                  <td class="text-left"><div>{{this.position}}</div><div class="text-xs text-muted">{{this.farm_name}}</div></td>
+                  <td>{{this.phone_number}}</td>
+                  <td>
+                    <select name="register_level" disabled required>
+                      <option selected value="">...</option>
+                      <option value="0">Administrator</option>
+                      <option value="1">Office Worker</option>
+                      <option value="2">Purchase Officer</option>
+                    </select>
+                  </td>
+                  <td>
+                    <div class="form-check">
+                      {{#if user_id}}
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked disabled>
+                      {{else}}
+                        <input class="form-check-input" name="register_checkbox" type="checkbox" value="{{this.employee_id}}" id="flexCheckChecked">
+                      {{/if}}
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+            </table>
+
+            <button type="submit" class="hide btn btn-primary float-right" id="btn_submit" name="" >Create Account</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div> -->
+
+<script type="text/javascript">
+  $('input[name="register_checkbox"]').change(function() {
+    var val = $(this).val();
+    var select = $(this).parent().parent().parent().children().eq(3).children().filter('[name="register_level"]');
+
+    if ($(this).prop('checked')) {
+      $(select).prop('disabled', false);
+
+      var pos = $(this).parent().parent().parent().children().eq(1).children().eq(0).html();
+
+      switch (pos) {
+        case 'Farm Manager':
+          $(select).val(1);
+          break;
+        case 'Farmer':
+          $(select).val(1);
+          break;
+        case 'Office Worker':
+          $(select).val(1);
+          break; 
+        case 'Owner':
+          $(select).val(0);
+          break;
+      }
+    }
+    else {
+      $(select).prop('disabled', true);
+      $(select).val('');
+    }
+
+    if ($(`input[name="register_checkbox"]:checked`).length > 0) {
+      $(`#btn_submit`).removeClass('hide');
+    }
+    else {
+      $(`#btn_submit`).addClass('hide');
+    }
+  });
+
+
+</script>

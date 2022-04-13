@@ -330,11 +330,20 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 	else {
 		summary += 'All farms were able to complete their respective crop calendars without any special/early harvests.';
 	}
-	
-	var highest_yield = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_yield>b.current_yield?a:b);
-	var highest_productivity = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_productivity>b.current_productivity?a:b);
-	var lowest_yield = fp.filter(e => e.status == 'Completed' && e.current_yield != 'N/A').reduce((a,b)=>a.current_yield<b.current_yield?a:b);
-	var lowest_productivity = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_productivity<b.current_productivity?a:b);
+
+	//Error handling to do more validation!!
+	if (fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').length == 0) {
+		var highest_yield = 0;
+		var highest_productivity = 0;
+		var lowest_yield = 0;
+		var lowest_productivity = 0;
+	}
+	else {
+		var highest_yield = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_yield>b.current_yield?a:b);
+		var highest_productivity = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_productivity>b.current_productivity?a:b);
+		var lowest_yield = fp.filter(e => e.status == 'Completed' && e.current_yield != 'N/A').reduce((a,b)=>a.current_yield<b.current_yield?a:b);
+		var lowest_productivity = fp.filter(e => e.status == 'Completed' && e.productivity != 'N/A').reduce((a,b)=>a.current_productivity<b.current_productivity?a:b);
+	}
 	// console.log(lowest_yield.calendar_id);
 	// console.log(highest_productivity.calendar_id);
 	summary += ` ${highest_yield.farm_name} is the top performer in terms of cavans harvest with a harvest of ${highest_yield.current_yield} 

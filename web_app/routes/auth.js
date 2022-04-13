@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const userController = require('../controllers/userController');
 const materialController = require('../controllers/materialsController');
 const farmController = require('../controllers/farmController');
 const workOrderController = require('../controllers/workOrderController');
@@ -11,10 +12,7 @@ const notifController = require('../controllers/notificationController.js');
 const disasterController = require('../controllers/disasterController.js');
 const globe = require('../controllers/sms-mt');
 
-router.get('/login', (req, res) => {
-	res.render('home', {});
-});
-
+const { isPrivate, isAdmin, isSales, isPurchasing, isLogistics } = require('../middlewares/checkAuth');
 
 router.get('/create_wo_test', (req, res) => {
 	var html_data = {};
@@ -45,7 +43,7 @@ router.get('/get_soil_records', environmentController.ajaxGetSoilRecord);
 router.post('/update_soil_records', environmentController.ajaxUpdateSoilRecord);
 router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
 
-router.get('/farm_monitoring', notifController.getNotification ,farmController.getMonitorFarms);
+router.get('/farm_monitoring', isPrivate, notifController.getNotification ,farmController.getMonitorFarms);
 router.get('/filter_farm_details', farmController.getFarmDetails);
 router.get('/filter_farmers', employeeController.ajaxFilterFarmers);
 
@@ -74,32 +72,38 @@ router.post('/assign_farmers', farmController.assignFarmers);
 
 /*** Database Ajax End ***/
 
+//Account Management
+router.get('/login', (req, res) => {
+  res.render('login', { } );
+});
+router.get('/initialize_account', userController.getInitializePassword);
+router.post('/initialize_password', userController.initializePassword);
+router.post('/login', userController.loginUser);
+router.get('/logout', userController.logout);
+router.get('/registration', userController.loadRegistration);
+router.post('/account_registration', userController.registerUser);
+router.get('/reset_password', (req, res) => {
+  res.render('forgot_pass', { } );
+});
+router.post('/reset_password', userController.resetPassword);
+
+
 /*** Page Navigation Start ***/
+router.get('/', isPrivate, notifController.getNotification ,workOrderController.getWorkOrdersDashboard); 
+router.get('/home', isPrivate, notifController.getNotification ,workOrderController.getWorkOrdersDashboard); 
 
-//login page
-// router.get('/', function(req, res) {
-//     res.render('login', {
-//         layout: 'login-main',
-//       })
-// });
+router.get('/farms', isPrivate, notifController.getNotification ,workOrderController.getWorkOrdersPage); 
+router.get('/farms/add', isPrivate, notifController.getNotification ,farmController.getAddFarm);
 
-//router.get('/', farmController.getDashboard);
-//router.get('/home', farmController.getDashboard);
-
-router.get('/', notifController.getNotification ,workOrderController.getWorkOrdersDashboard); 
-
-router.get('/farms', notifController.getNotification ,workOrderController.getWorkOrdersPage); 
-router.get('/farms/add', notifController.getNotification ,farmController.getAddFarm);
-
-router.get('/materials', notifController.getNotification ,materialController.getMaterials);
+router.get('/materials', isPrivate, notifController.getNotification ,materialController.getMaterials);
 
 //Disaster Tab
-router.get('/disaster_management', notifController.getNotification ,disasterController.getDisasterManagement);
-router.get('/farm_monitoring_summarized', notifController.getNotification, cropCalendarController.getSummarizedFarmMonitoring);
+router.get('/disaster_management', isPrivate, notifController.getNotification ,disasterController.getDisasterManagement);
+router.get('/farm_monitoring_summarized', isPrivate, notifController.getNotification, cropCalendarController.getSummarizedFarmMonitoring);
 
 //Farms Tab
 router.get("/farm_resources",notifController.getNotification , environmentController.getFarmResources);
-router.get("/farm_pestdisease", notifController.getNotification ,environmentController.getFarmPestDiseases);
+router.get("/farm_pestdisease", isPrivate, notifController.getNotification ,environmentController.getFarmPestDiseases);
 //ajax
 router.get("/ajax_farm_details", farmController.getFarmDetails);
 router.get("/ajax_farm_detailsDashboard", farmController.getFarmDetailsDashboard);
@@ -108,9 +112,9 @@ router.get("/ajaxGetSoilData", environmentController.getFarmSoilData);
 router.get("/ajaxGetWorkOrders", workOrderController.ajaxGetWorkOrders);
 
 //Crop Calendar
-router.get('/crop_calendar', notifController.getNotification ,cropCalendarController.getCropCalendarTab);
-router.get('/crop_calendar/add', notifController.getNotification ,cropCalendarController.getAddCropCalendar);
-router.get('/crop_calendar/details', notifController.getNotification ,cropCalendarController.getDetailedCropCalendar); //fix path later
+router.get('/crop_calendar', isPrivate, notifController.getNotification ,cropCalendarController.getCropCalendarTab);
+router.get('/crop_calendar/add', isPrivate, notifController.getNotification ,cropCalendarController.getAddCropCalendar);
+router.get('/crop_calendar/details', isPrivate, notifController.getNotification ,cropCalendarController.getDetailedCropCalendar); //fix path later
 
 //router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later
 
@@ -120,7 +124,7 @@ router.get('/harvest_cycle', farmController.getHarvestCycle);
 //Material Management
 router.get('/inventory',notifController.getNotification , materialController.getInventory);
 router.get('/ajaxGetInventory/:type', materialController.ajaxGetInventory);
-router.get('/orders', notifController.getNotification ,notifController.getNotification ,materialController.getOrders);
+router.get('/orders', isPrivate, notifController.getNotification ,notifController.getNotification ,materialController.getOrders);
 router.get('/orders/details',notifController.getNotification , materialController.getPurchaseDetails);
 router.post('/addMaterial', materialController.newMaterial);
 router.get('/ajaxGetMaterials', materialController.getMaterialsAjax);
@@ -129,9 +133,9 @@ router.post('/updatePurchase', materialController.updatePurchase)
 
 
 //Pest and Disease
-router.get('/pest_and_disease_management', notifController.getNotification ,environmentController.getPestDiseaseManagement);
+router.get('/pest_and_disease_management', isPrivate, notifController.getNotification ,environmentController.getPestDiseaseManagement);
 router.get('/pest_and_disease_management/:type/:name',notifController.getNotification , environmentController.getPestFactors);
-router.get('/pest_and_disease_details', notifController.getNotification ,environmentController.getPestDiseaseDetails);
+router.get('/pest_and_disease_details', isPrivate, notifController.getNotification ,environmentController.getPestDiseaseDetails);
 router.get('/update_pd_details/:type/:id/:detail_type', environmentController.updatePDDetails);
 router.get('/PDProbability', environmentController.ajaxGetFarmPestDiseaseProbability); //ajax 
 router.post('/addPest', environmentController.addPest);
@@ -148,16 +152,16 @@ router.get('/getPDPreventions', environmentController.getPreventions);
 
 
 //diagnose tab
-router.get('/pest_and_disease/discover', notifController.getNotification ,environmentController.getPestandDiseaseDiscover);
+router.get('/pest_and_disease/discover', isPrivate, notifController.getNotification ,environmentController.getPestandDiseaseDiscover);
 router.post('/pest_and_disease/discover', environmentController.addNewPD);
-router.get('/pest_and_disease/diagnose', notifController.getNotification , environmentController.getDiagnoses);
+router.get('/pest_and_disease/diagnose', isPrivate, notifController.getNotification , environmentController.getDiagnoses);
 router.post('/pest_and_disease/diagnose', environmentController.addDiagnosis);
-router.get('/pest_and_disease/frequency', notifController.getNotification , environmentController.getPDFrequency);
+router.get('/pest_and_disease/frequency', isPrivate, notifController.getNotification , environmentController.getPDFrequency);
 router.post('/pest_and_disease/frequency', environmentController.createPreventionWo);
 // router.get('/pest_and_disease/diagnose_add_diagnosis', environmentController.getAddDiagnosis);
 router.get('/pest_and_disease/diagnose_add_pest',notifController.getNotification , environmentController.getAddPest);
 router.get('/pest_and_disease/diagnose_add_disease', environmentController.getAddDisease);
-router.get('/pest_and_disease/diagnose_details', notifController.getNotification ,environmentController.getDiagnosisDetails);
+router.get('/pest_and_disease/diagnose_details', isPrivate, notifController.getNotification ,environmentController.getDiagnosisDetails);
 router.post('/pest_and_disease/diagnose_details', environmentController.updateDiagnosis);
 
 router.get('/pest_and_disease/diagnose_detailed_diagnosis', environmentController.getDetailedDiagnosis);
@@ -174,29 +178,29 @@ router.get('/checkExistingPreventionWo', environmentController.checkExistingPrev
 
 
 //Nutrient Management
-router.get('/nutrient_management', notifController.getNotification ,environmentController.getNurientManagement);
-router.get('/nutrient_management/:farm_name/:calendar_id', notifController.getNotification ,environmentController.detailedNutrientManagement);
+router.get('/nutrient_management', isPrivate, notifController.getNotification ,environmentController.getNurientManagement);
+router.get('/nutrient_management/:farm_name/:calendar_id', isPrivate, notifController.getNotification ,environmentController.detailedNutrientManagement);
 router.post('/nutrient_management/add_record', environmentController.addSoilRecord);
 
 //SMS Management (Update later)
-router.get('/sms/subscriptions', notifController.getNotification , globe.getSubscriptions);
-router.get('/sms/subscriptions_add', notifController.getNotification , globe.getAddSubscription);
-router.get('/sms/messages', notifController.getNotification , globe.getMessages);
+router.get('/sms/subscriptions', isPrivate, notifController.getNotification , globe.getSubscriptions);
+router.get('/sms/subscriptions_add', isPrivate, notifController.getNotification , globe.getAddSubscription);
+router.get('/sms/messages', isPrivate, notifController.getNotification , globe.getMessages);
 
 
 //Work Order
-router.get('/farms/work_order&id=:work_order_id', notifController.getNotification ,workOrderController.getDetailedWO);
+router.get('/farms/work_order&id=:work_order_id', isPrivate, notifController.getNotification ,workOrderController.getDetailedWO);
 router.post('/create_work_order', workOrderController.createWorkOrder);
 router.post('/edit_work_order', workOrderController.editWorkOrder);
 
 //User Management
-router.get('/user_management', notifController.getNotification , employeeController.getUsers);
+router.get('/user_management', isPrivate, notifController.getNotification , employeeController.getUsers);
 
 //Report
-router.get('/farm_productivity_report', notifController.getNotification ,reportController.getFarmProductivityReport);
-router.get('/farm_productivity/detailed', notifController.getNotification ,reportController.getDetailedReport);
-router.get('/harvest_report/:crop_plan/summary', notifController.getNotification ,reportController.getSummaryHarvestReport);
-router.get('/harvest_report/:crop_plan/detailed', notifController.getNotification ,reportController.getDetailedHarvestReport);
+router.get('/farm_productivity_report', isPrivate, notifController.getNotification ,reportController.getFarmProductivityReport);
+router.get('/farm_productivity/detailed', isPrivate, notifController.getNotification ,reportController.getDetailedReport);
+router.get('/harvest_report/:crop_plan/summary', isPrivate, notifController.getNotification ,reportController.getSummaryHarvestReport);
+router.get('/harvest_report/:crop_plan/detailed', isPrivate, notifController.getNotification ,reportController.getDetailedHarvestReport);
 
 
 /*** Agro API Start ***/

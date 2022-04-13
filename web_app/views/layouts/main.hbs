@@ -96,6 +96,7 @@
 </head>
 <body id="page-top">
 
+  {{#if session}}
   <div class="main_container primary">
     
     <div class="sidebar_container secondary">
@@ -119,12 +120,15 @@
     </div>
     
   </div>
+  {{else}}
+  {{{body}}}
+  {{/if}}
 
   <!-- Bootstrap JS Option 1: Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+  {{#if session}}
   <script src="../../../js/agroapi_ajax.js"></script>
-
   <script src="../../assets/js/ajax.js"></script>
   <script src="../../../js/farm_view.js"></script>
   <script src="../../../js/materials.js"></script>
@@ -138,7 +142,7 @@
   <script src="../../../js/notification.js"></script>
   <script src="../../../js/pest&diseaseRecommendation.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+  {{/if}}
 
   <script type="text/javascript">
     jQuery.ajaxSetup({async: false });
