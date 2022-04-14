@@ -20,6 +20,7 @@ exports.getSeedChart = function(farm,data, next) {
 	var sql = "select * from crop_calendar_table join seed_table on seed_id = seed_planted join farm_table ft using(farm_id) where ? and harvest_date > ? order by harvest_date asc, calendar_id asc";
 	sql = mysql.format(sql, farm);
 	sql = mysql.format(sql, data);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
