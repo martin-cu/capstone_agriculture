@@ -1,5 +1,6 @@
 exports.init_session = function(obj, role, name, username, tab, session) {
 	var role = session.authority;
+	obj['writeable'] = session.writeable;
 	obj['name'] = session.username;
 	obj['username'] = session.username;
 	obj['session'] = true;

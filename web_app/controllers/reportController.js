@@ -215,11 +215,11 @@ exports.getDetailedHarvestReport = function(req, res) {
 											}
 											console.log(pd_chart);
 											for (var i = 0; i < pd_chart.length; i++) {
-												if (new Date(calendar.sowing_date > new Date(nutrient_chart[i].date_completed))) {
-													pd_chart[i]['dat'] = dateDiffInDays(new Date(pd_chart[i].date_diagnosed), new Date(calendar.sowing_date));
+												if (new Date(calendar.sowing_date > new Date(pd_chart[i].date_diagnosed))) {
+													pd_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(pd_chart[i].date_diagnosed));
 												}
 												else {
-													pd_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(pd_chart[i].date_diagnosed));
+													pd_chart[i]['dat'] = dateDiffInDays(new Date(pd_chart[i].date_diagnosed), new Date(calendar.sowing_date));
 												}
 
 												if (calendar.method == 'Transplanting')

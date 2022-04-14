@@ -54,6 +54,7 @@
 
                                 {{!-- <button class="btn btn-primary d-flex float-end" role="button" style="background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/sms/subscriptions_add"'>Add Subscription</button> --}}
                                 {{!-- ADD SUBSCRIPTIONS --}}
+                                {{#if writeable}}
                                 <div role="tablist" id="accordion-subscriptions" style="margin-bottom: 20px;">
                                     <div class="card shadow mb-4">
                                         <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
@@ -162,6 +163,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                {{/if}}
                                 {{!-- END OF ADD SUBSCRIPTIONS --}}
                                         
                                 <div>

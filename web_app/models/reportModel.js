@@ -4,6 +4,7 @@ mysql = mysql.connection;
 exports.getPDOccurence = function(data, next) {
 	var sql = "select *, case when type = 'Pest' then (select pest_name from pest_table where pest_id = pd_id) else (select disease_name from disease_table where disease_id = pd_id) end as pd_name, case when type = 'Pest' then (select pest_desc from pest_table where pest_id = pd_id) else (select disease_desc from disease_table where disease_id = pd_id) end as pd_desc, case when type = 'Pest' then (select scientific_name from pest_table where pest_id = pd_id) else (select scientific_name from disease_table where disease_id = pd_id) end as scientific_name from diagnosis where ?";
 	sql = mysql.format(sql, data);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
