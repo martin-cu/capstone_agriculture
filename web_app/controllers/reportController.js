@@ -97,6 +97,7 @@ exports.getFarmProductivityReport = function(req, res) {
 							//console.log(years);
 							html_data['harvest_reports'] = harvest_reports;
 							html_data['farm_productivity'] = analyzer.smoothFP(analyzer.calculateProductivity(fp_overview, input_resources));
+
 							//console.log(html_data.farm_productivity);
 							html_data["notifs"] = req.notifs;
 							res.render('farm_productivity_report', html_data);
@@ -163,79 +164,224 @@ exports.getSummaryHarvestReport = function(req, res) {
 	});
 }
 
+exports.ajaxSeedChart = function(req, res) {
+	console.log(req.body);
+	console.log(req.query);
+	var html_data = {};
+	// res.send({});
+	reportModel.getSeedChart( req.query.farms.map(a => a.farm_name), { list: req.query.plans }, function(err, seed_chart) {
+		if (err)
+			throw err;
+		else {
+			materialModel.getMaterialsList('Seed', null, function(err, seed_materials) {
+				if (err)
+					throw err;
+				else {
+					const calendar_list = seed_chart;
+					const calendar = calendar_list.filter(e => e.calendar_id == req.query.id)[0];
+					const crop_plans = [...new Set(calendar_list.map(e => e.crop_plan).map(item => item))];
+
+					seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
+					html_data['seed_chart_lbls'] = seed_chart.farm_legends;
+					html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
+					
+					res.send({ stringify: JSON.stringify(seed_chart.data), obj: seed_chart });
+				}
+			});
+		}
+	});
+}
+
 exports.getDetailedHarvestReport = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
 	html_data["notifs"] = req.notifs;
 	html_data["farm_name"] = req.query.farm;
-	html_data['range'] = { start: "2019-01-01", end: dataformatter.formatDate(new Date(), 'YYYY-MM-DD') };
-
-	farmModel.filteredFarmDetails({ farm_name: req.query.farm }, function(err, farm) {
-		if (err)
-			throw err
+	html_data['range'] = { start: "2017-01-01", end: dataformatter.formatDate(new Date(), 'YYYY-MM-DD') };
+	var arr = [], obj, calendar_ids;
+	reportModel.getHarvestSummaryChart({ crop_plan: req.params.crop_plan, status: 'Completed' }, function(err, chart_data) {
+		if (err) {
+			throw err;
+		}
 		else {
+			// Get best, worst, and target crop plans checked
+			obj = chart_data.filter(a => a.calendar_id == req.query.id)[0]
+			obj['category'] = 'Target';
+			arr.push(obj);
+			obj = chart_data.reduce((a,b)=>a.harvested>b.harvested ?a:b);
+			chart_data = chart_data.filter(function(e) { return e.calendar_id !== obj.calendar_id });
+			obj['category'] = '1st';
+			arr.push(obj);
+			obj = chart_data.reduce((a,b)=>a.harvested>b.harvested ?a:b);
+			chart_data = chart_data.filter(function(e) { return e.calendar_id !== obj.calendar_id });
+			obj['category'] = '2nd';
+			arr.push(obj);
+			obj = chart_data.reduce((a,b)=>a.harvested>b.harvested ?a:b);
+			obj['category'] = '3rd';
+			arr.push(obj);
 
-			reportModel.getSeedChart({ farm_name: req.query.farm },"2019-01-01", function(err, seed_chart) {
-				if (err)
+			// Clean array and indicate if object is best, worst, or target
+			arr = [...new Map(arr.map(item =>
+  		[item.calendar_id, item])).values()];
+  		arr.filter(e => e.calendar_id == req.query.id)[0]['isTarget'] = true;
+
+  		if (arr.length == 1)
+  			arr[0]['category'] = '';
+
+  		arr.sort((a,b) => b.harvested - a.harvested);
+
+  		calendar_ids = arr.map(a => a.calendar_id );
+
+			reportModel.getNutrientRecommendationDetails({ calendar_ids: calendar_ids }, function(err, nutrient_reco_details) {
+				if (err) {
 					throw err;
+				}
 				else {
-					materialModel.getMaterialsList('Seed', null, function(err, seed_materials) {
-						if (err)
-							throw err;
-						else {
-							const calendar_list = seed_chart;
-							//console.log(calendar_list);
-							const calendar = calendar_list.filter(e => e.calendar_id == req.query.id)[0];
-							seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
-							html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
-							//console.log(html_data);
 
-							reportModel.getNutrientChart({ crop_calendar_id: req.query.id }, { calendar_id: req.query.id }, function(err, nutrient_chart) {
-								if (err)
-									throw err;
-								else {
-									reportModel.getPDOccurence({ calendar_id: req.query.id }, function(err, pd_chart) {
-										if (err)
-											throw err;
-										else {
-											//console.log(calendar);
-											var len = dateDiffInDays(new Date(calendar.sowing_date), new Date(calendar.harvest_date));
-											for (var i = 0; i < nutrient_chart.length; i++) {
-												if (new Date(calendar.sowing_date > new Date(nutrient_chart[i].date_completed))) {
-													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(nutrient_chart[i].date_completed));
-												}
-												else {
-													nutrient_chart[i]['dat'] = dateDiffInDays(new Date(nutrient_chart[i].date_completed), new Date(calendar.sowing_date));
-												}
-												
-												if (calendar.method == 'Transplanting')
-													nutrient_chart[i].dat += 15;
+					html_data['comparison'] = analyzer.prepHarvestComparison(arr, nutrient_reco_details);
+					farmModel.filteredFarmDetails({ farm_name: req.query.farm }, function(err, farm) {
+					if (err) {
+						throw err
+					}
+					else {
+						cropCalendarModel.getAllCalendars(function(err, calendar_list) {
+							if (err)
+								throw err;
+							else {
+								console.log(calendar_list);
+								reportModel.getSeedChart( arr.map(a => a.farm_name), null, function(err, seed_chart) {
+									if (err)
+										throw err;
+									else {
+										materialModel.getMaterialsList('Seed', null, function(err, seed_materials) {
+											if (err)
+												throw err;
+											else {
+												const calendar_list = seed_chart;
+												const calendar = calendar_list.filter(e => e.calendar_id == req.query.id)[0];
+												const crop_plans = [...new Set(calendar_list.map(e => e.crop_plan).map(item => item))];
+												var te = ['Early 2019', 'Late 2020'];
 
-												//console.log(nutrient_chart[i].dat);
+												seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
+												html_data['seed_chart_lbls'] = seed_chart.farm_legends;
+												html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
+												html_data['crop_plans'] = { data: JSON.stringify(crop_plans), index: JSON.stringify([crop_plans.indexOf(te[0]), crop_plans.indexOf(te[1])]), start: te[0], end: te[1] };
+
+												reportModel.getNutrientChart({ crop_calendar_id: calendar_ids }, { calendar_id: calendar_ids }, function(err, nutrient_chart) {
+													if (err)
+														throw err;
+													else {
+														reportModel.getPDOccurence({ calendar_id: calendar_ids }, function(err, pd_chart) {
+															if (err)
+																throw err;
+															else {
+																farmModel.getAllFarms(function(err, farm_list) {
+																	if (err)
+																		throw err;
+																	else {
+																		var nutrient_chart_arr = [], temp_nutrient, temp_pd, temp;
+																		for (var x = 0; x < calendar_ids.length; x++) {
+																			temp_nutrient = nutrient_chart.filter(e => e.crop_calendar_id == calendar_ids[x]);
+																			temp_pd = pd_chart.filter(e => e.calendar_id == calendar_ids[x]);
+
+																			// Process and group nutrient and pd data by calendar ID
+																			// Nutrient data
+																			for (var i = 0; i < temp_nutrient.length; i++) {
+																				if (new Date(calendar.sowing_date > new Date(temp_nutrient[i].date_completed))) {
+																					temp_nutrient[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(temp_nutrient[i].date_completed));
+																				}
+																				else {
+																					temp_nutrient[i]['dat'] = dateDiffInDays(new Date(temp_nutrient[i].date_completed), new Date(calendar.sowing_date));
+																				}
+																				
+																				if (calendar.method == 'Transplanting')
+																					temp_nutrient[i].dat += 15;
+																			}
+																			// PD data
+																			for (var i = 0; i < temp_pd.length; i++) {
+																				if (new Date(calendar.sowing_date > new Date(temp_pd[i].date_diagnosed))) {
+																					temp_pd[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(temp_pd[i].date_diagnosed));
+																				}
+																				else {
+																					temp_pd[i]['dat'] = dateDiffInDays(new Date(temp_pd[i].date_diagnosed), new Date(calendar.sowing_date));
+																				}
+
+																				if (calendar.method == 'Transplanting')
+																					temp_pd[i].dat += 15;
+																			}
+																			
+																			temp = arr.filter(e => e.calendar_id == calendar_ids[x])[0].farm_name;
+																			while(temp.includes(" ")) {
+																				temp = temp.replace(' ', '_');
+																			}
+
+																			nutrient_chart_arr.push({ farm_name: arr.filter(e => e.calendar_id == calendar_ids[x])[0].farm_name, 
+																				chart_name: temp, 
+																				data: analyzer.processNutrientChart(temp_nutrient, temp_pd, arr) 
+																			});
+																		}
+
+																		farm_list.forEach(function(e) {
+																			arr.forEach(function(item) {
+																				if (e.farm_name == item.farm_name) {
+																					e['checked'] = true
+																				}
+																			})
+																		});
+
+																		html_data['farm_list'] = farm_list;
+																		html_data['json_nutrient'] = nutrient_chart_arr;
+																		html_data['nutrient_chart'] = JSON.stringify(nutrient_chart_arr);
+
+																		html_data["notifs"] = req.notifs;
+																		res.render('detailed_harvest_report', html_data);
+																	}
+																});
+																		
+															}
+														});
+																	
+													}
+												});						
 											}
-											console.log(pd_chart);
-											for (var i = 0; i < pd_chart.length; i++) {
-												if (new Date(calendar.sowing_date > new Date(pd_chart[i].date_diagnosed))) {
-													pd_chart[i]['dat'] = dateDiffInDays(new Date(calendar.sowing_date), new Date(pd_chart[i].date_diagnosed));
-												}
-												else {
-													pd_chart[i]['dat'] = dateDiffInDays(new Date(pd_chart[i].date_diagnosed), new Date(calendar.sowing_date));
-												}
-
-												if (calendar.method == 'Transplanting')
-													pd_chart[i].dat += 15;
-											}
-
-											nutrient_chart = analyzer.processNutrientChart(nutrient_chart, pd_chart);
-											html_data['nutrient_chart'] = JSON.stringify(nutrient_chart);
-											//console.log(nutrient_chart);
-											res.render('detailed_harvest_report', html_data);
-										}
-									});
+										});
 												
-								}
-							});
-							// Trial for getting ndvi data
+									}
+								});
+							}
+						});
+								
+					}
+				});
+
+				}
+			});
+		}
+});
+
+																
+}
+
+// reportModel.getHarvestReports(function(err, harvest_reports) {
+// 																if (err)
+// 																	throw err;
+// 																else {
+// 																	//console.log(harvest_reports);
+// 																	var years = harvest_reports.map( ({crop_plan}) => crop_plan.replace(/\D/g, "") );
+// 																	years = years.filter((x, i, a) => a.indexOf(x) == i)
+// 																	var lbl = ['Late', 'Early'];
+// 																	var arr;
+
+// 																	html_data['harvest_reports'] = harvest_reports;
+// 															html_data['farm_productivity'] = analyzer.smoothFP(analyzer.calculateProductivity(fp_overview, input_resources));
+// 															console.log(html_data['farm_productivity']);
+// 															//console.log(html_data.farm_productivity);
+// 															html_data["notifs"] = req.notifs;
+// 															res.render('detailed_harvest_report', html_data);
+// 																}
+// 															});		
+
+// Trial for getting ndvi data
 							// if (true) {
 							// 	const calendar = calendar_list.filter(e => e.calendar_id == req.query.id)[0];
 
@@ -302,13 +448,3 @@ exports.getDetailedHarvestReport = function(req, res) {
 							//         }
 							//     });
 							// }
-
-														
-						}
-					});
-							
-				}
-			});
-		}
-	});
-}

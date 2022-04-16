@@ -8,6 +8,11 @@ exports.createCycle = function(data, next) {
 	mysql.query(sql, next);
 };
 
+exports.getAllCalendars = function(next) {
+	var sql = "select * from crop_calendar_table join seed_table on seed_planted = seed_id order by crop_plan, farm_id";
+	mysql.query(sql, next);
+}
+
 exports.readCropCalendar = function(query, next) {
 	var sql = "select * from crop_calendar_table join seed_table on seed_planted = seed_id where ?";
 	sql = mysql.format(sql, query);

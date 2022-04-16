@@ -118,14 +118,13 @@
                             {{#each this.labels}}
                             <th class="text-center">{{this}}</th>
                             {{/each}}
-                            {{/if}}
+                        {{/if}}
 
                     	{{#each this.datasets}}
                     	<tr>
                     		<td class="text-left">{{this.label}}</td>
                     		{{#if @first}}
                     		<td class="text-left align-middle" rowspan="{{../datasets.length}}">{{../title}}</td>
-
                     		{{/if}}
                     		{{#each this.data}}
                     		<td class="text-center">{{this}}</td>
