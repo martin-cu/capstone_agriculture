@@ -165,11 +165,9 @@ exports.getSummaryHarvestReport = function(req, res) {
 }
 
 exports.ajaxSeedChart = function(req, res) {
-	console.log(req.body);
-	console.log(req.query);
 	var html_data = {};
-	// res.send({});
-	reportModel.getSeedChart( req.query.farms.map(a => a.farm_name), { list: req.query.plans }, function(err, seed_chart) {
+
+	reportModel.getSeedChart( req.query.farms, req.query.plans, function(err, seed_chart) {
 		if (err)
 			throw err;
 		else {
@@ -182,10 +180,11 @@ exports.ajaxSeedChart = function(req, res) {
 					const crop_plans = [...new Set(calendar_list.map(e => e.crop_plan).map(item => item))];
 
 					seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
+					
 					html_data['seed_chart_lbls'] = seed_chart.farm_legends;
 					html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
 					
-					res.send({ stringify: JSON.stringify(seed_chart.data), obj: seed_chart });
+					res.send({ stringify: (seed_chart.data), obj: seed_chart });
 				}
 			});
 		}
@@ -198,6 +197,7 @@ exports.getDetailedHarvestReport = function(req, res) {
 	html_data["notifs"] = req.notifs;
 	html_data["farm_name"] = req.query.farm;
 	html_data['range'] = { start: "2017-01-01", end: dataformatter.formatDate(new Date(), 'YYYY-MM-DD') };
+
 	var arr = [], obj, calendar_ids;
 	reportModel.getHarvestSummaryChart({ crop_plan: req.params.crop_plan, status: 'Completed' }, function(err, chart_data) {
 		if (err) {
@@ -205,20 +205,17 @@ exports.getDetailedHarvestReport = function(req, res) {
 		}
 		else {
 			// Get best, worst, and target crop plans checked
+			var ranking = ['1st', '2nd', '3rd'], i = 0;
 			obj = chart_data.filter(a => a.calendar_id == req.query.id)[0]
 			obj['category'] = 'Target';
 			arr.push(obj);
-			obj = chart_data.reduce((a,b)=>a.harvested>b.harvested ?a:b);
-			chart_data = chart_data.filter(function(e) { return e.calendar_id !== obj.calendar_id });
-			obj['category'] = '1st';
-			arr.push(obj);
-			obj = chart_data.reduce((a,b)=>a.harvested>b.harvested ?a:b);
-			chart_data = chart_data.filter(function(e) { return e.calendar_id !== obj.calendar_id });
-			obj['category'] = '2nd';
-			arr.push(obj);
-			obj = chart_data.reduce((a,b)=>a.harvested>b.harvested ?a:b);
-			obj['category'] = '3rd';
-			arr.push(obj);
+			while(i < ranking.length && chart_data.length > 0) {
+				obj = chart_data.reduce((a,b)=>a.harvested>b.harvested ?a:b);
+				chart_data = chart_data.filter(function(e) { return e.calendar_id !== obj.calendar_id });
+				obj['category'] = ranking[i];
+				arr.push(obj);
+				i++;
+			}
 
 			// Clean array and indicate if object is best, worst, or target
 			arr = [...new Map(arr.map(item =>
@@ -244,12 +241,14 @@ exports.getDetailedHarvestReport = function(req, res) {
 						throw err
 					}
 					else {
-						cropCalendarModel.getAllCalendars(function(err, calendar_list) {
+						cropCalendarModel.getAllCalendars(function(err, crop_cycle_list) {
 							if (err)
 								throw err;
 							else {
-								console.log(calendar_list);
-								reportModel.getSeedChart( arr.map(a => a.farm_name), null, function(err, seed_chart) {
+								var crop_plan_list = crop_cycle_list.map(a => a.crop_plan);
+								crop_plan_list = crop_plan_list.slice(crop_plan_list.indexOf(req.params.crop_plan), crop_plan_list.length);
+
+								reportModel.getSeedChart( arr.map(a => a.farm_name), crop_plan_list, function(err, seed_chart) {
 									if (err)
 										throw err;
 									else {
@@ -259,13 +258,13 @@ exports.getDetailedHarvestReport = function(req, res) {
 											else {
 												const calendar_list = seed_chart;
 												const calendar = calendar_list.filter(e => e.calendar_id == req.query.id)[0];
-												const crop_plans = [...new Set(calendar_list.map(e => e.crop_plan).map(item => item))];
-												var te = ['Early 2019', 'Late 2020'];
+												const crop_plans = [...new Set(crop_cycle_list.map(e => e.crop_plan).map(item => item))];
+												var range = [crop_plan_list[crop_plan_list.length-1], crop_plan_list[0]];
 
 												seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
 												html_data['seed_chart_lbls'] = seed_chart.farm_legends;
 												html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
-												html_data['crop_plans'] = { data: JSON.stringify(crop_plans), index: JSON.stringify([crop_plans.indexOf(te[0]), crop_plans.indexOf(te[1])]), start: te[0], end: te[1] };
+												html_data['crop_plans'] = { data: JSON.stringify(crop_plans.reverse()), index: JSON.stringify([crop_plans.indexOf(range[0]), crop_plans.indexOf(range[1])]), start: range[0], end: range[1] };
 
 												reportModel.getNutrientChart({ crop_calendar_id: calendar_ids }, { calendar_id: calendar_ids }, function(err, nutrient_chart) {
 													if (err)
@@ -280,7 +279,9 @@ exports.getDetailedHarvestReport = function(req, res) {
 																		throw err;
 																	else {
 																		var nutrient_chart_arr = [], temp_nutrient, temp_pd, temp;
+
 																		for (var x = 0; x < calendar_ids.length; x++) {
+																			//console.log(calendar_ids[x]);
 																			temp_nutrient = nutrient_chart.filter(e => e.crop_calendar_id == calendar_ids[x]);
 																			temp_pd = pd_chart.filter(e => e.calendar_id == calendar_ids[x]);
 

@@ -9,7 +9,7 @@ exports.createCycle = function(data, next) {
 };
 
 exports.getAllCalendars = function(next) {
-	var sql = "select * from crop_calendar_table join seed_table on seed_planted = seed_id order by crop_plan, farm_id";
+	var sql = "select distinct crop_plan, regexp_substr(crop_plan, '[0-9]+') as year from crop_calendar_table join seed_table on seed_planted = seed_id order by year desc, crop_plan desc";
 	mysql.query(sql, next);
 }
 

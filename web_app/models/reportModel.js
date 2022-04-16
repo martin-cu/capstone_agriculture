@@ -48,9 +48,17 @@ exports.getSeedChart = function(farm,data, next) {
 		}
 	}
 	if (data != null) {
-		sql += 'and harvest_date > ? ';
-		sql = mysql.format(sql, data);
-	}	
+		sql += 'and (?';
+		for (var i = 0; i < data.length; i++) {
+			sql = mysql.format(sql, { crop_plan: data[i] });
+			if (i < data.length - 1) {
+				sql += ' or ?';
+			}
+			else {
+				sql += ') ';
+			}
+		}
+	}
 
 	sql += 'and crop_calendar_table.status = "Completed" order by harvest_date asc, calendar_id asc';
 
@@ -118,7 +126,7 @@ exports.getHarvestSummaryChart = function(data, next) {
 		}
 	}
 
-	//console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 

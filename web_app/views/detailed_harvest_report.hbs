@@ -121,7 +121,7 @@
 									<div class="w-100">
 										<div class="w-100 border border-secondary d-flex flex-column rounded">
 											<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
-												<div>Historical Harvests ({{range.start}} to {{range.end}})</div>
+												<div>Historical Harvests</div>
 												<div class="text-small" style="font-size: 10px;">
 													{{seed_chart_lbls}}
 												</div>
@@ -193,13 +193,14 @@
 	var cycle_filter = ['Both'];
 	var temp_plans = [];
 	var disabled = false;
+	var seedChart;
 	$(document).ready(function() {
 		var view = '';
 		var seed_obj = {{{seed_chart.stringify}}};
 		console.log(seed_obj);
 
 		var seed_ctx = document.getElementById("seed_chart").getContext('2d');
-		var myChart = new Chart(seed_ctx, {
+		seedChart = new Chart(seed_ctx, {
 		  type: 'bar',
 		  data: seed_obj,
 		options: {
@@ -331,16 +332,18 @@
 	});
 
 	var crop_plans = {{{crop_plans.data}}};
+	console.log(crop_plans);
 	var early_plans = crop_plans.filter(e => e.includes('Early'));
 	var late_plans = crop_plans.filter(e => e.includes('Late'));
 	var index = {{{crop_plans.index}}};
 	var range = [];
 	temp_plans = crop_plans;
+	console.log(index);
 	$( function() {
 	    $("#slider-range").slider({
 	      range: true,
 	      min: 0,
-	      max: temp_plans.length,
+	      max: temp_plans.length-1,
 	      values: [ index[0], index[1] ],
 	      slide: function( event, ui ) {
 
@@ -373,9 +376,11 @@
 		}
 		console.log(selected_plans);
 		console.log(selected_farms);
-		// Update chart data
+		// Filter chart data
 		$.get('/update_seed_chart', { plans: selected_plans, farms: selected_farms }, function(result) {
-			console.log(result);
+			// Update chart data
+			seedChart.data = result.stringify;
+			seedChart.update();
 		});
 	});
 
