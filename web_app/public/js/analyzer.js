@@ -88,7 +88,7 @@ exports.processNutrientChart = function(nutrients, pd) {
 	var type = ['Applied', 'Recommended'];
 	var nutrient_arr = ['N', 'P', 'K'];
 	var datasets = ['Applied - N', 'Recommended - N', 'Applied - P', 'Recommended - P', 'Applied - K', 'Recommended - K'];
-	var color_arr = ['#6996b3', '#2d6484', '#74adad', '#588b8b', '#ffa59d', '#ff807b'];
+	var color_arr = ['#bdecff', '#0b86ba', '#aee8ae', '#0ea149', '#f7d6ff', '#b418de'];
 	var color_index = 0;
 	var filtered;
 	var dataset = [];
@@ -133,7 +133,7 @@ exports.processNutrientChart = function(nutrients, pd) {
 	}
 	//console.log(dataset);
 	var type = ['Pest', 'Disease'];
-	var pd_color = ['rgba(165, 42, 42, 0.3)', 'rgba(0,0,0, .3)',];
+	var pd_color = ['#d64700', '#cfc800',];
 	color_index = 0;
 	
 	for (var x = 0; x < type.length; x++) {
