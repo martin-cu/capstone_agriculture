@@ -40,6 +40,7 @@ router.post('/prepareFRPlan', environmentController.prepareFRPlan);
 
 //Ajax reports
 router.get('/update_seed_chart', reportController.ajaxSeedChart);
+router.get('/update_nutrient_chart', reportController.ajaxNutrientTimingChart);
 
 
 router.get('/get_soil_records', environmentController.ajaxGetSoilRecord);

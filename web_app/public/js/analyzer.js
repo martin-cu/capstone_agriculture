@@ -170,7 +170,7 @@ exports.processSeedChartData = function(calendars, seeds) {
 		['#FFA500', '#f3a73b', '#e7a95b', '#d8aa76', '#c7ac90'],
 		['#962995', '#ac44aa', '#c25cbf', '#d975d5', '#f08deb'],
 	]
-
+	//console.log(calendars);
 	var unique_cycles = [...new Set(calendars.map(item =>
 	  item.crop_plan))];
 	var unique_farms = [...new Set(calendars.map(item =>
