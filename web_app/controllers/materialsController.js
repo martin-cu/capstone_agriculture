@@ -35,7 +35,7 @@ exports.ajaxGetMaterials = function(req, res) {
             throw err;
         }
         else {
-            console.log(materials);
+            
             res.send(materials);
         }
     });
@@ -155,7 +155,7 @@ exports.addMaterials = function(req,res){
  exports.updateMaterial = function(req,res){
 
     var type = req.query.type;
-    console.log(type);
+    
     if(type == "Pesticide"){
         var filter = {
             pesticide_id : 1
@@ -350,7 +350,7 @@ exports.getOrders = function(req, res){
 
 exports.getMaterialsAjax = function(req, res){
     var type = req.query.type;
-    console.log(type);
+    
     materialModel.getMaterialsList(type, null, function(err, seeds){
         if(err){
             throw err;

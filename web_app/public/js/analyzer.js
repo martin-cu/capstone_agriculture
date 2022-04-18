@@ -101,7 +101,7 @@ exports.processNutrientChart = function(nutrients, pd) {
 			data_arr = [];
 			//console.log(`${type[i]} - ${nutrient_arr[x]}`);
 			filtered = nutrients.filter(e => e.nutrient_type == nutrient_arr[x] && e.application_type == type[i]);
-
+			//console.log(filtered);
 			for (var n = 0; n < filtered.length; n++) {
 				//console.log(filtered[n]);
 				data_arr.push({
@@ -160,46 +160,55 @@ exports.processNutrientChart = function(nutrients, pd) {
 exports.processSeedChartData = function(calendars, seeds) {
 	var obj_data = { labels: [], datasets: [] };
 	var color, lbl, data;
-	var color_arr = ['#ad765e', '#abaa5b', '#50a84a', '#3a6b9e', '#8d3a9e'];
-	for (var i = 0; i < calendars.length; i++) {
-		obj_data.labels.push(calendars[i].crop_plan);
-	}
-	// console.log(seeds)
-	// console.log(calendars);
+	var color_arr = ['#caf270', '#45c490', '#008d93', '#2e5468', '#2e5468', '#665191', '#a05195', '#d45087',
+	'#f95d6a', '#ff7c43', '#ffa600', ''
+	];
+	var color_arr_set = [
+		['#004c6d', '#2b6588', '#497fa3', '#669ac0', '#82b6dd'],
+		['#228B22', '#489740', '#5da453', '#75b16b', '#8cbd82'],
+		['#B22222', '#c64339', '#d85f52', '#eb7a6b', '#fc9485'],
+		['#FFA500', '#f3a73b', '#e7a95b', '#d8aa76', '#c7ac90'],
+		['#962995', '#ac44aa', '#c25cbf', '#d975d5', '#f08deb'],
+	]
+	//console.log(calendars);
+	var unique_cycles = [...new Set(calendars.map(item =>
+	  item.crop_plan))];
+	var unique_farms = [...new Set(calendars.map(item =>
+	  item.farm_name))];
+	obj_data.labels = unique_cycles;
+
+	var arr = [];
 	var seed_obj = { seed: [], avg_yield: [] }, avg, count;
-	for (var x = 0; x < seeds.length; x++) {
-		lbl = seeds[x].name;
-		data = [];
-		seed_obj.seed.push(lbl);
-		avg = 0;
-		count = 0;
-		for (var i = 0; i < calendars.length; i++) {
-			if (calendars[i].seed_planted == seeds[x].id) {
-				avg += parseInt(calendars[i].harvest_yield * calendars[i].farm_area);
-				data.push(parseInt(calendars[i].harvest_yield * calendars[i].farm_area));
-				count++;
-			}
-			else {
-				data.push(0);
-			}
-		}
-		obj_data.datasets.push({
-			label: lbl,
-			backgroundColor: color_arr[x],
-			data: data
-		});
+	var temp, stack, farm = '';
+	var y = 0;
 
-		if (avg == 0 && count == 0) {
-			avg = 1;
-			count = 1;
-		}
+	for (var y = 0; y < unique_farms.length; y++) {
+		for (var x = 0; x < seeds.length; x++) {
+			arr = [];
+			lbl = seeds[x].name;
+			data = [];
+			seed_obj.seed.push(lbl);
+			avg = 0;
+			count = 0;
 
-		seed_obj.avg_yield.push(parseInt(avg / count));
+			for (var i = 0; i < unique_cycles.length; i++) {
+				temp = calendars.filter(e=> e.crop_plan == unique_cycles[i] && e.farm_name == unique_farms[y]);
+				data.push(temp.filter(e => e.seed_planted == seeds[x].id).length != 0 ? temp.filter(e => e.seed_planted == seeds[x].id)[0].harvest_yield : 0 );
+			}
+
+			obj_data.datasets.push({
+				label: lbl+` ${unique_farms[y]}`,
+				yAxisID: `bar-stack`,
+				stack: unique_farms[y],
+				backgroundColor: color_arr_set[x][y],
+				data: data
+			});
+
+			seed_obj.avg_yield.push(parseInt(avg / count));
+		}
 	}
-	var max = (Math.max(...seed_obj.avg_yield));
-	var index = seed_obj.avg_yield.indexOf(max);
-
-	return { seed: seed_obj.seed[index], avg: seed_obj.avg_yield[index], data: obj_data };
+	
+	return { seed: null, avg: null, data: obj_data, farm_legends: unique_farms.join().replace(/,/g, ' / ') };
 }
 
 exports.processMeanProductivity = function(fp, input) {
@@ -212,6 +221,25 @@ exports.processMeanProductivity = function(fp, input) {
 
 	avg_productivity /= fp.length;
 	return (Math.round(avg_productivity * 10000) / 10000).toFixed(5);
+}
+
+exports.prepHarvestComparison = function(harvest_summary, nutrient_det) {
+	var filtered_nutrients;
+	for (var i = 0; i < harvest_summary.length; i++) {
+		filtered_nutrients = nutrient_det.filter(e => e.calendar_id == harvest_summary[i].calendar_id);
+
+		temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient User Generated');
+		harvest_summary[i]['manual_application'] = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
+
+		temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation' && e.followed == 'Followed');
+		harvest_summary[i]['followed_recommended'] = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
+		
+		temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation' && e.followed == 'Unfollowed');
+		harvest_summary[i]['total_recommended'] = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
+		harvest_summary[i]['total_recommended'] += harvest_summary[i]['followed_recommended'];
+	}
+
+	return harvest_summary;
 }
 
 exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
@@ -228,7 +256,7 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 	var temp_nutrients;
 
 	var env_obj = { Temperature: { data: [] }, Humidity: { data: [] }, Pressure: { data: [ ] }, Rainfall: { data: [] }, labels: [] };
-	console.log(data);
+	//console.log(data);
 	for (var i = 0; i < data.length; i++) {
 		env_obj.labels.push(data[i].farm_name);
 		env_obj.Temperature.data.push((Math.round((data[i].temp - 273.15) * 100)/100).toFixed(2));
@@ -277,13 +305,12 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 				temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation' && e.followed == 'Followed');
 				temp_nutrients = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
 				dataset_obj.data.splice(6, 0, temp_nutrients);
-
+				
 				temp_nutrients = filtered_nutrients.filter(e => e.record_type == 'Nutrient Generated Recommendation' && e.followed == 'Unfollowed');
 				temp_nutrients = temp_nutrients.length != 0 ? temp_nutrients[0].count : 0;
 				temp_nutrients += dataset_obj.data[6];
 				dataset_obj.data.splice(7, 0, temp_nutrients);
-
-
+				
 				chart_data.datasets.push(dataset_obj);
 			}
 
@@ -304,7 +331,7 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 			
 			
 			index++;
-			printable[i].datasets[x].data[6] = `${printable[i].datasets[x].data[6]} / ${printable[i].datasets[x].data[6]}`;
+			printable[i].datasets[x].data[6] = `${printable[i].datasets[x].data[6]} / ${printable[i].datasets[x].data[7]}`;
 			printable[i].datasets[x].data.splice(7,1);
 		}
 	}

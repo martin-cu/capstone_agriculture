@@ -8,7 +8,7 @@
 
 	<div class="row">
 		<div class="col-lg-12 col-lg-12 col-xxl-12">
-			<div class="card shadow mb-4" style="max-width: 1150px; margin: 0px auto;">
+			<div class="card shadow mb-4" style="max-width: 1250px; margin: 0px auto;">
 
 				{{!-- START CARD HEADER --}}
 				<div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff;">
@@ -25,63 +25,248 @@
 				    <i class="fas fa-print" style="color: rgb(255,255,255);" value="print" id="print" type="button"></i>
 				</div>
 
+				<div class="row">
+			        <div class="col mx-5">
+			            <div class="">
+			                <table class="table">
+			                    <tr>
+			                    	<th>Farm Name</th>
+			                    	<th>Seed Name</th>
+			                    	<th class="text-right">Seed Rate</th>
+			                    	<th class="text-center">User Generated Fertilizer Use</th>
+			                    	<th class="text-center">System Fertilizer Recommendation (Followed / Total)</th>
+			                    	<th class="text-left">Harvest Yield</th>
+			                    </tr>
+			                    {{#each comparison}}
+			                    <tr class="{{#if isTarget}}table-active{{/if}}">
+			                    	<td>
+			                    		<div class="" style="min-width: max-content !important;">
+			                    			{{this.farm_name}}
+			                    			{{#compareTwoValues this.category '1st' operator='==='}}<span class="ml-3"><i class="fas fa-medal"></i><i class="fas fa-medal"></i><i class="fas fa-medal"></i></span>{{/compareTwoValues}}
+			                    			{{#compareTwoValues this.category '2nd' operator='==='}}<span class="ml-3"><i class="fas fa-medal"></i><i class="fas fa-medal"></i></i></span>{{/compareTwoValues}}
+			                    			{{#compareTwoValues this.category '3rd' operator='==='}}<span class="ml-3"><i class="fas fa-medal"></i></i></span>{{/compareTwoValues}}
+			                    		</div>
+			                    	</td>
+			                    	<td>{{this.seed_name}}</td>
+			                    	<td class="text-right">{{this.seed_rate}}</td>
+			                    	<td class="text-center">{{this.manual_application}}</td>
+			                    	<td class="text-center">{{this.followed_recommended}} / {{this.total_recommended}}</td>
+			                    	<td class="text-left" {{#if isTarget}}style="border: solid 2px green;"{{/if}}>{{this.harvested}} cavans/ha</td>
+			                    </tr>
+			                    {{/each}}
+			                </table>
+			            </div>
+			        </div>
+			    </div>
+
 				<div class="card-body" style="color: #332C1F;">
 					<div class="row">
-						<div class="col" style="padding-top: 5px;">
-							<div class="m-3">
+						<div class="col" style="padding-top: 0px;">
+							<div class="mx-3 mb-3">
+								<div class="w-100">
+											
+								</div>
+							</div>
+							<div class="mx-3 mb-2">
 								<div class="d-flex w-100 flex-column">
 									<div class="w-100">
-										<div class="w-100 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+										<div class="w-100 border border-secondary d-flex flex-column rounded">
 											<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
-												{{farm_name}} Harvests ({{range.start}} to {{range.end}})
+												<div>Historical Harvests</div>
+												<div class="text-small" style="font-size: 10px;">
+													{{seed_chart_lbls}}
+												</div>
 											</div>
-											<div class="wrapper mx-3">
-												<canvas id="seed_chart" style="width: 450px; max-width: 850px !important;"></canvas>	
+											<!-- Seed chart filter -->
+											<div class="form-row ml-3 mt-3">
+												<div class="form-group">
+													<label class="form-check-label">Cycles Included:</label>
+													<div class="ml-4">
+													  <input class="form-check-input " type="checkbox" id="early_cycle" name="early_cycle" checked value="Early">
+													  <label class="form-check-label" for="early_cycle">
+													    Early Cycles
+													  </label>
+													</div>
+													<div class="ml-4">
+													  <input class="form-check-input" type="checkbox" id="late_cycle" name="late_cycle" checked value="Late">
+													  <label class="form-check-label" for="late_cycle">
+													    Late Cycles
+													  </label>
+													</div>
+												</div>
+										      	<div class="ml-3 d-block" style="width: 350px;">
+										      		<p>
+													  <label for="amount">From: </label>
+													  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;" value="{{crop_plans.start}} to {{crop_plans.end}}">
+													</p>
+													<div class="slider-wrap">
+														<div class="slider" id="slider-range"></div>
+													</div>
+												</div>
+											    <div class="form-group mx-3">
+												      <label class="ml-2" for="date_range_end">Farms</label>
+												      <div class="dropdown">
+														  <button class="btn btn-default dropdown-toggle" type="button" 
+														          id="dropdownMenu1" data-toggle="dropdown" 
+														          aria-haspopup="true" aria-expanded="false">
+														    Farms...
+														  </button>
+														  <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
+														  	{{#each farm_list}}
+														  		<li >
+															      <label>
+															        <input type="checkbox" name="farm_filter" {{#if this.checked}}checked{{/if}} value="{{this.farm_name}}">{{this.farm_name}}
+															      </label>
+															    </li>
+														  	{{/each}}
+														  </ul>
+														</div>
+												</div>
+												<div class="form-group align-bottom ml-3">
+													<div class="h-100 align-bottom align-text-bottom mt-2">
+														<button class="btn btn-primary mt-4" id="filter_seed_chart" type="button">Filter</button>	
+													</div>
+												</div>
+											</div>
+											<!-- Seed chart proper -->
+											<div class="w-100 wrapper px-3">
+												<canvas id="seed_chart" style="width: 75%; max-width: 100% !important;"></canvas>	
+											</div>
+											<div class="mt-1 mb-3 w-100">
+												<div class="d-flex justify-content-center">
+													<div class="">
+														<i class="fas fa-square"></i>
+														<label>Legend 1</label>
+													</div>
+												</div>
+												<!-- Seed chart instructions -->
+												<div class="mt-1 d-flex flex-column" style="font-size: 15px;">
+													<div class="text-muted mx-4">
+														* The chart visualizes the historical harvest performance of selected farms in relation to its crop cycle (e.g Early / Late) and seed type. It should be viewed in relation to the farming activities performed by each farm and assessed with the occurences of pest and diseases with the experienced environmental conditions during the cycle.
+													</div>
+													<div class="text-muted mx-4">
+														* Pests and diseases may often occur during (XXX crop cycles) as weather conditions are less favorable with strong and fluctuating rainfall. This may result in less yield. Comparison among different crop cycle performance is best performed within the same cycle (e.g Early / Late) as it portrays similar weather conditions due to the seasonal factor. 
+		 											</div>
+												</div>	
 											</div>
 										</div>
 									</div>
-									<div class="mt-3 w-100">
-										Consistently highest yield: {{seed_chart.obj.seed}} with mean produce of {{seed_chart.obj.avg}} per harvest
-									</div>
+											
 								</div>
 							</div>
 						</div>
 					</div>
 
 					<div class="row">
-						<div class="col" style="padding-top: 5px;">
-							<div class="m-3">
-								<div class="d-flex w-100 flex-column">
-									<!-- style="width: 950px; max-width: 1150px !important;" -->
+						<div class="col" style="">
+							<div class="mx-3 mb-3">
+								<div class="d-flex w-100 mb-2">
+									<div class="w-100 d-flex">
 									<div class="w-100">
-										<div class="w-100 mr-5 border border-secondary d-flex flex-column rounded" style="">
+										<div class="border border-secondary d-flex flex-column rounded" >
 											<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
-												Nutrient Application Timing
+												Nutrient Timing {{this.farm_name}}
 											</div>
-											<div class="wrapper mx-3 w-100 pr-5" style="">
-												<canvas class="mt-2" id="nutrient_chart" style="width: 750px; height: 400px;"></canvas>
+											<!-- Nutrient chart filters -->
+											<div class="form-row ml-3 mt-3">
+											    <div class="form-group mr-3">
+											      <label class="ml-1" for="date_range_end">Farm Filter 1</label>
+											      <select class="form-control" id="farm_filter1" name="farm_filter1">
+										      			{{#each farm_list}}
+										      				{{#if this.extra}}
+										      				
+										      				{{else}}
+										      				<option value="{{this.farm_name}}" {{#if this.nutrient_check1}}selected{{/if}}>{{this.farm_name}}</option>
+										      				{{/if}}
+										      			{{/each}}
+										      		</select>
+												</div>
+
+												<div class="form-group">
+											      <label class="ml-1" for="date_range_end">Crop Plan </label>
+													<select class="form-control" id="nutrient_plan_filter1" name="nutrient_plan_filter1">
+										      			{{#each nutrient_filter.crop_plan1}}
+										      				<option value="{{this.calendar_id}}" {{#if this.checked}}selected{{/if}}>{{this.crop_plan}}</option>
+										      			{{/each}}
+										      		</select>
+												</div>
+
+												<div class="form-group mx-3">
+													<label>vs</label>
+												</div>
+
+												<div class="form-group mr-3">
+											      <label class="ml-1" for="date_range_end">Farm Filter 2</label>
+											      <select class="form-control" id="farm_filter2" name="farm_filter2">
+											      		<option selected>...</option>
+										      			{{#each farm_list}}
+										      				{{#if this.extra}}
+										      				
+										      				{{else}}
+										      				<option value="{{this.farm_name}}" {{#if this.nutrient_check2}}selected{{/if}}>{{this.farm_name}}</option>
+										      				{{/if}}
+										      			{{/each}}
+										      		</select>
+												</div>
+												<div class="form-group">
+											      <label class="ml-1" for="date_range_end">Crop Plan </label>
+											      <select class="form-control" id="nutrient_plan_filter2" name="nutrient_plan_filter2">
+											      		<option selected>...</option>
+										      			{{#each nutrient_filter.crop_plan2}}
+										      				<option value="{{this.calendar_id}}" {{#if this.checked}}selected{{/if}}>{{this.crop_plan}}</option>
+										      			{{/each}}
+										      		</select>
+												</div>
+
+												<div class="form-group align-bottom ml-3">
+													<div class="h-100 align-bottom align-text-bottom mt-2">
+														<div class="d-flex">
+															<button class="btn btn-primary mt-4" id="filter_nutrient_chart" type="button">Compare</button>	
+															<div class="ml-3 text-danger mt-4 pt-1" id="nutrient_filter_err"></div>
+														</div>
+													</div>
+													
+												</div>
+											</div>
+											{{#grouped_each 2 json_nutrient}}
+											<div class="d-flex w-100">
+												{{#each this}}
+												<div class="d-flex flex-column w-50 mx-auto {{#if this.yes}}hide{{/if}}" style="" id="nutrient_chart{{@index}}_cont">
+													<div class="text-center" style="margin-bottom: -15px;" id="nutrient_chart_lbl{{@index}}">{{this.farm_name}}</div>
+													<div class="wrapper mx-3"  style="height: 400px;">
+														<canvas class="" id="nutrient_chart{{@index}}" style="height: 400px;"></canvas>
+													</div>
+												</div>
+												{{/each}}
+											</div>
+											{{/grouped_each}}
+											<div class="mt-1 mb-3 w-100">
+												<div class="d-flex justify-content-center">
+													<div class="">
+														<i class="fas fa-square"></i>
+														<label>Legend 1</label>
+													</div>
+												</div>
+												<!-- Seed chart instructions -->
+												<div class="mt-1 d-flex flex-column" style="font-size: 15px;">
+													<div class="text-muted mx-4">
+														* The chart aims to show the relationship between the timing and amount of recommended nutrient applications vs actual applications. It presents the data linearly by days in the x-axis. 
+													</div>
+													<div class="text-muted mx-4">
+														* Data concerning pests and diseases implies its diagnosis in accordance with its date of appearance 
+													</div>
+													<div class="text-muted mx-4">
+														* Notice relationship between pests and disease occurence with K nutrient application
+													</div>
+												</div>	
 											</div>
 										</div>
-									</div>
-									<div class="mt-3 w-100">
-										<div class="d-flex flex-column" style="font-size: 14px;">
-											<div class="text-muted mx-4">
-												* The chart aims to show the relationship between the timing and amount of recommended nutrient applications vs actual applications. It presents the data linearly by days in the x-axis. 
-											</div>
-											<div class="text-muted mx-4">
-												* Data concerning pests and diseases implies its diagnosis in accordance with its date of appearance 
-											</div>
-											<div class="text-muted mx-4">
-												* Notice relationship between pests and disease occurence with K nutrient application
-											</div>
-										</div>
-											
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
+					
 				</div>
 			</div>
 		</div>
@@ -91,56 +276,259 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script type="text/javascript">
-	
-	var seed_obj = {{{seed_chart.stringify}}};
-	console.log(seed_obj);
+	var cycle_filter = ['Both'];
+	var temp_plans = [];
+	var disabled = false;
+	var seedChart;
+	var nutrient_chart_arr = [];
 
-	var seed_ctx = document.getElementById("seed_chart").getContext('2d');
-	var myChart = new Chart(seed_ctx, {
-	  type: 'bar',
-	  data: seed_obj,
-	options: {
-	    tooltips: {
-	      displayColors: true,
-	      callbacks:{
-	        mode: 'x',
-	      },
-	    },
-	    responsive: true,
-	    maintainAspectRatio: false,
-	    legend: { position: 'bottom' },
-	  }
+	$(document).ready(function() {
+		var view = '';
+		var seed_obj = {{{seed_chart.stringify}}};
+		console.log(seed_obj);
+
+		var crop_plan_list = {{{nutrient_filter.crop_plan_list}}};
+
+		$('#nutrient_plan_filter2').on('change', function() {
+			if ($(this).find(':checked').val() == '...') {
+				$('#farm_filter2').val('...');
+			}
+		});
+
+		$('#farm_filter1, #farm_filter2').on('change', function() {
+			var target;
+			if ($(this).attr('id') == 'farm_filter1') {
+				target = '#nutrient_plan_filter1';
+			}
+			else {
+				target = '#nutrient_plan_filter2';
+			}
+			$(target).empty();
+			$(target).append(`<option selected>...</option>`)
+			crop_plan_list.filter(e => e.farm_name == $(this).val()).forEach(function(e) {
+				$(target).append(`<option value="${e.calendar_id}">${e.crop_plan}</option>`);
+			});
+		});
+
+		$('#filter_nutrient_chart').on('click', function() {
+			var calendars = [], farms = [], plans = [];
+			$('#nutrient_plan_filter1 option:selected, #nutrient_plan_filter2 option:selected').each(function() {
+				if ($(this).attr('value') != 'undefined') {
+					calendars.push($(this).attr('value'));
+
+					if ($(this).html() != '...')
+						plans.push($(this).html());
+					else
+						$(`#nutrient_chart1_cont`).addClass('hide');
+				}
+			});
+			$('#farm_filter1 option:selected, #farm_filter2 option:selected').each(function() {
+				if ($(this).attr('value') != 'undefined')
+					farms.push($(this).attr('value'));
+			});
+
+			// Data validation
+			if (calendars.filter(e => e == 'undefined').length == 1) {
+				// Error message here
+				$('#nutrient_filter_err').html('Please select a farm and a crop calendar filter');
+			}
+			else {
+				// Ajax and update chart
+				$.get('/update_nutrient_chart', { calendars: calendars, farms: farms, plans: plans }, function(result) {
+					result.obj.forEach(function(item, index) {
+						if (index == 1 && item.hasOwnProperty('yes')) {
+							$(`#nutrient_chart1_cont`).addClass('hide');
+						}
+						else {
+							$(`#nutrient_chart1_cont`).removeClass('hide');
+						}
+
+						if (!item.hasOwnProperty('yes')) {
+							$(`#nutrient_chart_lbl${index}`).html(item.farm_name);
+							nutrient_chart_arr[index].data.datasets = item.data;
+							nutrient_chart_arr[index].update();
+						}
+					});
+				});
+			}
+		});
+
+		var seed_ctx = document.getElementById("seed_chart").getContext('2d');
+		seedChart = new Chart(seed_ctx, {
+		  type: 'bar',
+		  data: seed_obj,
+		options: {
+			plugins: {
+				legend: {
+					display: false
+				}
+			},
+		    tooltips: {
+		      displayColors: true,
+		      callbacks:{
+		        mode: 'x',
+		      },
+		    },
+		    responsive: true,
+		    maintainAspectRatio: false,
+		    scales: {
+				yAxes: [
+					{
+					  id: "bar-stack",
+					  position: "left",
+					  stacked: true,
+					  ticks: {
+					    beginAtZero: true
+					  }
+					},
+					{
+						id: "line",
+						position: "right",
+						stacked: false,
+						ticks: {
+						beginAtZero: true
+					},
+						gridLines: {
+						drawOnChartArea: false, 
+					},
+					}]
+		    }
+		  }
+		});
+
+		var nutrient_obj = {{{nutrient_chart}}};
+		//console.log(nutrient_obj);
+		var ctx;
+		var options = {
+			responsive: true, // Instruct chart js to respond nicely.
+		    maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+		    scales: {
+		    	y: {
+		    		title: {
+		    			display: true, 
+		    			text: 'Amount'
+		    		}
+		    	},
+		    	x: {
+		    		title: {
+		    			display: true, 
+		    			text: 'Date of Application based on (DAT)'
+		    		}
+		    	}
+		    },
+		    plugins: {
+				legend: {
+					display: false
+				}
+			}
+		};
+		for (var i = 0; i < nutrient_obj.length; i++) {
+			
+			ctx =  document.getElementById('nutrient_chart'+i).getContext('2d');
+			nutrient_chart_arr.push(new Chart(ctx, {
+			    type: 'scatter',
+			    data: {
+				    datasets: nutrient_obj[i].data
+				},
+			    options: options
+			}));
+		}
+	})	
+
+	$('#early_cycle, #late_cycle').on('change', function() {
+		cycle_filter = [];
+		$('input:checked[name="early_cycle"], input:checked[name="late_cycle"]').each(function() {
+			cycle_filter.push($(this).attr('value'));
+		});
+		if (cycle_filter.length == 2)
+			cycle_filter = ['Both'];
+		if (cycle_filter.length == 0) {
+			$('#early_cycle, #late_cycle').each(function() {
+				$(this).prop('checked', true);
+			});
+			cycle_filter = ['Both'];
+		}
+		if (cycle_filter[0] == 'Both') {
+      		temp_plans = crop_plans;
+      	}
+      	else {
+      		temp_plans = crop_plans.filter(e => e.includes(cycle_filter[0]));
+      		
+      	}
+      	
+      	if (temp_plans.length <= 1) {
+      		disabled = true;
+      	}
+      	else 
+      		disabled = false;
+
+		$( "#slider-range" ).slider( "destroy" );
+		$('#amount').val(temp_plans[0] + " to " + temp_plans[temp_plans.length-1] );
+      	$( function() {
+		    $("#slider-range").slider({
+		    	disabled: disabled,
+		      range: true,
+		      min: 0,
+		      max: temp_plans.length-1,
+		      values: [ 0, temp_plans.length-1 ],
+		      slide: function( event, ui ) {
+		        $( "#amount" ).val(temp_plans[ui.values[0]] + " to " + temp_plans[ui.values[1]] );
+		      }
+		    });
+	 	 } );
 	});
 
-	var nutrient_obj = {{{nutrient_chart}}};
-	console.log(nutrient_obj);
-	var nutrient_ctx = document.getElementById("nutrient_chart").getContext('2d');
-	var options = {responsive: true, // Instruct chart js to respond nicely.
-	    maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
-	    scales: {
-	    	y: {
-	    		title: {
-	    			display: true, 
-	    			text: 'Amount'
-	    		},
-	    	},
-	    	x: {
-	    		title: {
-	    			display: true, 
-	    			text: 'Date of Application based on (DAT)'
-	    		},
-	    	}
-	    }
-	};
+	var crop_plans = {{{crop_plans.data}}};
+	console.log(crop_plans);
+	var early_plans = crop_plans.filter(e => e.includes('Early'));
+	var late_plans = crop_plans.filter(e => e.includes('Late'));
+	var index = {{{crop_plans.index}}};
+	var range = [];
+	temp_plans = crop_plans;
+	console.log(index);
+	$( function() {
+	    $("#slider-range").slider({
+	      range: true,
+	      min: 0,
+	      max: temp_plans.length-1,
+	      values: [ index[0], index[1] ],
+	      slide: function( event, ui ) {
 
-	// End Defining data
-	var myChart = new Chart(nutrient_ctx, {
-	    type: 'scatter',
-	    data: {
-		    datasets: nutrient_obj
-		},
-	    options: options
+	        $( "#amount" ).val(temp_plans[ui.values[0]] + " to " + temp_plans[ui.values[1]] );
+	      }
+	    });
+
+  } );
+
+	$(".checkbox-menu").on("change", "input[type='checkbox']", function() {
+	   $(this).closest("li").toggleClass("active", this.checked);
 	});
-	//console.log(myChart);
+
+	$(document).on('click', '.allow-focus', function (e) {
+	  e.stopPropagation();
+	});
+
+	$('#filter_seed_chart').on('click', function() {
+		// Get filter values
+		var slider = $('#slider-range').slider('option', 'values') 
+		var selected_farms = [];
+		var selected_plans = [];
+		var found = false;
+		($('input:checked[name="farm_filter"]').each(function() {
+			selected_farms.push($(this).attr('value'));
+		}));
+
+		for (var i = slider[0]; i <= slider[1]; i++) {
+			selected_plans.push(temp_plans[i]);
+		}
+		console.log(selected_plans);
+		console.log(selected_farms);
+		// Filter chart data
+		$.get('/update_seed_chart', { plans: selected_plans, farms: selected_farms }, function(result) {
+			// Update chart data
+			seedChart.data = result.stringify;
+			seedChart.update();
+		});
+	});
 
 </script>

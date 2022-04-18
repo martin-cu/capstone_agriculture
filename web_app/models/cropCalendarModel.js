@@ -8,6 +8,16 @@ exports.createCycle = function(data, next) {
 	mysql.query(sql, next);
 };
 
+exports.getAllCalendars = function(next) {
+	var sql = "select distinct crop_plan, regexp_substr(crop_plan, '[0-9]+') as year from crop_calendar_table join seed_table on seed_planted = seed_id order by year desc, crop_plan desc";
+	mysql.query(sql, next);
+}
+
+exports.getCropPlans = function(next) {
+	var sql = "select regexp_substr(crop_plan, '[0-9]+') as year, ft.farm_id, ft.farm_name, cct.calendar_id, cct.crop_plan from farm_table ft join crop_calendar_table cct where ft.farm_id = cct.farm_id order by year desc, crop_plan desc";
+	mysql.query(sql, next);
+}
+
 exports.readCropCalendar = function(query, next) {
 	var sql = "select * from crop_calendar_table join seed_table on seed_planted = seed_id where ?";
 	sql = mysql.format(sql, query);
