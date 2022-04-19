@@ -258,10 +258,10 @@ $(document).ready(function(){
             var i;
             for(i = 0; i < possibilities.length; i++){
                 if(symptoms.length > 0){
-                    $("#pd_possibility_list").append('<tr> <td colspan="3">'+ possibilities[i].pd_name +'</td> <td colspan="2">'+ possibilities[i].pd_type +'</td></td><td colspan="1">'+ possibilities[i].count +'</td><td colspan="1">'+ possibilities[i].percent +'</td> <td colspan="1"><input class="diagnosis_radio" type="radio" id="" name="pd" value="'+ possibilities[i].pd_id +'|'+ possibilities[i].pd_type +'"></tr>');
+                    $("#pd_possibility_list").append('<tr> <td colspan="3">'+ possibilities[i].pd_name +'</td> <td colspan="2">'+ possibilities[i].pd_type +'</td></td><td colspan="1" style="text-align: right;">'+ possibilities[i].count +'</td><td colspan="1" style="text-align: right;">'+ possibilities[i].percent +'</td> <td colspan="1"><input class="diagnosis_radio" type="radio" id="" name="pd" value="'+ possibilities[i].pd_id +'|'+ possibilities[i].pd_type +'"></tr>');
                 }
                 else{
-                    $("#pd_possibility_list").append('<tr> <td colspan="3">'+ possibilities[i].pd_name +'</td> <td colspan="2">'+ possibilities[i].pd_type +'</td></td><td colspan="1">N/A</td><td colspan="1">'+ possibilities[i].percent +'</td> <td colspan="1"><input class="diagnosis_radio" type="radio" id="" name="pd" form="add_diagnosis_form" value="'+ possibilities[i].pd_id +'|'+ possibilities[i].pd_type +'"></tr>');
+                    $("#pd_possibility_list").append('<tr> <td colspan="3">'+ possibilities[i].pd_name +'</td> <td colspan="2">'+ possibilities[i].pd_type +'</td></td><td colspan="1" style="text-align: right;">N/A</td><td colspan="1" style="text-align: right;" style="text-align: right;">'+ possibilities[i].percent +'</td> <td colspan="1"><input class="diagnosis_radio" type="radio" id="" name="pd" form="add_diagnosis_form" value="'+ possibilities[i].pd_id +'|'+ possibilities[i].pd_type +'"></tr>');
                 }
             }
         });

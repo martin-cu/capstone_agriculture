@@ -149,7 +149,7 @@ $(document).ready(function() {
 									// }
 								}
 							}
-							if(probabilities[i].probability >= 40){
+							if(probabilities[i].probability >= 35){//from 40
 								// console.log("push");
 								possibilities.push(probabilities[i]);
 							}
@@ -171,7 +171,7 @@ $(document).ready(function() {
 							}
 						});
 						console.log(possibilities);
-						for(i = 0; i < possibilities.length; i++){
+						for(i = 0; i < possibilities.length; i++){ //possibilities.length
 							//Add to pesticide application plan
 							$.get("/getPDPreventions", {type : possibilities[i].pd_type, id : possibilities[i].pd_id, possibilities : possibilities[i], land_prep_date : $("#land_prep_date_start").val(), seed_id : $("#seed_id").val(), sowing_date : $("#sowing_date_start").val(), vegetation_date : $("#sowing_date_end").val()}, function(preventions){
 								// console.log(preventions);
@@ -754,8 +754,9 @@ $(document).on("change","#frequency_pd_id", function(){
 		if(farm_id == "all"){
 			var radio = "hidden";
 			var checked = "";
+			$("#prevention_table").empty();
 			for(i = 0; i < result.preventions.length; i++){
-				$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+				$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p class="ellipsis" style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
 			}
 		}
 		else{
@@ -768,7 +769,7 @@ $(document).on("change","#frequency_pd_id", function(){
 					//NO EXISTING ID
 					radio = "hidden";
 					for(i = 0; i < result.preventions.length; i++){
-						$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
+						$("#prevention_table").append('<div class="card-body card cards-shadown aos-init mini-card symptom-card" data-aos="flip-left" data-aos-duration="350" > <h4 class="card-title" style="color: #657429 !important;">' + result.preventions[i].detail_name + '</h4> <p <p class="ellipsis" style="height : 60%; color: gray;">'+ result.preventions[i].detail_desc +'</p> <row class="text-right" style="bottom: 0px; align: right;"> <input type="checkbox" name="preventions['+i+']" form="create_preventions_form" value="'+i+'|'+result.preventions[i].detail_name+'|'+result.preventions[i].detail_desc + '" style="padding-right : 10px; color: gray;" '+ checked +' '+ radio +'> <span style="color: gray;" '+ radio +'>Create work order</span> </row> </div>');
 					}
 				}
 				else{

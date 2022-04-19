@@ -658,3 +658,9 @@ div.scrollmenu {
 	position :relative;
 	bottom: 20px;
 }
+
+.ellipsis {
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}

@@ -163,12 +163,19 @@ exports.processSeedChartData = function(calendars, seeds) {
 	var color_arr = ['#caf270', '#45c490', '#008d93', '#2e5468', '#2e5468', '#665191', '#a05195', '#d45087',
 	'#f95d6a', '#ff7c43', '#ffa600', ''
 	];
+	// var color_arr_set = [
+	// 	['#004c6d', '#2b6588', '#497fa3', '#669ac0', '#82b6dd'],
+	// 	['#228B22', '#489740', '#5da453', '#75b16b', '#8cbd82'],
+	// 	['#B22222', '#c64339', '#d85f52', '#eb7a6b', '#fc9485'],
+	// 	['#FFA500', '#f3a73b', '#e7a95b', '#d8aa76', '#c7ac90'],
+	// 	['#962995', '#ac44aa', '#c25cbf', '#d975d5', '#f08deb'],
+	// ]
 	var color_arr_set = [
-		['#004c6d', '#2b6588', '#497fa3', '#669ac0', '#82b6dd'],
-		['#228B22', '#489740', '#5da453', '#75b16b', '#8cbd82'],
-		['#B22222', '#c64339', '#d85f52', '#eb7a6b', '#fc9485'],
-		['#FFA500', '#f3a73b', '#e7a95b', '#d8aa76', '#c7ac90'],
-		['#962995', '#ac44aa', '#c25cbf', '#d975d5', '#f08deb'],
+		['#2b6588', '#489740', "#fccb35", "#1ff0ff", '#e65ab5'],
+		['#2b6588', '#489740', "#fccb35", "#1ff0ff", '#e65ab5'],
+		['#2b6588', '#489740', "#fccb35", "#1ff0ff", '#e65ab5'],
+		['#2b6588', '#489740', "#fccb35", "#1ff0ff", '#e65ab5'],
+		['#2b6588', '#489740', "#fccb35", "#1ff0ff", '#e65ab5'],
 	]
 	//console.log(calendars);
 	var unique_cycles = [...new Set(calendars.map(item =>
@@ -246,6 +253,7 @@ exports.processHarvestSummary = function(data, harvest, history, fp, nutrient) {
 	const unique = [...new Map(data.map(item =>
 	  [item.seed_name, item])).values()];
 	var obj_keys = ['seed_rate', 'temp', 'humidity', 'pressure', 'rainfall', 'forecast', 'harvested'];
+	var color_arr = ['#ad765e', '#abaa5b', '#50a84a', '#3a6b9e', '#8d3a9e'];
 	var chart_arr = [];
 	var dataset_obj;
 	var summary = '';
