@@ -3,6 +3,7 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const workOrderModel = require('../models/workOrderModel.js');
 const materialModel = require('../models/materialModel.js');
+const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const farmModel = require('../models/farmModel.js');
 const harvestModel = require('../models/harvestModel.js');
@@ -421,7 +422,117 @@ exports.getWorkOrdersDashboard = function(req, res) {
 											html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard', req.session);
 
 											html_data["notifs"] = req.notifs;
-											res.render('home', html_data);
+
+											pestdiseaseModel.getTotalDiagnosesPerPD2(null,null, function(err, total){
+												if(err)
+													throw err;
+												else{
+													var i,x, temp_total = [];
+													var pest = [];
+													var disease = [];
+													
+													temp_total = total;
+													
+												}
+												pestdiseaseModel.getDiagnosisFrequentStage2(null, null, null, null, function(err, frequency){
+													if(err)
+														throw err;
+													else{
+														// console.log(temp_total);
+														for(x = 0; x < temp_total.length; x++){
+															var freq_stage = "N/A", stage_count = 0;
+															for(i = 0; i < frequency.length; i++){
+																if(temp_total[x].pd_id == frequency[i].pd_id && temp_total[x].type == frequency[i].type){
+																	if(frequency[i].count > stage_count){
+																		stage_count = frequency[i].count;
+																		freq_stage = frequency[i].stage_diagnosed;
+																	}
+																}
+															}
+															temp_total[x]["frequent_stage"] = freq_stage;
+														}
+
+
+														for(x = 0; x < temp_total.length; x++){
+															if(temp_total[x].type == "Pest")
+																pest[x] = temp_total[x];
+															if(temp_total[x].type == "Disease")
+																disease[x] = temp_total[x];
+														}
+														var new_total = [];
+														for(i = 0; i < 5; i++){
+															new_total.push(temp_total[i]);
+														}
+														
+														new_total[0]["selected"] = true;
+
+														// console.log(new_total);
+
+													}
+
+													farmModel.getAllFarms(function(err, farms){
+														if(err)
+															throw err;
+														else{
+															html_data["farms"] = farms;
+														}
+
+														pestdiseaseModel.getTotalDiagnosesPerMonth(null, null, null, null, function(err, month_frequency){
+															if(err)
+																throw err;
+															else{
+																var i, highest = 0;
+																for(i = 0; i < month_frequency.length; i++){
+																	//get highest
+																	if(month_frequency[i].frequency > highest)
+																		highest = month_frequency[i].frequency;
+																}
+																highest = Math.ceil(highest / 5) * 5;
+																for(i = 0; i < month_frequency.length; i++){
+																	//update array for chart
+																	month_frequency[i]["percent"] = (month_frequency[i].frequency * 1.0) / (highest * 1.0) * 100;
+																}
+
+																month_frequency[0]["month_label"] = "Jan";
+																month_frequency[1]["month_label"] = "Feb";
+																month_frequency[2]["month_label"] = "Mar";
+																month_frequency[3]["month_label"] = "Apr";
+																month_frequency[4]["month_label"] = "May";
+																month_frequency[5]["month_label"] = "Jun";
+																month_frequency[6]["month_label"] = "Jul";
+																month_frequency[7]["month_label"] = "Aug";
+																month_frequency[8]["month_label"] = "Sep";
+																month_frequency[9]["month_label"] = "Oct";
+																month_frequency[10]["month_label"] = "Nov";
+																month_frequency[11]["month_label"] = "Dec";
+
+																html_data["highest"] = highest;
+																html_data["middle"] = highest / 2;
+																
+															}
+															pestdiseaseModel.getPestDiseaseList("Pest", function(err, pests){
+																if(err)
+																	throw err;
+																else{
+																	var i;
+																	// console.log(pests);
+																	for(i = 0; i < pests.length; i++){
+																		pests[i]["pd_type"] = "Pest";
+																		if(pests[i].last_diagnosed != null)
+																		pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'YYYY-MM-DD');
+																	}
+																	html_data["pests"] = pests;
+																}
+																html_data["total"] = new_total;
+																html_data["month_frequency"] = month_frequency;
+																// html_data["pest"] = pest;
+																// html_data["disease"] = disease;
+																res.render('home', html_data);
+															});
+														});
+													});
+												});
+											});
 										}
 									});
 								}

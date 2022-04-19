@@ -613,7 +613,7 @@ div.scrollmenu {
 	margin: 0;
 	padding : 0;
 	display : inline-block;
-	width: 500px;
+	width: 90%;
 	height : 300px;
 	box-shadow: 0 0 10px 0 #555;
 	border-radius: 5px;
@@ -636,7 +636,7 @@ div.scrollmenu {
 .bars .bar{
 	display: block;
 	background : rgb(103, 129, 31);
-	width : 25px;
+	width : 40px;
 	height : 100px;
 	position: absolute;
 	border-radius: 3px;
