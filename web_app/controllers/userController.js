@@ -15,16 +15,51 @@ function initializeSessionInfo(session, obj) {
 
 exports.loadRegistration = function(req, res) {
 	var html_data = {};
-	//html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
+	html_data["title"] = "User Management";
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'user_management', req.session);
+	html_data["notifs"] = req.notifs;
 
 	employeeModel.queryEmployee(null, function(err, result) {
 		if (err)
 			throw err;
 		else {
-			html_data['employee_list'] = result;
-			res.render('registration', html_data );
+			html_data['employee_list'] = { activeUsers: result.filter(e=>e.isAccActive == 1), isActiveEmployees: result.filter(e=>e.isActive == 1 && (e.isAccActive == null || e.isAccActive == 0)), 
+				isInactiveEmployees: result.filter(e=>e.isActive == null || e.isActive == 0) };
+			res.render('user_management', html_data );
 		}
 	});
+}
+
+exports.deactivateAccount = function(req, res) {
+	employeeModel.queryEmployee({username:req.query.username}, function(err, emp) {
+		if (err)
+			throw err;
+		else {
+			if (emp.length != 0) {
+				var status;
+				if (req.query.status == 'deactivate') {
+					status = 0;
+					userModel.deleteUser({ username: req.query.username }, function(err, result) {
+						if (err)
+							throw err;
+						else {
+							console.log(result);
+							res.redirect('/user_management');
+						}
+					});
+				}
+				else {
+					//Err message
+					res.redirect('/user_management');
+				}
+			}
+			else {
+				//Err message
+				res.redirect('/user_management');
+			}	
+		}
+	});
+			
 }
 
 exports.registerUser = function(req, res) {
@@ -149,7 +184,7 @@ exports.loginUser = function(req, res) {
 										// Update session object once matched!
 										req.session = initializeSessionInfo(req.session, user_details[0]);
 										
-										res.redirect('/home');	
+										res.redirect('/crop_calendar');	
 									}
 								});								
 							} 

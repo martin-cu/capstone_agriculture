@@ -87,12 +87,6 @@ router.get('/initialize_account', userController.getInitializePassword);
 router.post('/initialize_password', userController.initializePassword);
 router.post('/login', userController.loginUser);
 router.get('/logout', userController.logout);
-router.get('/registration', userController.loadRegistration);
-router.post('/account_registration', userController.registerUser);
-router.get('/reset_password', (req, res) => {
-  res.render('forgot_pass', { } );
-});
-router.post('/reset_password', userController.resetPassword);
 
 
 /*** Page Navigation Start ***/
@@ -195,7 +189,14 @@ router.post('/create_work_order', workOrderController.createWorkOrder);
 router.post('/edit_work_order', workOrderController.editWorkOrder);
 
 //User Management
-router.get('/user_management', isPrivate, notifController.getNotification , employeeController.getUsers);
+router.get('/user_management', isPrivate, notifController.getNotification , userController.loadRegistration);
+router.get('/registration', userController.loadRegistration);
+router.post('/account_registration', userController.registerUser);
+router.get('/reset_password', (req, res) => {
+  res.render('forgot_pass', { } );
+});
+router.post('/reset_password', userController.resetPassword);
+router.get('/deactivateAccount', userController.deactivateAccount);
 
 //Report
 router.get('/farm_productivity_report', isPrivate, notifController.getNotification ,reportController.getFarmProductivityReport);
