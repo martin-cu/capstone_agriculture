@@ -1,0 +1,224 @@
+<div class="container-fluid">
+
+    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">{{title}}</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12 col-xl-12 col-xxl-12">
+
+            <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
+              <div class="card-header d-flex justify-content-between align-items-center" style="background: #939C1F;color: #ffffff; height:auto">
+                <ul class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
+                    <li class="nav-item"><a id="active-subscriptions-tab" class="nav-link " data-toggle="tab" href="#default"role="tab" aria-controls="activeUsers" aria-selected="false" 
+                        style="background: #F0F0F0;">Default</a></li>
+                    <li class="nav-item"><a id="active-subscriptions-tab" class="nav-link" data-toggle="tab" href="#manage_reco"role="tab" aria-controls="activeEmployees" aria-selected="false" 
+                    style="background: #F0F0F0;">Manage Recommendations</a></li>
+                    <li class="nav-item"><a id="active-subscriptions-tab" class="nav-link active" data-toggle="tab" href="#define_reco"role="tab" aria-controls="activeEmployees" aria-selected="true" 
+                    style="background: #F0F0F0;">Define Recommendations</a></li>
+                </ul>
+              </div>
+
+              <div class="card-body">
+                {{!-- TAB CONTENT --}}
+                <div class="tab-content" id="nav-tabContent">
+                  {{!-- TAB 1 --}}
+                  <div class="tab-pane fade " id="default" role="tabpanel" aria-labelledby="active-users-tab">
+                      <div class="text-dark" id="">
+                        Explain default nutrient recommendation here...
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                      </div>
+                  </div>
+
+                  {{!-- END OF TAB 1 --}}
+
+                  {{!-- TAB 2 --}}
+                  <div class="tab-pane fade" id="manage_reco" role="tabpanel" aria-labelledby="inactive-users-tab">
+                      
+                  </div>
+                  {{!-- END OF TAB 2 --}}
+
+                  {{!-- TAB 3 --}}
+                  <div class="tab-pane fade show active" id="define_reco" role="tabpanel" aria-labelledby="inactive-users-tab">
+                      <div class="text-dark">
+                        <form action="" method="">
+                          
+                          <div class="form-row">
+                            <div class="form-group">
+                              <label class="ml-1" for="reco_name">Custom Recommendation Name</label>
+                              <input type="text" class="form-control" id="reco_name" name="reco_name" max="20" placeholder="Custom name..." required style="width: 350px;">
+                            </div>
+                            <div class="form-group mx-3">
+                              <label class="ml-1" for="farm_filter">Farms</label>
+                              <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" 
+                                        id="dropdownMenu1" data-toggle="dropdown" 
+                                        aria-haspopup="true" aria-expanded="false">
+                                  Farms...
+                                </button>
+                                <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
+                                  {{#each farm_list}}
+                                    <li >
+                                      <label>
+                                        <input type="checkbox" name="farm_filter" value="{{this.farm_id}}">{{this.farm_name}}
+                                      </label>
+                                    </li>
+                                  {{/each}}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          <table class="table w-100" id="table">
+                            <tr>
+                              <th class="text-center">Application Date</th>
+                              <th class="text-center">Fertilizer</th>
+                              <th class="w-100">Amount Calculation</th>
+                              <th><button type="button" class="float-right btn btn-primary" id="btn_add">Add Item</button></th>
+                            </tr>
+                            <tr>
+                              <td style="width:  180px;">
+                                <div class="d-flex">
+                                  <label class="col-form-label">DAT</label>
+                                  <div class="ml-3">
+                                    <input type="number" class="form-control" id="dat" name="dat" placeholder="0" minlength="0" style="width: 120px !important;">
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="">
+                                  <select class="form-control" id="fertilizer" name="fertilizer" required>
+                                    {{#each fertilizer_list}}
+                                    <option value="{{this.fertilizer_id}}">{{this.fertilizer_name}}</option>
+                                    {{/each}}
+                                  </select>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="d-flex mt-2">
+                                  <div id="formula_container0" class="d-flex"><div class="formula_item">=</div></div>
+
+                                  <div class="ml-auto">
+                                    <div class="nav-item dropdown no-arrow btn-dropdown" style="" id="action_menu">
+                                      <button type="button" class="btn btn-dark dropdown-toggle item_dropdown" aria-expanded="true" data-toggle="dropdown" style="" id="">
+                                        <span class="d-none d-lg-inline me-2 small formula_menu_span" style="">Formula Menu</span>
+                                      </button>
+                      
+                                      <div class="dropdown-menu notSidebar formula-menu" style="width: fit-content;" aria-labelledby="action_menu" value="0">
+                                        <h6 class="dropdown-header">Operands</h6>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_add" value="1">Add</a>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_subtract" value="2">Subtract</a>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_multiply" value="3">Multiply</a>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_divide" value="4">Divide</a>
+
+                                        <div class="dropdown-divider"></div>
+
+                                        <h6 class="dropdown-header">Round Brackets</h6>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_open_parentheses" value="5">Open Parentheses</a>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_closing_parentheses" value="6">Closing Parentheses</a>
+
+                                        <div class="dropdown-divider"></div>
+
+                                        <h6 class="dropdown-header">Variables</h6>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_farm_area" value="7">Farm Area</a>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_fertilizer_value" value="8">Fertilizer Nutrient Value</a>
+                                        <a class="dropdown-item notSidebar" href="#" name="menu_total_requirement" value="9">Total Nutrient Reqs</a>
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </td>
+                              <td></td>
+                            </tr>
+                          </table>
+
+                        </form>
+                      </div>
+                  </div>
+                  {{!-- END OF TAB 3 --}}
+
+              </div>
+              {{!-- END OF TAB CONTENT --}}
+
+            </div>
+
+          </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var menu_arr = ['', 'fa fa-plus fa-2xs', 'fas fa-minus fa-2xs', 'fas fa-asterisk fa-2xs', 'fas fa-divide fa-2xs', '', '', '', '', ''];
+  var count = 0;
+  var item_arr = [];
+  var temp_arr;
+  var item_str;
+  var append_icon;
+
+  function registerDropdownEvent() {
+    $('#table').off('show.bs.dropdown');
+
+    $('#table').on('show.bs.dropdown', function(e) {
+
+    });
+  }
+
+  $('table').on('click', 'tr td div div div div a',function(e) {
+    e.stopPropagation();
+    console.log('asdas');
+    var index = $(this).parent().attr('value');
+    item_str = $(`#formula_container${index}`).html();
+    temp_arr = [];
+    temp_arr.push($(this).html());
+ 
+    switch (parseInt($(this).attr('value'))) {
+      case 1: 
+        append_icon = `<i class="${menu_arr[$(this).attr('value')]}"></i>`;
+        break;
+      case 2:
+        append_icon = `<i class="${menu_arr[$(this).attr('value')]}"></i>`;
+        break;
+      case 3:
+        append_icon = `<i class="${menu_arr[$(this).attr('value')]}"></i>`;
+        break;
+      case 4:
+        append_icon = `<i class="${menu_arr[$(this).attr('value')]}"></i>`;
+        break;
+      case 5:
+        append_icon = `<div class="formula_item-special">(</div>`;
+        break;
+      case 6:
+        append_icon = `<div class="formula_item-special">)</div>`;
+        break;
+      case 7:
+        append_icon = `<div class="formula_item">Farm area</div>`;
+        break;
+      case 8:
+        append_icon = `<div class="formula_item">Fertilizer nutrient value</div>`;
+        break;
+      case 9:
+        append_icon = `<div class="formula_item">Total nutrient requirement</div>`;
+        break;
+      default:
+        append_icon = ``;
+    }
+
+    $(`#formula_container${index}`).html('');
+    $(`#formula_container${index}`).append(`${item_str} ${append_icon}`);
+  });
+
+  $('#btn_add').on('click', function() {
+    var count = $('#table').children().length;
+    console.log(count);
+    $('#table').append(`<tr> <td style="width: 180px;"> <div class="d-flex"> <label class="col-form-label">DAT</label> <div class="ml-3"> <input type="number" class="form-control" id="dat" name="dat" placeholder="0" minlength="0" style="width: 120px !important;"> </div> </div> </td> <td> <div class=""> <select class="form-control" id="fertilizer" name="fertilizer" required=""> </select> </div> </td> <td> <div class="d-flex mt-2"> <div id="formula_container${count}" class="d-flex"><div class="formula_item">=</div></div> <div class="ml-auto"> <div class="nav-item dropdown no-arrow btn-dropdown" style="" id="action_menu"> <button type="button" class="btn btn-dark dropdown-toggle item_dropdown" aria-expanded="true" data-toggle="dropdown" style="" id=""> <span class="d-none d-lg-inline me-2 small formula_menu_span" style="">Formula Menu</span> </button> <div class="dropdown-menu notSidebar formula-menu" style="width: fit-content;" aria-labelledby="action_menu" value="${count}"> <h6 class="dropdown-header">Operands</h6> <a class="dropdown-item notSidebar" href="#" name="menu_add" value="1">Add</a> <a class="dropdown-item notSidebar" href="#" name="menu_subtract" value="2">Subtract</a> <a class="dropdown-item notSidebar" href="#" name="menu_multiply" value="3">Multiply</a> <a class="dropdown-item notSidebar" href="#" name="menu_divide" value="4">Divide</a> <div class="dropdown-divider"></div> <h6 class="dropdown-header">Round Brackets</h6> <a class="dropdown-item notSidebar" href="#" name="menu_open_parentheses" value="5">Open Parentheses</a> <a class="dropdown-item notSidebar" href="#" name="menu_closing_parentheses" value="6">Closing Parentheses</a> <div class="dropdown-divider"></div> <h6 class="dropdown-header">Variables</h6> <a class="dropdown-item notSidebar" href="#" name="menu_farm_area" value="7">Farm Area</a> <a class="dropdown-item notSidebar" href="#" name="menu_fertilizer_value" value="8">Fertilizer Nutrient Value</a> <a class="dropdown-item notSidebar" href="#" name="menu_total_requirement" value="9">Total Nutrient Reqs</a> </div> </div> </div> </div> </td> <td></td> </tr>`);
+
+    registerDropdownEvent();
+  });
+</script>

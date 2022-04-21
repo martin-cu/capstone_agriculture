@@ -10,6 +10,27 @@
 
 } */
 
+.formula_item {
+	font-size: 16px;
+	height: max-content;
+	line-height: 1.2;
+}
+
+.formula_item-special {
+	font-size: 18px;
+	line-height: 1.05;
+	height: max-content;
+}
+
+.item_dropdown {
+	/*border-radius: 20px; color: #584c33; height: 50px; margin-top: 5px*/
+	margin-top:  -5px;
+}
+
+.formula_menu_span {
+	/*color: #584c33; padding-left: 10px; font-weight: bold;*/
+}
+
 .ui-slider .ui-btn-inner {
     padding: 4px 0 0 0 !important;
 }

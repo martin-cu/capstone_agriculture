@@ -141,6 +141,8 @@ exports.getAllMaterials = function(type, filter, next) {
 }
 
 exports.readResourcesUsed = function(type, data, calendar, next) {
+	console.log(data);
+	console.log(calendar);
 	if (type == 'Seed') {
 
 	}

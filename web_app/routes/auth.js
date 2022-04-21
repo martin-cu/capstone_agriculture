@@ -177,6 +177,11 @@ router.get('/nutrient_management', isPrivate, notifController.getNotification ,e
 router.get('/nutrient_management/:farm_name/:calendar_id', isPrivate, notifController.getNotification ,environmentController.detailedNutrientManagement);
 router.post('/nutrient_management/add_record', environmentController.addSoilRecord);
 
+router.get('/nutrient_mgt/discover', isPrivate, notifController.getNotification ,environmentController.getNutrientMgtDiscover);
+router.get('/nutrient_mgt/nutrient_plan', isPrivate, notifController.getNotification ,environmentController.getNutrientMgtPlan);
+router.get('/nutrient_mgt/fertilizer_plan/ajax' ,environmentController.ajaxGetNutrientPlanView);
+router.get('/nutrient_mgt/recommendation_system', isPrivate, notifController.getNotification ,environmentController.getRecommendationSystem);
+
 //SMS Management (Update later)
 router.get('/sms/subscriptions', isPrivate, notifController.getNotification , globe.getSubscriptions);
 router.get('/sms/subscriptions_add', isPrivate, notifController.getNotification , globe.getAddSubscription);

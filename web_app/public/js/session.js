@@ -11,7 +11,7 @@ exports.init_session = function(obj, role, name, username, tab, session) {
 		obj['office_role'] = true;
 	else if (role === 2)
 		obj['purchasing_role'] = true;
-	console.log(obj);
+
 	if (tab === 'dashboard')
 		obj['home_tab'] = true;
 	else if (tab === 'farms') 
@@ -32,8 +32,6 @@ exports.init_session = function(obj, role, name, username, tab, session) {
 		obj['sms_tab'] = true;
 	else if (tab === 'pest_and_disease') 
 		obj['pest_and_disease_tab'] = true;
-	else if (tab === 'nutrient_mgt_discover') 
-		obj['nutrient_discover_tab'] = true;
 	else if (tab === 'nutrient_mgt_diagnose') 
 		obj['nutrient_diagnose_tab'] = true;
 	else if (tab === 'user_mgt') 
@@ -50,7 +48,13 @@ exports.init_session = function(obj, role, name, username, tab, session) {
 		obj['monitor_farms_tab'] = true;
 	else if (tab === 'disaster') 
 		obj['disaster'] = true;
-		
+
+	// Nutrient Management Tab
+	else if (tab === 'nutrient_mgt_discover') 
+		obj['nutrient_mgt_discover'] = true;
+	else if (tab === 'nutrient_mgt_plan') 
+		obj['nutrient_mgt_plan'] = true;
+
 	// Pest and Disease Diagnose Tab
 	else if (tab === 'pest_and_disease_discover') 
 		obj['pest_and_disease_discover'] = true;
@@ -86,7 +90,7 @@ exports.init_session = function(obj, role, name, username, tab, session) {
 	// Reports
 	else if (tab === 'reports') 
 	obj['reports_tab'] = true;
-
+	
 	return obj;
 }
 
