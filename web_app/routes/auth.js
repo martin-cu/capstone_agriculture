@@ -6,6 +6,7 @@ const workOrderController = require('../controllers/workOrderController');
 const employeeController = require('../controllers/employeeController');
 const cropCalendarController = require('../controllers/cropCalendarController');
 const environmentController = require('../controllers/environmentController');
+const nutrientController = require('../controllers/nutrientController');
 const reportController = require('../controllers/reportController');
 const openWeatherController = require('../controllers/openWeatherController');
 const notifController = require('../controllers/notificationController.js');
@@ -173,14 +174,18 @@ router.get('/checkExistingPreventionWo', environmentController.checkExistingPrev
 
 
 //Nutrient Management
-router.get('/nutrient_management', isPrivate, notifController.getNotification ,environmentController.getNurientManagement);
+router.get('/nutrient_management', isPrivate, notifController.getNotification ,nutrientController.getNurientManagement);
 router.get('/nutrient_management/:farm_name/:calendar_id', isPrivate, notifController.getNotification ,environmentController.detailedNutrientManagement);
 router.post('/nutrient_management/add_record', environmentController.addSoilRecord);
 
-router.get('/nutrient_mgt/discover', isPrivate, notifController.getNotification ,environmentController.getNutrientMgtDiscover);
-router.get('/nutrient_mgt/nutrient_plan', isPrivate, notifController.getNotification ,environmentController.getNutrientMgtPlan);
-router.get('/nutrient_mgt/fertilizer_plan/ajax' ,environmentController.ajaxGetNutrientPlanView);
-router.get('/nutrient_mgt/recommendation_system', isPrivate, notifController.getNotification ,environmentController.getRecommendationSystem);
+router.get('/nutrient_mgt/discover', isPrivate, notifController.getNotification ,nutrientController.getNutrientMgtDiscover);
+router.get('/nutrient_mgt/nutrient_plan', isPrivate, notifController.getNotification ,nutrientController.getNutrientMgtPlan);
+router.get('/nutrient_mgt/fertilizer_plan/ajax' ,nutrientController.ajaxGetNutrientPlanView);
+router.get('/nutrient_mgt/recommendation_system', isPrivate, notifController.getNotification ,nutrientController.getRecommendationSystem);
+router.get('/nutrient_mgt/get_cnr_plans/ajax',nutrientController.ajaxCheckCNRPlans);
+router.get('/nutrient_mgt/create_cnr_plans/ajax',nutrientController.createCNRPlan);
+router.get('/nutrient_mgt/update_cnr_plan',nutrientController.updateCNRPlan);
+
 
 //SMS Management (Update later)
 router.get('/sms/subscriptions', isPrivate, notifController.getNotification , globe.getSubscriptions);

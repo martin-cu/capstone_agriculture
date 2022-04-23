@@ -1,6 +1,71 @@
 var mysql = require('./connectionModel');
 mysql = mysql.connection;
 
+exports.deleteCNRAssignments = function(query, next) {
+	var sql = `delete from custom_nutrient_recommendation_assignments where ?`;
+	sql = mysql.format(sql, query);
+	mysql.query(sql, next);
+}
+
+exports.deleteCNRItems = function(query, next) {
+	var sql = `delete from custom_nutrient_recommendation_items where ?`;
+	sql = mysql.format(sql, query);
+	mysql.query(sql, next);
+}
+
+exports.getAggregatedCNR = function(next) {
+	var sql = `SELECT cnr.cnr_id, cnr.cnr_name, cnri.* FROM custom_nutrient_recommendation cnr join custom_nutrient_recommendation_items cnri on cnr.cnr_id = cnri.cnr_id order by cnr.cnr_id;`;
+	mysql.query(sql, next);
+}
+
+exports.getAggregatedCNRAssignment = function(next) {
+	var sql = `select cnra.*, cnr.cnr_name from custom_nutrient_recommendation cnr join custom_nutrient_recommendation_assignments cnra on cnr.cnr_id = cnra.cnr_id`;
+	mysql.query(sql, next);
+}
+
+exports.getCNRPlans = function(query, next) {
+	var sql = `SELECT cnr.cnr_id, cnr.cnr_name, cnr_assignment_id, farm_id FROM custom_nutrient_recommendation cnr join custom_nutrient_recommendation_assignments cnra on cnr.cnr_id = cnra.cnr_id`;
+	if (query != null) {
+		sql += ` where ?`;
+		sql = mysql.format(sql, query);
+	}
+	mysql.query(sql, next);
+}
+
+exports.createCNR = function(query, next) {
+	var sql = `insert into custom_nutrient_recommendation set ?`;
+	sql = mysql.format(sql, query);
+	mysql.query(sql, next);
+}
+
+exports.createCNRAssignments = function(query, next) {
+	var sql = `insert into custom_nutrient_recommendation_assignments (cnr_id, farm_id) values `;
+	query.forEach(function(item, index) {
+		if (index != 0) {
+			sql += `, `;
+		}
+		sql += `(?, ?)`;
+		sql = mysql.format(sql, item.cnr_id);
+		sql = mysql.format(sql, item.farm_id);
+	});
+	mysql.query(sql, next);
+}
+
+exports.createCNRItems = function(query, next) {
+	var sql = `insert into custom_nutrient_recommendation_items (dat, fertilizer_id, amount_equation, cnr_id) values `;
+	query.forEach(function(item, index) {
+		if (index != 0) {
+			sql += `, `;
+		}
+		sql += `(?, ?, ?, ?)`;
+		sql = mysql.format(sql, item.dat);
+		sql = mysql.format(sql, item.fertilizer_id);
+		sql = mysql.format(sql, item.amount_equation);
+		sql = mysql.format(sql, item.cnr_id);
+	});
+	mysql.query(sql, next);
+}
+
 exports.addSoilRecord = function(data, next) {
 	var sql = "insert into soil_quality_table set ?";
 	sql = mysql.format(sql, data);
