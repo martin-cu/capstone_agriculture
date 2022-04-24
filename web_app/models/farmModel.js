@@ -19,6 +19,12 @@ exports.getForecastedYieldRecord = function(data, next) {
 	mysql.query(sql, next);
 }
 
+exports.getSpecificFarm = function(data, next) {
+	var sql = "select * from farm_table where ?";
+	sql = mysql.format(sql, data);
+	mysql.query(sql, next);
+}
+
 exports.getForecastedYieldRecord1 = function(data, next) {
 	var sql = "SELECT calendar_id, temp, humidity, pressure, rainfall, seed_id, harvested, N, P, K, seed_rate, forecast FROM forecasted_yield where ";
 	for (var i = 0; i < data.calendar_id.length; i++) {

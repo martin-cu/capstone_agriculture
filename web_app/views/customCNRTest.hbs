@@ -1,0 +1,41 @@
+<div class="w-50 mx-auto">
+	<table class="table">
+		<tr>
+			<td colspan="4">
+				Active Custom Nutrient Recommendation/s
+			</td>
+		</tr>
+		{{#each cnr_plans}}
+		<tr class="fr_item">
+			<td>
+				{{this.cnr_name}}
+				<input type="hidden" name="cnr_name" value="{{this.cnr_name}}">
+			</td>
+			<td colspan="3"></td>
+		</tr>
+			{{#each this.cnr_items}}
+			<tr class="fr_item">
+				<td>
+					{{this.target_date}}
+					<input type="hidden" name="cnr_item_target_date" value="{{this.target_date}}">
+				</td>
+				<td>
+					{{this.fertilizer.name}}
+					<input type="hidden" name="cnr_item_fertilizer" value="{{this.fertilizer}}">
+				</td>
+				<td>
+					{{this.desc}}
+					<input type="hidden" name="cnr_item_desc" value="{{this.desc}}">
+				</td>
+				<td>
+					{{this.amount}} bags
+					<input type="hidden" name="cnr_item_amount" value="{{this.amount}}">
+				</td>
+				<td>
+					<input class="form-check-input" style="margin-top: 10px;" type="checkbox" name="fr_checkbox" value="{{@index}}" rowspan="1" checked="true">
+				</td>
+			</tr>
+			{{/each}}
+		{{/each}}
+	</table>
+</div>

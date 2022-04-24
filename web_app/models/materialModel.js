@@ -95,7 +95,7 @@ exports.getMaterialsList = function(type, filter, next){
 		}
 	}
 	else if (type == "Fertilizer") {
-		table = "SELECT fertilizer_id as id, fertilizer_name as name, fertilizer_desc as mat_desc FROM fertilizer_table";
+		table = "SELECT fertilizer_id as id, fertilizer_name as name, fertilizer_desc as mat_desc, N, P, K FROM fertilizer_table";
 	
 		if(filter == null){
 			sql = table + ";";

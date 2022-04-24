@@ -224,7 +224,7 @@ function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 						var diff = (split_pattern[stages_arr[i]].dat_range[0] - dat);
 
 						if (dat != null && sowing_date < 0) {
-							diff -= sowing_date-1;	
+							diff -= sowing_date;	
 						}
 
 						obj = {
@@ -580,11 +580,26 @@ function normalizeSchedule(arr, origin, material_list, isChecked) {
 	return cont_arr;
 }
 
+function appendCustomPlans(tnr, farm_id, sow_end, target) {
+	$.get('/load_cnr_plans', { farm_id: farm_id, sow_end: sow_end, tnr: tnr }, function(result) {
+		console.log(result);
+		var str = ``;
+		result.forEach(function(item) {
+			str += `<tr class="fr_item"> <td class="cnr_lbl" colspan="4"> ${item.cnr_name} <input type="hidden" name="cnr_name" value="${item.cnr_name}"> </td></tr>`;
+			item.cnr_items.forEach(function(cnr_items, index) {
+				str += `<tr class="fr_item"> <td> ${cnr_items.target_date} <input type="hidden" name="cnr_item_target_date" value="${cnr_items.target_date}"> </td> <td> ${cnr_items.fertilizer.name} <input type="hidden" name="cnr_item_fertilizer" value="${cnr_items.fertilizer.id}"> </td> <td> ${cnr_items.desc} <input type="hidden" name="cnr_item_desc" value="${cnr_items.desc}"> </td> <td> ${cnr_items.amount} bags <input type="hidden" name="cnr_item_amount" value="${cnr_items.amount}"> </td> <td> <input class="form-check-input" style="margin-top: 10px;" type="checkbox" name="cnr_fr_checkbox" value="${index+1}" rowspan="1" checked="true"> </td> </tr>`;
+			});
+		});
+		$(target).find('tbody').append(str);
+	});
+}
+
 function appendManualWO(target, type) {
 	if (type) {
 		$(target).find('tbody').append(`<tr> <td colspan="4"><div class="d-flex w-100"> <div class="w-100 text-muted text-center" style="margin-left: 105px;"> or manually create work order: </div><button type="button" onclick="appendManualWO('#fertilizer_recommendation_table', 0)" class="btn btn-primary float-right" id="add_order">Add Order</button> <div class="float-right"> </div> </div></td></tr>`);
 	}
-	$(target).find('tbody').append(`<tr> <td class="align-top"> <div class=""> <input class="form-control" type="date" name="manual_date" id="manual_date"> </div> </td> <td class="align-top"> <div class=""> <select class="form-select" name="manual_fertilizer" id="manual_fertilizer"> ${opts} </select> </div> </td> <td class="align-top"> <div class=""> <textarea type="text" class="form-control" id="manual_desc" name="manual_desc" rows="3" style="resize: none;" placeholder="User generated work order..."></textarea> </div> </td> <td class="align-top"> <div class="d-flex"> <div class=""> <input class="form-control mr-3" type="number" name="manual_amt" id="manual_amt" min="1" step="1" value="1" style="width: 100px;"> </div> <button type="button" onclick="removeManualWO(this)" class="icon-btn-trash"><i class="fas fa-trash"></i></button> </div> </td> </tr>`);
+	else
+		$(target).find('tbody').append(`<tr> <td class="align-top"> <div class=""> <input class="form-control" type="date" name="manual_date" id="manual_date"> </div> </td> <td class="align-top"> <div class=""> <select class="form-select" name="manual_fertilizer" id="manual_fertilizer"> ${opts} </select> </div> </td> <td class="align-top"> <div class=""> <textarea type="text" class="form-control" id="manual_desc" name="manual_desc" rows="3" style="resize: none;" placeholder="User generated work order..."></textarea> </div> </td> <td class="align-top"> <div class="d-flex"> <div class=""> <input class="form-control mr-3" type="number" name="manual_amt" id="manual_amt" min="1" step="1" value="1" style="width: 100px;"> </div> <button type="button" onclick="removeManualWO(this)" class="icon-btn-trash"><i class="fas fa-trash"></i></button> </div> </td> </tr>`);
 }
 
 function removeManualWO(target) {
@@ -801,7 +816,6 @@ function processFRItems(arr, frp_id, origin) {
 			wo_obj['isCreated'] = arr[i].checkbox.val;
 		}
 		else if (origin == 'Single') {
-			console.log('asddasasdadsdasads');
 			wo_obj['isCreated'] = false;
 		}
 
@@ -1083,6 +1097,11 @@ $(document).ready(function() {
 							appendScheduleTable(schedule_arr, '#fertilizer_recommendation_table');
 
 							// Append custom recommandation list
+							var sow_end = $('#sowing_date_end').val();
+							if ($('#method').val()) {
+								sow_end = addDays(sow_end, -15);
+							}
+							appendCustomPlans(nutrient_details, $('#farm_id').val(), sow_end, '#fertilizer_recommendation_table');
 
 							appendManualWO('#fertilizer_recommendation_table', 1);
 						});

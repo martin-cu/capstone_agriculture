@@ -112,7 +112,7 @@ router.get('/crop_calendar', isPrivate, notifController.getNotification ,cropCal
 router.get('/crop_calendar/add', isPrivate, notifController.getNotification ,cropCalendarController.getAddCropCalendar);
 router.get('/crop_calendar/details', isPrivate, notifController.getNotification ,cropCalendarController.getDetailedCropCalendar); //fix path later
 
-router.get('/crop_calendar/test', cropCalendarController.ajaxLoadCNRPlan);
+router.get('/load_cnr_plans', cropCalendarController.ajaxLoadCNRPlan);
 //router.get('/crop_calendar_test/add', farmController.getAddCropCalendar2); //delete later
 
 router.get('/harvest_cycle', farmController.getHarvestCycle);

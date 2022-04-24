@@ -3,6 +3,7 @@ const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const nutrientModel = require('../models/nutrientModel.js');
+const materialModel = require('../models/materialModel.js');
 const farmModel = require('../models/farmModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
 const pestDiseaseModel = require('../models/pestdiseaseModel.js');
@@ -20,42 +21,121 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function processAmountEquation(arr, variables) {
+	//console.log(arr);
+	var order = [];
+	var inner_most_opening, inner_most_closing;
+	var i = 0, x = 0;
+
+	// Get highest fertilizer value
+	const fertilizer_keys = Object.keys(variables.fv);
+	const str_values = fertilizer_keys.map(key => {
+		return key;
+	});
+	const values = fertilizer_keys.map(key => {
+		if (isNaN(variables.fv[key]))
+			return 0;
+		else
+	  	return variables.fv[key];
+	});
+	const max = Math.max(...values);
+	var nutrient_type = str_values[values.indexOf(max)];
+
+	switch (nutrient_type) {
+		case 'N': nutrient_type = 'n_lvl';
+			break;
+		case 'P': nutrient_type = 'p_lvl';
+			break;
+		case 'K': nutrient_type = 'k_lvl';
+			break;
+	}
+
+	arr.forEach(function(item, index) {
+		switch (item) {
+			case 'fa':
+				arr[index] = variables.fa;
+				break;
+			case 'fv':
+				arr[index] = max;
+				break;
+			case 'tnr':
+				arr[index] = variables.tnr[nutrient_type];
+				break;
+		}
+		arr = arr;
+	});
+
+	var str = arr.join('');
+	//console.log(str);
+	return Math.ceil(Function("return " + str)());
+}
+
 exports.ajaxLoadCNRPlan = function(req, res) {
 	var html_data = {};
-	var farm_id  = '57';
+	var farm_id  = req.query.farm_id;
+	var sow_end = req.query.sow_end;
 	var cnr_id_filter;
-	var cnr_plan_arr = [], temp_arr;
+	var cnr_plan_arr = [];
 	var cnr_plan_obj = {};
-	nutrientModel.getAggregatedCNRAssignment(function(err, cnra) {
+	var tnr = req.query.tnr;
+	var obj;
+	var fertilizer;
+	materialModel.getMaterialsList('Fertilizer', null, function(err, material_list) {
 		if (err)
 			throw err;
 		else {
-			cnr_id_filter = [...new Set(cnra.filter(e => e.farm_id == farm_id).map(item =>
-			 						 item.cnr_name))]
-			nutrientModel.getAggregatedCNR(function(err, cnrp) {
+			farmModel.getSpecificFarm({ farm_id: farm_id }, function(err, farm_list) {
 				if (err)
 					throw err;
 				else {
+					nutrientModel.getAggregatedCNRAssignment(function(err, cnra) {
+						if (err)
+							throw err;
+						else {
+							cnr_id_filter = [...new Set(cnra.filter(e => e.farm_id == farm_id).map(item =>
+							 						 item.cnr_name))]
+							nutrientModel.getAggregatedCNR(function(err, cnrp) {
+								if (err)
+									throw err;
+								else {
+									cnr_id_filter.forEach(function(item) {
 
-					cnr_id_filter.forEach(function(item) {
-						temp_arr = [];
-						
-						temp_arr.push(cnrp.filter(e => e.cnr_name == item));
-						cnr_plan_obj = {
-							cnr_name: item,
-							cnr_items: temp_arr
+										cnr_plan_obj = {
+											cnr_name: item,
+											cnr_items: cnrp.filter(e => e.cnr_name == item)
+										}
+										cnr_plan_arr.push(cnr_plan_obj);
+									});
+									cnr_plan_arr.forEach(function(item) {
+										
+										item.cnr_items.forEach(function(cnr_item, index) {
+											fertilizer = material_list.filter(e => e.id == cnr_item.fertilizer_id)[0];
+											obj = {
+												target_date: dataformatter.formatDate(addDays(sow_end, cnr_item.dat), 'YYYY-MM-DD'),
+												fertilizer: fertilizer,
+												desc: 'Custom Recommendation Item',
+												amount: processAmountEquation(cnr_item.amount_equation.split(','), { fa: farm_list[0].farm_area, fv: fertilizer, tnr: tnr })
+											}
+											item.cnr_items[index] = (obj);
+										});
+									});
+
+									res.send(cnr_plan_arr);
+								}
+							});
 						}
-						cnr_plan_arr.push(cnr_plan_obj);
 					});
-					cnr_plan_arr.forEach(function(item) {
-						console.log(item);
-					})
 				}
 			});
 		}
 	});
-
-	res.render('customCNRTest', html_data);
+					
 }
 
 exports.getSummarizedFarmMonitoring = function(req, res) {
