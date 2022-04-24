@@ -20,6 +20,43 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+exports.ajaxLoadCNRPlan = function(req, res) {
+	var html_data = {};
+	var farm_id  = '57';
+	var cnr_id_filter;
+	var cnr_plan_arr = [], temp_arr;
+	var cnr_plan_obj = {};
+	nutrientModel.getAggregatedCNRAssignment(function(err, cnra) {
+		if (err)
+			throw err;
+		else {
+			cnr_id_filter = [...new Set(cnra.filter(e => e.farm_id == farm_id).map(item =>
+			 						 item.cnr_name))]
+			nutrientModel.getAggregatedCNR(function(err, cnrp) {
+				if (err)
+					throw err;
+				else {
+
+					cnr_id_filter.forEach(function(item) {
+						temp_arr = [];
+						
+						temp_arr.push(cnrp.filter(e => e.cnr_name == item));
+						cnr_plan_obj = {
+							cnr_name: item,
+							cnr_items: temp_arr
+						}
+						cnr_plan_arr.push(cnr_plan_obj);
+					});
+					cnr_plan_arr.forEach(function(item) {
+						console.log(item);
+					})
+				}
+			});
+		}
+	});
+
+	res.render('customCNRTest', html_data);
+}
 
 exports.getSummarizedFarmMonitoring = function(req, res) {
 	var html_data = {};

@@ -59,7 +59,7 @@ function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 	var result_arr = [];
 	var temp_dat;
 
-	if (dat == null)
+	if (dat == null || isNaN(dat))
 		temp_dat = 0
 	else {
 		temp_dat = dat;
@@ -166,6 +166,7 @@ function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 					var stage;
 					var stages_arr = [];
 					var stage_index = null;
+
 					for (prop in split_pattern) {
 						range_start = split_pattern[prop].dat_range[0];
 						range_end = split_pattern[prop].dat_range[1];
@@ -215,11 +216,16 @@ function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 							|| stage == 'Panicle') {
 							N_amount += 10;
 						}
+
 						if (dat == null) {
-							dat = sowing_date - 1;
+							dat = 0;
 						}
+
 						var diff = (split_pattern[stages_arr[i]].dat_range[0] - dat);
-					console.log(N_amount+' = '+farm_area);
+
+						if (dat != null && sowing_date < 0) {
+							diff -= sowing_date-1;	
+						}
 
 						obj = {
 							desc: stage,
@@ -227,7 +233,7 @@ function getNDVI(farm_name, dat, N_recommendation, sowing_date) {
 							amount: N_amount*farm_area,
 							nutrient: 'N'
 						};
-					
+						
 
 						result_arr.push(obj);
 					}
@@ -302,6 +308,7 @@ function mapFertilizertoSchedule(obj, materials, applied, recommendation) {
 	}
 	console.log(recommendation);
 	console.log(obj);
+	console.log(fertilizer_cont);
 	//Create obj for P recommendation
 	if (fertilizer_cont.p_fertilizer.arr.length != 0) {
 		temp_obj = {
@@ -430,24 +437,30 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 	console.log(method);
 
 	if (method == 'Transplanting') {
-		sowing.date_completed = sowing.date_completed == null || sowing.date_completed == undefined ? addDays(sowing.date_due, -15) : addDays(sowing.date_completed, -15);
-		temp_d = land_prep.date_completed == null || land_prep.date_completed == undefined ? land_prep.date_due : land_prep.date_completed;
+		sowing.date_completed = sowing.date_completed == null || sowing.date_completed == undefined ? addDays(sowing.date_due, 0) : addDays(sowing.date_completed, 0);
+		temp_d = sowing.date_completed = sowing.date_completed == null || sowing.date_completed == undefined ? addDays(sowing.date_due, 0) : addDays(sowing.date_completed, 0);
 		target_date = new Date(temp_d);
 	}
 	else if (method == 'Direct Seeding') {
-		temp_d = sowing.date_completed == null || sowing.date_completed == undefined ? new Date(sowing.date_due) : new Date(sowing.date_completed);
+		temp_d = sowing.date_completed == null || sowing.date_completed == undefined ? addDays(sowing.date_due, 0) : addDays(sowing.date_completed, 0);
 		target_date = new Date(temp_d);
-		target_date = target_date.setDate(target_date.getDate() + 12);
+		// target_date = target_date.setDate(target_date.getDate() + 12);
 	}
 
-	var temp_date = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
+	//var temp_date = sowing.date_completed == null || sowing.date_completed == undefined ? sowing.date_due : sowing.date_completed;
+	var temp_date = temp_d;
 	var now = new Date();
-
+	console.log(temp_date);
 	var diffTime = (now - temp_date);
 	var DAT = Math.ceil(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+	var sowing_ndvi = DAT;
 
-	if (DAT < 0) 
-		DAT = null
+	if (DAT < 0) {
+		DAT = null;
+		if (method == 'Transplanting') {
+			DAT = 15;
+		}
+	}
 
 	console.log('DAT: '+DAT);
 	
@@ -491,7 +504,7 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 	}];
 
 	//N Need-Based Approach
-	N = getNDVI(crop_calendar.farm_name, DAT, N_recommendation, Math.ceil(Math.ceil(diffTime / (1000 * 60 * 60 * 24))));
+	N = getNDVI(crop_calendar.farm_name, DAT, N_recommendation, sowing_ndvi);
 
 	obj = { N: N, P: P, K: K};
 	schedule_arr = mapFertilizertoSchedule(obj, materials, applied, recommendation);
@@ -1068,6 +1081,8 @@ $(document).ready(function() {
 							schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, true);
 							//console.log(schedule_arr);
 							appendScheduleTable(schedule_arr, '#fertilizer_recommendation_table');
+
+							// Append custom recommandation list
 
 							appendManualWO('#fertilizer_recommendation_table', 1);
 						});
