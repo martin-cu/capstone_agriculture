@@ -12,7 +12,7 @@ var code = 'osg68ErhoXxaACygn5yS7yAqRfB6E49S7qE75Id6z4puxBayXhpGMdzFzxeb6FKded8u
 
 
 var shortcode = '21585119';
-var access_token = 'A-2szoYus7mB13l5axDrr_1234AApSz8eu236GRNsoBQ'; //not yet final
+var access_token = 'PGgaVczHMKbJ6jbccFXiuZE57d6zSW3AiwS7S3ChCrg'; //sample only
 var address = '9173028128';
 var clientCorrelator = '264801';
 var message = 'THIS IS A REPLY TO YOU';
@@ -39,19 +39,27 @@ exports.globe_inbound_msg = function(req, res){
   
   console.log("--------------------");
   
-  console.log(req.body);
+  console.log(req.query);
   console.log("~~~~~~~~~~~~PROCESS DATA~~~~~~~~~~~~");
   // console.log(req.body.inboundSMSMessageList.inboundSMSMessage);
   console.log("~~~~~~~~~~~~STORE DATA~~~~~~~~~~~~");
   
 
   // this.globe_outbound_msg;
-  this.getAccessToken;
+  // this.getAccessToken;
+  
+  
+  console.log("sending outbound message");
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+    console.log(body);
+  });
   return;
   }
 
    
 exports.globe_outbound_msg = function(req, res){
+  console.log("sending outbound message");
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
     console.log(body);
