@@ -262,6 +262,7 @@ router.get('/get_climate_forecast', openWeatherController.climateForecast);
 
 //Martin Testing
 router.get('/forecast_yield', farmController.forecastYield);
+router.get('/test_chart', reportController.testDisasterChart);
 
 
 //Y2 TESTING

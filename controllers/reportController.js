@@ -2,14 +2,18 @@ const dataformatter = require('../public/js/dataformatter.js');
 const reportModel = require('../models/reportModel.js');
 const farmModel = require('../models/farmModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
+const weatherForecastModel = require('../models/weatherForecastModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const materialModel = require('../models/materialModel.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 var request = require('request');
+var gaussian = require('gaussian');
 
+var temp_lat = 13.073091;
+var temp_lon = 121.388563;
 var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
-
+var open_weather_key = 'd7aa391cd7b67e678d0df3f6f94fda20';
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 // a and b are javascript Date objects
@@ -65,6 +69,52 @@ function processNutrientChartData(sql_filter, calendar_list, nutrient_chart, pd_
 	}
 
 	return nutrient_chart_arr;
+}
+
+const calculateMean = (values) => {
+    const mean = (values.reduce((sum, current) => sum + current)) / values.length;
+    return mean;
+};
+
+const calculateVariance = (values) => {
+    const average = calculateMean(values);
+    const squareDiffs = values.map((value) => {
+        const diff = value - average;
+        return diff * diff;
+    });
+    const variance = calculateMean(squareDiffs);
+    return variance;
+};
+
+exports.testDisasterChart = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
+
+	weatherForecastModel.getWeatherData(function(err, result) {
+		if (err)
+			throw err;
+		else {
+			var unique = [...new Set(result.map(item =>
+			 						 item.precip))];
+			console.log(unique);
+			var arr = [10, 98, 3, 5,6];
+			// unique.forEach(function(item) {
+			// 	if (isNaN(item) == true)
+			// 		console.log('!!');
+			// 	else {
+			// 		console.log(item);
+			// 	}
+			// })
+			var arr = [-0.04949349443049506, 0.24431456445461106];
+			console.log(calculateVariance(arr));
+			var distribution = gaussian(0, 1);
+			console.log(distribution.pdf(arr));
+
+			//console.log(PD.rgamma(arr, 0.5, 20));
+		}
+	});
+
+	res.send('asdas');
 }
 
 exports.getDetailedReport = function(req, res) {
