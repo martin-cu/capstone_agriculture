@@ -30,7 +30,9 @@ var options = { method: 'POST',
         'address': address } },
   json: true };
 
-
+exports.redirectPOSTurl = function(req, res){
+  
+}
 
 exports.globe_inbound_msg = function(req, res){
   // console.log(req);
@@ -39,7 +41,7 @@ exports.globe_inbound_msg = function(req, res){
   
   console.log(req.body);
   console.log("~~~~~~~~~~~~PROCESS DATA~~~~~~~~~~~~");
-  console.log(req.body.inboundSMSMessageList.inboundSMSMessage);
+  // console.log(req.body.inboundSMSMessageList.inboundSMSMessage);
   console.log("~~~~~~~~~~~~STORE DATA~~~~~~~~~~~~");
   
 
@@ -47,6 +49,7 @@ exports.globe_inbound_msg = function(req, res){
   this.getAccessToken;
   return;
   }
+
    
 exports.globe_outbound_msg = function(req, res){
   request(options, function (error, response, body) {
