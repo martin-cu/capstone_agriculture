@@ -1,0 +1,33 @@
+{
+  "name": "web_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "supervisor app.js",
+    "debug": "nodemon -r dotenv/config app.js",
+    "dev": "nodemon -r dotenv/config app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.5",
+    "bcrypt": "^5.0.1",
+    "brain.js": "^1.6.1",
+    "chart.js": "^3.6.2",
+    "compression": "^1.7.4",
+    "connect-flash": "^0.1.1",
+    "decision-tree": "^0.3.7",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.3",
+    "express-mysql-session": "^2.1.6",
+    "express-session": "^1.17.2",
+    "express-validator": "^6.14.0",
+    "javascript-lp-solver": "^0.4.24",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.14",
+    "request": "^2.88.2",
+    "supervisor": "^0.12.0"
+  }
+}

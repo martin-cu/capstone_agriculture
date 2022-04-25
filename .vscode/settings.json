@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/2ea4a03a-e430-49db-8905-52e37de6af6f/resourceGroups/larice-cms-new-resource-group/providers/Microsoft.Web/sites/larice-cms",
+    "appService.deploySubpath": "."
+}
