@@ -292,5 +292,6 @@ router.get('/getWeather', materialController.getWeather);
 //Globe
 router.get('/globe_api', globe.test_globe);
 router.post('/globe_api2', globe.test_globe2);
+router.post('/globe_inbound', globe.globe_inbound_msg);
 
 module.exports = router;
