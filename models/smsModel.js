@@ -4,7 +4,7 @@ mysql = mysql.connection;
 
 //USED FOR REGISTRATION THROUGH SMS
 exports.addAccessToken = function(phone_number, access_token, next){
-    var sql = "UPDATE employee SET access_token = ? WHERE phone_number = ?";
+    var sql = "UPDATE employee_table SET access_token = ? WHERE phone_number = ?";
     sql = mysql.format(sql, access_token);
     sql = mysql.format(sql, phone_number);
 
@@ -22,7 +22,7 @@ exports.getEmployeeDetails = function(access_token, next){
 
 
 exports.insertOutboundMsg = function(message, employee_id, next){
-    var sql = "INSERT INTO outbound_msg SET (employee_id, message, date, time) VALUES (?, ?, DATE(NOW()), TIME(NOW())); SELECT LAST_INSERT_ID() as last;";
+    var sql = "INSERT INTO outbound_msg (employee_id, message, date, time) VALUES (?, ?, DATE(NOW()), TIME(NOW()));";
     sql = mysql.format(sql, employee_id);
     sql = mysql.format(sql, message);
 

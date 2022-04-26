@@ -11,7 +11,7 @@ const reportController = require('../controllers/reportController');
 const openWeatherController = require('../controllers/openWeatherController');
 const notifController = require('../controllers/notificationController.js');
 const disasterController = require('../controllers/disasterController.js');
-const globe = require('../controllers/sms-mt');
+const globe = require('../controllers/smsController.js');
 
 const { isPrivate, isAdmin, isSales, isPurchasing, isLogistics } = require('../middlewares/checkAuth');
 
