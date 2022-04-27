@@ -21,6 +21,8 @@ exports.getNotification = function(req, res, next) {
         else {
             var notif_obj_arr = [];
             var title, desc, url, icon, color;
+
+            // LOOKS FOR WORKORDERS THAT ARE OVERDUE, DUE SOON OR DUE IN A WEEK
             for (var i = 0; i < wo_list.length; i++) {
                 switch (wo_list[i].notif_type) {
                     case 'Overdue':
@@ -65,19 +67,45 @@ exports.getNotification = function(req, res, next) {
                         }
                     }
 
+                    //Creates notification if it is not yet created
                     if (notif_query.length != 0) {
                         notifModel.createNotif(notif_query, function(err, create_status) {
                             if (err)
                                 throw err;
                         });
                     }
+
+                    //Filter notifs with status 1
+                    for(var i = 0; i < notif_list.length; i++){
+                        if(notif_list[i].status == 0){
+                            notif_list.splice(i, 1);
+                            i--;
+                        }
+                        
+                    }
+                    //Limit list to 10 notifs
                     notif_list = notif_list.slice(0, 10);
 
-                    for (var i = 0; i < notif_list.length; i++) {
-                        notif_list[i].date = dataformatter.formatDate(new Date(notif_list[i].date), 'mm DD, YYYY');
+                    //Sort notifications by urgency
+                    var temp_arr = [];
+                    for(var i = 0; i < notif_list.length; i++){
+                        if(notif_list[i].color == "danger"){
+                            temp_arr.push(notif_list[i]);
+                            notif_list.splice(i, 1);
+                            i--;
+                        }
+                    }
+                    for(var i = 0; i < notif_list.length; i++){
+                        temp_arr.push(notif_list[i]);
                     }
 
-                    req.notifs = notif_list;
+                    
+
+                    for (var i = 0; i < temp_arr.length; i++) {
+                        temp_arr[i].date = dataformatter.formatDate(new Date(temp_arr[i].date), 'mm DD, YYYY');
+                    }
+                    console.log(temp_arr);
+                    req.notifs = temp_arr;
 
                     return next();
                 }

@@ -12,6 +12,16 @@ exports.addAccessToken = function(phone_number, access_token, next){
     return sql;
 }
 
+exports.removeAccessToken = function(phone_number, access_token, next){
+    var sql = "UPDATE employee_table SET access_token = null WHERE phone_number = ? AND access_token = ?";
+    sql = mysql.format(sql, phone_number);
+    sql = mysql.format(sql, access_token);
+
+    mysql.query(sql, next);
+    return sql;
+}
+
+
 exports.getEmployeeDetails = function(access_token, next){
     var sql = "SELECT * FROM employee_table WHERE access_token = ?";
     sql = mysql.format(sql, access_token);
@@ -20,6 +30,10 @@ exports.getEmployeeDetails = function(access_token, next){
     return sql;
 }
 
+
+exports.insertInboundMsg = function(message, message_id, employee_id, next){
+
+}
 
 exports.insertOutboundMsg = function(message, employee_id, next){
     var sql = "INSERT INTO outbound_msg (employee_id, message, date, time) VALUES (?, ?, DATE(NOW()), TIME(NOW()));";

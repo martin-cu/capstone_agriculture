@@ -48,7 +48,15 @@ exports.globe_inbound_msg = function(req, res){
 
     //CHECK IF UNSUBSCRIBE
     if("unsubscribed" in req.body){
+        smsModel.removeAccessToken(req.body.subscriber_number, req.body.access_token, function(err, result){
+        });
+    }
+    else{
+        console.log(req.body.inboundSMSMessage);
 
+        //get employee details using phone number
+
+        //Store message to db
     }
     console.log("--------------------");
 
@@ -58,10 +66,6 @@ exports.globe_inbound_msg = function(req, res){
 
     // this.globe_outbound_msg;
     // this.getAccessToken;
-
-
-    console.log("sending outbound message");
-    this.globe_outbound_msg();
     return;
 }
 
