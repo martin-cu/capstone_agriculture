@@ -810,6 +810,9 @@ function formatDate(date, format) {
 			day = '0'+day;
 		date = month+'/'+day+'/'+year;
 	}
+	else if (format == 'Month - Year') {
+		date = `${monthNames[month]} ${year}`;
+	}
 	else if (format === 'YYYY-MM-DD') {
 		if (month < 10)
 			month = '0'+month;
@@ -891,6 +894,9 @@ exports.formatDate = function(date, format) {
 		if (day < 10)
 			day = '0'+day;
 		date = month+'/'+day+'/'+year;
+	}
+	else if (format == 'Month - Year') {
+		date = `${monthNames[month]} ${year}`;
 	}
 	else if (format === 'YYYY-MM-DD') {
 		if (month < 10)

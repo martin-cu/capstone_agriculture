@@ -7,8 +7,43 @@ const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const farmModel = require('../models/farmModel.js');
 const harvestModel = require('../models/harvestModel.js');
+const weatherForecastModel = require('../models/weatherForecastModel.js');
 const reportModel = require('../models/reportModel.js');
 var request = require('request');
+
+const precip = 'rgba(82, 94, 117, 1)';
+const avg_precip = 'rgba(146, 186, 146, 1)';
+const precip_3_year = 'rgba(252, 170, 53, 1)';
+const precip_1_year = 'rgba(148, 70, 84, 1)';
+const precip_6_month = 'rgba(86, 36, 92, 1)';
+const precip_3_month = 'rgba(252, 170, 53, 1)';
+const precip_1_month = 'rgba(181, 179, 130, 1)';
+
+function processPrecipChartData(result) {
+	var data = { labels: [], datasets: [] };
+	var data_cont = { precipitation_mean: [], lag_30year: [], lag_1year: [], lag_3year: [], lag_3month: [], lag_1month: [] };
+
+	result.forEach(function(item) {
+		data_cont.precipitation_mean.push(item.precipitation_mean);
+		data_cont.lag_30year.push(item.year_30_lag);
+		data_cont.lag_3year.push(item.year_3_lag);
+		data_cont.lag_1year.push(item.year_1_lag);
+		// data_cont.lag_6month.push(item.month_6_lag);
+		// data_cont.lag_3month.push(item.month_3_lag);
+		// data_cont.lag_1month.push(item.month_1_lag);
+
+		data.labels.push(dataformatter.formatDate(new Date(item.date), 'Month - Year'));
+	});
+	data.datasets.push({ type: 'line', backgroundColor: precip, borderColor: precip, label: 'Total Precipitation', yAxisID: 'y', data: data_cont.precipitation_mean });
+	data.datasets.push({ type: 'line', backgroundColor: avg_precip, borderColor: avg_precip, label: 'Average Precipitation', yAxisID: 'y', data: data_cont.lag_30year });
+	data.datasets.push({ type: 'line', backgroundColor: precip_3_year, borderColor: precip_3_year, label: '3 Yr MA', yAxisID: 'y', data: data_cont.lag_3year });
+	data.datasets.push({ type: 'line', backgroundColor: precip_1_year, borderColor: precip_1_year, label: '1 Yr MA', yAxisID: 'y', data: data_cont.lag_1year });
+	// data.datasets.push({ type: 'line', backgroundColor: precip_6_month, borderColor: precip_6_month, label: '6 Mo MA', yAxisID: 'y', data: data_cont.lag_6month, hidden: true });
+	// data.datasets.push({ type: 'line', backgroundColor: precip_3_month, borderColor: precip_3_month, label: '3 Mo MA', yAxisID: 'y', data: data_cont.lag_3month, hidden: true });
+	// data.datasets.push({ type: 'line', backgroundColor: precip_1_month, borderColor: precip_1_month, label: '1 Mo MA', yAxisID: 'y', data: data_cont.lag_1month, hidden: true });
+
+	return data;
+}
 
 function consolidateResources(type, ids, qty, wo_id) {
 	var query_arr = [];
@@ -362,6 +397,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
         order: [ 'work_order_table.date_completed desc', 'work_order_table.date_due ASC'],
 		// limit: ['10']
     }
+
 	workOrderModel.getWorkOrders(query, function(err, list) {
 		if (err)
 			throw err;
@@ -525,9 +561,20 @@ exports.getWorkOrdersDashboard = function(req, res) {
 																}
 																html_data["total"] = new_total;
 																html_data["month_frequency"] = month_frequency;
+																var month = 2;
+																var start_date = new Date();
+																start_date.setMonth(start_date.getMonth() - 12);
+																weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD') }, function(err, precip_data) {
+																	if (err)
+																		throw err;
+																	else {
+																		html_data['precip_data'] = JSON.stringify(processPrecipChartData(precip_data));
+																		res.render('home', html_data);
+																	}
+																});
 																// html_data["pest"] = pest;
 																// html_data["disease"] = disease;
-																res.render('home', html_data);
+																
 															});
 														});
 													});

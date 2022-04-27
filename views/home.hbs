@@ -3,84 +3,138 @@
                         <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
                     </div>
 
-                  <div class="row" style="margin: 0px;">
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-primary py-2">
-            <div class="card-body">
-                <div class="row d-lg-flex align-items-center justify-content-lg-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-primary font-weight-bold text-xs" style="margin-top: -20px;"><span>Active Farms</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0"><span id="numFarms"></span></div>
-                    </div>
-                    <div class="col-auto">
-                        {{!-- <svg class="bi bi-house-fill fa-2x text-gray-300" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"></path>
-                            <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"></path>
-                        </svg> --}}
-                        <i class="fas fa-farm text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+    <div class="row" style="margin: 0px;">
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-primary py-2">
+                <div class="card-body">
+                    <div class="row d-lg-flex align-items-center justify-content-lg-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-primary font-weight-bold text-xs" style="margin-top: -20px;"><span>Active Farms</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span id="numFarms"></span></div>
                         </div>
+                        <div class="col-auto">
+                            {{!-- <svg class="bi bi-house-fill fa-2x text-gray-300" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"></path>
+                                <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"></path>
+                            </svg> --}}
+                            <i class="fas fa-farm text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+                            </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-success py-2" style="border-left-color: #CA4E0C !important;">
-            <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-success font-weight-bold text-xs" style="margin-top: -20px;">
-                            <span style="color:#CA4E0C !important;">Low stock resources</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0"><span id="numLowStocks"></span></div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-exclamation-triangle text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
-                        {{!-- <i class="fa fa-list-alt fa-2x "></i> --}}
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-success py-2" style="border-left-color: #CA4E0C !important;">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-success font-weight-bold text-xs" style="margin-top: -20px;">
+                                <span style="color:#CA4E0C !important;">Low stock resources</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span id="numLowStocks"></span></div>
                         </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+                            {{!-- <i class="fa fa-list-alt fa-2x "></i> --}}
+                            </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-info py-2">
-            <div class="card-body">
-               <div class="row no-gutters fp_hover" data-toggle="tooltip" data-placement="bottom" title="MA Productivity: {{fp.avg}}&#013Current Productivity: {{fp.cur}}">
-                    <div class="col mr-2">
-                              <div class="text-uppercase text-info font-weight-bold text-xs" style="margin-top: -20px;margin-bottom: 0px;"><span>overall farm productivity</span></div>
-                <div class="row no-gutters align-items-center">
-                    <div class="col-auto" style="margin-left: 12px;">
-                       <div class="text-dark font-weight-bold h5 mb-0"><span style="margin-right: 10px;">{{fp.percentage}}%</span></div>
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-info py-2">
+                <div class="card-body">
+                   <div class="row no-gutters fp_hover" data-toggle="tooltip" data-placement="bottom" title="MA Productivity: {{fp.avg}}&#013Current Productivity: {{fp.cur}}">
+                        <div class="col mr-2">
+                                  <div class="text-uppercase text-info font-weight-bold text-xs" style="margin-top: -20px;margin-bottom: 0px;"><span>overall farm productivity</span></div>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-auto" style="margin-left: 12px;">
+                           <div class="text-dark font-weight-bold h5 mb-0"><span style="margin-right: 10px;">{{fp.percentage}}%</span></div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-info" aria-valuenow="{{fp.percentage}}" aria-valuemin="0" aria-valuemax="{{fp.max}}" style="width: {{fp.percentage}}%;"><span class="sr-only">{{fp.percentage}}%</span></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xl-6">
-                        <div class="progress progress-sm">
-                            <div class="progress-bar bg-info" aria-valuenow="{{fp.percentage}}" aria-valuemin="0" aria-valuemax="{{fp.max}}" style="width: {{fp.percentage}}%;"><span class="sr-only">{{fp.percentage}}%</span></div>
+                </div>
+                <div class="col-auto d-xl-flex justify-content-xl-start align-items-xl-center">
+                    <i class="fas fa-chart-bar text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
+                    {{!-- <i class="fas fa-ruble-sign d-xl-flex align-items-xl-center fa-2x text-gray-300"></i> --}}
+                    </div>
+            </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-warning py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-warning font-weight-bold text-xs" style="margin-top: -20px;"><span>Farmer Queries</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>0</span></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa fa-mobile fa-2x text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-auto d-xl-flex justify-content-xl-start align-items-xl-center">
-                <i class="fas fa-chart-bar text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
-                {{!-- <i class="fas fa-ruble-sign d-xl-flex align-items-xl-center fa-2x text-gray-300"></i> --}}
-                </div>
         </div>
+    </div>
+
+    <div class="row mb-3" style="margin: 0px;">
+        <div class="col-lg-7 col-xl-8">
+            <div class="w-100 border border-secondary d-flex flex-column rounded" style="">
+                <div class="text-white w-100 py-2 text-center rounded-top bg-dark">
+                    Precipitation Data
+                </div>
+                <!-- <div class="w-100 d-flex">
+                    <div class="form-row ml-3 mt-2">
+                        <div class="form-group">
+                            <label class="form-check-label">From: </label>
+                            <div class="">
+                              <input class="form-control " type="date" id="weather_start" name="weather_start" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                    
+                <canvas id="precip_chart" style="width: 500px;"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-5 col-xl-4">
+            <div class="w-100 border border-secondary d-flex flex-column rounded" style="">
+                <div class="text-white w-100 py-2 text-center rounded-top bg-dark">
+                    Weather Data
+                </div>
+                <div class="w-100 d-flex">
+                    <div class="form-row ml-3 mt-2">
+                        <div class="form-group">
+                            <label class="form-check-label">From: </label>
+                            <div class="">
+                              <input class="form-control " type="date" id="weather_start" name="weather_start" value="">
+                            </div>
+                        </div>
+                        <div class="form-group ml-2">
+                            <label class="form-check-label">To: </label>
+                            <div class="">
+                              <input class="form-control " type="date" id="weather_end" name="weather_end" value="">
+                            </div>
+                        </div>
+                        <div class="form-group align-bottom ml-3">
+                            <div class="h-100 align-bottom align-text-bottom mt-2">
+                                <button type="button" id="weather_filter" class="btn btn-primary float-right mt-3">Filter</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                    
+                <canvas id="weather_chart" style="width: 500px;"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-warning py-2">
-            <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                    <div class="col mr-2">
-                        <div class="text-uppercase text-warning font-weight-bold text-xs" style="margin-top: -20px;"><span>Farmer Queries</span></div>
-                        <div class="text-dark font-weight-bold h5 mb-0"><span>0</span></div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fa fa-mobile fa-2x text-gray-300" style="font-size:xx-large; margin-right: 10px"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
                     <div class="row">
@@ -489,18 +543,86 @@
 
 <script src="../js/dashboard_mapbox.js"></script>
 
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="text/javascript">
     var view = "home";
+    $(document).ready(function() {
+        var weather_chart_data = [];
+        var precip_chart_data = {{{precip_data}}};
 
-// Automatically scroll to bottom of div (for message history)
-/*
-var element = document.getElementById("recentActivity");
-element.scrollTop = element.scrollHeight;
+        var canvas = document.getElementById('weather_chart');
+        var date = new Date().toISOString().split('T')[0];
+        var start = new Date();
+        start.setDate(start.getDate() - 30);
+        start = start.toISOString().split('T')[0];
 
-function updateScroll(){
-    element.scrollTop = element.scrollHeight;
-}
-*/
-    
+        var weather_chart = new Chart(canvas, {
+          type: 'line',
+          data: weather_chart_data,
+          options: {
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function(value, index, values) {
+                            return value+' ℃';
+                        }
+                    }
+                },
+                // y1: {
+                //  type: 'linear',
+                //  display: true,
+                //  position: 'right',
+                //  ticks: {
+       //                  // Include a dollar sign in the ticks
+       //                  callback: function(value, index, values) {
+       //                      return value+' mm';
+       //                  }
+       //              }
+                // }
+            }
+          }
+        });
 
+        var precipitation_chart = new Chart(document.getElementById('precip_chart'), {
+            type: 'line',
+            data: precip_chart_data,
+            options: {
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        ticks: {
+                            // Include a dollar sign in the ticks
+                            callback: function(value, index, values) {
+                                return value+' mm';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#weather_start').val(start);
+        $('#weather_end').val(date);
+
+        function updateWeatherChart() {
+            var start = new Date($('#weather_start').val()), date = new Date($('#weather_end').val());
+            $.get('/ajax_weather_chart', { start_date: start, end_date: date }, function(result) {
+                weather_chart.data = result.stringify;
+                weather_chart.update();
+            });
+        }
+
+        updateWeatherChart();
+
+        $('#weather_filter').on('click', function() {
+            updateWeatherChart();
+        });
+    })
 </script>

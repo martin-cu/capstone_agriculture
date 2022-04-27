@@ -29,6 +29,8 @@ router.post('/create_crop_plan', cropCalendarController.ajaxCreateCropPlan);
 router.get('/get_crop_plans', cropCalendarController.ajaxGetCropPlans);
 router.get('/get_active_calendar', cropCalendarController.ajaxGetCurrentCropCalendar);
 
+router.get('/ajax_weather_chart', reportController.ajaxWeatherChart);
+
 //Ajax nutrient mgt
 router.get('/get_nutrient_plan_details', environmentController.ajaxGetNutrientPlan);
 router.get('/get_nutrient_plan_items', environmentController.ajaxGetNutrientPlanItems);

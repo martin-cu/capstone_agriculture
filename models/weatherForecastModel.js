@@ -1,6 +1,28 @@
 var mysql = require('./connectionModel');
 mysql = mysql.connection;
 
+exports.getPrecipHistory = function(data, next) {
+	var str = ``;
+	str = `where date > '${data.date}'`;
+	var sql = `select date, round(sum(precipitation_mean),2) as precipitation_mean, (select round(sum(precipitation_mean),2) from weather_data_table where date_sub(wdt.date, interval 1 year) <= date and date < wdt.date and month(wdt.date) = month(date)) as year_1_lag, (select round(sum(precipitation_mean) / 3,2) from weather_data_table where date_sub(wdt.date, interval 3 year) <= date and date < wdt.date and month(wdt.date) = month(date)) as year_3_lag, (select round(sum(precipitation_mean) / 30,2) from weather_data_table where date_sub(wdt.date, interval 30 year) <= date and date < wdt.date and month(wdt.date) = month(date)) as year_30_lag from weather_data_table wdt ${str} group by year(date), month(date)`;
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.getWeatherChart = function(data, next) {
+	var str = ``;
+	if (data.hasOwnProperty('start_date')) {
+		str = data != null ? `where date >= '${data.start_date}' and date <= '${data.end_date}'` : ``;
+	}
+	if (data.type == 'grouped') {
+		var sql = `select date, year(date) year, month(date) as month, max(temp_max) temp_max, min(temp_min) as temp_min, round(avg(temp_mean),2) as temp,round(sum(precipitation_mean),2) precip from weather_data_table ${str} group by year(date), month(date) order by year(date), month(date)`;
+	}
+	else {
+		var sql = `select date, year(date) year, month(date) as month, (temp_max) temp_max, (temp_min) as temp_min, round((temp_mean),2) as temp,round((precipitation_mean),2) precip from weather_data_table ${str} order by date`;
+	}
+	mysql.query(sql, next);
+}
+
 exports.getWeatherData = function(next) {
 	var sql = `select year(date) year, month(date) year, round(sum(precipitation_mean),2) precip from weather_data_table group by year(date), month(date)`;
 	mysql.query(sql, next);

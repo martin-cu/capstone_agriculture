@@ -7,14 +7,115 @@ const cropCalendarModel = require('../models/cropCalendarModel.js');
 const materialModel = require('../models/materialModel.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
-var request = require('request');
-var gaussian = require('gaussian');
+const request = require('request');
+const mathjs = require('mathjs');
 
 var temp_lat = 13.073091;
 var temp_lon = 121.388563;
 var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 var open_weather_key = 'd7aa391cd7b67e678d0df3f6f94fda20';
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+const min_temp = 'rgba(	255, 166, 0, 0.6)';
+const max_temp = 'rgba(188,	80,	144, 0.6)';
+const temp = 'rgba(255,99,97, 0.6)';
+
+const precip = 'rgba(82, 94, 117, 1)';
+const avg_precip = 'rgba(146, 186, 146, 1)';
+const precip_3_year = 'rgba(252, 170, 53, 1)';
+const precip_1_year = 'rgba(148, 70, 84, 1)';
+const precip_6_month = 'rgba(86, 36, 92, 1)';
+const precip_3_month = 'rgba(252, 170, 53, 1)';
+const precip_1_month = 'rgba(181, 179, 130, 1)';
+
+function processPrecipChartData(result) {
+	var data = { labels: [], datasets: [] };
+	var data_cont = { precipitation_mean: [], lag_30year: [], lag_1year: [], lag_3year: [], lag_3month: [], lag_1month: [] };
+
+	result.forEach(function(item) {
+		data_cont.precipitation_mean.push(item.precipitation_mean);
+		data_cont.lag_30year.push(item.year_30_lag);
+		data_cont.lag_3year.push(item.year_3_lag);
+		data_cont.lag_1year.push(item.year_1_lag);
+		// data_cont.lag_6month.push(item.month_6_lag);
+		// data_cont.lag_3month.push(item.month_3_lag);
+		// data_cont.lag_1month.push(item.month_1_lag);
+
+		data.labels.push(dataformatter.formatDate(new Date(item.date), 'Month - Year'));
+	});
+	data.datasets.push({ type: 'line', backgroundColor: precip, borderColor: precip, label: 'Total Precipitation', yAxisID: 'y', data: data_cont.precipitation_mean });
+	data.datasets.push({ type: 'line', backgroundColor: avg_precip, borderColor: avg_precip, label: 'Average Precipitation', yAxisID: 'y', data: data_cont.lag_30year });
+	data.datasets.push({ type: 'line', backgroundColor: precip_3_year, borderColor: precip_3_year, label: '3 Yr MA', yAxisID: 'y', data: data_cont.lag_3year, hidden: true });
+	data.datasets.push({ type: 'line', backgroundColor: precip_1_year, borderColor: precip_1_year, label: '1 Yr MA', yAxisID: 'y', data: data_cont.lag_1year, hidden: true });
+	// data.datasets.push({ type: 'line', backgroundColor: precip_6_month, borderColor: precip_6_month, label: '6 Mo MA', yAxisID: 'y', data: data_cont.lag_6month, hidden: true });
+	// data.datasets.push({ type: 'line', backgroundColor: precip_3_month, borderColor: precip_3_month, label: '3 Mo MA', yAxisID: 'y', data: data_cont.lag_3month, hidden: true });
+	// data.datasets.push({ type: 'line', backgroundColor: precip_1_month, borderColor: precip_1_month, label: '1 Mo MA', yAxisID: 'y', data: data_cont.lag_1month, hidden: true });
+
+	var len_severe = 0, len = 0;
+	var start_severe = 0, start = 0;
+	var continuous_severe = false, continuous = false;
+	var obj = { severe: { index : [], len: [] }, medium: { index : [], len: [] } }
+	result.forEach(function(item, index) {
+		if ((item.year_30_lag - item.precipitation_mean) / item.year_30_lag >= .6 ) {
+			if (len_severe == 0) {
+				start = index;
+				len++;
+			}
+			else {
+				if (start_severe+1 == index) {
+					start_severe = index;
+					len_severe++;
+				}
+				else {
+					if (len_severe >= 2) {
+						obj.severe.len.push(len_severe);
+						obj.severe.index.push(start_severe);
+					}
+					start_severe = 0;
+					len_severe = 0;
+				}
+			}
+				
+		}
+
+		if ((item.year_30_lag - item.precipitation_mean) / item.year_30_lag >= .21 ) {
+			if (len == 0) {
+				start = index;
+				len++;
+			}
+			else {
+				if (start+1 == index) {
+					start = index;
+					len++;
+				}
+				else {
+					if (len >= 2) {
+						obj.medium.len.push(len);
+						obj.medium.index.push(start);
+					}
+					start = 0;
+					len = 0;
+				}
+			}
+		}
+
+		if (index == result.length-1) {
+			if (len >= 2) {
+				obj.medium.len.push(len);
+				obj.medium.index.push(start);
+			}
+			if (len_severe >= 2) {
+				obj.severe.len.push(len_severe);
+				obj.severe.index.push(start_severe);
+			}
+		}
+
+	});
+
+	console.log(obj);
+
+	return { chart: data, outlook: null };
+}
 
 // a and b are javascript Date objects
 function dateDiffInDays(a, b) {
@@ -71,50 +172,112 @@ function processNutrientChartData(sql_filter, calendar_list, nutrient_chart, pd_
 	return nutrient_chart_arr;
 }
 
-const calculateMean = (values) => {
-    const mean = (values.reduce((sum, current) => sum + current)) / values.length;
-    return mean;
-};
+function processWeatherChartData(result, type) {
+	var month_arr = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	var data = { labels: [], datasets: [] };
+	var data_cont = { min_temp: [], max_temp: [], avg_temp: [], precip: [] };
 
-const calculateVariance = (values) => {
-    const average = calculateMean(values);
-    const squareDiffs = values.map((value) => {
-        const diff = value - average;
-        return diff * diff;
-    });
-    const variance = calculateMean(squareDiffs);
-    return variance;
-};
+	result.forEach(function(item) {
+		data_cont.min_temp.push(item.temp_min);
+		data_cont.max_temp.push(item.temp_max);
+		data_cont.avg_temp.push(item.temp);
+		//data_cont.precip.push(item.precip);
+		if (type == 'grouped')
+			data.labels.push(`${month_arr[item.month]} (${item.year})`);
+		else 
+			data.labels.push(dataformatter.formatDate(new Date(item.date), 'mm DD, YYYY'));
+	});
+	data.datasets.push({ type: 'line', backgroundColor: min_temp, borderColor: min_temp, label: 'Min Temp', yAxisID: 'y', data: data_cont.min_temp });
+	data.datasets.push({ type: 'line', backgroundColor: max_temp, borderColor: max_temp, label: 'Max Temp', yAxisID: 'y', data: data_cont.max_temp });
+	data.datasets.push({ type: 'line', backgroundColor: temp, borderColor: temp, label: 'Avg Temp', yAxisID: 'y', data: data_cont.avg_temp });
+	//data.datasets.push({ type: 'bar', backgroundColor: 'rgba(	0, 63, 92, 0.6)', borderColor: 'rgba(0, 63, 92, 0.6)', label: 'Precipitation', yAxisID: 'y1', data: data_cont.precip });
+	return data;
+}
+
+function groupSPI_N(arr, month, n) {
+	var filter = arr.map(e => e.month);
+	var indices = filter.reduce(function(a, e, i) {
+	    if (e === month)
+	        a.push(i);
+	    return a;
+	}, []);
+	var cont = [];
+
+	var grouped_precip, prev_n, len;
+	indices.forEach(function(item, index) {
+		// Group precipitation data according to time series (3 mo, 6 mo, etc)
+		// i.e SPI 3 for February requires data from Dec, Jan, and Feb
+		prev_n = (item - n+1) <= 0 ? 0 : (item - n+1);
+		grouped_precip = arr.slice(prev_n, item+1);
+		len = grouped_precip.length;
+		grouped_precip = grouped_precip.reduce((n, { precip }) => n + precip, 0) / len;
+
+		cont.push({ date:`${arr[item].year} ${arr[item].month}`, data: grouped_precip, count: len });
+	});
+	//console.log(cont);
+
+	return cont;
+}
+
+function getGammaParameters(data) {
+	var mean_precip = data.reduce((n , { data }) => n + data, 0) / data.length;
+
+	var A = (mathjs.log(mean_precip) - (data.reduce((n , { data }) => n + mathjs.log(data), 0) / data.length ) );
+	var alpha = (1/(4*A) * (1+mathjs.sqrt(1+(4*A/3) ) ) );
+	var beta = mean_precip / alpha;
+	
+	return { alpha: alpha, beta: beta };
+}
+
+function gammaEq(params, spi_data) {
+	var g_of_x = (1/mathjs.gamma(params.alpha)) * 1;
+	var x = spi_data[spi_data.length-1].data;
+	var t = x / params.beta;
+	var integral = ( (mathjs.pow(t, params.alpha-1)) * (mathjs.pow(2.71828, t*-1)) ) / mathjs.pow(1, params.alpha-1);
+	console.log(params.alpha);
+	console.log(g_of_x);
+	console.log(x);
+	console.log(t);
+	console.log(integral);
+}
+
+function calculateSPI(spi_data, month, n) {
+	var spi_data = groupSPI_N(spi_data, month, n);
+	var gamma_params = getGammaParameters(spi_data);
+	gammaEq(gamma_params, spi_data);
+
+}
+
+exports.ajaxWeatherChart = function(req, res) {
+	var start_date = new Date(req.query.start_date), end_date = new Date(req.query.end_date);
+	var diff = Math.abs(end_date - start_date);
+	var diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24)); 
+
+	weatherForecastModel.getWeatherChart({ type: diffDays <= 90 ? '' : 'grouped', start_date: dataformatter.formatDate((start_date), 'YYYY-MM-DD'), end_date: dataformatter.formatDate((end_date), 'YYYY-MM-DD') }, function(err, weather_chart) {
+		if (err)
+			throw err;
+		else {
+			res.send({ stringify: processWeatherChartData(weather_chart, diffDays <= 90 ? '' : 'grouped') });
+		}
+	});
+}
 
 exports.testDisasterChart = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
-
-	weatherForecastModel.getWeatherData(function(err, result) {
+	var month = 2;
+	var start_date = new Date();
+	start_date.setMonth(start_date.getMonth() - 12);
+	weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD') }, function(err, precip_data) {
 		if (err)
 			throw err;
 		else {
-			var unique = [...new Set(result.map(item =>
-			 						 item.precip))];
-			console.log(unique);
-			var arr = [10, 98, 3, 5,6];
-			// unique.forEach(function(item) {
-			// 	if (isNaN(item) == true)
-			// 		console.log('!!');
-			// 	else {
-			// 		console.log(item);
-			// 	}
-			// })
-			var arr = [-0.04949349443049506, 0.24431456445461106];
-			console.log(calculateVariance(arr));
-			var distribution = gaussian(0, 1);
-			console.log(distribution.pdf(arr));
-
-			//console.log(PD.rgamma(arr, 0.5, 20));
+			var precip_details = processPrecipChartData(precip_data)
+			html_data['precip_data'] = JSON.stringify(precip_details.chart);
+			//calculateSPI(spi_data, month, 3);
+			res.render('customCNRTest', html_data);
 		}
 	});
-
-	res.send('asdas');
 }
 
 exports.getDetailedReport = function(req, res) {
