@@ -22,7 +22,7 @@ const precip_1_month = 'rgba(181, 179, 130, 1)';
 function processPrecipChartData(result) {
 	var data = { labels: [], datasets: [] };
 	var data_cont = { precipitation_mean: [], lag_30year: [], lag_1year: [], lag_3year: [], lag_3month: [], lag_1month: [] };
-
+	var outlook = { classification: '', drought_summary: '', weather_forecast: '' };
 	result.forEach(function(item) {
 		data_cont.precipitation_mean.push(item.precipitation_mean);
 		data_cont.lag_30year.push(item.year_30_lag);
@@ -36,13 +36,101 @@ function processPrecipChartData(result) {
 	});
 	data.datasets.push({ type: 'line', backgroundColor: precip, borderColor: precip, label: 'Total Precipitation', yAxisID: 'y', data: data_cont.precipitation_mean });
 	data.datasets.push({ type: 'line', backgroundColor: avg_precip, borderColor: avg_precip, label: 'Average Precipitation', yAxisID: 'y', data: data_cont.lag_30year });
-	data.datasets.push({ type: 'line', backgroundColor: precip_3_year, borderColor: precip_3_year, label: '3 Yr MA', yAxisID: 'y', data: data_cont.lag_3year });
-	data.datasets.push({ type: 'line', backgroundColor: precip_1_year, borderColor: precip_1_year, label: '1 Yr MA', yAxisID: 'y', data: data_cont.lag_1year });
+	data.datasets.push({ type: 'line', backgroundColor: precip_3_year, borderColor: precip_3_year, label: '3 Yr MA', yAxisID: 'y', data: data_cont.lag_3year, hidden: true });
+	data.datasets.push({ type: 'line', backgroundColor: precip_1_year, borderColor: precip_1_year, label: '1 Yr MA', yAxisID: 'y', data: data_cont.lag_1year, hidden: true });
 	// data.datasets.push({ type: 'line', backgroundColor: precip_6_month, borderColor: precip_6_month, label: '6 Mo MA', yAxisID: 'y', data: data_cont.lag_6month, hidden: true });
 	// data.datasets.push({ type: 'line', backgroundColor: precip_3_month, borderColor: precip_3_month, label: '3 Mo MA', yAxisID: 'y', data: data_cont.lag_3month, hidden: true });
 	// data.datasets.push({ type: 'line', backgroundColor: precip_1_month, borderColor: precip_1_month, label: '1 Mo MA', yAxisID: 'y', data: data_cont.lag_1month, hidden: true });
 
-	return data;
+	// Classify meteorological drought
+	var drought_obj = { severe: { data: [], continuous: [] }, medium: { data: [], continuous: [] } };
+	result.forEach(function(item, index) {
+		if ((item.year_30_lag - item.precipitation_mean) / item.year_30_lag >= .6 ) {
+			drought_obj.severe.data.push(item);				
+		}
+
+		if ((item.year_30_lag - item.precipitation_mean) / item.year_30_lag >= .21 ) {
+			drought_obj.medium.data.push(item);
+		}
+	});
+
+	drought_obj.severe = checkContinuous(drought_obj.severe);
+	drought_obj.medium = checkContinuous(drought_obj.medium);
+
+	// Classify severity and category
+	var recent_medium_count = drought_obj.medium.continuous.length != 0 ? drought_obj.medium.continuous[drought_obj.medium.continuous.length-1].length : 0;
+	var recent_severe_count = drought_obj.severe.continuous.length != 0 ? drought_obj.severe.continuous[drought_obj.severe.continuous.length-1].length : 0;
+	var str = '';
+	var count_to_word = ['one','two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+
+	if (recent_severe_count >= 3 || recent_medium_count >= 5) {
+		if (recent_severe_count >= 3) {
+			str += `A significant decline in precipitation levels has been ongoing for ${count_to_word[recent_severe_count-1]} months during the season.`;
+		}
+		else {
+			str += `An extended decline in precipitation levels is currently being experienced for the current season. Allocate water reserves as needed.`
+		}
+
+		outlook.classification = 'Drought';
+		outlook.drought_summary = str;
+	}
+	else if (recent_severe_count >= 2 || recent_medium_count >= 3) {
+		if (recent_severe_count >= 2) {
+			str += `A significant decline in precipitation levels has been ongoing for two months during the season. Drought may be expected if precipitation levels do not rise. Prepare water reserves now.`;
+		}
+		else {
+			str += `A ${count_to_word[recent_medium_count-1]} month decline in precipitation levels is currently being experienced for the current season. Please be advised to monitor precipitation and temperature levels closely and allocate water reserves.`
+		}
+
+		outlook.classification = 'Dry Spell';
+		outlook.drought_summary = str;
+	}
+	else if (recent_medium_count >= 2) {
+		outlook.classification = 'Dry Condition';
+		outlook.drought_summary = 'Precipitation levels have fallen below normal range for two consecutive months in the current season. Please be advised to monitor precipitation and temperature levels closely and allocate water reserves.';
+	}
+	else {
+		outlook.classification = 'Normal Fluctuation';
+		outlook.drought_summary = 'Precipitation levels are within normal ranges. Refer to the weather forecast for short-term fluctuations in the weather.';
+	}
+
+
+	return { chart: data, outlook: outlook };
+}
+
+function checkContinuous(arr) {
+	const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+	var date, month_index, prev_month_index;
+	var count = 1;
+	var found = 0;
+
+	arr.data.forEach(function(item, index) {
+		if (index != 0) {
+			date = new Date(item.date);
+			month_index = date.getMonth();
+			date = new Date(arr.data[index-1].date);
+			prev_month_index = date.getMonth();
+			if (Math.abs((month_index - prev_month_index)%10) == 1) {
+				if (found == 0) {
+					found = arr.data[index-1];
+				}
+
+				if (count > arr.continuous.length) {
+					arr.continuous.push([found]);
+				}
+				arr.continuous[arr.continuous.length-1].push(item);
+			}
+			else {
+				if (found != 0) {
+					count++;
+					found = 0;
+				}
+			}
+		}
+	});
+	return arr;
 }
 
 function consolidateResources(type, ids, qty, wo_id) {
@@ -568,7 +656,9 @@ exports.getWorkOrdersDashboard = function(req, res) {
 																	if (err)
 																		throw err;
 																	else {
-																		html_data['precip_data'] = JSON.stringify(processPrecipChartData(precip_data));
+																		var precip_details = processPrecipChartData(precip_data)
+																		html_data['precip_data'] = JSON.stringify(precip_details.chart);
+																		html_data['outlook'] = (precip_details.outlook);
 																		res.render('home', html_data);
 																	}
 																});

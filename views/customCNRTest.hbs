@@ -47,10 +47,21 @@
 </div>
 
 <div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
-	<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
-		Outlook
+	<div class="text-white w-100 py-2 text-center rounded-top bg-dark">
+		Weather Outlook
 	</div>
-	dasas
+	<div class="px-3">
+		<div class="d-flex">
+			<div>Weather Assessment: </div>
+			<div class="ml-auto font-weight-bold">{{outlook.classification}}</div>
+		</div>
+		<div class="d-flex flex-column">
+			<div class="Note"></div>
+			<span class="">{{outlook.drought_summary}}</span>
+			<span class="">{{outlook.weather_forecast}}</span>
+		</div>
+	</div>
+		
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
