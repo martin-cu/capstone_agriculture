@@ -1,136 +1,230 @@
-<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
-	<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
-		Weather Data
-	</div>
-	<div class="w-100 d-flex">
-		<div class="form-row ml-3 mt-2">
-			<div class="form-group">
-				<label class="form-check-label">From: </label>
-				<div class="">
-				  <input class="form-control " type="date" id="weather_start" name="weather_start" value="">
-				</div>
-			</div>
-			<div class="form-group ml-2">
-				<label class="form-check-label">To: </label>
-				<div class="">
-				  <input class="form-control " type="date" id="weather_end" name="weather_end" value="">
-				</div>
-			</div>
-			<div class="form-group align-bottom ml-3">
-				<div class="h-100 align-bottom align-text-bottom mt-2">
-					<button type="button" id="weather_filter" class="btn btn-primary float-right mt-3">Filter</button>
-				</div>
-			</div>
-			
+<div class="form-row ml-3 mt-3">
+	<div class="form-group ml-2">
+      <label class="ml-1" for="farm_filter">Farms</label>
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" 
+                  id="dropdownMenu1" data-toggle="dropdown" 
+                  aria-haspopup="true" aria-expanded="false">
+            Crop Cycles
+          </button>
+          <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
+          {{#each crop_plans}}
+            <li >
+              <label>
+                <input type="checkbox" name="overview_cycle_filter" value="{{this}}">{{this}}
+              </label>
+            </li>
+          {{/each}}
+          </ul>
+        </div>
+    </div>
+
+    <div class="form-group mx-3">
+        <label class="ml-1" for="farm_filter">Farms</label>
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" 
+                  id="dropdownMenu1" data-toggle="dropdown" 
+                  aria-haspopup="true" aria-expanded="false">
+            Farms...
+          </button>
+          <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
+            {{#if farm_list.lowland}}
+              <h6 class="dropdown-header">Lowland</h6>
+              {{#each farm_list.lowland}}
+                <li >
+                  <label>
+                    <input type="checkbox" name="overview_farm_filter" value="{{this.farm_id}}" selected>{{this.farm_name}}
+                  </label>
+                </li>
+              {{/each}}
+            {{else}}
+
+            {{/if}}
+
+            {{#if farm_list.upland}}
+              <h6 class="dropdown-header">Upland</h6>
+              {{#each farm_list.upland}}
+                <li >
+                  <label>
+                    <input type="checkbox" name="overview_farm_filter" value="{{this.farm_id}}" selected>{{this.farm_name}}
+                  </label>
+                </li>
+              {{/each}}
+            {{else}}
+
+            {{/if}}
+          </ul>
+        </div>
+    </div>
+
+	<div class="form-group align-bottom ml-3">
+		<div class="h-100 align-bottom align-text-bottom mt-2">
+			<button class="btn btn-primary mt-4" id="overview_filter_btn" type="button">Filter</button>	
 		</div>
 	</div>
-		
-	<canvas id="weather_chart" style="width: 500px;"></canvas>
 </div>
 
-<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
-	<div class="text-white w-100 px-3 py-2 text-center rounded-top bg-dark">
-		Precipitation Data
-	</div>
-	<!-- <div class="w-100 d-flex">
-		<div class="form-row ml-3 mt-2">
-			<div class="form-group">
-				<label class="form-check-label">From: </label>
-				<div class="">
-				  <input class="form-control " type="date" id="weather_start" name="weather_start" value="">
-				</div>
-			</div>
-		</div>
-	</div> -->
-		
-	<canvas id="precip_chart" style="width: 500px;"></canvas>
-</div>
-
-<div class="w-100 mx-3 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+<div class="w-100 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
 	<div class="text-white w-100 py-2 text-center rounded-top bg-dark">
-		Weather Outlook
-	</div>
-	<div class="px-3">
-		<div class="d-flex">
-			<div>Weather Assessment: </div>
-			<div class="ml-auto font-weight-bold">{{outlook.classification}}</div>
+		<div>
+			Crop Production <small>(in cavans/ha)</small>
 		</div>
-		<div class="d-flex flex-column">
-			<div class="Note"></div>
-			<span class="">{{outlook.drought_summary}}</span>
-			<span class="">{{outlook.weather_forecast}}</span>
-		</div>
+		<!-- <small>actual vs forecasted</small> -->
 	</div>
-		
+	<div>
+		<canvas id="crop_production" style=""></canvas>
+	</div>
+</div>
+
+<div class="w-100 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+	<div class="text-white w-100 py-2 text-center rounded-top bg-dark">
+		Fertilizer Consumption <small>(in grams/ha)</small>
+	</div>
+	<div>
+		<canvas id="fertilizer_consumption" style=""></canvas>
+	</div>
+</div>
+
+<div class="w-100 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+	<div class="text-white w-100 py-2 text-center rounded-top bg-dark">
+		Pest Disease Trend
+	</div>
+	<div>
+		<canvas id="pd_trend" style=""></canvas>
+	</div>
+</div>
+
+<div class="w-100 border border-secondary d-flex flex-column rounded" style="max-width: 600px;">
+	<div class="text-white w-100 py-2 text-center rounded-top bg-dark">
+		Pest Disease By Stage
+	</div>
+	<div>
+		<canvas id="pd_stage" style="height: 700px; width: 700px;"></canvas>
+	</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js" integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script type="text/javascript">
+		
 	$(document).ready(function() {
-		var weather_chart_data = [];
-		var precip_chart_data = {{{precip_data}}};
-
-		var canvas = document.getElementById('weather_chart');
-		var date = new Date().toISOString().split('T')[0];
-		var start = new Date();
-		start.setDate(start.getDate() - 30);
-		start = start.toISOString().split('T')[0];
-
-		var weather_chart = new Chart(canvas, {
-		  type: 'line',
-		  data: weather_chart_data,
-		  options: {
-		    scales: {
-				y: {
-					type: 'linear',
-					display: true,
-					position: 'left',
-					ticks: {
-	                    // Include a dollar sign in the ticks
-	                    callback: function(value, index, values) {
-	                        return value+' ℃';
-	                    }
-	                }
-				},
-				// y1: {
-				// 	type: 'linear',
-				// 	display: true,
-				// 	position: 'right',
-				// 	ticks: {
-	   //                  // Include a dollar sign in the ticks
-	   //                  callback: function(value, index, values) {
-	   //                      return value+' mm';
-	   //                  }
-	   //              }
-				// }
-		    }
-		  }
+		$('#overview_filter_btn').on('click', function() {
+			// $.get('/ajax_filter_dashboard', {  }, function(result) {
+			// 	console.log(result);
+			// });
 		});
+	});
 
-		var precipitation_chart = new Chart(document.getElementById('precip_chart'), {
-			type: 'line',
-		  	data: precip_chart_data,
-		 	options: {
+	var view = '';
 
-		  	}
-		});
+	var production_data = {{{production_chart}}};
+	var consumption_data = {{{consumption_chart}}};
+	var pd_trend = {{{pd_overview_chart.trend}}};
+	var pd_stage = {{{pd_overview_chart.stage}}};
 
-		$('#weather_start').val(start);
-		$('#weather_end').val(date);
+	console.log(production_data);
+	console.log(consumption_data);
+	console.log(pd_trend);
+	console.log(pd_stage);
 
-		function updateWeatherChart() {
-			var start = new Date($('#weather_start').val()), date = new Date($('#weather_end').val());
-			$.get('/ajax_weather_chart', { start_date: start, end_date: date }, function(result) {
-				weather_chart.data = result.stringify;
-				weather_chart.update();
-			});
-		}
+	var productionChart = new Chart(crop_production, {
+	  type: 'bar',
+	  data: production_data,
+		options: {
+		plugins: {
+			legend: {
+				display: false
+			}
+		},
+	    tooltips: {
+	      displayColors: true,
+	    },
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    scales: {
+	    }
+	  }
+	});
 
-		updateWeatherChart();
+	var consumptionChart = new Chart(document.getElementById("fertilizer_consumption"), {
+	  type: 'bar',
+	  data: consumption_data,
+		options: {
+		indexAxis: 'y',
+		plugins: {
+			legend: {
+				display: false
+			}
+		},
+	    tooltips: {
+	      displayColors: true,
 
-		$('#weather_filter').on('click', function() {
-			updateWeatherChart();
-		});
-	})
+	    },
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    scales: {
+	    	x: {
+                type: 'linear',
+                display: true,
+            }
+	    }
+	  }
+	});
+
+	var pdTrendChart = new Chart(document.getElementById("pd_trend"), {
+	  type: 'line',
+	  data: pd_trend,
+		options: {
+		plugins: {
+			legend: {
+				display: false
+			}
+		},
+	    tooltips: {
+	      displayColors: true,
+
+	    },
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    scales: {
+	    	y: {
+	    		ticks: {
+	    			beginAtZero: true,
+	    			suggestedMin: 0
+	    		}
+	    	}
+	    }
+	  }
+	});
+
+	var pdByStageChart = new Chart(document.getElementById("pd_stage"), {
+	  type: 'bar',
+	  data: pd_stage,
+		options: {
+		indexAxis: 'y',
+		plugins: {
+
+		},
+	    tooltips: {
+	      displayColors: true,
+
+	    },
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    scales: {
+	    	y: {
+	    		callback: function (value, index, values) {
+
+                    var dataValue = obj.datasets[0].data;
+
+                    if (dataValue[index]) {
+                        return values[index];
+                    }
+
+                }
+	    	}
+	    }
+	  }
+	});
+
 </script>

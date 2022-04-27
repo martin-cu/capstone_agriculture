@@ -7,6 +7,45 @@ const nutrientModel = require('../models/nutrientModel.js');
 const dataformatter = require('../public/js/dataformatter.js');
 const js = require('../public/js/session.js');
 var request = require('request');
+var solver = require('javascript-lp-solver');
+
+function recommendFertilizerPlan(obj, materials) {
+	var model;
+	var multiplier = 1.5;
+	var constraints = {
+		N: { min: obj.n_lvl },
+		P: { min: obj.p_lvl, max: obj.p_lvl*1.1 },
+		K: { min: obj.k_lvl },
+	};
+	//console.log(obj);
+	var temp_obj = {};
+	var variables = {};
+	for (var i = 0; i < materials.length; i++) {
+		variables[materials[i].fertilizer_name] = {
+			N: materials[i].N,
+			P: materials[i].P,
+			K: materials[i].K,
+			price: materials[i].price
+		};
+	}
+	model = {
+		optimize: '',
+		opType: 'min',
+		constraints,
+		variables
+	};
+
+	temp_obj['recommendation'] = solver.Solve(model);
+
+	for (var prop in obj.recommendation) {
+		if (parseFloat(obj.recommendation[prop])) {
+			temp_obj.recommendation[prop] = Math.round(temp_obj.recommendation[prop] * 100) / 100;
+			temp_obj.recommendation[prop] = temp_obj.recommendation[prop] < 0 ? 0 : temp_obj.recommendation[prop];
+		}
+	}
+
+	return temp_obj.recommendation;
+}
 
 function processInventory(arr, recommendation, applied) {
 	var row_arr = [];

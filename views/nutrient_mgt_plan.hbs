@@ -179,7 +179,8 @@
 
   $('#calendar_filter').on('change', function() {
     var farm_id = $('#farm_filter option:selected').val(),farm_name = $('#farm_filter option:selected').html(), calendar = $(this).find(':selected').val();
-    getDetails(farm_id, farm_name, calendar);
+    if (calendar != '...')
+      getDetails(farm_id, farm_name, calendar);
   });
 
 
