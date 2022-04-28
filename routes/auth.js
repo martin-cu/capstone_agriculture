@@ -278,7 +278,7 @@ router.get('/updatePurchase', materialController.updatePurchase);
 
 router.get('/getMaterialsAjax/:type', materialController.getMaterialsAjax);
 
-router.get("/updateNotif", notifController.updateNotif);
+router.get("/updateNotif", notifController.updateNotif);//Ajax
 router.get("/notifications",  notifController.getNotification ,notifController.getNotificationTab);
 
 

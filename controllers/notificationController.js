@@ -117,6 +117,7 @@ exports.getNotification = function(req, res, next) {
 
 exports.getNotificationTab = function(req,res){
     var html_data = {};
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'user_management', req.session);
     notifModel.getAllNotifs(function(err, notifs){
         if(err)
             throw err;
@@ -127,8 +128,26 @@ exports.getNotificationTab = function(req,res){
                 if(notifs[i].status == 0)
                     notifs[i]["done"] = true;
             }
-            html_data["notifs"] = notifs;
+            html_data["all"] = notifs;
+
+            //FILTER NOTIFS
+            var danger = [];
+            var primary = [];
+            var warning = [];
+            for(var i = 0; i < notifs.length; i++){
+                console.log(notifs[i].color);
+                switch(notifs[i].color){
+                    case "danger" : danger.push(notifs[i]); break;
+                    case "primary" : primary.push(notifs[i]); break;
+                    case "warning" : warning.push(notifs[i]); break;
+                }
+            }
+
+            html_data["danger"] = danger;
+            html_data["primary"] = primary;
+            html_data["warning"] = warning;
         }
+        html_data["notifs"] = req.notifs;
         res.render("notifications", html_data);
     });
 }

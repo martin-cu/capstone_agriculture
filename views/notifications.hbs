@@ -14,69 +14,120 @@
                         <h3 class="text-dark mb-0"Notifications</h3><a class="btn btn-primary disabled btn-sm d-none d-sm-inline-block" role="button" style="background: rgba(78,115,223,0);color: #332c1f;border-color: rgba(51,44,31,0);">&nbsp;<br>&nbsp;<i class="far fa-clock" style="margin-right: 5px;"></i>October 1, 2021 10:32am<br><br></a>
                     </div>
     
+        <div class="row">
 
-    <div class="row">
+                <div class="col-lg-12 col-xl-12 col-xxl-12">
 
-        <div class="col-lg-12 col-xl-12 col-xxl-12">
+                    <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
 
-            <div class="card shadow mb-4"  style="max-width: 1150px; margin: 0px auto;">
+                        <div class="card-header d-flex justify-content-between align-items-center" style="height:auto">
+                            
+                            <ul class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
+                                <li class="nav-item"><a id="notifs-tab" class="nav-link active" data-toggle="tab" href="#all_notifs"role="tab" aria-controls="notifs" aria-selected="true" 
+                                    style="background: #F0F0F0;">ALL</a></li>
 
-                <div class="card-header d-flex justify-content-between align-items-center" style="height:auto">
+                                <li class="nav-item"><a id="primary-tab" class="nav-link" data-toggle="tab" href="#primary_notif" role="tab" aria-controls="primary" aria-selected="false" 
+                                    style="background: #F0F0F0;">Primary</a></li>
+                                <li class="nav-item"><a id="warning-tab" class="nav-link" data-toggle="tab" href="#warning_notif"role="tab" aria-controls="warning" aria-selected="false" 
+                                    style="background: #F0F0F0;">Warning</a></li>
+                                <li class="nav-item"><a id="danger-tab" class="nav-link" data-toggle="tab" href="#danger_notif"role="tab" aria-controls="danger" aria-selected="false" 
+                                    style="background: #F0F0F0;">Danger</a></li>
 
-                    <div class="col" style="max-width: 70px; padding-top: 2px">
+                            </ul>
 
-                        <button type="submit" class="btn btn-primary btn-md" id="back" onclick="history.back()"> <!-- Replaced the javascript back function because the page top function is also being considered in the window history -->
-                            <i class="far fa-long-arrow-left d-lg-flex justify-content-lg-center" id="backIcon"></i>
-                        </button>        
-
-                    </div>
-                    
-                    <div class="col" style="margin-right: 650px; padding-top: 15px">
-                        <h6 style="color: white;">Notifications</h6>
-            
-                    </div>
-
-                    
-                    </div>
-
-                    <div class="card-body">
-                             
-                            {{!-- TAB CONTENT --}}
-
-                            <div class="tab-content" id="nav-tabContent">
-
-                                {{!-- TAB 1 --}}
-                                <div class="tab-pane fade show active" id="pests" role="tabpanel" aria-labelledby="pests-tab">
-                                
-                                {{!-- ADD DIAGNOSIS --}}
-                                {{!-- END OF ADD DIAGNOSIS --}}
-                                
-                                {{!-- <small class="form-text" style="color: #584c33;font-weight: bold;font-size: 18px;">Filter Results:&nbsp;&nbsp;</small>
-                                <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
-                                    <div class="input-group"><input id="filterDiagnosesTable" onkeyup="diagnosesFilter()" class="bg-light form-control border-0 small" type="text" placeholder="Search for ..." style="border-radius: 60px;border-color: #7D7D7D;border-left-style: solid;border-left-color: #7D7D7D;"></div>
-                                </form> --}}
-                                {{!-- <button class="btn btn-primary d-flex float-end" role="button" style=" margin-bottom: 20px; background: #EDD172;border-style: none;color: #332c1f;border-radius: 20px;" onclick='window.location="/pest_and_disease/diagnose_add_diagnosis"'>Add Diagnosis</button> --}}
-                                
-                            {{#each notifs}}
-                                <a class="rounded mt-2 d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="padding: 10px; background: {{#if this.done}}#EEEEEE{{else}}#ffffff{{/if}};">
-                                    <div class="mr-3">
-                                        <div class="bg-{{this.color}} icon-circle"><i class="fas fa-{{this.icon}} text-white"></i></div>
+                                {{!-- <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"><i class="fas fa-ellipsis-v d-xxl-flex justify-content-xxl-end text-gray-400"></i></button>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                                        <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
+                                            <div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a>
                                     </div>
-                                    <div>
-                                        <span class="small text-gray-500" {{#if this.done}}style="color: #7D7D7D !important; font-weight 700"{{else}}style="color: #7D7D7D !important"{{/if}}>{{this.date}}</span>
-                                        <p class="small text-dark" {{#if this.done}}style="font-weight: 700"{{else}}{{/if}}>{{this.notification_title}}</p>
-                                        <div class="text-dark small" style="font-size: 12px;">
-                                            {{this.notification_desc}}
+                                </div> --}}
+
+                            </div>
+
+                            <div class="card-body">
+                                    
+                                    {{!-- TAB CONTENT --}}
+
+                                    <div class="tab-content" id="nav-tabContent">
+
+                                        {{!-- TAB 1 --}}
+                                        <div class="tab-pane fade show active" id="all_notifs" role="tabpanel" aria-labelledby="notifs-tab">
+                                            {{#each all}}
+                                                <a class="rounded mt-2 d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="padding: 10px; background: {{#if this.done}}#EEEEEE{{else}}#ffffff{{/if}};">
+                                                    <div class="mr-3">
+                                                        <div class="bg-{{this.color}} icon-circle"><i class="fas fa-{{this.icon}} text-white"></i></div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="small text-gray-500" {{#if this.done}}style="color: #7D7D7D !important; font-weight 700"{{else}}style="color: #7D7D7D !important"{{/if}}>{{this.date}}</span>
+                                                        <p class="small text-dark" {{#if this.done}}style="font-weight: 700"{{else}}{{/if}}>{{this.notification_title}}</p>
+                                                        <div class="text-dark small" style="font-size: 12px;">
+                                                            {{this.notification_desc}}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {{/each}}
                                         </div>
-                                    </div>
-                                </a>
-                            {{/each}}
+                                        {{!-- END OF TAB 1 --}}
+
+                                        {{!-- TAB 2 --}}
+                                        <div class="tab-pane fade" id="primary_notif" role="tabpanel" aria-labelledby="primary-tab">
+                                            {{#each primary}}
+                                                <a class="rounded mt-2 d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="padding: 10px; background: {{#if this.done}}#EEEEEE{{else}}#ffffff{{/if}};">
+                                                    <div class="mr-3">
+                                                        <div class="bg-{{this.color}} icon-circle"><i class="fas fa-{{this.icon}} text-white"></i></div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="small text-gray-500" {{#if this.done}}style="color: #7D7D7D !important; font-weight 700"{{else}}style="color: #7D7D7D !important"{{/if}}>{{this.date}}</span>
+                                                        <p class="small text-dark" {{#if this.done}}style="font-weight: 700"{{else}}{{/if}}>{{this.notification_title}}</p>
+                                                        <div class="text-dark small" style="font-size: 12px;">
+                                                            {{this.notification_desc}}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {{/each}}
+                                        </div>
+                                
+                                        {{!-- TAB 3 --}}
+                                        <div class="tab-pane fade" id="warning_notif" role="tabpanel" aria-labelledby="warning-tab">
+                                            {{#each warning}}
+                                                <a class="rounded mt-2 d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="padding: 10px; background: {{#if this.done}}#EEEEEE{{else}}#ffffff{{/if}};">
+                                                    <div class="mr-3">
+                                                        <div class="bg-{{this.color}} icon-circle"><i class="fas fa-{{this.icon}} text-white"></i></div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="small text-gray-500" {{#if this.done}}style="color: #7D7D7D !important; font-weight 700"{{else}}style="color: #7D7D7D !important"{{/if}}>{{this.date}}</span>
+                                                        <p class="small text-dark" {{#if this.done}}style="font-weight: 700"{{else}}{{/if}}>{{this.notification_title}}</p>
+                                                        <div class="text-dark small" style="font-size: 12px;">
+                                                            {{this.notification_desc}}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {{/each}}
+                                        </div>
+
+                                        {{!-- TAB 4 --}}
+                                        <div class="tab-pane fade" id="danger_notif" role="tabpanel" aria-labelledby="danger-tab">
+                                            {{#each danger}}
+                                                <a class="rounded mt-2 d-flex align-items-center notification" id="{{this.notification_id}}" href="{{this.url}}" style="padding: 10px; background: {{#if this.done}}#EEEEEE{{else}}#ffffff{{/if}};">
+                                                    <div class="mr-3">
+                                                        <div class="bg-{{this.color}} icon-circle"><i class="fas fa-{{this.icon}} text-white"></i></div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="small text-gray-500" {{#if this.done}}style="color: #7D7D7D !important; font-weight 700"{{else}}style="color: #7D7D7D !important"{{/if}}>{{this.date}}</span>
+                                                        <p class="small text-dark" {{#if this.done}}style="font-weight: 700"{{else}}{{/if}}>{{this.notification_title}}</p>
+                                                        <div class="text-dark small" style="font-size: 12px;">
+                                                            {{this.notification_desc}}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {{/each}}
+                                        </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-       </div>
+        </div>
     </div>
+    
 </div>
 
 <script>
