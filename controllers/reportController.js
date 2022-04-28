@@ -2,15 +2,24 @@ const dataformatter = require('../public/js/dataformatter.js');
 const reportModel = require('../models/reportModel.js');
 const farmModel = require('../models/farmModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
+const weatherForecastModel = require('../models/weatherForecastModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const materialModel = require('../models/materialModel.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
-var request = require('request');
+const chart_formatter = require('../public/js/chart_formatter.js');
+const request = require('request');
+const mathjs = require('mathjs');
 
+var temp_lat = 13.073091;
+var temp_lon = 121.388563;
 var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
-
+var open_weather_key = 'd7aa391cd7b67e678d0df3f6f94fda20';
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+const min_temp = 'rgba(	255, 166, 0, 0.6)';
+const max_temp = 'rgba(188,	80,	144, 0.6)';
+const temp = 'rgba(255,99,97, 0.6)';
 
 // a and b are javascript Date objects
 function dateDiffInDays(a, b) {
@@ -23,7 +32,7 @@ function dateDiffInDays(a, b) {
 
 function processNutrientChartData(sql_filter, calendar_list, nutrient_chart, pd_chart) {
 	var nutrient_chart_arr = [], temp_nutrient, temp_pd, temp, calendar;
-
+	var legends;
 	for (var x = 0; x < sql_filter.length; x++) {
 		calendar = calendar_list.filter(e => e.calendar_id == parseInt(sql_filter[x]))[0];
 
@@ -54,17 +63,156 @@ function processNutrientChartData(sql_filter, calendar_list, nutrient_chart, pd_
 				temp_pd[i].dat += 15;
 		}
 
+		var temp_data = analyzer.processNutrientChart(temp_nutrient, temp_pd);
+		legends = temp_data.legends;
+
 		nutrient_chart_arr.push({ 
 			farm_name: calendar_list.filter(e => e.calendar_id == sql_filter[x])[0].farm_name, 
-			data: analyzer.processNutrientChart(temp_nutrient, temp_pd) 
+			data: temp_data.dataset
 		});
 	}
-	
+
 	if (nutrient_chart_arr.length == 1) {
 		nutrient_chart_arr.push({ yes: true });
 	}
 
-	return nutrient_chart_arr;
+	return { dataset: nutrient_chart_arr, legends: legends };
+}
+
+function processWeatherChartData(result, type) {
+	var month_arr = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	var data = { labels: [], datasets: [] };
+	var data_cont = { min_temp: [], max_temp: [], avg_temp: [], precip: [] };
+
+	result.forEach(function(item) {
+		data_cont.min_temp.push(item.temp_min);
+		data_cont.max_temp.push(item.temp_max);
+		data_cont.avg_temp.push(item.temp);
+		//data_cont.precip.push(item.precip);
+		if (type == 'grouped')
+			data.labels.push(`${month_arr[item.month]} (${item.year})`);
+		else 
+			data.labels.push(dataformatter.formatDate(new Date(item.date), 'mm DD, YYYY'));
+	});
+	data.datasets.push({ type: 'line', backgroundColor: min_temp, borderColor: min_temp, label: 'Min Temp', yAxisID: 'y', data: data_cont.min_temp });
+	data.datasets.push({ type: 'line', backgroundColor: max_temp, borderColor: max_temp, label: 'Max Temp', yAxisID: 'y', data: data_cont.max_temp });
+	data.datasets.push({ type: 'line', backgroundColor: temp, borderColor: temp, label: 'Avg Temp', yAxisID: 'y', data: data_cont.avg_temp });
+	//data.datasets.push({ type: 'bar', backgroundColor: 'rgba(	0, 63, 92, 0.6)', borderColor: 'rgba(0, 63, 92, 0.6)', label: 'Precipitation', yAxisID: 'y1', data: data_cont.precip });
+	return data;
+}
+
+function groupSPI_N(arr, month, n) {
+	var filter = arr.map(e => e.month);
+	var indices = filter.reduce(function(a, e, i) {
+	    if (e === month)
+	        a.push(i);
+	    return a;
+	}, []);
+	var cont = [];
+
+	var grouped_precip, prev_n, len;
+	indices.forEach(function(item, index) {
+		// Group precipitation data according to time series (3 mo, 6 mo, etc)
+		// i.e SPI 3 for February requires data from Dec, Jan, and Feb
+		prev_n = (item - n+1) <= 0 ? 0 : (item - n+1);
+		grouped_precip = arr.slice(prev_n, item+1);
+		len = grouped_precip.length;
+		grouped_precip = grouped_precip.reduce((n, { precip }) => n + precip, 0) / len;
+
+		cont.push({ date:`${arr[item].year} ${arr[item].month}`, data: grouped_precip, count: len });
+	});
+	//console.log(cont);
+
+	return cont;
+}
+
+function getGammaParameters(data) {
+	var mean_precip = data.reduce((n , { data }) => n + data, 0) / data.length;
+
+	var A = (mathjs.log(mean_precip) - (data.reduce((n , { data }) => n + mathjs.log(data), 0) / data.length ) );
+	var alpha = (1/(4*A) * (1+mathjs.sqrt(1+(4*A/3) ) ) );
+	var beta = mean_precip / alpha;
+	
+	return { alpha: alpha, beta: beta };
+}
+
+function gammaEq(params, spi_data) {
+	var g_of_x = (1/mathjs.gamma(params.alpha)) * 1;
+	var x = spi_data[spi_data.length-1].data;
+	var t = x / params.beta;
+	var integral = ( (mathjs.pow(t, params.alpha-1)) * (mathjs.pow(2.71828, t*-1)) ) / mathjs.pow(1, params.alpha-1);
+	console.log(params.alpha);
+	console.log(g_of_x);
+	console.log(x);
+	console.log(t);
+	console.log(integral);
+}
+
+function calculateSPI(spi_data, month, n) {
+	var spi_data = groupSPI_N(spi_data, month, n);
+	var gamma_params = getGammaParameters(spi_data);
+	gammaEq(gamma_params, spi_data);
+
+}
+
+exports.ajaxWeatherChart = function(req, res) {
+	var start_date = new Date(req.query.start_date), end_date = new Date(req.query.end_date);
+	var diff = Math.abs(end_date - start_date);
+	var diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24)); 
+
+	weatherForecastModel.getWeatherChart({ type: diffDays <= 90 ? '' : 'grouped', start_date: dataformatter.formatDate((start_date), 'YYYY-MM-DD'), end_date: dataformatter.formatDate((end_date), 'YYYY-MM-DD') }, function(err, weather_chart) {
+		if (err)
+			throw err;
+		else {
+			res.send({ stringify: processWeatherChartData(weather_chart, diffDays <= 90 ? '' : 'grouped') });
+		}
+	});
+}
+
+exports.ajaxFilterOverview = function(req, res) {
+	var html_data = {};
+	const unique_cycles = req.query.selected_cycles;
+	const unique_farms = req.query.selected_farms;
+
+	reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
+		if (err)
+			throw err;
+		else {
+			reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
+				if (err)
+					throw err;
+				else {
+					reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
+						if (err)
+							throw err;
+						else {
+							var production_chart = chart_formatter.formatProductionChart(production_chart_data);
+							var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
+							var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
+
+							html_data['production_chart'] = (production_chart);
+							html_data['consumption_chart'] = (nutrient_consumption_chart);
+							html_data['pd_overview_chart'] = (pd_overview);
+
+							res.send(html_data);
+						}
+					});
+							
+				}
+			});
+					
+		}
+	});
+}
+
+exports.testDisasterChart = function(req, res) {
+	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
+	var month = 2;
+	var start_date = new Date();
+	start_date.setMonth(start_date.getMonth() - 12);
+	
+	res.render('customCNRTest', html_data);
 }
 
 exports.getDetailedReport = function(req, res) {
@@ -172,7 +320,7 @@ exports.ajaxSeedChart = function(req, res) {
 
 					seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
 					
-					res.send({ stringify: (seed_chart.data), obj: seed_chart });
+					res.send({ stringify: (seed_chart.data), obj: seed_chart, legends: legends });
 				}
 			});
 		}
@@ -197,7 +345,7 @@ exports.ajaxNutrientTimingChart = function(req, res) {
 						else {
 							var nutrient_chart_arr = nutrient_chart_arr = processNutrientChartData(sql_filter, seed_chart, nutrient_chart, pd_chart);
 
-							res.send({ obj: nutrient_chart_arr });
+							res.send({ obj: nutrient_chart_arr.dataset, legends: nutrient_chart_arr.legends });
 						}
 					});
 				}
@@ -351,6 +499,7 @@ exports.getSummaryHarvestReport = function(req, res) {
 																														var range = [crop_plan_list[crop_plan_list.length-1], crop_plan_list[0]];
 
 																														seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
+																														html_data['seed_chart_legends'] = seed_chart.legends;
 																														html_data['seed_chart_lbls'] = seed_chart.farm_legends;
 																														html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
 																														html_data['crop_plans'] = { data: JSON.stringify(crop_plans.reverse()), index: JSON.stringify([crop_plans.indexOf(range[0]), crop_plans.indexOf(range[1])]), start: range[0], end: range[1] };
@@ -372,9 +521,10 @@ exports.getSummaryHarvestReport = function(req, res) {
 																																		}
 
 																																		html_data['farm_list'] = farm_list;
-																																		html_data['json_nutrient'] = nutrient_chart_arr;
+																																		html_data['json_nutrient'] = nutrient_chart_arr.dataset;
 
-																																		html_data['nutrient_chart'] = JSON.stringify(nutrient_chart_arr);
+																																		html_data['nutrient_chart_legends'] = nutrient_chart_arr.legends
+																																		html_data['nutrient_chart'] = JSON.stringify(nutrient_chart_arr.dataset);
 
 																																		html_data['nutrient_filter'] = { crop_plan1: filter1, crop_plan2: filter2, crop_plan_list: JSON.stringify(all_crop_plans) };
 																																		html_data["notifs"] = req.notifs;
