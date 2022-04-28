@@ -34,20 +34,22 @@ exports.formatProductionChart = function(data) {
 		}
 
 		obj_data.datasets.push({
-			label: lbl,
+			label: `Harvested ${lbl}`,
 			yAxisID: `bar-stack`,
 			stack: 'harvested',
 			backgroundColor: color_arr_set[0][x],
 			data: data1
 		});
 		obj_data.datasets.push({
-			label: lbl,
+			label: `Forecasted ${lbl}`,
 			yAxisID: `bar-stack`,
 			stack: 'forecasted',
 			backgroundColor: color_arr_set[1][x],
 			data: data2
 		});
 	}
+
+	console.log(obj_data.datasets);
 
 	return obj_data;
 } 

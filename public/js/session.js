@@ -54,6 +54,8 @@ exports.init_session = function(obj, role, name, username, tab, session) {
 		obj['nutrient_mgt_discover'] = true;
 	else if (tab === 'nutrient_mgt_plan') 
 		obj['nutrient_mgt_plan'] = true;
+	else if (tab === 'nutrient_mgt_reco') 
+		obj['nutrient_mgt_reco'] = true;
 
 	// Pest and Disease Diagnose Tab
 	else if (tab === 'pest_and_disease_discover') 

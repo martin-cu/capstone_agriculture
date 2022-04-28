@@ -32,7 +32,7 @@ function dateDiffInDays(a, b) {
 
 function processNutrientChartData(sql_filter, calendar_list, nutrient_chart, pd_chart) {
 	var nutrient_chart_arr = [], temp_nutrient, temp_pd, temp, calendar;
-
+	var legends;
 	for (var x = 0; x < sql_filter.length; x++) {
 		calendar = calendar_list.filter(e => e.calendar_id == parseInt(sql_filter[x]))[0];
 
@@ -63,17 +63,20 @@ function processNutrientChartData(sql_filter, calendar_list, nutrient_chart, pd_
 				temp_pd[i].dat += 15;
 		}
 
+		var temp_data = analyzer.processNutrientChart(temp_nutrient, temp_pd);
+		legends = temp_data.legends;
+
 		nutrient_chart_arr.push({ 
 			farm_name: calendar_list.filter(e => e.calendar_id == sql_filter[x])[0].farm_name, 
-			data: analyzer.processNutrientChart(temp_nutrient, temp_pd) 
+			data: temp_data.dataset
 		});
 	}
-	
+
 	if (nutrient_chart_arr.length == 1) {
 		nutrient_chart_arr.push({ yes: true });
 	}
 
-	return nutrient_chart_arr;
+	return { dataset: nutrient_chart_arr, legends: legends };
 }
 
 function processWeatherChartData(result, type) {
@@ -317,7 +320,7 @@ exports.ajaxSeedChart = function(req, res) {
 
 					seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
 					
-					res.send({ stringify: (seed_chart.data), obj: seed_chart });
+					res.send({ stringify: (seed_chart.data), obj: seed_chart, legends: legends });
 				}
 			});
 		}
@@ -342,7 +345,7 @@ exports.ajaxNutrientTimingChart = function(req, res) {
 						else {
 							var nutrient_chart_arr = nutrient_chart_arr = processNutrientChartData(sql_filter, seed_chart, nutrient_chart, pd_chart);
 
-							res.send({ obj: nutrient_chart_arr });
+							res.send({ obj: nutrient_chart_arr.dataset, legends: nutrient_chart_arr.legends });
 						}
 					});
 				}
@@ -496,6 +499,7 @@ exports.getSummaryHarvestReport = function(req, res) {
 																														var range = [crop_plan_list[crop_plan_list.length-1], crop_plan_list[0]];
 
 																														seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
+																														html_data['seed_chart_legends'] = seed_chart.legends;
 																														html_data['seed_chart_lbls'] = seed_chart.farm_legends;
 																														html_data['seed_chart'] = { stringify: JSON.stringify(seed_chart.data), obj: seed_chart };
 																														html_data['crop_plans'] = { data: JSON.stringify(crop_plans.reverse()), index: JSON.stringify([crop_plans.indexOf(range[0]), crop_plans.indexOf(range[1])]), start: range[0], end: range[1] };
@@ -517,9 +521,10 @@ exports.getSummaryHarvestReport = function(req, res) {
 																																		}
 
 																																		html_data['farm_list'] = farm_list;
-																																		html_data['json_nutrient'] = nutrient_chart_arr;
+																																		html_data['json_nutrient'] = nutrient_chart_arr.dataset;
 
-																																		html_data['nutrient_chart'] = JSON.stringify(nutrient_chart_arr);
+																																		html_data['nutrient_chart_legends'] = nutrient_chart_arr.legends
+																																		html_data['nutrient_chart'] = JSON.stringify(nutrient_chart_arr.dataset);
 
 																																		html_data['nutrient_filter'] = { crop_plan1: filter1, crop_plan2: filter2, crop_plan_list: JSON.stringify(all_crop_plans) };
 																																		html_data["notifs"] = req.notifs;

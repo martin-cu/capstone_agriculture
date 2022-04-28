@@ -40,6 +40,7 @@ router.post('/create_nutrient_plan', environmentController.ajaxCreateNutrientPla
 router.post('/create_nutrient_item', environmentController.ajaxCreateNutrientItem);
 router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
 router.post('/prepareFRPlan', environmentController.prepareFRPlan);
+router.get('/ajax_active_cnr_plans', nutrientController.ajaxGetActiveCNRPlans);
 
 //Ajax reports
 router.get('/update_seed_chart', reportController.ajaxSeedChart);

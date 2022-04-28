@@ -47,15 +47,61 @@ function recommendFertilizerPlan(obj, materials) {
 	return temp_obj.recommendation;
 }
 
+function processAmountEquation(arr, variables) {
+	//console.log(arr);
+	var order = [];
+	var inner_most_opening, inner_most_closing;
+	var i = 0, x = 0;
+
+	// Get highest fertilizer value
+	const fertilizer_keys = Object.keys(variables.fv);
+	const str_values = fertilizer_keys.map(key => {
+		return key;
+	});
+	const values = fertilizer_keys.map(key => {
+		if (isNaN(variables.fv[key]))
+			return 0;
+		else
+	  	return variables.fv[key];
+	});
+	const max = Math.max(...values);
+	var nutrient_type = str_values[values.indexOf(max)];
+
+	switch (nutrient_type) {
+		case 'N': nutrient_type = 'n_lvl';
+			break;
+		case 'P': nutrient_type = 'p_lvl';
+			break;
+		case 'K': nutrient_type = 'k_lvl';
+			break;
+	}
+
+	arr.forEach(function(item, index) {
+		switch (item) {
+			case 'fa':
+				arr[index] = variables.fa;
+				break;
+			case 'fv':
+				arr[index] = max;
+				break;
+			case 'tnr':
+				arr[index] = variables.tnr[nutrient_type];
+				break;
+		}
+		arr = arr;
+	});
+
+	var str = arr.join('');
+	//console.log(str);
+	return Math.ceil(Function("return " + str)());
+}
+
 function processInventory(arr, recommendation, applied) {
 	var row_arr = [];
 	var temp_obj = {};
 	var qty, recommendation_amt, applied_fertilizer, deficiency;
 	var mat;
-	//console.log(arr);
-	//console.log(recommendation);
-	console.log('1');
-	console.log(applied);
+
 	//Fertilizer - Current Stock - Recommendation - Applied - Deficiency
 	for (var i = 0; i < arr.length; i++) {
 		mat = applied.filter(ele => ele.fertilizer_name == arr[i].fertilizer_name)[0];
@@ -93,6 +139,55 @@ function processInventory(arr, recommendation, applied) {
 	return row_arr;
 }
 
+exports.ajaxGetActiveCNRPlans = function(req, res) {
+	const farm_id = req.query.farm_id;
+	console.log(farm_id);
+	nutrientModel.getAggregatedCNRAssignment(function(err, cnr_assignments) {
+		if (err)
+			throw err;
+		else {
+			nutrientModel.getAggregatedCNR(function(err, cnr_items) {
+				if (err)
+					throw err;
+				else {
+					materialModel.getMaterialsList('Fertilizer', null, function(err, material_list) {
+						if (err)
+							throw err;
+						else {
+							var filtered_cnra = cnr_assignments.filter(e => e.farm_id == farm_id);
+							var filtered_arr = [];
+							var cnr_obj;
+							var temp_arr = [], filtered;
+							filtered_cnra.forEach(function(item) {
+								cnr_obj = {
+									name: item.cnr_name,
+									items: []
+								};
+
+								filtered = cnr_items.filter(e => e.cnr_id == item.cnr_id);
+
+								filtered.forEach(function(filtered_item) {
+									item_obj = {
+										dat: filtered_item.dat,
+										fertilizer_name: material_list.filter(e => e.id == filtered_item.fertilizer_id)[0].name,
+										amount_equation: convertCNRItems(filtered_item.amount_equation.split(','))
+									};
+
+									cnr_obj.items.push(item_obj);
+
+								});
+								filtered_arr.push(cnr_obj);
+							});
+							
+							res.send(filtered_arr);
+						}
+					});
+				}
+			});
+		}
+	});
+}
+
 exports.getNutrientMgtDiscover = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_discover', req.session);
@@ -104,8 +199,8 @@ exports.getNutrientMgtDiscover = function(req, res) {
 
 exports.getNutrientMgtPlan = function(req, res) {
 	var html_data = {};
-	var farm_filter = 'LA Farm WEST (Scenario 1)';
-	var calendar_filter = '70';
+	var farm_filter = req.query.farm_name;
+	var calendar_filter;
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'nutrient_mgt_plan', req.session);
 	html_data["notifs"] = req.notifs;
 
@@ -117,6 +212,12 @@ exports.getNutrientMgtPlan = function(req, res) {
 				if (err)
 					throw err;
 				else {
+					// Select default farm and calendar
+					if (farm_filter == undefined || farm_filter == null) {
+						farm_filter = farm_list[0].farm_name;
+					}
+					calendar_filter = crop_plans.filter(e => e.farm_name == farm_filter)[0].calendar_id;
+
 					html_data['farm_list'] = farm_list;
 					html_data['crop_plans'] = { filtered: crop_plans.filter(e=>e.farm_name == farm_filter), list: JSON.stringify(crop_plans) };
 					html_data['filter'] = JSON.stringify({ farm: farm_filter, calendar: calendar_filter });
@@ -355,7 +456,7 @@ exports.getRecommendationSystem = function(req, res) {
 										cnr_arr.push(obj);
 										cnr_items_arr.push(temp_arr);
 									});
-
+									console.log(cnr_arr[0].items);
 									html_data['cnr_plan_json'] = JSON.stringify(cnr_items_arr);
 									html_data['cnr_plans'] = cnr_arr;
 									html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
@@ -438,6 +539,9 @@ exports.updateCNRPlan = function(req, res) {
 
 exports.createCNRPlan = function(req, res) {
 	var { name, farms, items } = req.query;
+	console.log(farms);
+	if (farms == undefined)
+		farms = [];
 
 	nutrientModel.createCNR({ cnr_name: name }, function(err, cnr_result) {
 		if (err)
@@ -450,6 +554,7 @@ exports.createCNRPlan = function(req, res) {
 				if (err)
 					throw err;
 				else {
+
 					if (farms.length != 0) {
 						var assignment_arr = [];
 						farms.forEach(function(item) {
