@@ -83,70 +83,73 @@
     </div>
 
     <div class="row mb-3">
-        <div class="form-row ml-2">
-            <div class="form-group ml-2">
-              <label class="ml-1" for="farm_filter">Farms</label>
-                <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" 
-                          id="dropdownMenu1" data-toggle="dropdown" 
-                          aria-haspopup="true" aria-expanded="false">
-                    Crop Cycles
-                  </button>
-                  <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
-                  {{#each crop_plans}}
-                    <li >
-                      <label>
-                        <input type="checkbox" name="overview_cycle_filter" value="{{this}}">{{this}}
-                      </label>
-                    </li>
-                  {{/each}}
-                  </ul>
-                </div>
-            </div>
-
-            <div class="form-group mx-3">
-                <label class="ml-1" for="farm_filter">Farms</label>
-                <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" 
-                          id="dropdownMenu1" data-toggle="dropdown" 
-                          aria-haspopup="true" aria-expanded="false">
-                    Farms...
-                  </button>
-                  <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
-                    {{#if farm_list.lowland}}
-                      <h6 class="dropdown-header">Lowland</h6>
-                      {{#each farm_list.lowland}}
+        <div class="d-flex flex-column">
+            <div class="form-row ml-3 mt-3">
+                <div class="form-group ml-2">
+                  <label class="ml-1" for="farm_filter">Farms</label>
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" 
+                              id="dropdownMenu1" data-toggle="dropdown" 
+                              aria-haspopup="true" aria-expanded="false">
+                        Crop Cycles
+                      </button>
+                      <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
+                      {{#each crop_plans}}
                         <li >
                           <label>
-                            <input type="checkbox" name="overview_farm_filter" value="{{this.farm_id}}" selected>{{this.farm_name}}
+                            <input type="checkbox" name="overview_cycle_filter" value="{{this.cycle_name}}" {{#if this.checked}}checked{{/if}}>{{cycle_name}}
                           </label>
                         </li>
                       {{/each}}
-                    {{else}}
+                      </ul>
+                    </div>
+                </div>
 
-                    {{/if}}
+                <div class="form-group mx-3">
+                    <label class="ml-1" for="farm_filter">Farms</label>
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" 
+                              id="dropdownMenu1" data-toggle="dropdown" 
+                              aria-haspopup="true" aria-expanded="false">
+                        Farms...
+                      </button>
+                      <ul class="dropdown-menu checkbox-menu allow-focus farm_dropdown" aria-labelledby="dropdownMenu1">
+                        {{#if farm_list.lowland}}
+                          <h6 class="dropdown-header">Lowland</h6>
+                          {{#each farm_list.lowland}}
+                            <li >
+                              <label>
+                                <input type="checkbox" name="overview_farm_filter" value="{{this.farm_id}}" {{#if this.checked}}checked{{/if}}>{{this.farm_name}}
+                              </label>
+                            </li>
+                          {{/each}}
+                        {{else}}
 
-                    {{#if farm_list.upland}}
-                      <h6 class="dropdown-header">Upland</h6>
-                      {{#each farm_list.upland}}
-                        <li >
-                          <label>
-                            <input type="checkbox" name="overview_farm_filter" value="{{this.farm_id}}" selected>{{this.farm_name}}
-                          </label>
-                        </li>
-                      {{/each}}
-                    {{else}}
+                        {{/if}}
 
-                    {{/if}}
-                  </ul>
+                        {{#if farm_list.upland}}
+                          <h6 class="dropdown-header">Upland</h6>
+                          {{#each farm_list.upland}}
+                            <li >
+                              <label>
+                                <input type="checkbox" name="overview_farm_filter" value="{{this.farm_id}}" {{#if this.checked}}checked{{/if}}>{{this.farm_name}}
+                              </label>
+                            </li>
+                          {{/each}}
+                        {{else}}
+
+                        {{/if}}
+                      </ul>
+                    </div>
+                </div>
+
+                <div class="form-group align-bottom ml-3">
+                    <div class="h-100 align-bottom align-text-bottom mt-2">
+                        <button class="btn btn-primary mt-4" id="overview_filter_btn" type="button">Filter</button> 
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group align-bottom ml-3">
-                <div class="h-100 align-bottom align-text-bottom mt-2">
-                    <button class="btn btn-primary mt-4" id="overview_filter_btn" type="button">Filter</button> 
-                </div>
-            </div>
+            <span class="text-danger" id="overview_filter_err"></span>
         </div>
 
         <div class="col-lg-7 col-xl-8">
@@ -162,21 +165,21 @@
                 </div>
             </div>
 
-            <div class="d-flex my-3">
-                <div class="w-100 border border-secondary d-flex flex-column rounded" style="">
+            <div class="d-flex my-3 w-100">
+                <div class="w-50 border border-secondary d-flex flex-column rounded" style="">
                     <div class="text-white w-100 py-2 text-center rounded-top bg-dark">
                         Fertilizer Consumption <small>(in grams/ha)</small>
                     </div>
-                    <div>
+                    <div class="w-100">
                         <canvas id="fertilizer_consumption" style=""></canvas>
                     </div>
                 </div>
 
-                <div class="w-100 border border-secondary d-flex flex-column rounded" style="">
+                <div class="w-50 border border-secondary d-flex flex-column rounded" style="">
                     <div class="text-white w-100 py-2 text-center rounded-top bg-dark">
                         Pest Disease Trend
                     </div>
-                    <div>
+                    <div class="w-100">
                         <canvas id="pd_trend" style=""></canvas>
                     </div>
                 </div>
@@ -671,109 +674,143 @@
 <script type="text/javascript">
     var view = "home";
 
-    var production_data = {{{production_chart}}};
-    var consumption_data = {{{consumption_chart}}};
-    var pd_trend = {{{pd_overview_chart.trend}}};
-    var pd_stage = {{{pd_overview_chart.stage}}};
-
-    console.log(production_data);
-    console.log(consumption_data);
-    console.log(pd_trend);
-    console.log(pd_stage);
-
-    var productionChart = new Chart(crop_production, {
-      type: 'bar',
-      data: production_data,
-        options: {
-        plugins: {
-            legend: {
-                display: false
+    $(document).ready(function() {
+        $('#overview_filter_btn').on('click', function() {
+            var selected_cycles = [], selected_farms = [], err_str = '';
+            $('input:checked[name="overview_cycle_filter"]').each(function() {
+                selected_cycles.push($(this).attr('value'));
+            });
+            $('input:checked[name="overview_farm_filter"]').each(function() {
+                selected_farms.push($(this).attr('value'));
+            });
+            if (selected_cycles.length == 0) {
+                err_str += `Selected crop cycles cannot be empty!`;
             }
-        },
-        tooltips: {
-          displayColors: true,
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-        }
-      }
-    });
-
-    var consumptionChart = new Chart(document.getElementById("fertilizer_consumption"), {
-      type: 'bar',
-      data: consumption_data,
-        options: {
-        indexAxis: 'y',
-        plugins: {
-            legend: {
-                display: false
+            if (selected_farms.length == 0) {
+                err_str += `Selected farms cannot be empty!`;
             }
-        },
-        tooltips: {
-          displayColors: true,
 
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                type: 'linear',
-                display: true,
+            $('#overview_filter_err').html(err_str);
+            if (err_str == '') {
+                $.get('/ajax_filter_dashboard', { selected_cycles: selected_cycles, selected_farms: selected_farms }, function(result) {
+                    console.log(result);
+                    productionChart.data = result.production_chart;
+                    productionChart.update();
+
+                    consumptionChart.data = result.consumption_chart;
+                    consumptionChart.update();
+
+                    pdTrendChart.data = result.pd_overview_chart.trend;
+                    pdTrendChart.update();
+
+                    pdByStageChart.data = result.pd_overview_chart.stage;
+                    pdByStageChart.update();
+                });
             }
-        }
-      }
-    });
+        });
 
-    var pdTrendChart = new Chart(document.getElementById("pd_trend"), {
-      type: 'line',
-      data: pd_trend,
-        options: {
-        plugins: {
-            legend: {
-                display: false
+        var production_data = {{{production_chart}}};
+        var consumption_data = {{{consumption_chart}}};
+        var pd_trend = {{{pd_overview_chart.trend}}};
+        var pd_stage = {{{pd_overview_chart.stage}}};
+
+        console.log(production_data);
+        console.log(consumption_data);
+        console.log(pd_trend);
+        console.log(pd_stage);
+
+        var productionChart = new Chart(crop_production, {
+          type: 'bar',
+          data: production_data,
+            options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            tooltips: {
+              displayColors: true,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
             }
-        },
-        tooltips: {
-          displayColors: true,
+          }
+        });
 
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                ticks: {
-                    beginAtZero: true,
-                    suggestedMin: 0
+        var consumptionChart = new Chart(document.getElementById("fertilizer_consumption"), {
+          type: 'bar',
+          data: consumption_data,
+            options: {
+            indexAxis: 'y',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            tooltips: {
+              displayColors: true,
+
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'linear',
+                    display: true,
                 }
             }
-        }
-      }
-    });
+          }
+        });
 
-    var pdByStageChart = new Chart(document.getElementById("pd_stage"), {
-      type: 'bar',
-      data: pd_stage,
-        options: {
-        indexAxis: 'y',
-        plugins: {
+        var pdTrendChart = new Chart(document.getElementById("pd_trend"), {
+          type: 'line',
+          data: pd_trend,
+            options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            tooltips: {
+              displayColors: true,
 
-        },
-        tooltips: {
-          displayColors: true,
-
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    ticks: {
+                        beginAtZero: true,
+                        suggestedMin: 0
+                    }
+                }
             }
-        }
-      }
-    });
+          }
+        });
 
-    $(document).ready(function() {
+        var pdByStageChart = new Chart(document.getElementById("pd_stage"), {
+          type: 'bar',
+          data: pd_stage,
+            options: {
+            indexAxis: 'y',
+            plugins: {
+
+            },
+            tooltips: {
+              displayColors: true,
+
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+
+                }
+            }
+          }
+        });
+
         var weather_chart_data = [];
         var precip_chart_data = {{{precip_data}}};
 

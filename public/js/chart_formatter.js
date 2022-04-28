@@ -162,5 +162,5 @@ exports.formatPDOverview = function(data) {
 		});
 	}
 
-	return { trend: JSON.stringify(obj_data), stage: JSON.stringify(obj_data1) };
+	return { trend: (obj_data), stage: (obj_data1) };
 }

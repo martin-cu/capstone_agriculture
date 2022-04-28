@@ -167,54 +167,37 @@ exports.ajaxWeatherChart = function(req, res) {
 }
 
 exports.ajaxFilterOverview = function(req, res) {
-	console.log(req.query);
+	var html_data = {};
+	const unique_cycles = req.query.selected_cycles;
+	const unique_farms = req.query.selected_farms;
 
-	farmModel.getAllFarms(function(err, farm_list) {
+	reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
 		if (err)
 			throw err;
 		else {
-			cropCalendarModel.getCropPlans(function(err, crop_plans) {
+			reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
 				if (err)
 					throw err;
 				else {
-					var unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
-					const unique_farms = [...new Set(farm_list.map(e => e.farm_id).map(item => item))];
-
-					// Change active filters as needed
-					unique_cycles = ['Early 2019'];
-					reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
+					reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
 						if (err)
 							throw err;
 						else {
-							reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
-								if (err)
-									throw err;
-								else {
-									reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
-										if (err)
-											throw err;
-										else {
-											var production_chart = chart_formatter.formatProductionChart(production_chart_data);
-											var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
-											var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
+							var production_chart = chart_formatter.formatProductionChart(production_chart_data);
+							var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
+							var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
 
-											html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
-											html_data['crop_plans'] = unique_cycles;
-											html_data['production_chart'] = (production_chart);
-											html_data['consumption_chart'] = (nutrient_consumption_chart);
-											html_data['pd_overview_chart'] = (pd_overview);
+							html_data['production_chart'] = (production_chart);
+							html_data['consumption_chart'] = (nutrient_consumption_chart);
+							html_data['pd_overview_chart'] = (pd_overview);
 
-											res.send(html_data);
-										}
-									});
-											
-								}
-							});
-									
+							res.send(html_data);
 						}
 					});
+							
 				}
 			});
+					
 		}
 	});
 }
@@ -226,54 +209,7 @@ exports.testDisasterChart = function(req, res) {
 	var start_date = new Date();
 	start_date.setMonth(start_date.getMonth() - 12);
 	
-	farmModel.getAllFarms(function(err, farm_list) {
-		if (err)
-			throw err;
-		else {
-			cropCalendarModel.getCropPlans(function(err, crop_plans) {
-				if (err)
-					throw err;
-				else {
-					var unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
-					const unique_farms = [...new Set(farm_list.map(e => e.farm_id).map(item => item))];
-
-					// Change active filters as needed
-					unique_cycles = ['Early 2019'];
-					reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
-						if (err)
-							throw err;
-						else {
-							reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
-								if (err)
-									throw err;
-								else {
-									reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
-										if (err)
-											throw err;
-										else {
-											var production_chart = chart_formatter.formatProductionChart(production_chart_data);
-											var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
-											var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
-
-											html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
-											html_data['crop_plans'] = unique_cycles;
-											html_data['production_chart'] = JSON.stringify(production_chart);
-											html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
-											html_data['pd_overview_chart'] = (pd_overview);
-
-											res.render('customCNRTest', html_data);
-										}
-									});
-											
-								}
-							});
-									
-						}
-					});
-				}
-			});
-		}
-	});
+	res.render('customCNRTest', html_data);
 }
 
 exports.getDetailedReport = function(req, res) {

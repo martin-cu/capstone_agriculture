@@ -665,11 +665,9 @@ exports.getWorkOrdersDashboard = function(req, res) {
 																					if (err)
 																						throw err;
 																					else {
-																						var unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
+																						const unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
 																						const unique_farms = [...new Set(farm_list.map(e => e.farm_id).map(item => item))];
 
-																						// Change active filters as needed
-																						//unique_cycles = ['Early 2019'];
 																						reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
 																							if (err)
 																								throw err;
@@ -686,11 +684,25 @@ exports.getWorkOrdersDashboard = function(req, res) {
 																												var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
 																												var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
 
+																												// Change active filters as needed
+																												farm_list.forEach(function(item, index) {
+																														farm_list[index]['checked'] = true;
+																												});
+																												var cycle_cont = [], checked;
+																												unique_cycles.forEach(function(item, index) {
+																													if (index <= 6)
+																														checked = true;
+																													else
+																														checked = false;
+
+																													cycle_cont.push({ cycle_name: unique_cycles[index], checked: checked });
+																												});
+
 																												html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
-																												html_data['crop_plans'] = unique_cycles;
+																												html_data['crop_plans'] = cycle_cont;
 																												html_data['production_chart'] = JSON.stringify(production_chart);
 																												html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
-																												html_data['pd_overview_chart'] = (pd_overview);
+																												html_data['pd_overview_chart'] = { stage: JSON.stringify(pd_overview.stage), trend: JSON.stringify(pd_overview.trend) };
 
 																												var precip_details = processPrecipChartData(precip_data)
 																												html_data['precip_data'] = JSON.stringify(precip_details.chart);
