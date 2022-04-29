@@ -30,9 +30,22 @@ exports.getEmployeeDetails = function(access_token, next){
     return sql;
 }
 
+exports.getEmployeeDetailsPhoneNum = function(phone_number, next){
+    var sql = "SELECT * FROM employee_table WHERE phone_number = ?";
+    sql = mysql.format(sql, phone_number);
+
+    mysql.query(sql, next);
+    return sql;
+}
 
 exports.insertInboundMsg = function(message, message_id, employee_id, next){
+    var sql = "INSERT INTO inbound_msg (message_id, message, employee_id, date, time) VALUES (?,?,?, DATE(NOW()), TIME(NOW()))";
+    sql = mysql.format(sql, message_id);
+    sql = mysql.format(sql, message);
+    sql = mysql.format(sql, employee_id);
 
+    mysql.query(sql, next);
+    return sql;
 }
 
 exports.insertOutboundMsg = function(message, employee_id, next){

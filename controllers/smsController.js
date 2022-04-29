@@ -1,6 +1,7 @@
 const js = require('../public/js/session.js');
 const smsModel = require('../models/smsModel.js');
 var request = require("request");
+const { text } = require('express');
 
 
 var app_id = 'X4kxHEG59nuXkT8ynri5KGuyR4xzHLbr'; //final
@@ -55,14 +56,51 @@ exports.globe_inbound_msg = function(req, res){
         console.log(req.body.inboundSMSMessage);
 
         //get employee details using phone number
+        //SLICE 7 to remove 'tel:+63'
+        smsModel.getEmployeeDetailsPhoneNum(req.body.inboundSMSMessage[0].senderAddress.slice(7), function(err, employee_details){
+            if(err)
+                throw err;
+            else{
+                console.log(employee_details);
+                if(employee_details.length > 0){
+                    var message = req.body.inboundSMSMessage[0].message;
+                    var message_id = req.body.inboundSMSMessage[0].messageId;
+                    var employee_id = employee_details[0].employee_id;
 
-        //Store message to db
+                    //Store message to db
+                    smsModel.insertInboundMsg(message, message_id, employee_id, function(err, success){
+                        
+                    });
+
+                    //POCESS MESSAGE
+                    var text_message = req.body.inboundSMSMessage[0].message.slice(" ");
+                    var msg;
+                    switch (text_message[0]){
+                        case "1" : msg = "SEND EMPLOYEE DETAILS"; break; //SEND EMPLOYEE DETAILS
+                        case "2" : msg = "HELP \n HERE ARE THE LIST OF ACTIONS \n1 - EMPLOYEE DETAILS \n2 - HELP"; break; //SEND "HELP"
+                        case "3" : msg = "INCOMING WORK ORDERS"; break; //INCOMING WORK ORDERS
+                        case "4" : msg = "WO FOR TODAY"; break; //WORK ORDERS FOR TODAY
+                        case "5" : msg = "OVERDUE"; break; //Overdue workorders
+                    }
+
+                    var message = { method: 'POST',
+                                    url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                                    qs: { 'access_token': employee_details[0].access_token },
+                                    headers: 
+                                    { 'Content-Type': 'application/json'},
+                                    body: 
+                                    { 'outboundSMSMessageRequest': 
+                                        { 'clientCorrelator': last,
+                                        'senderAddress': shortcode,
+                                        'outboundSMSTextMessage': { 'message': msg },
+                                        'address': employee_details[0].phone_number } },
+                                    json: true };
+                    sendOutboundMsg(message);
+                }
+            }
+        });
     }
     console.log("--------------------");
-
-   
-
-
 
     // this.globe_outbound_msg;
     // this.getAccessToken;
@@ -105,17 +143,17 @@ exports.registerUser = function(req,res){
                         console.log(last_id.insertId);
                         console.log(last);
                         var message = { method: 'POST',
-                        url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                        qs: { 'access_token': emp.access_token },
-                        headers: 
-                        { 'Content-Type': 'application/json' },
-                        body: 
-                        { 'outboundSMSMessageRequest': 
-                            { 'clientCorrelator': last,
-                              'senderAddress': shortcode,
-                              'outboundSMSTextMessage': { 'message': msg },
-                              'address': emp.phone_number } },
-                        json: true };
+                                        url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                                        qs: { 'access_token': emp.access_token },
+                                        headers: 
+                                        { 'Content-Type': 'application/json' },
+                                        body: 
+                                        { 'outboundSMSMessageRequest': 
+                                            { 'clientCorrelator': last,
+                                            'senderAddress': shortcode,
+                                            'outboundSMSTextMessage': { 'message': msg },
+                                            'address': emp.phone_number } },
+                                        json: true };
                         sendOutboundMsg(message);
                     }
                 });
