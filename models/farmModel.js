@@ -75,7 +75,7 @@ exports.addAssignedFarmers = function(data, next) {
 }
 
 exports.filteredFarmDetails = function(data, next) {
-	var sql = "select * from ( select * from ( select * from farm_table ft cross join (select farm_id, et.* from farm_assignment fa join employee_table et using(employee_id) ) as t using(farm_id) ) as t where position = 'Farm Manager' and ? union select *, null as employee_id, null as position, null as last_name, null as first_name, null as phone_number, null from farm_table ft ) as t1 where ? group by farm_id";
+	var sql = "select * from ( select * from ( select * from farm_table ft cross join (select farm_id, et.* from farm_assignment fa join employee_table et using(employee_id) ) as t using(farm_id) ) as t where position = 'Farm Manager' and ? union select *, null as employee_id, null as position, null as last_name, null as first_name, null as phone_number, null, null from farm_table ft ) as t1 where ? group by farm_id";
 	sql = mysql.format(sql, data);
 	sql = mysql.format(sql, data);
 	// console.log(sql);
@@ -84,7 +84,7 @@ exports.filteredFarmDetails = function(data, next) {
 
 exports.getFarmData = function(data, next) {
 	//var sql = 'select ft.*, et.* from farm_table ft join farm_assignment fa on ft.farm_id = fa.farm_id join employee_table et on fa.employee_id = et.employee_id';
-	var sql = 'select * from( select ft.*, et.* from farm_table ft join farm_assignment fa on ft.farm_id = fa.farm_id join employee_table et on fa.employee_id = et.employee_id union select *, null, null, null, null, null, null from farm_table ) as t1 ';
+	var sql = 'select * from( select ft.*, et.* from farm_table ft join farm_assignment fa on ft.farm_id = fa.farm_id join employee_table et on fa.employee_id = et.employee_id union select *, null, null, null, null, null, null, null from farm_table ) as t1 ';
 	if (JSON.stringify(data) != '{ }') {
 		if (data.hasOwnProperty('where') && data.where != null) {
 			if (data.where.hasOwnProperty('key') && data.where.key != null) {

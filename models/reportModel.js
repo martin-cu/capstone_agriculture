@@ -1,6 +1,61 @@
 var mysql = require('./connectionModel');
 mysql = mysql.connection;
 
+function processOverviewFilter(data) {
+	var str = '';
+	if (data != null) {
+		str += `where `;
+		//console.log(data.farm_id);
+		data.farm_id.forEach(function(item, index) {
+			if (index == 0) {
+				str += '(';
+			}
+			str += `ft.farm_id = ${item}`
+			if (index != data.farm_id.length - 1)
+				str += ` or `;
+			else
+				str += `) `;
+		});
+
+		if (data.farm_id.length >= 1) {
+			str += ` and `;
+		}
+		data.cycles.forEach(function(item, index) {
+			if (index == 0) {
+				str += '(?';
+			}
+			str = mysql.format(str, { crop_plan: item });
+			if (index != data.cycles.length - 1)
+				str += ` or ?`;
+			else
+				str += `) `;
+		});
+	}
+	return str;
+}
+
+exports.getProductionOverview = function(data, next) {
+	var str = processOverviewFilter(data);
+	
+	var sql = `select ft.farm_area, ft.land_type, cct.calendar_id, ft.farm_name, st.seed_name, cct.crop_plan, case when fy.harvested is null then 0 else fy.harvested end as harvested, case when fy.forecast = -1 then 0 else fy.forecast end as forecasted from crop_calendar_table cct join forecasted_yield fy using(calendar_id) join seed_table st using(seed_id) join farm_table ft using(farm_id) ${str}`;
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.getFertilizerConsumption = function(data, next) {
+	var str = processOverviewFilter(data);
+	var sql = `select N, P, K, cct.crop_plan, cct.calendar_id, ft.farm_name, fet.fertilizer_name, sum(wrt.qty) as qty, ft.farm_area from crop_calendar_table cct join work_order_table wot on cct.calendar_id = wot.crop_calendar_id join wo_resources_table wrt using (work_order_id) join fertilizer_table fet on wrt.item_id = fet.fertilizer_id join farm_table ft using(farm_id) ${str} group by crop_plan, farm_name, fertilizer_name`;
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
+exports.getPDOverview = function(data, next) {
+	var str = processOverviewFilter(data);
+	var sql = `select cct.crop_plan, count(*) as count, d.type, d.stage_diagnosed, ft.farm_id, case when d.type = 'Pest' then (select pest_name from pest_table where pd_id = pest_id) else (select disease_name from disease_table where pd_id = disease_id) end as pd_name from crop_calendar_table cct join diagnosis d using(calendar_id) join farm_table ft on cct.farm_id = ft.farm_id  ${str} group by crop_plan, stage_diagnosed, pd_name`;
+	//console.log(sql);
+	mysql.query(sql, next);
+}
+
 exports.getPDOccurence = function(data1, next) {
 	var sql = "select *, case when type = 'Pest' then (select pest_name from pest_table where pest_id = pd_id) else (select disease_name from disease_table where disease_id = pd_id) end as pd_name, case when type = 'Pest' then (select pest_desc from pest_table where pest_id = pd_id) else (select disease_desc from disease_table where disease_id = pd_id) end as pd_desc, case when type = 'Pest' then (select scientific_name from pest_table where pest_id = pd_id) else (select scientific_name from disease_table where disease_id = pd_id) end as scientific_name from diagnosis where ?";
 	for (var i = 0; i < data1.calendar_id.length; i++) {

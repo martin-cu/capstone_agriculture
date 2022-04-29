@@ -29,6 +29,8 @@ router.post('/create_crop_plan', cropCalendarController.ajaxCreateCropPlan);
 router.get('/get_crop_plans', cropCalendarController.ajaxGetCropPlans);
 router.get('/get_active_calendar', cropCalendarController.ajaxGetCurrentCropCalendar);
 
+router.get('/ajax_weather_chart', reportController.ajaxWeatherChart);
+
 //Ajax nutrient mgt
 router.get('/get_nutrient_plan_details', environmentController.ajaxGetNutrientPlan);
 router.get('/get_nutrient_plan_items', environmentController.ajaxGetNutrientPlanItems);
@@ -38,11 +40,12 @@ router.post('/create_nutrient_plan', environmentController.ajaxCreateNutrientPla
 router.post('/create_nutrient_item', environmentController.ajaxCreateNutrientItem);
 router.post('/update_nutrient_plan', environmentController.ajaxUpdateNutrientPlan);
 router.post('/prepareFRPlan', environmentController.prepareFRPlan);
+router.get('/ajax_active_cnr_plans', nutrientController.ajaxGetActiveCNRPlans);
 
 //Ajax reports
 router.get('/update_seed_chart', reportController.ajaxSeedChart);
 router.get('/update_nutrient_chart', reportController.ajaxNutrientTimingChart);
-
+router.get('/ajax_filter_dashboard', reportController.ajaxFilterOverview);
 
 router.get('/get_soil_records', environmentController.ajaxGetSoilRecord);
 router.post('/update_soil_records', environmentController.ajaxUpdateSoilRecord);
@@ -262,6 +265,7 @@ router.get('/get_climate_forecast', openWeatherController.climateForecast);
 
 //Martin Testing
 router.get('/forecast_yield', farmController.forecastYield);
+router.get('/test_chart', reportController.testDisasterChart);
 
 
 //Y2 TESTING

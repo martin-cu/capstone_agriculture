@@ -129,7 +129,7 @@
                                   <td>
                                     <div class="d-flex mt-2 h-100">
                                       {{#if this.amount_equation.ele}}
-                                      <div id="manage_formula_container{{@index}}" class="h-100 d-flex formula_cont">
+                                      <div id="manage_formula_container{{@../index}}" class="h-100 d-flex formula_cont">
                                         <div class="formula_item">=</div>
                                         {{{this.amount_equation.ele}}}
                                         
@@ -142,7 +142,7 @@
                                             <span class="d-none d-lg-inline me-2 small formula_menu_span" style="">Formula Menu</span>
                                           </button>
                           
-                                          <div class="dropdown-menu notSidebar formula-menu" style="width: fit-content;" aria-describedby="plan{{@../index}}" aria-labelledby="manage_menu" value="{{@index}}">
+                                          <div class="dropdown-menu notSidebar formula-menu" style="width: fit-content;" aria-describedby="plan{{@../index}}" aria-labelledby="manage_menu" value="{{@../index}}">
                                             <h6 class="dropdown-header">Operands</h6>
                                             <a class="dropdown-item notSidebar" href="#" name="menu_add" value="1">Add</a>
                                             <a class="dropdown-item notSidebar" href="#" name="menu_subtract" value="2">Subtract</a>
@@ -396,72 +396,47 @@
   }
 
   function validateEquation(arr) {
-    var val, temp, syntax_arr = [];
-    var variable_index_arr;
-    var bracket_index_arr = { opening: [], closing: [] };
     var err_arr = [];
+    var temp_arr = JSON.parse(JSON.stringify(arr));
+    if (arr.indexOf('fv') == -1)
+      err_arr.push('Fertilizer value must be used in the equation!');
 
-    if (arr.length == 0) {
-      err_arr.push('Equation cannot be empty!');
+    if (temp_arr.length == 1) {
+      err_arr.push('Invalid equation!');
     }
 
-    if (arr.indexOf('fv') == -1) {
-      err_arr.push('Fertilizer nutrient value must be used in the equation!');
-    }
+    arr.forEach(function(item, index) {
+      if (item == 'tnr' || item == 'fv' || item == 'fa') {
+        temp_arr[index] = '1 ';
+      }
+      if (item == 0)
+        temp_arr[index] = '@';
+    });
 
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i].match(/^-?\d+$/)) {
-        val = parseInt(arr[i]);
-        syntax_arr.push('variable');
+    var str = temp_arr.join('');
+
+    try {
+      str = Function("return " + str)();
+      if (str == 1) {
+        str = 1;
+        throw 1;
       }
       else {
-        val = arr[i];
+        str = 0;
+        throw 0;
+      }
 
-        switch (val) {
-          case '+':
-            syntax_arr.push('operand');
-            break;
-          case '-':
-            syntax_arr.push('operand');
-            break;
-          case '*':
-            syntax_arr.push('operand');
-            break;
-          case '/':
-            syntax_arr.push('operand');
-            break;
-          case '(':
-            syntax_arr.push('opening_bracket');
-            break;
-          case ')':
-            syntax_arr.push('closing_bracket');
-            break;
-          default:
-            syntax_arr.push('variable');
-        }
+    }
+    catch(err) {
+      if (err.toString().includes('Syntax')) {
+        str = 0;
+      }
+      else {
+        str = 1;
       }
     }
-
-    var opening = syntax_arr.filter(e => e == 'opening_bracket').length;
-    var closing = syntax_arr.filter(e => e == 'closing_bracket').length;
-
-    bracket_index_arr.opening = (syntax_arr.map((e, i) => e === 'opening_bracket' ? i : null).filter(i => i !== null));
-    bracket_index_arr.closing = (syntax_arr.map((e, i) => e === 'closing_bracket' ? i : null).filter(i => i !== null));
-    if (opening != closing) {
-      err_arr.push('Number of opening and closing brackets mismatch!');
-    }
-    else {
-      for (var i = 0; i < bracket_index_arr.opening.length; i++) {
-        if (bracket_index_arr.closing[i] < bracket_index_arr.opening[i]) {
-          err_arr.push('Opening and closing bracket position mismatch!');
-        }
-      }
-    }
-
-    console.log(syntax_arr);
-
-    for (var i = 0; i < syntax_arr.length; i++) {
-      err_arr = validateNeighborItem(i, syntax_arr, err_arr, syntax_arr[i]);
+    if (str == 0) {
+      err_arr.push('Invalid equation!');
     }
 
     return err_arr;
@@ -533,6 +508,7 @@
           str += ``;
       }
     });
+    console.log(index);
 
     $(`#${target}_formula_container${index}`).html('');
     $(`#${target}_formula_container${index}`).append(str);
@@ -712,7 +688,6 @@
     else {
       var plan_index = $(this).parent().attr('aria-describedby').replace('plan', '');
       temp_arr = manage_plan_arr;
-
       temp_arr = temp_arr[plan_index][tr_count-1];
     }
 

@@ -25,6 +25,7 @@
     "express-session": "^1.17.2",
     "express-validator": "^6.14.0",
     "javascript-lp-solver": "^0.4.24",
+    "mathjs": "^10.5.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.14",
     "request": "^2.88.2",

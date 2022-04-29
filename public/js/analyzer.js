@@ -95,6 +95,7 @@ exports.processNutrientChart = function(nutrients, pd) {
 	var data_arr = [];
 	var coords = [];
 	var max = 0, min = 0;
+	var legends = [];
 
 	for (var x = 0; x < nutrient_arr.length; x++) {
 		for (var i = 0; i < type.length; i++) {
@@ -117,7 +118,7 @@ exports.processNutrientChart = function(nutrients, pd) {
 			}
 			for (var y = 0; y < datasets.length; y++) {
 				if (`${type[i]} - ${nutrient_arr[x]}` == datasets[y]) {
-
+					legends.push({ color: color_arr[color_index], lbl: datasets[y] });
 					dataset.push({
 						label: datasets[y],
 						borderColor: color_arr[color_index],
@@ -144,6 +145,7 @@ exports.processNutrientChart = function(nutrients, pd) {
 				x: filtered[i].dat, y: (max+min)/2
 			});
 		}
+		legends.push({ color: pd_color[color_index], lbl: type[x] });
 		dataset.push({
 			label: type[x],
 			borderColor: pd_color[color_index],
@@ -154,7 +156,10 @@ exports.processNutrientChart = function(nutrients, pd) {
 		color_index++;
 	}
 
-	return dataset;
+	legends = [...new Map(legends.map(item =>
+	  [item.lbl, item])).values()];
+
+	return { dataset: dataset, legends: legends};
 }
 
 exports.processSeedChartData = function(calendars, seeds) {
@@ -188,6 +193,7 @@ exports.processSeedChartData = function(calendars, seeds) {
 	var seed_obj = { seed: [], avg_yield: [] }, avg, count;
 	var temp, stack, farm = '';
 	var y = 0;
+	var legends = [];
 
 	for (var y = 0; y < unique_farms.length; y++) {
 		for (var x = 0; x < seeds.length; x++) {
@@ -210,12 +216,15 @@ exports.processSeedChartData = function(calendars, seeds) {
 				backgroundColor: color_arr_set[x][y],
 				data: data
 			});
+			legends.push({ color: color_arr_set[x][y], lbl: lbl });
 
 			seed_obj.avg_yield.push(parseInt(avg / count));
 		}
 	}
-	
-	return { seed: null, avg: null, data: obj_data, farm_legends: unique_farms.join().replace(/,/g, ' / ') };
+	legends = [...new Map(legends.map(item =>
+	  [item.lbl, item])).values()];
+
+	return { seed: null, avg: null, data: obj_data, farm_legends: unique_farms.join().replace(/,/g, ' / '), legends: legends };
 }
 
 exports.processMeanProductivity = function(fp, input) {
