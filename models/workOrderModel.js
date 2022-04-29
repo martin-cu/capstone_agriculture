@@ -134,7 +134,7 @@ exports.getWorkOrders = function(query, next) {
 			
 		}
 	}
-	//console.log(sql);
+	console.log(sql);
 	mysql.query(sql, next);
 }
 
