@@ -54,3 +54,10 @@ exports.deleteUser = function(data, next) {
 	sql = mysql.format(sql, data);
 	mysql.query(sql, next);
 }
+
+exports.getEmployeeDetails = function(employee_id, next){
+	var sql = "SELECT * FROM employee_table WHERE employee_id = ?;";
+
+	sql = mysql.format(sql, employee_id);
+	mysql.query(sql, next);
+}

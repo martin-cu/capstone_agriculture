@@ -22,7 +22,7 @@ exports.removeAccessToken = function(phone_number, access_token, next){
 }
 
 
-exports.getEmployeeDetails = function(access_token, next){
+exports.getEmployeeDetailsAccessToken = function(access_token, next){
     var sql = "SELECT * FROM employee_table WHERE access_token = ?";
     sql = mysql.format(sql, access_token);
 
@@ -52,6 +52,23 @@ exports.insertOutboundMsg = function(message, employee_id, next){
     var sql = "INSERT INTO outbound_msg (employee_id, message, date, time) VALUES (?, ?, DATE(NOW()), TIME(NOW()));";
     sql = mysql.format(sql, employee_id);
     sql = mysql.format(sql, message);
+
+    mysql.query(sql, next);
+    return sql;
+}
+
+
+
+exports.getSubscriptions = function(next){
+    var sql = "SELECT et.*, a.date as last_message, a.time as last_time, a.message FROM employee_table et LEFT JOIN (SELECT * FROM (SELECT im.message_id, im.message, im.employee_id, im.date, im.time  FROM inbound_msg im UNION SELECT om.message_id, om.message, om.employee_id, om.date, om.time FROM outbound_msg om ORDER BY date DESC, time DESC) a group by employee_id) a USING (employee_id) WHERE access_token is not null GROUP by employee_id ORDER BY last_message DESC, last_time DESC;";
+    
+    mysql.query(sql, next);
+    return sql;
+}
+
+exports.getUserConverstation = function(employee_id, next){
+    var sql = "SELECT * FROM (SELECT im.message_id, im.message, im.employee_id, im.date, TIME_FORMAT(im.time, '%h %i %p') as time, 'inbound' as origin  FROM inbound_msg im UNION SELECT om.message_id, om.message, om.employee_id, om.date, TIME_FORMAT(om.time, '%h %i %p') as time, 'outbound' as origin FROM outbound_msg om ORDER BY date ASC, time ASC) a WHERE employee_id = ?;";
+    sql = mysql.format(sql, employee_id);
 
     mysql.query(sql, next);
     return sql;

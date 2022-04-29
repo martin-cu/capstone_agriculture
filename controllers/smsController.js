@@ -2,6 +2,8 @@ const js = require('../public/js/session.js');
 const smsModel = require('../models/smsModel.js');
 var request = require("request");
 const { text } = require('express');
+const dataformatter = require('../public/js/dataformatter.js');
+const { formatDate } = require('../public/js/dataformatter.js');
 
 
 var app_id = 'X4kxHEG59nuXkT8ynri5KGuyR4xzHLbr'; //final
@@ -49,7 +51,7 @@ exports.globe_inbound_msg = function(req, res){
 
     //CHECK IF UNSUBSCRIBE
     if("unsubscribed" in req.body){
-        smsModel.removeAccessToken(req.body.subscriber_number, req.body.access_token, function(err, result){
+        smsModel.removeAccessToken(req.body.unsubscribed.subscriber_number, req.body.unsubscribed.access_token, function(err, result){
         });
     }
     else{
@@ -57,14 +59,14 @@ exports.globe_inbound_msg = function(req, res){
 
         //get employee details using phone number
         //SLICE 7 to remove 'tel:+63'
-        smsModel.getEmployeeDetailsPhoneNum(req.body.inboundSMSMessage[0].senderAddress.slice(7), function(err, employee_details){
+        smsModel.getEmployeeDetailsPhoneNum(req.body.inboundSMSMessageList.inboundSMSMessage[0].senderAddress.slice(7), function(err, employee_details){
             if(err)
                 throw err;
             else{
                 console.log(employee_details);
                 if(employee_details.length > 0){
-                    var message = req.body.inboundSMSMessage[0].message;
-                    var message_id = req.body.inboundSMSMessage[0].messageId;
+                    var message = req.body.inboundSMSMessageList.inboundSMSMessage[0].message;
+                    var message_id = req.body.inboundSMSMessageList.inboundSMSMessage[0].messageId;
                     var employee_id = employee_details[0].employee_id;
 
                     //Store message to db
@@ -73,29 +75,37 @@ exports.globe_inbound_msg = function(req, res){
                     });
 
                     //POCESS MESSAGE
-                    var text_message = req.body.inboundSMSMessage[0].message.slice(" ");
+                    var text_message = req.body.inboundSMSMessageList.inboundSMSMessage[0].message.slice(" ");
                     var msg;
                     switch (text_message[0]){
                         case "1" : msg = "SEND EMPLOYEE DETAILS"; break; //SEND EMPLOYEE DETAILS
-                        case "2" : msg = "HELP \n HERE ARE THE LIST OF ACTIONS \n1 - EMPLOYEE DETAILS \n2 - HELP"; break; //SEND "HELP"
+                        case "2" : msg = "HELP \nHERE ARE THE LIST OF ACTIONS \n1 - EMPLOYEE DETAILS \n2 - HELP"; break; //SEND "HELP"
                         case "3" : msg = "INCOMING WORK ORDERS"; break; //INCOMING WORK ORDERS
                         case "4" : msg = "WO FOR TODAY"; break; //WORK ORDERS FOR TODAY
                         case "5" : msg = "OVERDUE"; break; //Overdue workorders
                     }
-
-                    var message = { method: 'POST',
-                                    url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                                    qs: { 'access_token': employee_details[0].access_token },
-                                    headers: 
-                                    { 'Content-Type': 'application/json'},
-                                    body: 
-                                    { 'outboundSMSMessageRequest': 
-                                        { 'clientCorrelator': last,
-                                        'senderAddress': shortcode,
-                                        'outboundSMSTextMessage': { 'message': msg },
-                                        'address': employee_details[0].phone_number } },
-                                    json: true };
-                    sendOutboundMsg(message);
+                    smsModel.insertOutboundMsg(msg, employee_id, function(err, last_id){
+                        if(err)
+                            throw err;
+                        else{
+                            var last = last_id.insertId;
+                            console.log(last_id.insertId);
+                            console.log(last);
+                            var message = { method: 'POST',
+                                            url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                                            qs: { 'access_token': employee_details[0].access_token },
+                                            headers: 
+                                            { 'Content-Type': 'application/json' },
+                                            body: 
+                                            { 'outboundSMSMessageRequest': 
+                                                { 'clientCorrelator': last,
+                                                'senderAddress': shortcode,
+                                                'outboundSMSTextMessage': { 'message': msg },
+                                                'address': employee_details[0].phone_number } },
+                                            json: true };
+                            sendOutboundMsg(message);
+                        }
+                    });
                 }
             }
         });
@@ -104,7 +114,7 @@ exports.globe_inbound_msg = function(req, res){
 
     // this.globe_outbound_msg;
     // this.getAccessToken;
-    return;
+    return true;
 }
 
 
@@ -126,7 +136,7 @@ exports.registerUser = function(req,res){
 
     //SEND WELCOME MESSAGE TO USER
     //create outbound message
-    smsModel.getEmployeeDetails(req.query.access_token, function(err, employee){
+    smsModel.getEmployeeDetailsAccessToken(req.query.access_token, function(err, employee){
         if(err){
           throw err;
         }
@@ -161,7 +171,7 @@ exports.registerUser = function(req,res){
         }
     });
 
-    return {message : "Thank you"};
+    return true;
 }
 
 
@@ -220,10 +230,39 @@ exports.getAddSubscription = function(req, res) {
 
 exports.getMessages = function(req, res) {
 	var html_data = {};
-  html_data["title"] = "SMS Management > Messages";
+    html_data["title"] = "SMS Management > Messages";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_messages', req.session);
-  html_data["notifs"] = req.notifs;
-	res.render('sms_messages', html_data);
+    html_data["notifs"] = req.notifs;
+
+    //Gets list of users registered to SMS feature
+    smsModel.getSubscriptions(function(err, subscriptions){
+        if(err)
+            throw err;
+        else{
+            subscriptions[0].first = true;
+            for(var i = 0; i < subscriptions.length; i++){
+                subscriptions[i].last_message = dataformatter.formatDate(new Date(subscriptions[i].last_message), 'mm DD, YYYY');
+            }
+            html_data["subscriptions"] = subscriptions;
+
+            
+        }
+        res.render('sms_messages', html_data);
+    });
+}
+
+exports.getUserConversation = function(req,res){
+    smsModel.getUserConverstation(req.query.employee_id, function(err, messages){
+        if(err)
+            throw err;
+        else{
+            for(var i = 0; i < messages.length; i++){
+                messages[i].date = dataformatter.formatDate(new Date(messages[i].date), 'mm DD, YYYY');
+            }
+            console.log(messages);
+            res.send(messages);
+        }
+    }); 
 }
 
 
