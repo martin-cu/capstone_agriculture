@@ -298,5 +298,6 @@ router.get('/getWeather', materialController.getWeather);
 // router.post('/globe_api2', globe.test_globe2);
 router.post('/globe_inbound', globe.globe_inbound_msg);
 router.get('/globe_inbound', globe.registerUser); //WHEN REGISTERING THROUGH SMS
-
+router.get('/userConvos', globe.getUserConversation); //Gets conversation per user
+router.get('/employeeDetails', userController.getEmployeeDetails);
 module.exports = router;
