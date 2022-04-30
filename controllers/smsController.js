@@ -53,17 +53,31 @@ exports.globe_inbound_msg = function(req, res){
     if("unsubscribed" in req.body){
         smsModel.removeAccessToken(req.body.unsubscribed.subscriber_number, req.body.unsubscribed.access_token, function(err, result){
         });
+        
+        smsModel.getEmployeeDetails({ key: "phone_number" , value : req.body.unsubscribed.subscriber_number}, function(err, employee_details){
+            if(err)
+                console.log(err);
+            else{
+                smsModel.insertOutboundMsg("YOU HAVE UNSUBSCRIBED", employee_details[0].employee_id, function(err, last_id){
+                    if(err)
+                        throw err;
+                    else{
+                        console.log("SUCCESSFULLY INSERTED OUTBOUND MSG");
+                    }
+                });
+            }
+        });
     }
     else{
-        console.log(req.body.inboundSMSMessage);
+        // console.log(req.body.inboundSMSMessage);
 
         //get employee details using phone number
         //SLICE 7 to remove 'tel:+63'
-        smsModel.getEmployeeDetailsPhoneNum(req.body.inboundSMSMessageList.inboundSMSMessage[0].senderAddress.slice(7), function(err, employee_details){
+        smsModel.getEmployeeDetails({ key: "phone_number" , value : req.body.inboundSMSMessageList.inboundSMSMessage[0].senderAddress.slice(7)}, function(err, employee_details){
             if(err)
-                throw err;
+                console.log(err);
             else{
-                console.log(employee_details);
+                
                 if(employee_details.length > 0){
                     var message = req.body.inboundSMSMessageList.inboundSMSMessage[0].message;
                     var message_id = req.body.inboundSMSMessageList.inboundSMSMessage[0].messageId;
@@ -86,28 +100,6 @@ exports.globe_inbound_msg = function(req, res){
                     }
 
                     sendOutboundMsg(employee_details[0], msg);
-                    // smsModel.insertOutboundMsg(msg, employee_id, function(err, last_id){
-                    //     if(err)
-                    //         throw err;
-                    //     else{
-                    //         var last = last_id.insertId;
-                    //         console.log(last_id.insertId);
-                    //         console.log(last);
-                    //         var message = { method: 'POST',
-                    //                         url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                    //                         qs: { 'access_token': employee_details[0].access_token },
-                    //                         headers: 
-                    //                         { 'Content-Type': 'application/json' },
-                    //                         body: 
-                    //                         { 'outboundSMSMessageRequest': 
-                    //                             { 'clientCorrelator': last,
-                    //                             'senderAddress': shortcode,
-                    //                             'outboundSMSTextMessage': { 'message': msg },
-                    //                             'address': employee_details[0].phone_number } },
-                    //                         json: true };
-                    //         sendOutboundMsg(message);
-                    //     }
-                    // });
                 }
             }
         });
@@ -128,56 +120,56 @@ exports.registerUser = function(req,res){
     //Search in user tables the same number
     smsModel.addAccessToken(req.query.subscriber_number, req.query.access_token, function(err, result){
         if(err){
-          console.log(err);
+            console.log(err);
         }
         else{
-          console.log("SUCCESSFULLY UPDATED EMPLOYEE ACCESS TOKEN");
+            console.log("SUCCESSFULLY UPDATED EMPLOYEE ACCESS TOKEN");
+          
+            //SEND WELCOME MESSAGE TO USER
+            //create outbound message
+            smsModel.getEmployeeDetails({ key : "access_token", value : req.query.access_token}, function(err, employee){
+                if(err){
+                  throw err;
+                }
+                else{
+                    console.log(employee);
+                    if(employee.length > 0){
+                        var emp = employee[0];
+                        var msg = "Welcome to LA Rice CMS, " + emp.first_name + " " + emp.last_name + "!";
+                        console.log(msg);
+                        sendOutboundMsg(emp, msg);
+                        // smsModel.insertOutboundMsg(msg, emp.employee_id, function(err, last_id){
+                        //     if(err)
+                        //         throw err;
+                        //     else{
+                        //         var last = last_id.insertId;
+                        //         console.log(last_id.insertId);
+                        //         console.log(last);
+                        //         var message = { method: 'POST',
+                        //                         url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                        //                         qs: { 'access_token': emp.access_token },
+                        //                         headers: 
+                        //                         { 'Content-Type': 'application/json' },
+                        //                         body: 
+                        //                         { 'outboundSMSMessageRequest': 
+                        //                             { 'clientCorrelator': last,
+                        //                             'senderAddress': shortcode,
+                        //                             'outboundSMSTextMessage': { 'message': msg },
+                        //                             'address': emp.phone_number } },
+                        //                         json: true };
+                        //         sendOutboundMsg(message);
+                        //     }
+                        // });
+                    }
+                }
+            });
         }
     });
-
-
-    //SEND WELCOME MESSAGE TO USER
-    //create outbound message
-    smsModel.getEmployeeDetailsAccessToken(req.query.access_token, function(err, employee){
-        if(err){
-          throw err;
-        }
-        else{
-            if(employee.length > 0){
-                var emp = employee[0];
-                var msg = "Welcome to LA Rice CMS, " + emp.first_name + " " + emp.last_name + "!";
-                sendOutboundMsg(emp, msg);
-                // smsModel.insertOutboundMsg(msg, emp.employee_id, function(err, last_id){
-                //     if(err)
-                //         throw err;
-                //     else{
-                //         var last = last_id.insertId;
-                //         console.log(last_id.insertId);
-                //         console.log(last);
-                //         var message = { method: 'POST',
-                //                         url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                //                         qs: { 'access_token': emp.access_token },
-                //                         headers: 
-                //                         { 'Content-Type': 'application/json' },
-                //                         body: 
-                //                         { 'outboundSMSMessageRequest': 
-                //                             { 'clientCorrelator': last,
-                //                             'senderAddress': shortcode,
-                //                             'outboundSMSTextMessage': { 'message': msg },
-                //                             'address': emp.phone_number } },
-                //                         json: true };
-                //         sendOutboundMsg(message);
-                //     }
-                // });
-            }
-        }
-    });
-
     return true;
 }
 
 
-//SEND MESSAGE TO USER
+//SEND MESSAGE TO USER FROM APP
 exports.globe_outbound_msg = function(req, res){
     console.log("sending outbound message");
     console.log(req.query);
@@ -191,10 +183,12 @@ exports.globe_outbound_msg = function(req, res){
             if(employee_details.length > 0){
                 var emp = employee_details[0];
 
-                if(emp.access_token == null)
-                    console.log("exit");
+                if(emp.access_token == null){
+                    res.send("No access token");
+                }
                 else{
                     sendOutboundMsg(emp, message);
+                    res.send("message sent");
                 }
             }
         }
@@ -207,8 +201,9 @@ function sendOutboundMsg(emp, message){
         if(err)
             throw err;
         else{
+            console.log("SUCCESSFULLY INSERTED OUTBOUND MSG");
             var last = last_id.insertId;
-            var message = { method: 'POST',
+            var send_message = { method: 'POST',
                             url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
                             qs: { 'access_token': emp.access_token },
                             headers: 
@@ -220,7 +215,7 @@ function sendOutboundMsg(emp, message){
                                 'outboundSMSTextMessage': { 'message': message },
                                 'address': emp.phone_number } },
                             json: true };
-            request(msg, function (error, response, body) {
+            request(send_message, function (error, response, body) {
                 if (error) throw new Error(error);
                 console.log(body);
                 });
@@ -294,7 +289,7 @@ exports.getUserConversation = function(req,res){
             for(var i = 0; i < messages.length; i++){
                 messages[i].date = dataformatter.formatDate(new Date(messages[i].date), 'mm DD, YYYY');
             }
-            console.log(messages);
+            // console.log(messages);
             res.send(messages);
         }
     }); 

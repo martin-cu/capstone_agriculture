@@ -43,7 +43,7 @@ exports.getEmployeeDetails = function(data, next){
     sql += data.key+' = ?';
 	sql = mysql.format(sql, data.value);
     console.log(sql);
-    // mysql.query(sql, next);
+    mysql.query(sql, next);
     return sql;
 }
 
