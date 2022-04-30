@@ -1,3 +1,5 @@
+// const e = require("connect-flash");
+
 $(document).ready(function(){
 
     $.get("/employeeDetails", {employee_id : $(".active_chat").attr("id")}, function(result){
@@ -33,6 +35,54 @@ $(document).ready(function(){
         $.get("/updateNotif", {notification_id : $(this).attr("id")}, function(result){});
     });
 
+
+    $("#send_btn").on("click", function(){
+        if($("#text_message").val() == "")
+            alert("null"); //Do nothing
+        else{
+            alert("append");
+            var date = new Date();
+
+            //SET TIME
+            var time;
+            var time_sent;
+            if(date.getHours() > 11){
+                time = date.getHours() % 12;
+                console.log(time);
+                if(time < 10){
+                    time_sent = "0" + time + " " + date.getMinutes() +  ' PM';
+                }
+                else{
+                    time_sent = time + " " + date.getMinutes() + ' PM';
+                }
+            }
+            else{
+                if(time < 10){
+                    time_sent = "0" + " " + time + date.getMinutes() + ' AM';
+                }
+                else{
+                    time_sent = time + " " + date.getMinutes() +  ' AM';
+                }
+            }
+            // var time_sent = (date.getHours() % 12 + 1) + " " + (date.getMinutes() + 1) + " " + time;
+
+            //SET DATE
+            var date_sent;
+            var monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+            var year = date.getFullYear();
+            var month = date.getMonth()+1;
+            var day = date.getDate();
+            date_sent = monthNames[month]+' '+day+', '+year;
+            
+            //APPEND
+            $("#msgHistory").append(' <div class="outgoing_msg"> <div class="sent_msg"> <p>' + $("#text_message").val() +'</p> <span class="time_date">' + time_sent + ' | ' + date_sent + '</span> </div> </div> ');
+
+            //SEND SMS
+            
+            //Scroll to botom
+            $("#msgHistory").scrollTop($("#msgHistory").prop("scrollHeight"));
+        }
+    });
     
 });
 

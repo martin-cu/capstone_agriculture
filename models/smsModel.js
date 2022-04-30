@@ -38,6 +38,15 @@ exports.getEmployeeDetailsPhoneNum = function(phone_number, next){
     return sql;
 }
 
+exports.getEmployeeDetails = function(data, next){
+    var sql = "SELECT * FROM employee_table WHERE ";
+    sql += data.key+' = ?';
+	sql = mysql.format(sql, data.value);
+    console.log(sql);
+    // mysql.query(sql, next);
+    return sql;
+}
+
 exports.insertInboundMsg = function(message, message_id, employee_id, next){
     var sql = "INSERT INTO inbound_msg (message_id, message, employee_id, date, time) VALUES (?,?,?, DATE(NOW()), TIME(NOW()))";
     sql = mysql.format(sql, message_id);
@@ -60,7 +69,7 @@ exports.insertOutboundMsg = function(message, employee_id, next){
 
 
 exports.getSubscriptions = function(next){
-    var sql = "SELECT et.*, a.date as last_message, a.time as last_time, a.message FROM employee_table et LEFT JOIN (SELECT * FROM (SELECT im.message_id, im.message, im.employee_id, im.date, im.time  FROM inbound_msg im UNION SELECT om.message_id, om.message, om.employee_id, om.date, om.time FROM outbound_msg om ORDER BY date DESC, time DESC) a group by employee_id) a USING (employee_id) WHERE access_token is not null GROUP by employee_id ORDER BY last_message DESC, last_time DESC;";
+    var sql = "SELECT *,  a.date as last_message, a.time as last_time FROM (SELECT im.message_id, im.message, im.employee_id, im.date, im.time  FROM inbound_msg im UNION SELECT om.message_id, om.message, om.employee_id, om.date, om.time FROM outbound_msg om ORDER BY date DESC, time DESC) a INNER JOIN employee_table et USING (employee_id) group by employee_id;";
     
     mysql.query(sql, next);
     return sql;

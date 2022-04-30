@@ -84,28 +84,30 @@ exports.globe_inbound_msg = function(req, res){
                         case "4" : msg = "WO FOR TODAY"; break; //WORK ORDERS FOR TODAY
                         case "5" : msg = "OVERDUE"; break; //Overdue workorders
                     }
-                    smsModel.insertOutboundMsg(msg, employee_id, function(err, last_id){
-                        if(err)
-                            throw err;
-                        else{
-                            var last = last_id.insertId;
-                            console.log(last_id.insertId);
-                            console.log(last);
-                            var message = { method: 'POST',
-                                            url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                                            qs: { 'access_token': employee_details[0].access_token },
-                                            headers: 
-                                            { 'Content-Type': 'application/json' },
-                                            body: 
-                                            { 'outboundSMSMessageRequest': 
-                                                { 'clientCorrelator': last,
-                                                'senderAddress': shortcode,
-                                                'outboundSMSTextMessage': { 'message': msg },
-                                                'address': employee_details[0].phone_number } },
-                                            json: true };
-                            sendOutboundMsg(message);
-                        }
-                    });
+
+                    sendOutboundMsg(employee_details[0], msg);
+                    // smsModel.insertOutboundMsg(msg, employee_id, function(err, last_id){
+                    //     if(err)
+                    //         throw err;
+                    //     else{
+                    //         var last = last_id.insertId;
+                    //         console.log(last_id.insertId);
+                    //         console.log(last);
+                    //         var message = { method: 'POST',
+                    //                         url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                    //                         qs: { 'access_token': employee_details[0].access_token },
+                    //                         headers: 
+                    //                         { 'Content-Type': 'application/json' },
+                    //                         body: 
+                    //                         { 'outboundSMSMessageRequest': 
+                    //                             { 'clientCorrelator': last,
+                    //                             'senderAddress': shortcode,
+                    //                             'outboundSMSTextMessage': { 'message': msg },
+                    //                             'address': employee_details[0].phone_number } },
+                    //                         json: true };
+                    //         sendOutboundMsg(message);
+                    //     }
+                    // });
                 }
             }
         });
@@ -144,29 +146,29 @@ exports.registerUser = function(req,res){
             if(employee.length > 0){
                 var emp = employee[0];
                 var msg = "Welcome to LA Rice CMS, " + emp.first_name + " " + emp.last_name + "!";
-
-                smsModel.insertOutboundMsg(msg, emp.employee_id, function(err, last_id){
-                    if(err)
-                        throw err;
-                    else{
-                        var last = last_id.insertId;
-                        console.log(last_id.insertId);
-                        console.log(last);
-                        var message = { method: 'POST',
-                                        url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                                        qs: { 'access_token': emp.access_token },
-                                        headers: 
-                                        { 'Content-Type': 'application/json' },
-                                        body: 
-                                        { 'outboundSMSMessageRequest': 
-                                            { 'clientCorrelator': last,
-                                            'senderAddress': shortcode,
-                                            'outboundSMSTextMessage': { 'message': msg },
-                                            'address': emp.phone_number } },
-                                        json: true };
-                        sendOutboundMsg(message);
-                    }
-                });
+                sendOutboundMsg(emp, msg);
+                // smsModel.insertOutboundMsg(msg, emp.employee_id, function(err, last_id){
+                //     if(err)
+                //         throw err;
+                //     else{
+                //         var last = last_id.insertId;
+                //         console.log(last_id.insertId);
+                //         console.log(last);
+                //         var message = { method: 'POST',
+                //                         url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                //                         qs: { 'access_token': emp.access_token },
+                //                         headers: 
+                //                         { 'Content-Type': 'application/json' },
+                //                         body: 
+                //                         { 'outboundSMSMessageRequest': 
+                //                             { 'clientCorrelator': last,
+                //                             'senderAddress': shortcode,
+                //                             'outboundSMSTextMessage': { 'message': msg },
+                //                             'address': emp.phone_number } },
+                //                         json: true };
+                //         sendOutboundMsg(message);
+                //     }
+                // });
             }
         }
     });
@@ -178,18 +180,51 @@ exports.registerUser = function(req,res){
 //SEND MESSAGE TO USER
 exports.globe_outbound_msg = function(req, res){
     console.log("sending outbound message");
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      console.log(body);
+    console.log(req.query);
+    var employee_id = req.query.employee_id;
+    var message = req.query.message;
+    //GET EMPLOYEE DETAILS
+    smsModel.getEmployeeDetails({key : "employee_id", value : employee_id}, function(err, employee_details){
+        if(err)
+            throw err;
+        else{
+            if(employee_details.length > 0){
+                var emp = employee_details[0];
+
+                if(emp.access_token == null)
+                    console.log("exit");
+                else{
+                    sendOutboundMsg(emp, message);
+                }
+            }
+        }
     });
-  
 }
 
 
-function sendOutboundMsg(msg){
-    request(msg, function (error, response, body) {
-      if (error) throw new Error(error);
-      console.log(body);
+function sendOutboundMsg(emp, message){
+    smsModel.insertOutboundMsg(message, emp.employee_id, function(err, last_id){
+        if(err)
+            throw err;
+        else{
+            var last = last_id.insertId;
+            var message = { method: 'POST',
+                            url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                            qs: { 'access_token': emp.access_token },
+                            headers: 
+                            { 'Content-Type': 'application/json' },
+                            body: 
+                            { 'outboundSMSMessageRequest': 
+                                { 'clientCorrelator': last,
+                                'senderAddress': shortcode,
+                                'outboundSMSTextMessage': { 'message': message },
+                                'address': emp.phone_number } },
+                            json: true };
+            request(msg, function (error, response, body) {
+                if (error) throw new Error(error);
+                console.log(body);
+                });
+        }
     });
 }
 
