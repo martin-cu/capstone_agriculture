@@ -8,7 +8,11 @@ $(document).ready(function(){
         $.get("/updateNotif", {notification_id : $(this).attr("id")}, function(result){});
     });
 
-    if(view = "sms"){
+
+
+    if(view == "sms_messages"){
+
+        //INITIALIZE
         $.get("/employeeDetails", {employee_id : $(".active_chat").attr("id")}, function(result){
             $("#texter_name").text(result.first_name + " " + result.last_name);
         });
@@ -27,18 +31,20 @@ $(document).ready(function(){
             }
     
         });
+
         //Scroll to botom
         $("#msgHistory").animate({scrollTop: $("#msgHistory").prop("scrollHeight")}, 1000)
-    
+
+
+        //ON SELECT OF NEW USER
         $(".chat_list").on("click", function(){
             changeConversation();
         });
-    
+
         $("#send_btn").on("click", function(){
             if($("#text_message").val() == "")
                 alert("null"); //Do nothing
             else{
-                alert("append");
                 var date = new Date();
     
                 //SET TIME
@@ -64,6 +70,7 @@ $(document).ready(function(){
                 }
                 // var time_sent = (date.getHours() % 12 + 1) + " " + (date.getMinutes() + 1) + " " + time;
     
+
                 //SET DATE
                 var date_sent;
                 var monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -79,7 +86,7 @@ $(document).ready(function(){
                 $.get("/sendSMS", { employee_id : $(".active_chat").attr("id"), message : $("#text_message").val()}, function(result){
                     alert(result);
                 });
-
+                $("#text_message").val("");
                 //Scroll to botom
                 $("#msgHistory").scrollTop($("#msgHistory").prop("scrollHeight"));
             }
