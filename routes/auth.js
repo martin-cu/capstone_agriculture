@@ -13,6 +13,8 @@ const notifController = require('../controllers/notificationController.js');
 const disasterController = require('../controllers/disasterController.js');
 const globe = require('../controllers/sms-mt');
 
+const dataformatter = require('../public/js/dataformatter.js');
+
 const { isPrivate, isAdmin, isSales, isPurchasing, isLogistics } = require('../middlewares/checkAuth');
 
 router.get('/create_wo_test', (req, res) => {
@@ -23,6 +25,8 @@ router.get('/create_wo_test', (req, res) => {
 
 // router.get('/due_wo', notifController.checkDueWorkOrders);
 /*** Database Ajax Start ***/
+
+router.get('/edit_system_date', userController.editSystemDate);
 
 router.get('/get_farm_list', farmController.ajaxGetFarmList);
 router.post('/create_crop_plan', cropCalendarController.ajaxCreateCropPlan);
@@ -85,7 +89,8 @@ router.get("/ajaxGetWorkOrders", workOrderController.ajaxGetWorkOrders);
 
 //Account Management
 router.get('/login', (req, res) => {
-  res.render('login', { } );
+	var date = req.query.cur_date != undefined ? req.query.cur_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD');
+  res.render('login', { cur_date: date } );
 });
 router.get('/initialize_account', userController.getInitializePassword);
 router.post('/initialize_password', userController.initializePassword);

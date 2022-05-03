@@ -49,7 +49,7 @@ exports.formatProductionChart = function(data) {
 		});
 	}
 
-	console.log(obj_data.datasets);
+	//console.log(obj_data.datasets);
 
 	return obj_data;
 } 

@@ -226,7 +226,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 
 												// }
 												
-												list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays((list[i].sow_date_completed), new Date());
+												list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays((list[i].sow_date_completed), new Date(html_data.cur_date));
 											}
 											// console.log(list);
 											pestDiseaseModel.getDiagnosisSymptomsSummarized(null, function(err, symptoms){
@@ -278,6 +278,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 exports.getCropCalendarTab = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar', req.session);
+
 	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
 		if (err)
 			throw err;

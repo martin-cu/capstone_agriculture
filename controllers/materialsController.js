@@ -8,6 +8,7 @@ const { Solve } = require('javascript-lp-solver');
 
 exports.getMaterials = function(req,res){
     var html_data = {};
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'farm', req.session);
     console.log("WEH");
     materialModel.getMaterials("Seed", null, function(err, seeds){
         if(err){
@@ -16,7 +17,7 @@ exports.getMaterials = function(req,res){
         else{
             if(seeds.length != 0){
                 html_data["seed"] = seeds;
-                html_data = js.init_session(html_data, 'role', 'name', 'username', 'farm', req.session);
+                
 				html_data["notifs"] = req.notifs;
                 res.render('materials', html_data);
             }
@@ -225,7 +226,7 @@ exports.addPurchase3 = function(req,res){
     //     amount : 45,
     //     units : "Kg",
     //     requested_by : 1,
-    //     request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+    //     request_date : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD')
     // }
     // materialModel.addPurchase(purchase, function(err, result){
     // });
@@ -504,7 +505,7 @@ exports.addPurchase = function(req,res){
                     item_desc : req.body.item_desc,
                     item_id : req.body.item[i].item,
                     amount : req.body.item[i].amount,
-                    request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+                    request_date : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD')
                 }
 
                 var cont = true;
@@ -521,7 +522,7 @@ exports.addPurchase = function(req,res){
                             console.log(add);
                             //Create Notification
                             var notif = {
-                                date : new Date(),
+                                date : new Date(req.session.cur_date),
                                 farm_id : farm_id,
                                 notification_title : "New pending order",
                                 url : "/orders/details?id=" + add.insertId,
@@ -549,7 +550,7 @@ exports.addPurchase = function(req,res){
     //     amount : 45,
     //     units : "Kg",
     //     requested_by : 1,
-    //     request_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+    //     request_date : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD')
     // }
     // materialModel.addPurchase(purchase, function(err, result){
     // });
@@ -578,7 +579,7 @@ exports.getPurchaseDetails = function(req,res){
             html_data['details'] = details[0];
             console.log(details[0]);
         }
-        html_data["cur_date"] = dataformatter.formatDate(new Date(),'YYYY-MM-DD');
+        html_data["cur_date"] = dataformatter.formatDate(new Date(req.session.cur_date),'YYYY-MM-DD');
         html_data["notifs"] = req.notifs;
         res.render("purchaseDetails", html_data);
     });

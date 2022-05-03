@@ -339,7 +339,7 @@ exports.createWorkOrder = function(req, res) {
 	var query = {
 		type: req.body.wo_type,
 		crop_calendar_id: req.body.crop_calendar_id,
-		date_created: dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
+		date_created: dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD'),
 		date_due: dataformatter.formatDate(new Date(req.body.due_date), 'YYYY-MM-DD'),
 		date_start: dataformatter.formatDate(new Date(req.body.start_date), 'YYYY-MM-DD'),
 		status: 'Pending',
@@ -395,7 +395,7 @@ exports.ajaxCreateWorkOrder = function(req, res) {
 	var query = {
 		type: req.body.wo_type,
 		crop_calendar_id: req.body.crop_calendar_id,
-		date_created: dataformatter.formatDate(new Date(), 'YYYY-MM-DD'),
+		date_created: dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD'),
 		date_due: dataformatter.formatDate(new Date(req.body.due_date), 'YYYY-MM-DD'),
 		date_start: dataformatter.formatDate(new Date(req.body.start_date), 'YYYY-MM-DD'),
 		status: 'Pending',
@@ -481,7 +481,8 @@ exports.getWorkOrdersDashboard = function(req, res) {
 	var upcoming = [];
 	var completed = [];
 	var html_data = {};
-	
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard', req.session);
+
 	var query = {
         order: [ 'work_order_table.date_completed desc', 'work_order_table.date_due ASC'],
 		// limit: ['10']
@@ -542,9 +543,10 @@ exports.getWorkOrdersDashboard = function(req, res) {
 												fp_obj.max = standard;
 											}
 
-											html_data = { upcomingWoList: upcoming.slice(0, 10), completedWoList: completed.slice(0, 10) };
+											html_data['upcomingWoList'] = upcoming.slice(0, 10);
+											html_data['completedWoList'] =  completed.slice(0, 10);
 											html_data['fp'] = fp_obj;
-											html_data = js.init_session(html_data, 'role', 'name', 'username', 'dashboard', req.session);
+											
 
 											html_data["notifs"] = req.notifs;
 
@@ -651,7 +653,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 																html_data["total"] = new_total;
 																html_data["month_frequency"] = month_frequency;
 																var month = 2;
-																var start_date = new Date();
+																var start_date = new Date(req.session.cur_date);
 																start_date.setMonth(start_date.getMonth() - 12);
 																weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD') }, function(err, precip_data) {
 																	if (err)
@@ -707,6 +709,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 																												var precip_details = processPrecipChartData(precip_data)
 																												html_data['precip_data'] = JSON.stringify(precip_details.chart);
 																												html_data['outlook'] = (precip_details.outlook);
+
 																												res.render('home', html_data);
 																											}
 																										});
@@ -813,7 +816,7 @@ exports.editWorkOrder = function(req, res) {
 		req.body.harvest_type = [req.body.harvest_type];
 
 	if (query.status == 'Completed') {
-		query['date_completed'] = dataformatter.formatDate(new Date(), 'YYYY-MM-DD');
+		query['date_completed'] = dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD');
 
 		if (query.type == 'Land Preparation') {
 			next_stage = 'Sow Seed';
@@ -859,7 +862,7 @@ exports.editWorkOrder = function(req, res) {
 										pesticide_id : farm_materials[i].item_id,
 										farm_id : wo_details[0].farm_id,
 										amount : 5,
-										date_used : dataformatter.formatDate(new Date(), 'YYYY-MM-DD')
+										date_used : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD')
 									};
 									materialModel.addPesticideUsage(usage, function(err, success){
 

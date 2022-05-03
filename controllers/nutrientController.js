@@ -245,6 +245,8 @@ exports.getNutrientMgtPlan = function(req, res) {
 exports.ajaxGetNutrientPlanView = function(req, res) {
 	var query = { farm_name: req.query.farm_name };
 	var html_data = {};
+	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
+	
 	var summary = '';
 	cropCalendarModel.readCropCalendar({ calendar_id: req.query.calendar_id }, function(err, calendar_details) {
 		if (err)
@@ -319,7 +321,7 @@ exports.ajaxGetNutrientPlanView = function(req, res) {
 																				fr_items[i].target_application_date = dataformatter.formatDate(new Date(fr_items[i].target_application_date), 'YYYY-MM-DD');
 																			}
 																			
-																			html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
+																			
 																			html_data['detailed_data'] = dataformatter.processNPKValues(result, result[0].farm_area, applied, summary, wo_list);
 																			if (forecast != 0) {
 																				html_data['yield_forecast'] = forecast[0].forecast;

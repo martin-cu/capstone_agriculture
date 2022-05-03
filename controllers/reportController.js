@@ -209,7 +209,7 @@ exports.testDisasterChart = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
 	var month = 2;
-	var start_date = new Date();
+	var start_date = new Date(req.session.cur_date);
 	start_date.setMonth(start_date.getMonth() - 12);
 	
 	res.render('customCNRTest', html_data);
@@ -572,7 +572,7 @@ exports.getDetailedHarvestReport = function(req, res) {
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'reports', req.session);
 	html_data["notifs"] = req.notifs;
 	html_data["farm_name"] = req.query.farm;
-	html_data['range'] = { start: "2017-01-01", end: dataformatter.formatDate(new Date(), 'YYYY-MM-DD') };
+	html_data['range'] = { start: "2017-01-01", end: dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD') };
 
 	var arr = [], obj, calendar_ids;
 	reportModel.getHarvestSummaryChart({ crop_plan: req.params.crop_plan, status: 'Completed' }, function(err, chart_data) {

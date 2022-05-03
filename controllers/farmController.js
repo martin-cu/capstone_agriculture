@@ -163,17 +163,17 @@ exports.getFarmDetails = function(req, res) {
 									var lon = center[0];
 								}
 								
-								new Date(Date.now());
+								new Date(req.session.cur_date());
 
-								var d1 = new Date(Date.now());
-								var d2 = new Date(Date.now());
+								var d1 = new Date(req.session.cur_date());
+								var d2 = new Date(req.session.cur_date());
 								d2.setDate(d2.getDate() - 2);
 								d1.setDate(d1.getDate() - 1);
 
 								var start_date = dataformatter.dateToUnix(d2);
 								var end_date = dataformatter.dateToUnix(d1);
 								
-								var x = new Date();
+								var x = new Date(req.session.cur_date);
 								var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
 
 								request(url, { json: true }, function(err, response, body) {
@@ -803,8 +803,8 @@ exports.completeYieldForecast = function(req, res) {
 									// If there is existing crop cycle - Get current env variables
 									if (current_calendar != null) {
 										console.log(current_calendar);
-										req.params.start = new Date(req.params.start) > new Date() ? dataformatter.formatDate(new Date(), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.params.start), 'YYYY-MM-DD');
-										req.params.end = new Date(req.params.end) > new Date() ? dataformatter.formatDate(new Date(), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.params.end), 'YYYY-MM-DD');
+										req.params.start = new Date(req.params.start) > new Date(req.session.cur_date) ? dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.params.start), 'YYYY-MM-DD');
+										req.params.end = new Date(req.params.end) > new Date(req.session.cur_date) ? dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.params.end), 'YYYY-MM-DD');
 
 										// Get polygon id
 										var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
@@ -951,8 +951,8 @@ exports.ajaxGetForecastRecord = function(req, res) {
 }
 
 exports.getYieldVariables = function(req, res) {
-	req.query.start = new Date(req.query.start) > new Date() ? dataformatter.formatDate(new Date(), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.query.start), 'YYYY-MM-DD');
-	req.query.end = new Date(req.query.end) > new Date() ? dataformatter.formatDate(new Date(), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.query.end), 'YYYY-MM-DD');
+	req.query.start = new Date(req.query.start) > new Date(req.session.cur_date) ? dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.query.start), 'YYYY-MM-DD');
+	req.query.end = new Date(req.query.end) > new Date(req.session.cur_date) ? dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD') : dataformatter.formatDate(new Date(req.query.end), 'YYYY-MM-DD');
 
 	var polygon_id = req.query.polyid;
 	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);

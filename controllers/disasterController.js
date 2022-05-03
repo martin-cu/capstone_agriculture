@@ -34,10 +34,10 @@ exports.getDisasterManagement = function(req, res) {
 					var active_drought_arr = [], inactive_drought_arr = [];
 
 					for (var i = 0; i < active_rainfall.length; i++) {
-						active_rainfall_arr.push(prepareRainfallDisaster(active_rainfall[i], active_calendars));
+						active_rainfall_arr.push(prepareRainfallDisaster(active_rainfall[i], active_calendars, html_data));
 					}
 					for (var i = 0; i < inactive_rainfall.length; i++) {
-						inactive_rainfall_arr.push(prepareRainfallDisaster(inactive_rainfall[i], active_calendars));
+						inactive_rainfall_arr.push(prepareRainfallDisaster(inactive_rainfall[i], active_calendars, html_data));
 					}
 					//console.log(rainfall_arr);
 					html_data['active_rainfall'] = active_rainfall_arr;
@@ -114,7 +114,7 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
-function prepareRainfallDisaster(rainfall, active_calendars) {
+function prepareRainfallDisaster(rainfall, active_calendars, html_data) {
 	var rainfall_obj = {};
 	var stage = null, recommendation, damages, risk_lvl, text_color, damage_color, risk_n;
 	rainfall['mph'] = Math.round(rainfall.wind_speed * 2.237 * 100)/100;
@@ -124,7 +124,7 @@ function prepareRainfallDisaster(rainfall, active_calendars) {
 	'Tropical Storm' : rainfall.mph < 111 ?
 	'Hurricane' : rainfall.mph >= 111 ?
 	'Major Hurricane' : 'Major Hurricane';
-	rainfall.days = dateDiffInDays(new Date(), new Date(rainfall.target_date));
+	rainfall.days = dateDiffInDays(new Date(html_data.cur_date), new Date(rainfall.target_date));
 	rainfall.date_recorded = dataformatter.formatDate(new Date(rainfall.date_recorded), 'YYYY-MM-DD');
 	rainfall.target_date = dataformatter.formatDate(new Date(rainfall.target_date), 'mm DD, YYYY');
 

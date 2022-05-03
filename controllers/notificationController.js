@@ -41,7 +41,7 @@ exports.getNotification = function(req, res, next) {
                 }
 
                 notif_obj_arr.push({
-                    date: '"'+dataformatter.formatDate(new Date(), 'YYYY-MM-DD')+'"',
+                    date: '"'+dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD')+'"',
                     notification_title: title,
                     notification_desc: desc,
                     farm_id: wo_list[i].farm_id,
@@ -107,7 +107,7 @@ exports.getNotificationTab = function(req,res){
 
 exports.createNotif = function(req,res) {
     var notif = {
-        date : new Date(),
+        date : new Date(req.session.cur_date),
         farm_id : farm_id,
         notification_title : "New pending order",
         url : "/orders/details?id=" + add.insertId,
@@ -145,7 +145,7 @@ exports.createNotif = function(req,res) {
 //                         }
 //                         if(create){
 //                             var notif = {
-//                                 date : new Date(),
+//                                 date : new Date(req.session.cur_date),
 //                                 farm_id : due[i].farm_id,
 //                                 notification_title : "Work Order due today: WO-"+due[i].work_order_id,
 //                                 url : "/farms/work_order&id=" + due[i].work_order_id,
@@ -174,7 +174,7 @@ exports.createNotif = function(req,res) {
 //                                 }
 //                                 if(create){
 //                                     var notif = {
-//                                         date : new Date(),
+//                                         date : new Date(req.session.cur_date),
 //                                         farm_id : overdue[i].farm_id,
 //                                         notification_title : "Work Order Overdue: WO-"+overdue[i].work_order_id,
 //                                         url : "/farms/work_order&id=" + overdue[i].work_order_id,
