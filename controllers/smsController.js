@@ -249,10 +249,20 @@ function sendOutboundMsg(emp, message){
 //SMS Pages
 exports.getSubscriptions = function(req, res) {
 	var html_data = {};
-  html_data["title"] = "SMS Management > Subscriptions";
+    html_data["title"] = "SMS Management > Subscriptions";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_subscriptions', req.session);
-  html_data["notifs"] = req.notifs;
-	res.render('sms_subscriptions', html_data);
+    html_data["notifs"] = req.notifs;
+
+    smsModel.getSubscriptionsList(function(err, list){
+        if(err)
+            throw err;
+        else{
+            html_data["list"] = list;
+        }
+        res.render('sms_subscriptions', html_data);
+    });
+
+	
 }
 
 exports.getAddSubscription = function(req, res) {

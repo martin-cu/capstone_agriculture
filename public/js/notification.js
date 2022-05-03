@@ -10,6 +10,8 @@ $(document).ready(function(){
 
 
     if(view == "sms_messages"){
+
+        //INITIALIZE
         $.get("/employeeDetails", {employee_id : $(".active_chat").attr("id")}, function(result){
             
             $("#texter_name").text(result.first_name + " " + result.last_name);
@@ -33,6 +35,8 @@ $(document).ready(function(){
         //Scroll to botom
         $("#msgHistory").animate({scrollTop: $("#msgHistory").prop("scrollHeight")}, 1000)
 
+
+        //ON SELECT OF NEW USER
         $(".chat_list").on("click", function(){
             changeConversation();
         });

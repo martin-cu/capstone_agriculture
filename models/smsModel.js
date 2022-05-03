@@ -82,3 +82,10 @@ exports.getUserConverstation = function(employee_id, next){
     mysql.query(sql, next);
     return sql;
 }
+
+exports.getSubscriptionsList = function(next){
+    var sql = "SELECT et.*, a.date as last_message, a.time as last_time, a.message, fa.* FROM employee_table et LEFT JOIN (SELECT fa.*, ft.farm_name FROM farm_assignment fa LEFT JOIN farm_table ft USING (farm_id)) fa USING (employee_id) LEFT JOIN (SELECT * FROM (SELECT im.message_id, im.message, im.employee_id, im.date, im.time  FROM inbound_msg im UNION SELECT om.message_id, om.message, om.employee_id, om.date, om.time FROM outbound_msg om ORDER BY date DESC, time DESC) a group by employee_id) a USING (employee_id) WHERE access_token is not null GROUP by et.employee_id ORDER BY last_message DESC, last_time DESC;";
+
+    mysql.query(sql, next);
+    return sql;
+}
