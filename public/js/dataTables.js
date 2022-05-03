@@ -1,6 +1,6 @@
 // If else must be done to have different table options for each page
 // and because dataTables cannot be reinitialized
-$(document).ready(function() {
+// $(document).ready(function() {
 
 if (view == 'orders') {
     $('.table.table-striped.table-bordered.tablesorter').DataTable( {
@@ -42,6 +42,44 @@ else if (view == 'diagnosis_frequency') {
     });
 }
 
+else if (view == 'user_management') {
+    $('#activeUsersTable').DataTable( { //One table only
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "search": {
+            // "caseInsensitive": false
+        },
+        "order": [[ 0, "desc" ]],
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+            } ]
+    });
+
+    $('#activeEmployeesTable').DataTable( { //One table only
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "search": {
+            // "caseInsensitive": false
+        },
+        "order": [[ 0, "desc" ]],
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+            } ]
+    });
+
+    $('#inactiveEmployeesTable').DataTable( { //One table only
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "search": {
+            // "caseInsensitive": false
+        },
+        "order": [[ 0, "desc" ]],
+        "columnDefs": [ {
+            "targets": 4,
+            "orderable": false
+            } ]
+    });
+}
+
 else {
     $('.table.table-striped.table-bordered.tablesorter').DataTable( {
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -52,4 +90,4 @@ else {
     });
 }
 
-});
+// });
