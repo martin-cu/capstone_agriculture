@@ -6,9 +6,10 @@ const dataformatter = require('../public/js/dataformatter.js');
 const { formatDate } = require('../public/js/dataformatter.js');
 
 
-var app_id = 'X4kxHEG59nuXkT8ynri5KGuyR4xzHLbr'; //final
-var app_secret = '280f39f528dc56db22e5f31a4a87dad0969d5cce23f659e3e3e888a2371fe585'; //final
-var shortcode = '21585119'; //final
+var app_id = 'X4kxHEG59nuXkT8ynri5KGuyR4xzHLbr'; //final OLD
+var app_secret = '280f39f528dc56db22e5f31a4a87dad0969d5cce23f659e3e3e888a2371fe585'; //final OLD
+//var shortcode = '21585119'; //OLD
+var shortcode = "21663543"; //NEW
 
 
 
@@ -292,17 +293,20 @@ exports.getMessages = function(req, res) {
 }
 
 exports.getUserConversation = function(req,res){
-    smsModel.getUserConverstation(req.query.employee_id, function(err, messages){
-        if(err)
-            throw err;
-        else{
-            for(var i = 0; i < messages.length; i++){
-                messages[i].date = dataformatter.formatDate(new Date(messages[i].date), 'mm DD, YYYY');
+    if(req.query.employee_id != null)
+        smsModel.getUserConverstation(req.query.employee_id, function(err, messages){
+            if(err)
+                throw err;
+            else{
+                for(var i = 0; i < messages.length; i++){
+                    messages[i].date = dataformatter.formatDate(new Date(messages[i].date), 'mm DD, YYYY');
+                }
+                // console.log(messages);
+                res.send(messages);
             }
-            // console.log(messages);
-            res.send(messages);
-        }
-    }); 
+        }); 
+     else
+        res.send(true);
 }
 
 

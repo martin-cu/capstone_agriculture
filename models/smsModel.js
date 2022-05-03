@@ -58,7 +58,7 @@ exports.insertInboundMsg = function(message, message_id, employee_id, next){
 }
 
 exports.insertOutboundMsg = function(message, employee_id, next){
-    var sql = "INSERT INTO outbound_msg (employee_id, message, date, time) VALUES (?, ?, DATE(NOW()), TIME(NOW()));";
+    var sql = "INSERT INTO outbound_msg (employee_id, message, date, time) VALUES (?, ?, DATE(NOW()), TIME(NOW()) - INTERVAL -5 SECOND);";
     sql = mysql.format(sql, employee_id);
     sql = mysql.format(sql, message);
 
@@ -76,7 +76,7 @@ exports.getSubscriptions = function(next){
 }
 
 exports.getUserConverstation = function(employee_id, next){
-    var sql = "SELECT * FROM (SELECT im.message_id, im.message, im.employee_id, im.date, TIME_FORMAT(im.time, '%h %i %p') as time, 'inbound' as origin  FROM inbound_msg im UNION SELECT om.message_id, om.message, om.employee_id, om.date, TIME_FORMAT(om.time, '%h %i %p') as time, 'outbound' as origin FROM outbound_msg om ORDER BY date ASC, time ASC) a WHERE employee_id = ?;";
+    var sql = "SELECT * FROM (SELECT im.message_id, im.message, im.employee_id, im.date, TIME_FORMAT(im.time, '%h %i %p') as time, im.time as time2,'inbound' as origin  FROM inbound_msg im UNION SELECT om.message_id, om.message, om.employee_id, om.date, TIME_FORMAT(om.time, '%h %i %p') as time, om.time as time2, 'outbound' as origin FROM outbound_msg om) a WHERE employee_id = ? ORDER BY date ASC, time2 ASC;";
     sql = mysql.format(sql, employee_id);
 
     mysql.query(sql, next);

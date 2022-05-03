@@ -228,11 +228,14 @@ exports.logout = function(req, res) {
 };
 
 exports.getEmployeeDetails = function(req, res){
-	userModel.getEmployeeDetails(req.query.employee_id, function(err, details){
-		if(err)
-			throw err;
-		else{
-			res.send(details[0]);
-		}
-	});
+	if(req.query.employee_id != null)
+		userModel.getEmployeeDetails(req.query.employee_id, function(err, details){
+			if(err)
+				throw err;
+			else{
+				res.send(details[0]);
+			}
+		});
+	else
+		res.send(true);
 }
