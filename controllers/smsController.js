@@ -1,10 +1,14 @@
 const js = require('../public/js/session.js');
 const smsModel = require('../models/smsModel.js');
+const employeeModel = require('../models/employeeModel.js');
+const farmModel = require('../models/farmModel.js');
 var request = require("request");
 const { text } = require('express');
 const dataformatter = require('../public/js/dataformatter.js');
 const { formatDate } = require('../public/js/dataformatter.js');
 
+//API Key for WEATHER API
+var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 
 var app_id = 'X4kxHEG59nuXkT8ynri5KGuyR4xzHLbr'; //final
 var app_secret = '280f39f528dc56db22e5f31a4a87dad0969d5cce23f659e3e3e888a2371fe585'; //final
@@ -78,11 +82,10 @@ exports.globe_inbound_msg = function(req, res){
                     var text_message = req.body.inboundSMSMessageList.inboundSMSMessage[0].message.slice(" ");
                     var msg;
                     switch (text_message[0]){
-                        case "1" : msg = "SEND EMPLOYEE DETAILS"; break; //SEND EMPLOYEE DETAILS
-                        case "2" : msg = "HELP \nHERE ARE THE LIST OF ACTIONS \n1 - EMPLOYEE DETAILS \n2 - HELP"; break; //SEND "HELP"
-                        case "3" : msg = "INCOMING WORK ORDERS"; break; //INCOMING WORK ORDERS
-                        case "4" : msg = "WO FOR TODAY"; break; //WORK ORDERS FOR TODAY
-                        case "5" : msg = "OVERDUE"; break; //Overdue workorders
+                        case "1" : msg = getWeatherForecastMsg(employee_id); break; //Weather Forecast
+                        case "2" : msg = "INCOMING WORK ORDERS"; break; //SEND "HELP"
+                        case "3" : msg = "PEST/DISEASE SYMPTOMS"; break; //INCOMING WORK ORDERS
+                        default : msg = "Below are the list of actions that can be performed.\n1 - Weather Forecast\n2 - Incoming work orders\n3 - Report Pest/Disease Symptoms\nTo complete action, send <number of desired action> to 21663543";
                     }
 
                     sendOutboundMsg(employee_details[0], msg);
@@ -229,8 +232,179 @@ function sendOutboundMsg(emp, message){
 }
 
 
+function getWeatherForecastMsg(employee_id){
+    
+    //Get assigned farm
+    employeeModel.queryEmployee({employee_id: employee_id}, function(err, emp){ //change 24 to employee_id
+        if(err)
+            throw err;
+        else{
+            // console.log(emp);
+            var farm_name = emp[0].farm_name;
+            //get farm plots
+            var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
+            request(url, {json : true}, function(err, polygon_list){
+                if (err)
+                    throw err;
+                else{
+                    var lat;
+                    var lon;
+                    // console.log(farm_name);
+                    // console.log(polygon_list.body);
+                    for(var i = 0 ; i < polygon_list.body.length; i++){
+                        // console.log(polygon_list.body[i]);
+                        if(polygon_list.body[i].name == farm_name){
+                            // console.log(polygon_list.body[i]);
+                            lat = polygon_list.body[i].center[1];
+						    lon = polygon_list.body[i].center[0];
+                            break;
+                        }
+                    }
+                    //get weather for farm
+                    var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+                    request(forecast_url, { json: true }, function(err, response, forecast_body){
+                        if(err)
+                            throw err;
+                        else{
+                            console.log(forecast_body);
+                            forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
+                            var hour_arr = [];
+                            for (var i = 0; i < forecast_body.length; i++) {
+                                forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
+                                forecast_body[i]["date"] = dataformatter.formatDate(forecast_body[i].dt, 'mm DD, YYYY');
+                                hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
+                            }
+
+                            var dates = [];
+                            for(var i = 0; i < forecast_body.length; i++) {
+                                if(dates.includes(forecast_body[i].date)){
+                                    //dont add
+                                }
+                                else{
+                                    dates.push(forecast_body[i].date);
+                                }
+                            }
+
+                            var daily_weather = [];
+                            for(var i = 0; i < dates.length; i++){
+                                var temp = 0;
+                                var ctr = 0;
+                                var weather;
+                                for(var x = 0; x < forecast_body.length; x++){
+                                    if(forecast_body[x].date == dates[i]){
+                                        weather = forecast_body[x].weather[0].description;
+                                        temp =+ forecast_body[x].main.temp;
+                                        ctr++;
+                                    }
+                                }
+                                daily_weather.push({date : dates[i], weather : weather, temp : temp - 273.15});
+                            }
+                            console.log(daily_weather);
+                            //***** Get unique hour timestamps from forecast and filter data
+                            hour_arr = [...new Map(hour_arr.map(item => [item, item])).values()];
+
+                            //SET MESSAGE LAYOUT
+                            var message = "WEATHER FORECAST\nFarm: " + farm_name;
+                            for(var i = 0 ; i < daily_weather.length; i++){
+                                message = message + "\n\nDate: " + daily_weather[i].date + "\nWeather: " + daily_weather[i].weather + "\nTemp: " + daily_weather[i].temp.toFixed(2) + " C";
+                            }
+                            console.log(message);
+                            return message;
+                        }
+                    });
+                }
+            })
+        }
+    });
+
+}
 
 
+exports.getWeatherForecast = function(employee_id){
+    
+    //Get assigned farm
+    employeeModel.queryEmployee({employee_id: 24}, function(err, emp){ //change 24 to employee_id
+        if(err)
+            throw err;
+        else{
+            // console.log(emp);
+            var farm_name = emp[0].farm_name;
+            //get farm plots
+            var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
+            request(url, {json : true}, function(err, polygon_list){
+                if (err)
+                    throw err;
+                else{
+                    var lat;
+                    var lon;
+                    // console.log(farm_name);
+                    // console.log(polygon_list.body);
+                    for(var i = 0 ; i < polygon_list.body.length; i++){
+                        // console.log(polygon_list.body[i]);
+                        if(polygon_list.body[i].name == farm_name){
+                            // console.log(polygon_list.body[i]);
+                            lat = polygon_list.body[i].center[1];
+						    lon = polygon_list.body[i].center[0];
+                            break;
+                        }
+                    }
+                    //get weather for farm
+                    var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+                    request(forecast_url, { json: true }, function(err, response, forecast_body){
+                        if(err)
+                            throw err;
+                        else{
+                            console.log(forecast_body);
+                            forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
+                            var hour_arr = [];
+                            for (var i = 0; i < forecast_body.length; i++) {
+                                forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
+                                forecast_body[i]["date"] = dataformatter.formatDate(forecast_body[i].dt, 'mm DD, YYYY');
+                                hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
+                            }
+
+                            var dates = [];
+                            for(var i = 0; i < forecast_body.length; i++) {
+                                if(dates.includes(forecast_body[i].date)){
+                                    //dont add
+                                }
+                                else{
+                                    dates.push(forecast_body[i].date);
+                                }
+                            }
+
+                            var daily_weather = [];
+                            for(var i = 0; i < dates.length; i++){
+                                var temp = 0;
+                                var ctr = 0;
+                                var weather;
+                                for(var x = 0; x < forecast_body.length; x++){
+                                    if(forecast_body[x].date == dates[i]){
+                                        weather = forecast_body[x].weather[0].description;
+                                        temp =+ forecast_body[x].main.temp;
+                                        ctr++;
+                                    }
+                                }
+                                daily_weather.push({date : dates[i], weather : weather, temp : temp - 273.15});
+                            }
+                            console.log(daily_weather);
+                            //***** Get unique hour timestamps from forecast and filter data
+                            hour_arr = [...new Map(hour_arr.map(item => [item, item])).values()];
+
+                            //SET MESSAGE LAYOUT
+                            var message = "WEATHER FORECAST\nFarm: " + farm_name;
+                            for(var i = 0 ; i < daily_weather.length; i++){
+                                message = message + "\n\nDate: " + daily_weather[i].date + "\nWeather: " + daily_weather[i].weather + "\nTemp: " + daily_weather[i].temp.toFixed(2) + " C";
+                            }
+                            console.log(message);
+                            return message;
+                        }
+                    });
+                }
+            })
+        }
+    });
+}
 
 
 
