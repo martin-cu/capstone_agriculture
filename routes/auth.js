@@ -290,7 +290,7 @@ router.get('/getWeather', materialController.getWeather);
 
 
 
-router.get("/test_sample", globe.getWeatherForecast);
+router.get("/test_sample", globe.incomingWO);
 
 //Globe
 // router.get('/globe_api', globe.test_globe);

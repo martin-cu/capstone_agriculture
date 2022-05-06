@@ -1,6 +1,8 @@
 const js = require('../public/js/session.js');
 const smsModel = require('../models/smsModel.js');
 const employeeModel = require('../models/employeeModel.js');
+const woModel = require('../models/workOrderModel.js');
+const cropCalendarModel = require('../models/cropCalendarModel.js');
 const farmModel = require('../models/farmModel.js');
 var request = require("request");
 const { text } = require('express');
@@ -82,35 +84,11 @@ exports.globe_inbound_msg = function(req, res){
                     var text_message = req.body.inboundSMSMessageList.inboundSMSMessage[0].message.slice(" ");
                     var msg;
                     switch (text_message[0]){
-                        case "1" : msg = getWeatherForecastMsg(employee_id); break; //Weather Forecast
-                        case "2" : msg = "INCOMING WORK ORDERS"; break; //SEND "HELP"
+                        case "1" : msg = getWeatherForecastMsg(employee_details[0]); break; //Weather Forecast
+                        case "2" : msg = getIncomingWos(employee_details[0]); break; //SEND "HELP"
                         case "3" : msg = "PEST/DISEASE SYMPTOMS"; break; //INCOMING WORK ORDERS
-                        default : msg = "Below are the list of actions that can be performed.\n1 - Weather Forecast\n2 - Incoming work orders\n3 - Report Pest/Disease Symptoms\nTo complete action, send <number of desired action> to 21663543";
+                        default : sendSMSActions(employee_details[0]); break;
                     }
-
-                    sendOutboundMsg(employee_details[0], msg);
-                    // smsModel.insertOutboundMsg(msg, employee_id, function(err, last_id){
-                    //     if(err)
-                    //         throw err;
-                    //     else{
-                    //         var last = last_id.insertId;
-                    //         console.log(last_id.insertId);
-                    //         console.log(last);
-                    //         var message = { method: 'POST',
-                    //                         url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                    //                         qs: { 'access_token': employee_details[0].access_token },
-                    //                         headers: 
-                    //                         { 'Content-Type': 'application/json' },
-                    //                         body: 
-                    //                         { 'outboundSMSMessageRequest': 
-                    //                             { 'clientCorrelator': last,
-                    //                             'senderAddress': shortcode,
-                    //                             'outboundSMSTextMessage': { 'message': msg },
-                    //                             'address': employee_details[0].phone_number } },
-                    //                         json: true };
-                    //         sendOutboundMsg(message);
-                    //     }
-                    // });
                 }
             }
         });
@@ -232,12 +210,12 @@ function sendOutboundMsg(emp, message){
 }
 
 
-function getWeatherForecastMsg(employee_id){
-    
+function getWeatherForecastMsg(employee){
+    var message = "-";
     //Get assigned farm
-    employeeModel.queryEmployee({employee_id: employee_id}, function(err, emp){ //change 24 to employee_id
+    employeeModel.queryEmployee({employee_id: employee.employee_id}, function(err, emp){ //change 24 to employee_id
         if(err)
-            throw err;
+            console.log(err);
         else{
             // console.log(emp);
             var farm_name = emp[0].farm_name;
@@ -245,7 +223,7 @@ function getWeatherForecastMsg(employee_id){
             var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
             request(url, {json : true}, function(err, polygon_list){
                 if (err)
-                    throw err;
+                    console.log(err);
                 else{
                     var lat;
                     var lon;
@@ -264,7 +242,7 @@ function getWeatherForecastMsg(employee_id){
                     var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
                     request(forecast_url, { json: true }, function(err, response, forecast_body){
                         if(err)
-                            throw err;
+                            console.log(err);
                         else{
                             console.log(forecast_body);
                             forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
@@ -304,106 +282,120 @@ function getWeatherForecastMsg(employee_id){
                             hour_arr = [...new Map(hour_arr.map(item => [item, item])).values()];
 
                             //SET MESSAGE LAYOUT
-                            var message = "WEATHER FORECAST\nFarm: " + farm_name;
+                            message = "WEATHER FORECAST\nFarm: " + farm_name;
                             for(var i = 0 ; i < daily_weather.length; i++){
                                 message = message + "\n\nDate: " + daily_weather[i].date + "\nWeather: " + daily_weather[i].weather + "\nTemp: " + daily_weather[i].temp.toFixed(2) + " C";
                             }
                             console.log(message);
-                            return message;
+                            
+                            
+                            sendOutboundMsg(employee, message);
                         }
                     });
                 }
             })
         }
     });
-
 }
 
-
-exports.getWeatherForecast = function(employee_id){
-    
-    //Get assigned farm
-    employeeModel.queryEmployee({employee_id: 24}, function(err, emp){ //change 24 to employee_id
+function getIncomingWos(employee){
+    employeeModel.queryEmployee({employee_id: employee.employee_id}, function(err, emp){
         if(err)
-            throw err;
+            console.log(err);
         else{
-            // console.log(emp);
+            //Get active crop calendar
             var farm_name = emp[0].farm_name;
-            //get farm plots
-            var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
-            request(url, {json : true}, function(err, polygon_list){
-                if (err)
+            cropCalendarModel.getCurrentCropCalendar({farm_name : farm_name}, function(err, crop_calendar){
+                if(err)
                     throw err;
                 else{
-                    var lat;
-                    var lon;
-                    // console.log(farm_name);
-                    // console.log(polygon_list.body);
-                    for(var i = 0 ; i < polygon_list.body.length; i++){
-                        // console.log(polygon_list.body[i]);
-                        if(polygon_list.body[i].name == farm_name){
-                            // console.log(polygon_list.body[i]);
-                            lat = polygon_list.body[i].center[1];
-						    lon = polygon_list.body[i].center[0];
-                            break;
-                        }
-                    }
-                    //get weather for farm
-                    var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
-                    request(forecast_url, { json: true }, function(err, response, forecast_body){
+                    console.log(crop_calendar);
+                    //Get work orders
+                    var wo_query = {
+                        where: {
+                            key: ['crop_calendar_id'],
+                            value: [crop_calendar[0].calendar_id]
+                        },
+                        order: ['work_order_table.date_start ASC']
+                    };
+                    woModel.getWorkOrders(wo_query, function(err, wos){
                         if(err)
                             throw err;
                         else{
-                            console.log(forecast_body);
-                            forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
-                            var hour_arr = [];
-                            for (var i = 0; i < forecast_body.length; i++) {
-                                forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
-                                forecast_body[i]["date"] = dataformatter.formatDate(forecast_body[i].dt, 'mm DD, YYYY');
-                                hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
-                            }
-
-                            var dates = [];
-                            for(var i = 0; i < forecast_body.length; i++) {
-                                if(dates.includes(forecast_body[i].date)){
-                                    //dont add
+                            var message = "WORK ORDERS\nFarm: " + farm_name;
+                            console.log(wos);
+                            var not_completed = [];
+                            for(var i = 0; i < wos.length; i++){
+                                if(wos[i].status != "Completed"){
+                                    not_completed.push(wos[i]); 
+                                    wos[i].date_start = dataformatter.formatDate(wos[i].date_start, 'mm DD, YYYY');
+                                    wos[i].date_due = dataformatter.formatDate(wos[i].date_due, 'mm DD, YYYY');
+                                    message = message + "\n\n" + wos[i].type + " (" + wos[i].notif_type + ")"+ "\nStart: " + wos[i].date_start + "\nDue: " + wos[i].date_due + "\nStatus: " + wos[i].status;
                                 }
-                                else{
-                                    dates.push(forecast_body[i].date);
-                                }
-                            }
-
-                            var daily_weather = [];
-                            for(var i = 0; i < dates.length; i++){
-                                var temp = 0;
-                                var ctr = 0;
-                                var weather;
-                                for(var x = 0; x < forecast_body.length; x++){
-                                    if(forecast_body[x].date == dates[i]){
-                                        weather = forecast_body[x].weather[0].description;
-                                        temp =+ forecast_body[x].main.temp;
-                                        ctr++;
-                                    }
-                                }
-                                daily_weather.push({date : dates[i], weather : weather, temp : temp - 273.15});
-                            }
-                            console.log(daily_weather);
-                            //***** Get unique hour timestamps from forecast and filter data
-                            hour_arr = [...new Map(hour_arr.map(item => [item, item])).values()];
-
-                            //SET MESSAGE LAYOUT
-                            var message = "WEATHER FORECAST\nFarm: " + farm_name;
-                            for(var i = 0 ; i < daily_weather.length; i++){
-                                message = message + "\n\nDate: " + daily_weather[i].date + "\nWeather: " + daily_weather[i].weather + "\nTemp: " + daily_weather[i].temp.toFixed(2) + " C";
                             }
                             console.log(message);
-                            return message;
+
+                            //Send outbound message
+                            sendOutboundMsg(employee, message);
                         }
-                    });
+                    });    
                 }
-            })
+            });
         }
     });
+}
+
+exports.incomingWO = function(req, res){
+    employeeModel.queryEmployee({employee_id: 24}, function(err, emp){
+        if(err)
+            console.log(err);
+        else{
+            //Get active crop calendar
+            var farm_name = emp[0].farm_name;
+            cropCalendarModel.getCurrentCropCalendar({farm_name : farm_name}, function(err, crop_calendar){
+                if(err)
+                    throw err;
+                else{
+                    console.log(crop_calendar);
+                    //Get work orders
+                    var wo_query = {
+                        where: {
+                            key: ['crop_calendar_id'],
+                            value: [crop_calendar[0].calendar_id]
+                        },
+                        order: ['work_order_table.date_start ASC']
+                    };
+                    woModel.getWorkOrders(wo_query, function(err, wos){
+                        if(err)
+                            throw err;
+                        else{
+                            var message = "WORK ORDERS\nFarm: " + farm_name;
+                            console.log(wos);
+                            var not_completed = [];
+                            for(var i = 0; i < wos.length; i++){
+                                if(wos[i].status != "Completed"){
+                                    not_completed.push(wos[i]); 
+                                    wos[i].date_start = dataformatter.formatDate(wos[i].date_start, 'mm DD, YYYY');
+                                    wos[i].date_due = dataformatter.formatDate(wos[i].date_due, 'mm DD, YYYY');
+                                    message = message + "\n\n" + wos[i].type + " (" + wos[i].notif_type + ")"+ "\nStart: " + wos[i].date_start + "\nDue: " + wos[i].date_due + "\nStatus: " + wos[i].status;
+                                }
+                            }
+                            console.log(message);
+
+                            //Send outbound message
+                            sendOutboundMsg(employee, message);
+                        }
+                    });    
+                }
+            });
+        }
+    });
+}
+
+function sendSMSActions(employee){
+    var msg = "Below are the list of actions that can be performed.\n1 - Weather Forecast\n2 - Incoming work orders\n3 - Report Pest/Disease Symptoms\nTo complete action, send <number of desired action> to 21663543";
+
+    sendOutboundMsg(employee, msg);
 }
 
 
