@@ -23,6 +23,7 @@ exports.deleteDisasterLog = function(query, next){
         sql += ' where ?';
         sql = mysql.format(sql, query);
     }
+
     mysql.query(sql, next);
 };
 
@@ -32,6 +33,7 @@ exports.getDisasterLogs = function(query, next){
         sql += ' where ?';
         sql = mysql.format(sql, query);
     }
+    sql += ' order by target_date desc';
     mysql.query(sql, next);
 };
 

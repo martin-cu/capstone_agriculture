@@ -92,7 +92,7 @@ exports.getFarmDetails = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			console.log(details);
+			//console.log(details);
 			html_data["details"] = details;
 			////console.log(details);
 			farmtypes.push(details[0].land_type);
@@ -163,19 +163,19 @@ exports.getFarmDetails = function(req, res) {
 									var lon = center[0];
 								}
 								
-								new Date(req.session.cur_date());
+								new Date(req.session.cur_date);
 
-								var d1 = new Date(req.session.cur_date());
-								var d2 = new Date(req.session.cur_date());
+								var d1 = new Date(req.session.cur_date);
+								var d2 = new Date(req.session.cur_date);
 								d2.setDate(d2.getDate() - 2);
 								d1.setDate(d1.getDate() - 1);
 
-								var start_date = dataformatter.dateToUnix(d2);
-								var end_date = dataformatter.dateToUnix(d1);
+								var temp_date = dataformatter.processChangedDate(d2, d1);
+								var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
 								
 								var x = new Date(req.session.cur_date);
 								var url = 'http://api.agromonitoring.com/agro/1.0/weather/history?lat='+lat+'&lon='+lon+'&start='+start_date+'&end='+end_date+'&appid='+key;
-
+								console.log(url);
 								request(url, { json: true }, function(err, response, body) {
 									if (err)
 										throw err;
@@ -187,6 +187,7 @@ exports.getFarmDetails = function(req, res) {
 										
 										//***** Call Agro API for succeeding 5 day forecast
 										var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+										console.log(forecast_url);
 										request(forecast_url, { json: true }, function(err, response, forecast_body) {
 											if (err)
 												throw err;
@@ -453,7 +454,7 @@ exports.getFarmDetails = function(req, res) {
 																				}
 																			}
 																		}
-																	
+																		console.log('filter farm details');
 																		html_data["workorders"] = workorders;
 																		html_data["queries"] = queries;
 																		html_data["statements"] = statements;
@@ -743,7 +744,7 @@ exports.completeYieldForecast = function(req, res) {
 	var current_calendar = null;
 	var training_set = [];
 	var testing_set = [];
-
+	console.log(req.params);
 	cropCalendarModel.getCurrentCropCalendar({ farm_name: req.params.farm_name }, function(err, calendar) {
 		if (err)
 			throw err;
@@ -1124,7 +1125,8 @@ exports.getHistoricalNDVI = function(req, res) {
 exports.getSatelliteImageryData = function(req, res) {
 	//console.log(req.query.start);
 	var polygon_id = req.query.polygon_id;
-	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
+	var temp_date = dataformatter.processChangedDate(req.query.start, req.query.end);
+	var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
 	var obj;
 
 	var data = {
@@ -1133,6 +1135,7 @@ exports.getSatelliteImageryData = function(req, res) {
 		end: end_date,
 		clouds_max: 1
 	};
+
 	var options = {
 		url: 'https://api.agromonitoring.com/agro/1.0/image/search?polyid='+polygon_id+'&start='+start_date+'&end='+end_date+'&appid='+key+'&clouds_max='+60,
 		method: 'GET',
@@ -1141,6 +1144,7 @@ exports.getSatelliteImageryData = function(req, res) {
 		},
 		body: JSON.stringify(data)
 	};
+	console.log('satellite image');
 	request(options, function(err, response, body) {
 		if (err)
 			throw err;
@@ -1163,26 +1167,59 @@ exports.getSatelliteImageryData = function(req, res) {
 //**** Soil Data ****//
 exports.getCurrentSoilData = function(req, res){
 	var polygon_id = req.query.polyid;
-	var url = 'http://api.agromonitoring.com/agro/1.0/soil?polyid='+polygon_id+'&appid='+key;
+	var cur_date = new Date(req.session.cur_date);
+	var true_date = new Date();
 
-    request(url, { json: true }, function(err, response, body) {
-        if (err)
-        	throw err;
-        else {
-        	console.log(body);
-			body.dt = dataformatter.unixtoDate(body.dt);
-			body.moisture *= 100;
-			body = dataformatter.kelvinToCelsius(body, 'Soil');
+	if(true_date != cur_date) {
+		var temp_date = dataformatter.processChangedDate(req.session.cur_date, req.session.cur_date);
+		var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
 
-        	res.send(body);
-        }
-    });
+		var url = 'http://api.agromonitoring.com/agro/1.0/soil/history?start='+start_date+'&end='+end_date+'&polyid='+polygon_id+'&appid='+key;
+
+	    request(url, { json: true }, function(err, response, body) {
+	        if (err)
+	        	throw err;
+	        else {
+	        	//console.log(body);
+	        	body = JSON.parse(JSON.stringify(body));
+	        	body = body[body.length - 1];
+
+				// for (var i = 0; i < body.length; i++) {
+	   //      		body[i].dt = dataformatter.formatDate(dataformatter.unixtoDate(body[i].dt), 'YYYY-MM-DD');
+	   //      		body[i]['date'] = dataformatter.unixtoDate(body[i].dt);
+	   //      	}
+	  			body.dt = dataformatter.unixtoDate(body.dt);
+				body.moisture *= 100;
+				body = dataformatter.kelvinToCelsius(body, 'Soil');
+
+	        	res.send(body);
+	        }
+	    });
+	}
+	else {
+		var url = 'http://api.agromonitoring.com/agro/1.0/soil?polyid='+polygon_id+'&appid='+key;
+		console.log('cur soil');
+	    request(url, { json: true }, function(err, response, body) {
+	        if (err)
+	        	throw err;
+	        else {
+	        	//console.log(body);
+				body.dt = dataformatter.unixtoDate(body.dt);
+				body.moisture *= 100;
+				body = dataformatter.kelvinToCelsius(body, 'Soil');
+
+	        	res.send(body);
+	        }
+	    });
+	}
 }
 
 //!!!!! havent tested yet because of this is a premium feature !!!!!//
 exports.getHistoricalSoilData = function(req, res){
 	var polygon_id = req.query.polyid;
-	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
+	var temp_date = dataformatter.processChangedDate(req.query.start, req.query.end);
+	var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
+
 	var url = 'http://api.agromonitoring.com/agro/1.0/soil/history?start='+start_date+'&end='+end_date+'&polyid='+polygon_id+'&appid='+key;
 
     request(url, { json: true }, function(err, response, body) {
@@ -1206,7 +1243,9 @@ exports.getHistoricalSoilData = function(req, res){
 //**** Temperature and Precipitation ****//
 exports.getAccumulatedTemperature = function(req, res){
 	var polygon_id = req.query.polyid;
-	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
+	var temp_date = dataformatter.processChangedDate(req.query.start, req.query.end);
+	var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
+
 	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
 
 	lat = temp_lat;
@@ -1232,7 +1271,9 @@ exports.getAccumulatedTemperature = function(req, res){
 
 exports.getAccumulatedPrecipitation = function(req, res){
 	var polygon_id = req.query.polyid;
-	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
+	var temp_date = dataformatter.processChangedDate(req.query.start, req.query.end);
+	var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
+
 	var lat = req.query.lat, lon = req.query.lon, threshold = req.query.threshold;
 
 	lat = temp_lat;
@@ -1275,7 +1316,9 @@ exports.getCurrentUVI = function(req, res){
 
 exports.getHistoricalUVI = function(req, res){
 	var polygon_id = req.query.polyid;
-	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
+	var temp_date = dataformatter.processChangedDate(req.query.start, req.query.end);
+	var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
+
 	var url = 'http://api.agromonitoring.com/agro/1.0/uvi/history?polyid='+polygon_id+'&appid='+key+'&start='+start_date+'&end='+end_date;
 
     request(url, { json: true }, function(err, response, body) {
@@ -1317,7 +1360,8 @@ exports.getCurrentWeather = function(req, res){
 }
 
 exports.getHistoricalWeather = function(req, res){
-	var start_date = dataformatter.dateToUnix(req.query.start), end_date = dataformatter.dateToUnix(req.query.end);
+	var temp_date = dataformatter.processChangedDate(req.query.start, req.query.end);
+	var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
 	var lat = req.query.lat, lon = req.query.lon;
 	
 	lat = temp_lat;
@@ -1343,8 +1387,8 @@ exports.getHistoricalWeather = function(req, res){
 
 // 
 exports.getForecastWeather = function(req, res) {
-	var start_date = dataformatter.dateToUnix(req.query.start), 
-	end_date = dataformatter.dateToUnix(req.query.end);
+	var temp_date = dataformatter.processChangedDate(req.query.start, req.query.end);
+	var start_date = dataformatter.dateToUnix(temp_date.start), end_date = dataformatter.dateToUnix(temp_date.end);
 	
 	var lat = req.query.lat, lon = req.query.lon;
 	lat = temp_lat;

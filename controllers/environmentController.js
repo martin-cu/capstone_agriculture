@@ -1034,7 +1034,7 @@ exports.detailedNutrientManagement = function(req, res) {
 
 exports.uploadForecastResult = function(req, res) {
 	var query = req.body.data;
-
+	console.log('upload forecast res');
 	weatherForecastModel.saveForecastResults(query, function(err, result) {
 		if (err)
 			throw err;
@@ -1045,6 +1045,7 @@ exports.uploadForecastResult = function(req, res) {
 }
 
 exports.getWeatherForecast = function(req, res) {
+	console.log('forecast res');
 	weatherForecastModel.readWeatherForecast(function(err, result) {
 		if (err)
 			throw err;

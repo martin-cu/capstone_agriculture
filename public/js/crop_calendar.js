@@ -577,11 +577,16 @@ $(document).ready(function() {
 			form_data['manual_wo'] = form_data['manual_wo'].concat(processCustomFR(crop_plan.insertId));
 			
 			//Create forecast record
+			var forecast_val;
 			if (form_data.seed_expected_yield != 'Insufficient historical data to make forecast') {
-				$.get('/create_forecast_record', { calendar_id: crop_plan.insertId, seed_id: form_data.seed_id, forecast: form_data.seed_expected_yield }, function(forecast_record) {
-
-				});
+				forecast_val = null;
 			}
+			else {
+				forecast_val = form_data.seed_expected_yield;
+			}
+			$.get('/create_forecast_record', { calendar_id: crop_plan.insertId, seed_id: form_data.seed_id, forecast: forecast_val }, function(forecast_record) {
+
+			});
 
 			// Check if FR Plan already exists!
 			$.get('/get_nutrient_plan_details', { farm_id: form_data.farm_id }, function(fr_plans) {

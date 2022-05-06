@@ -15,6 +15,8 @@ exports.getDisasterManagement = function(req, res) {
 	var html_data = {};
 
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'disaster', req.session);
+	var cur_date = new Date(req.session.cur_date);
+	var true_date = new Date();
 
 	disasterModel.getDisasterLogs(null, function(err, disasters) {
 		if (err)
@@ -24,7 +26,7 @@ exports.getDisasterManagement = function(req, res) {
 				if (err)
 					throw err;
 				else {
-					var active_disasters = disasters.filter(e => e.status == 1), inactive_disasters = disasters.filter(e => e.status == 0);
+					var active_disasters = disasters.filter(e => e.status == 1 && cur_date <= new Date(e.target_date)), inactive_disasters = disasters.filter(e => e.status == 0);
 					var active_rainfall = active_disasters.filter(e => e.type == 'Heavy Rainfall'), 
 					inactive_rainfall = inactive_disasters.filter(e => e.type == 'Heavy Rainfall');
 					var active_drought = active_disasters.filter(e => e.type == 'Drought'), 
@@ -36,7 +38,8 @@ exports.getDisasterManagement = function(req, res) {
 					for (var i = 0; i < active_rainfall.length; i++) {
 						active_rainfall_arr.push(prepareRainfallDisaster(active_rainfall[i], active_calendars, html_data));
 					}
-					for (var i = 0; i < inactive_rainfall.length; i++) {
+					var len = inactive_rainfall.length > 3 ? 3 : inactive_rainfall.length; 
+					for (var i = 0; i < len; i++) {
 						inactive_rainfall_arr.push(prepareRainfallDisaster(inactive_rainfall[i], active_calendars, html_data));
 					}
 					//console.log(rainfall_arr);

@@ -592,7 +592,8 @@ exports.forecastYield = function(dataset, testing) {
 //!!
 exports.weatherForecast14D = function(dataset, testing, length) {
 	var result_obj;
-	const net = new brain.brain.recurrent.LSTMTimeStep({
+
+	const net = new brain.recurrent.LSTMTimeStep({
 	  inputSize: 6,
 	  hiddenLayers: [10],
 	  outputSize: 6,
