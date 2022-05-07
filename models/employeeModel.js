@@ -34,3 +34,14 @@ exports.filterFarmers = function(data, next) {
 
 	mysql.query(sql, next);
 }
+
+
+
+exports.getRelatedEmployees = function(data, next){
+	var sql = "SELECT * FROM employee_table et LEFT JOIN farm_assignment fa USING (employee_id) WHERE ? AND access_token is not null;";
+
+	sql = mysql.format(sql, data);
+
+	mysql.query(sql, next);
+	return sql;
+}

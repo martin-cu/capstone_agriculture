@@ -727,6 +727,7 @@ function normalizeForecastVariables(data) {
 }
 
 exports.ajaxCreateForecastedYieldRecord = function(req, res) {
+	//ERROR THAT PREVENTS SMS
 	farmModel.createForecastedYieldRecord(req.query, function(err, record) {
 		if (err)
 			throw err;

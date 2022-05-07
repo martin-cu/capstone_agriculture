@@ -322,7 +322,7 @@ function getIncomingWos(employee){
                         if(err)
                             throw err;
                         else{
-                            var message = "WORK ORDERS\nFarm: " + farm_name;
+                            var message = "WORK ORDERS\nFarm: " + farm_name + "\n";
                             console.log(wos);
                             var not_completed = [];
                             for(var i = 0; i < wos.length; i++){
@@ -397,6 +397,44 @@ function sendSMSActions(employee){
 
     sendOutboundMsg(employee, msg);
 }
+
+
+
+
+
+
+//EXTERNAL SMS SEND
+exports.sendSMS = function(emp, message){
+    // console.log(emp);
+    smsModel.insertOutboundMsg(message, emp.employee_id, function(err, last_id){
+        if(err)
+            throw err;
+        else{
+            
+            var last = last_id.insertId;
+            var send_message = { method: 'POST',
+                            url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                            qs: { 'access_token': emp.access_token },
+                            headers: 
+                            { 'Content-Type': 'application/json' },
+                            body: 
+                            { 'outboundSMSMessageRequest': 
+                                { 'clientCorrelator': last,
+                                'senderAddress': shortcode,
+                                'outboundSMSTextMessage': { 'message': message },
+                                'address': emp.phone_number } },
+                            json: true };
+            request(send_message, function (error, response, body) {
+                if (error) throw new Error(error);
+                console.log(error);
+                console.log(body);
+                console.log("SUCCESSFULLY INSERTED OUTBOUND MSG");
+            });
+        }
+    });
+}
+
+
 
 
 

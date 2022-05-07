@@ -2,12 +2,14 @@ const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const workOrderModel = require('../models/workOrderModel.js');
+const employeeModel = require('../models/employeeModel.js');
 const materialModel = require('../models/materialModel.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const farmModel = require('../models/farmModel.js');
 const harvestModel = require('../models/harvestModel.js');
 const reportModel = require('../models/reportModel.js');
+const globe = require('../controllers/smsController.js');
 var request = require('request');
 
 function consolidateResources(type, ids, qty, wo_id) {
@@ -235,6 +237,26 @@ exports.createWorkOrder = function(req, res) {
 					throw err;
 				else {
 					var resource_type = null;
+
+					//CODE OSMS2
+					//CREATE SMS FOR SMS SUBSCRIPTIONS
+					//Get employees of the farm subscribed to sms
+					employeeModel.getRelatedEmployees({farm_id : selected_calendar.farm_id}, function(err, employees){
+						if(err)
+							throw err;
+						else{
+							console.log(employees);
+							console.log(query);
+							//set message
+							var msg = "NEW WORK ORDER FOR " + selected_calendar.farm_name + "\n\nType: " + query.type + "\nStart: " + dataformatter.formatDate(new Date(req.body.start_date), "mm DD, YYYY") + "\nDue: " + dataformatter.formatDate(new Date(req.body.due_date), "mm DD, YYYY") + "\nNotes: " + query.notes;
+							//For each employee, send SMS
+							for(var i = 0; i < employees.length; i++){
+								//SEND SMS TO EMPLOYEE ID
+								globe.sendSMS(employees[i], msg);
+							}
+						}
+					});	
+
 
 					if (query.type == 'Pesticide Application') {
 						resource_type = 'Pesticide';
