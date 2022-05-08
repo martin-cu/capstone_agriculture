@@ -328,6 +328,8 @@ exports.ajaxGetNutrientPlanView = function(req, res) {
 																			}
 																			fr_items = fr_items.filter(e => e.isCreated == 0);
 																			//console.log(fr_items);
+																			frp[0]['formatted_date'] = dataformatter.formatDate(new Date(frp[0].last_updated), 'YYYY-MM-DD');
+																			html_data['frp_details'] = frp[0];
 																			html_data['recommendation'] = recommendFertilizerPlan(result[0], material_list);
 																			html_data['detailed_data']['calendar_id'] = req.query.calendar_id;
 																			html_data['fr_items'] = fr_items;

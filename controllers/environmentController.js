@@ -670,6 +670,7 @@ function recommendFertilizerPlan(obj, materials) {
 exports.ajaxUpdateNutrientPlan = function(req, res) {
 	var update = req.body.update;
 	var filter = req.body.filter;
+
 	nutrientModel.updateNutrientPlan(update, filter, function(err, plan_record) {
 		if (err)
 			throw err;

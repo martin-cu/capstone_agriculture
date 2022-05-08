@@ -393,6 +393,7 @@ exports.getCropCalendarTab = function(req, res) {
 									
 									html_data['materials'] = material_obj;
 									html_data["notifs"] = req.notifs;
+
 									res.render('crop_calendar_tab', html_data);
 								}
 							});
