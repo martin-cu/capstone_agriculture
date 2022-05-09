@@ -22,7 +22,7 @@ exports.updateWeatherData = function(req, res, next) {
 	var range_start, range_end = new Date();
 	var month_end = range_end.getMonth()+1, day_end = range_end.getDate();
 	var url = `https://history.openweathermap.org/data/2.5/aggregated/year?lat=${lat}&lon=${lon}&appid=${open_weather_key}`;
-	console.log(url);
+
 	weatherForecastModel.lastWeatherData(function(err, last_record) {
 		if (err)
 			throw err;
@@ -76,8 +76,7 @@ exports.getHistoricalWeather = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			console.log(body);
-			res.render('')
+			//console.log(body);
 			res.send(body);
 		}
 	});
@@ -268,7 +267,7 @@ exports.climateForecast = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			console.log(body.list[29]);
+			//console.log(body.list[29]);
 			res.send(body);
 		}
 	});

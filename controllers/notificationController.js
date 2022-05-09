@@ -119,7 +119,7 @@ exports.createNotif = function(req,res) {
     });
 }
 // exports.getNotification = function(req, res, next){
-//     console.log("test");
+//
 //     notifModel.getNotifs(function(err, prenotifs){
 //         if(err)
 //             throw err;
@@ -130,16 +130,16 @@ exports.createNotif = function(req,res) {
 //                 else{
 //                     //loop through
 //                     var i,x;
-//                     console.log("due");
-//                     console.log(due.length);
+//
+//
 
 //                     for(i = 0; i < due.length; i++){
 //                         var create = true;
 //                         for(x = 0; x < prenotifs.length; x++){
 //                             var id = prenotifs[x].notification_title.split('-');
-//                             console.log(due[i].work_order_id + "-" + id[1]);
+//
 //                             if(due[i].work_order_id == id[1]){
-//                                 console.log("Do not create notif");
+//
 //                                 create = false;
 //                             }
 //                         }
@@ -168,7 +168,7 @@ exports.createNotif = function(req,res) {
 //                                 for(x = 0; x < prenotifs.length; x++){
 //                                     var id = prenotifs[x].notification_title.split('-');
 //                                     if(overdue[i].work_order_id == id[1]){
-//                                         console.log("Do not create notif OVERDUE");
+//
 //                                         create = false;
 //                                     }
 //                                 }
@@ -197,7 +197,7 @@ exports.createNotif = function(req,res) {
 //         if(err)
 //             throw err;
 //         else{
-//             // console.log(notifs);
+//             //
 
 
 //             for(i = 0; i < notifs.length; i++){
@@ -215,7 +215,7 @@ exports.createNotif = function(req,res) {
 
 exports.updateNotif = function(req,res){
     var id = req.query.notification_id;
-    //console.log(id);
+    //
     notifModel.updateNotif(id, function(err, success){});
     res.send("ok");
 };

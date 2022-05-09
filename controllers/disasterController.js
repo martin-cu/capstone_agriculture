@@ -42,13 +42,13 @@ exports.getDisasterManagement = function(req, res) {
 					for (var i = 0; i < len; i++) {
 						inactive_rainfall_arr.push(prepareRainfallDisaster(inactive_rainfall[i], active_calendars, html_data));
 					}
-					//console.log(rainfall_arr);
+					//
 					html_data['active_rainfall'] = active_rainfall_arr;
 					html_data['inactive_rainfall'] = inactive_rainfall_arr;
 					html_data['notifs'] = req.notifs;
 					html_data['active_drought'] = active_drought_arr;
 					html_data['inactive_drought'] = inactive_drought_arr;
-					//console.log(html_data);
+					//
 					res.render('disaster_warnings', html_data);					
 				}
 			});
@@ -80,7 +80,7 @@ exports.ajaxGetRecommendations = function(req, res) {
 								rainfall_arr.push(prepareRainfallDisaster(rainfall[i], active_calendars));
 							}
 
-							//console.log(consolidateRecommendations(nutrients, rainfall_arr));
+							//
 							res.send(consolidateRecommendations(nutrients, rainfall_arr));
 						}
 					});			
@@ -144,7 +144,6 @@ function prepareRainfallDisaster(rainfall, active_calendars, html_data) {
 		}
 
 		dat = dateDiffInDays(new Date(active_calendars[x].sow_date_completed), new Date(rainfall.target_date));
-		console.log('Dat: '+dat);
 
 		maturity_days = active_calendars[x].maturity_days;
 
@@ -244,7 +243,7 @@ function prepareRainfallDisaster(rainfall, active_calendars, html_data) {
 				damage: damages, damage_color: damage_color, risk_n: risk_n }, recommendation: recommendation };
 
 		stage = null;
-		//console.log(farm_obj);
+		//
 		rainfall_obj.farms.push(farm_obj);
 	}
 	rainfall_obj.farms.sort((a, b) => b.severity.risk_n - a.severity.risk_n);

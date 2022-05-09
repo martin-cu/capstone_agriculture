@@ -15,7 +15,7 @@ exports.registerMaterial = function(type, data, next) {
 	}
 
 	sql = mysql.format(sql, data);
-	// console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -106,7 +106,6 @@ exports.getMaterialsList = function(type, filter, next){
 		}
 	}
 
-	// console.log(sql);
 	mysql.query(sql, next);
 }
 
@@ -210,7 +209,7 @@ exports.addMaterials = function(type,name, desc, next){
 
 	sql = mysql.format(sql, name);
 	sql = mysql.format(sql, desc);
-	// console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -232,7 +231,7 @@ exports.addFarmMaterials = function(amount, farm_mat_id, next){
 	var sql = "UPDATE farm_materials set current_amount = current_amount + ? WHERE farm_mat_id = ?";
 	sql = mysql.format(sql, amount);
 	sql = mysql.format(sql, farm_mat_id);
-	// console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -251,7 +250,7 @@ exports.getFarmMaterials = function(farm_id, next){
 		sql = sql + farm;
 		sql = mysql.format(sql, farm_id);
 	}
-	// console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -273,7 +272,7 @@ exports.getLowStocks = function(farm_id, next){
 		sql_3 = mysql.format(sql_3, farm_id);
 	}
 	var sql = sql_1 + " UNION " + sql_2 + " UNION " + sql_3;
-	console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -287,7 +286,7 @@ exports.getFarmMaterialsSpecific = function(farm_id, item_type, next){
 		sql = "SELECT farm_mat_id, item_id, item_type, current_amount, pesticide_name as item_name, units FROM farm_materials m INNER JOIN pesticide_table st ON m.item_id = st.pesticide_id WHERE ? && ?";
 	sql = mysql.format(sql, farm_id);
 	sql = mysql.format(sql, item_type);
-	// console.log(sql);
+
 	mysql. query(sql, next);
 }
 
@@ -297,7 +296,7 @@ exports.getFarmMaterialsMultiple = function(filter, next){
 	sql = mysql.format(sql, filter[0]);
 	sql = mysql.format(sql, filter[1]);
 	sql = mysql.format(sql, filter[2]);
-	// console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -326,7 +325,7 @@ exports.updatePurchase = function(id, data, next){
 	var sql = "UPDATE purchase_table SET ? WHERE ?;";
 	sql = mysql.format(sql, data);
 	sql = mysql.format(sql, id);
-	// console.log(sql);
+
 	mysql.query(sql, next);
 };
 
@@ -359,7 +358,6 @@ exports.getPurchasesPerFarm = function(type, farm_id, status, next){
 		sql = mysql.format(sql, status.status);
 	}
 	
-	// console.log("\n\n\n" + sql);
 	mysql.query(sql, next);
 
 }

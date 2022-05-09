@@ -52,7 +52,6 @@ exports.deactivateAccount = function(req, res) {
 						if (err)
 							throw err;
 						else {
-							console.log(result);
 							res.redirect('/user_management');
 						}
 					});
@@ -158,7 +157,6 @@ exports.initializePassword = function(req, res) {
 		});
 	}
 	else {
-		console.log('Not same passwords');
 		req.flash('error_msg', 'Passwords do not match');
 		res.redirect(`/initialize_account?username=${username}`);
 	}
@@ -169,7 +167,7 @@ exports.loginUser = function(req, res) {
 	const errors = validationResult(req);
 
 	if(errors.isEmpty()) {
-		//console.log(req.body);
+		//
 
 		var {username, password, cur_date} = req.body;
 		req.session.cur_date = cur_date;
@@ -186,7 +184,6 @@ exports.loginUser = function(req, res) {
 					else if (userQuery[0].password !== null && userQuery[0].otp == null) {
 						bcrypt.compare(password, userQuery[0].password, (err, result) => {
 							// passwords match (result == true)
-							console.log('for encrypted' + result);
 							if (result) {
 								employeeModel.queryEmployee({ username: username }, function(err, user_details) {
 									if (err)
@@ -244,7 +241,7 @@ exports.logout = function(req, res) {
 		// req.session.destroy(() => {
 		// 	res.clearCookie('connect.sid');
 		// 	req.session.cur_date = date;
-		// 	console.log(req.session);
+		//
 		// 	res.redirect('/login');
   //   	});
   	}

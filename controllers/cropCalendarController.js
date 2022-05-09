@@ -28,7 +28,7 @@ function addDays(date, days) {
 }
 
 function processAmountEquation(arr, variables) {
-	//console.log(arr);
+	//
 	var order = [];
 	var inner_most_opening, inner_most_closing;
 	var i = 0, x = 0;
@@ -72,7 +72,7 @@ function processAmountEquation(arr, variables) {
 	});
 
 	var str = arr.join('');
-	//console.log(str);
+	//
 	return Math.ceil(Function("return " + str)());
 }
 
@@ -159,7 +159,6 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 								if(err)
 									throw err;
 								else {
-									console.log(forecast_record);
 									calendars = calendars.filter(function(cv) {
 										return !list.find(function(e) {
 											return e.farm_id == cv.farm_id;
@@ -190,7 +189,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 										}
 									}
 
-									//console.log(calendars);
+									//
 									for (var i = 0; i < nutrient_reco.length; i++) {
 										nutrient_reco[i].target_application_date = dataformatter.formatDate(nutrient_reco[i].target_application_date, 'mm DD, YYYY');
 									}
@@ -206,7 +205,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 											}
 										}
 									}
-									//console.log(nutrient_reco);
+									//
 									//var filtered_list = list.filter(e => e.stage != 'Land Preparation' && e.stage != 'Sow Seed');
 									var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
 									request(url, { json: true }, function(err, response, body) {
@@ -214,7 +213,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 											throw err;
 										else {
 											var farm_list = [];
-											//console.log(body);
+											//
 											for (var i = 0; i < list.length; i++) {
 												farm_list.push({ id: body.filter(e => e.name == list[i].farm_name)[0].id, name: list[i].farm_name });
 
@@ -228,7 +227,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 												
 												list[i]['days_till_harvest'] = list[i].sow_date_completed == null ? 'N/A' : dateDiffInDays((list[i].sow_date_completed), new Date(html_data.cur_date));
 											}
-											// console.log(list);
+											//
 											pestDiseaseModel.getDiagnosisSymptomsSummarized(null, function(err, symptoms){
 												if(err)
 													throw err;
@@ -295,7 +294,7 @@ exports.getCropCalendarTab = function(req, res) {
 			};
 
 			list_obj.land_prep = list.filter(ele => ele.stage2 == 'Land Preparation');
-			//console.log(list_obj.land_prep);
+			//
 			list_obj.sowing = list.filter(ele => ele.stage2 == 'Sowing');
 			list_obj.vegetation = list.filter(ele => ele.stage2 == 'Vegetation');
 			list_obj.reproductive = list.filter(ele => ele.stage2 == 'Reproductive');
@@ -417,7 +416,7 @@ exports.ajaxGetCurrentCropCalendar = function(req, res) {
 };
 
 exports.ajaxCreateCropPlan = function(req, res) {
-	//console.log(req.body);
+	//
 	var query = {
 		farm_id: req.body.farm_id,
 		land_prep_date: req.body.land_prep_date_end,
@@ -450,7 +449,7 @@ exports.ajaxGetCropPlans = function(req, res) {
 	  							[plan.crop_plan, plan])).values()];
 			}
 			
-			// console.log(plans);
+			//
 			res.send(plans);
 		}
 	});
@@ -493,11 +492,11 @@ exports.getDetailedCropCalendar = function(req, res) {
 		}
 
 		for (const [key, value] of Object.entries(crop_calendar[0])){
-			// console.log(key, value);
+			//
 			if(value == null)
 				crop_calendar[0][key] = "N/A";
 		}
-		// console.log(crop_calendar);
+		//
 
 		var wo_query = {
 			where : { key : ["calendar_id"], value : [req.query.id]}
@@ -545,8 +544,8 @@ exports.getDetailedCropCalendar = function(req, res) {
 							if (err)
 								throw err;
 							else {
-								//console.log(material_list);
-								//console.log(soil_record);
+								//
+								//
 								if(soil_record[0].pH_lvl == null)
 									soil_record[0].pH_lvl = "N/A";
 								if(soil_record[0].p_lvl == null)
@@ -562,7 +561,6 @@ exports.getDetailedCropCalendar = function(req, res) {
 									fertilizer: material_list.filter(e => e.type == 'Fertilizer'), 
 									pesticide: material_list.filter(e => e.type == 'Pesticide')
 								};
-								console.log(material_obj);
 								html_data['materials'] = material_obj;
 								html_data["workorders"] = wos;
 								html_data["soil_record"] = soil_record[0];
