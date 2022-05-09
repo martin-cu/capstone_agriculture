@@ -3024,7 +3024,6 @@ exports.getPDFrequency = function(req, res){
 			if(err)
 				throw err;
 			else{
-				//
 				for(x = 0; x < temp_total.length; x++){
 					var freq_stage = "N/A", stage_count = 0;
 					for(i = 0; i < frequency.length; i++){
@@ -3038,7 +3037,6 @@ exports.getPDFrequency = function(req, res){
 					temp_total[x]["frequent_stage"] = freq_stage;
 				}
 
-
 				for(x = 0; x < temp_total.length; x++){
 					if(temp_total[x].type == "Pest")
 						pest[x] = temp_total[x];
@@ -3046,14 +3044,14 @@ exports.getPDFrequency = function(req, res){
 						disease[x] = temp_total[x];
 				}
 				var new_total = [];
-				for(i = 0; i < 5; i++){
+
+				var max_index = temp_total.length >= 5 ? 5 : temp_total.length;
+				for(i = 0; i < max_index; i++){
 					new_total.push(temp_total[i]);
 				}
 				
-				new_total[0]["selected"] = true;
-
-				//
-
+				if (new_total.length != 0)
+					new_total[0]["selected"] = true;
 			}
 
 			farmModel.getAllFarms(function(err, farms){

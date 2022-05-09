@@ -470,16 +470,29 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 	
 	//target_date = formatDate(target_date, 'YYYY-MM-DD');
 	//K Fertilizer changes depending on K requirement
-	var k_date, k_stage;
+	var k_date, k_stage, temp_add;
 	if (details.k_lvl >= 30) {
 		for (var i = 0; i < 2; i++) {
 			if (i == 0) {
-				k_date = new Date(land_prep.date_completed != null || land_prep.date_completed != undefined ? land_prep.date_completed : land_prep.date_due);
+				if (method == 'Transplanting') {
+					k_date = new Date(land_prep.date_completed != null || land_prep.date_completed != undefined ? land_prep.date_completed : land_prep.date_due);
+				}
+				else {
+					k_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
+					k_date = new Date(k_date.setDate(k_date.getDate() + 10));
+				}
 				k_stage = 'Basal Potassium Application (K)';
 			}
 			else {
-				k_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
-				k_date = new Date(k_date.setDate(k_date.getDate() + 35));
+				if (method == 'Transplanting') {
+					k_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
+					k_date = new Date(k_date.setDate(k_date.getDate() + 25));
+				}
+				else {
+					k_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
+					k_date = new Date(k_date.setDate(k_date.getDate() + 40));
+				}
+					
 				k_stage = 'Early Panicle Potassium Application (K)';
 			}
 
@@ -492,6 +505,9 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 		}
 	}
 	else {
+		k_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
+		if (method == 'Direct Seeding')
+			k_date = new Date(k_date.setDate(k_date.getDate() + 15));
 		K.push({
 			desc: 'Potassium Application (K)',
 			date: formatDate(new Date(target_date),'YYYY-MM-DD'),
@@ -500,9 +516,18 @@ function createSchedule(materials, recommendation, applied, farm_id, N_recommend
 		});
 	}
 	//P Fertilizer 100% always
+	var p_date;
+	if (method == 'Direct Seeding') {
+		p_date = new Date(sowing.date_completed != null || sowing.date_completed != undefined ? sowing.date_completed : sowing.date_due);
+		p_date = new Date(k_date.setDate(p_date.getDate() + 15));
+	}
+	else {
+		p_date = new Date(land_prep.date_completed != null || land_prep.date_completed != undefined ? land_prep.date_completed : land_prep.date_due);
+	}
+	
 	P = [{
 		desc: 'Phosphorous Application (P)',
-		date: formatDate(new Date(target_date),'YYYY-MM-DD'),
+		date: formatDate(new Date(p_date),'YYYY-MM-DD'),
 		amount: details.p_lvl,
 		nutrient: 'P'
 	}];
@@ -1102,6 +1127,8 @@ $(document).ready(function() {
 							//console.log(crop_calendar);
 							var schedule_arr = createSchedule(materials, nutrient_details.recommendation, list, $('#farm_id').val(), calculateDeficientN(nutrient_details, list), nutrient_details, crop_calendar, work_order_list, ndvi_cont);
 							var recommendation_list = [];
+							var ndvi_cont = schedule_arr.ndvi;
+							schedule_arr = schedule_arr.schedule_arr;
 							
 							schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, true);
 							//console.log(schedule_arr);
@@ -1189,6 +1216,8 @@ $(document).ready(function() {
 												$.get('/get_work_orders', query, function(work_order_list) {
 													var schedule_arr = createSchedule(materials, details.recommendation, list, form_data.farm_id, calculateDeficientN(details, list), details, curr_calendar[0], work_order_list, ndvi_cont);
 													var recommendation_list = [];
+													var ndvi_cont = schedule_arr.ndvi;
+													schedule_arr = schedule_arr.schedule_arr;
 													
 													schedule_arr = normalizeSchedule(schedule_arr, 'js', materials, false);
 

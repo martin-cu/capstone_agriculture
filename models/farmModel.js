@@ -26,15 +26,21 @@ exports.getSpecificFarm = function(data, next) {
 }
 
 exports.getForecastedYieldRecord1 = function(data, next) {
-	var sql = "SELECT calendar_id, temp, humidity, pressure, rainfall, seed_id, harvested, N, P, K, seed_rate, forecast FROM forecasted_yield where ";
-	for (var i = 0; i < data.calendar_id.length; i++) {
-		sql += 'calendar_id = '+data.calendar_id[i];
-		if (i != data.calendar_id.length-1) {
-			sql +=' or ';
+	if (data.calendar_id.length != 0) {
+		var sql = "SELECT calendar_id, temp, humidity, pressure, rainfall, seed_id, harvested, N, P, K, seed_rate, forecast FROM forecasted_yield where ";
+		for (var i = 0; i < data.calendar_id.length; i++) {
+			sql += 'calendar_id = '+data.calendar_id[i];
+			if (i != data.calendar_id.length-1) {
+				sql +=' or ';
+			}
 		}
+		//console.log(sql);
+		mysql.query(sql, next);
 	}
-	//console.log(sql);
-	mysql.query(sql, next);
+	else {
+		return next();
+	}
+		
 }
 
 exports.getAllFarmswCalendar = function(next) {

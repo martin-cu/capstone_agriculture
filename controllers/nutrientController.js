@@ -215,8 +215,12 @@ exports.getNutrientMgtPlan = function(req, res) {
 					if (farm_filter == undefined || farm_filter == null) {
 						farm_filter = farm_list[0].farm_name;
 					}
-					calendar_filter = crop_plans.filter(e => e.farm_name == farm_filter)[0].calendar_id;
 
+					if (crop_plans.length != 0)
+						calendar_filter = crop_plans.filter(e => e.farm_name == farm_filter)[0].calendar_id;
+					else 
+						calendar_filter = null;
+					
 					html_data['farm_list'] = farm_list;
 					html_data['crop_plans'] = { filtered: crop_plans.filter(e=>e.farm_name == farm_filter), list: JSON.stringify(crop_plans) };
 					html_data['filter'] = JSON.stringify({ farm: farm_filter, calendar: calendar_filter });

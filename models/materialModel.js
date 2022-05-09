@@ -64,7 +64,7 @@ exports.getMaterials = function(type, filter, next){
 		}
 		sql = table;
 	}
-	//console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -135,13 +135,12 @@ exports.getAllMaterials = function(type, filter, next) {
 		}
 	}
 
-	//console.log(sql);
+
 	mysql.query(sql, next);
 }
 
 exports.readResourcesUsed = function(type, data, calendar, next) {
-	console.log(data);
-	console.log(calendar);
+
 	if (type == 'Seed') {
 
 	}
@@ -153,7 +152,7 @@ exports.readResourcesUsed = function(type, data, calendar, next) {
 	else if (type == 'Pesticide') {
 
 	}
-	console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -223,7 +222,7 @@ exports.updateFarmMaterials = function(data, farm_mat_id, next){
 	var sql = "UPDATE farm_materials set ? WHERE ?";
 	sql = mysql.format(sql, data);
 	sql = mysql.format(sql, farm_mat_id);
-	console.log(sql);
+
 	mysql.query(sql, next);
 }
 
@@ -385,7 +384,7 @@ exports.getAllPurchases = function(type, status, next){
 		sql = mysql.format(sql, status.status);
 	}
 	sql = sql + " ORDER BY purchase_status"
-	console.log("\n\n\n" + sql);
+
 	mysql.query(sql, next);
 
 }
@@ -397,7 +396,7 @@ exports.getDetailsPurchase = function(purchase_id, next){
 	var sql;
 	sql = "SELECT * FROM (" + fertilizer + " UNION " + seed + " UNION " + pesticide + ") a WHERE ?";
 	sql = mysql.format(sql, purchase_id);
-	console.log("\n\n\n" + sql);
+
 	mysql.query(sql, next);
 
 }
@@ -416,7 +415,7 @@ exports.getFertilizerElements = function(fertilizer_id, next){
 exports.addPesticideUsage = function(usage, next){
 	var sql = "INSERT INTO pesticide_usage SET ?";
 	sql = mysql.format(sql, usage);
-	console.log(sql);
+
 	mysql.query(sql, next);
 }
 

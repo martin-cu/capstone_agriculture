@@ -492,256 +492,257 @@ exports.getWorkOrdersDashboard = function(req, res) {
 		if (err)
 			throw err;
 		else {
+			for (var i = 0; i < list.length; i++) {
+
+				if (list[i].status == 'Pending') {
+					list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+					list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+					list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+
+					upcoming.push(list[i]);
+				}
+
+				if (list[i].status == 'Completed') {
+					list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
+					list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
+					list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');
+					list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+	
+					completed.push(list[i]);
+				}
+			}
+			html_data['upcomingWoList'] = upcoming.slice(0, 10);
+			html_data['completedWoList'] =  completed.slice(0, 10);
+
 			reportModel.getCalendarList('old',function(err, fp_overview) {
 				if (err)
 					throw err;
 				else {
 					var calendar_arr = fp_overview.map(({ calendar_id }) => calendar_id);
-					reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
+					if (calendar_arr.length != 0) {
+						reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr }, function(err, input_resources) {
+							if (err)
+								throw err;
+							else {
+								reportModel.getCalendarList('new', function(err, fp_new) {
+									if (err)
+										throw err;
+									else {
+										var calendar_arr_new = fp_new.map(({ calendar_id }) => calendar_id);
+										if (calendar_arr_new.length != 0) {
+											reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr_new }, function(err, input_new) {
+												if (err)
+													throw err;
+												else {
+													var fp_obj = {
+														avg: analyzer.processMeanProductivity(fp_overview, input_resources),
+														cur: analyzer.processMeanProductivity(fp_new, input_new),
+														percentage: null,
+														max: 100
+													}
+													fp_obj.percentage = ((fp_obj.cur / fp_obj.avg) * 100).toFixed(2);
+
+													var standard = 100;
+													while (standard < fp_obj.percentage) {
+														standard += 100;
+														fp_obj.max = standard;
+													}
+													html_data['fp'] = fp_obj;
+												}
+											});
+										}
+									}
+								});		
+							}
+						});
+					}
+				}
+			});
+
+			// pestdiseaseModel.getTotalDiagnosesPerPD2(null,null, function(err, total){
+			// 	if(err)
+			// 		throw err;
+			// 	else{
+			// 		var i,x, temp_total = [];
+			// 		var pest = [];
+			// 		var disease = [];
+					
+			// 		temp_total = total;
+					
+			// 	}
+			// 	pestdiseaseModel.getDiagnosisFrequentStage2(null, null, null, null, function(err, frequency){
+			// 		if(err)
+			// 			throw err;
+			// 		else{
+			// 			// console.log(temp_total);
+			// 			for(x = 0; x < temp_total.length; x++){
+			// 				var freq_stage = "N/A", stage_count = 0;
+			// 				for(i = 0; i < frequency.length; i++){
+			// 					if(temp_total[x].pd_id == frequency[i].pd_id && temp_total[x].type == frequency[i].type){
+			// 						if(frequency[i].count > stage_count){
+			// 							stage_count = frequency[i].count;
+			// 							freq_stage = frequency[i].stage_diagnosed;
+			// 						}
+			// 					}
+			// 				}
+			// 				temp_total[x]["frequent_stage"] = freq_stage;
+			// 			}
+
+
+			// 			for(x = 0; x < temp_total.length; x++){
+			// 				if(temp_total[x].type == "Pest")
+			// 					pest[x] = temp_total[x];
+			// 				if(temp_total[x].type == "Disease")
+			// 					disease[x] = temp_total[x];
+			// 			}
+			// 			var new_total = [];
+			// 			for(i = 0; i < 5; i++){
+			// 				new_total.push(temp_total[i]);
+			// 			}
+						
+			// 			new_total[0]["selected"] = true;
+
+			// 			// console.log(new_total);
+
+			// 		}
+
+			// 		farmModel.getAllFarms(function(err, farms){
+			// 			if(err)
+			// 				throw err;
+			// 			else{
+			// 				html_data["farms"] = farms;
+			// 			}
+
+			// 			pestdiseaseModel.getTotalDiagnosesPerMonth(null, null, null, null, function(err, month_frequency){
+			// 				if(err)
+			// 					throw err;
+			// 				else{
+			// 					var i, highest = 0;
+			// 					for(i = 0; i < month_frequency.length; i++){
+			// 						//get highest
+			// 						if(month_frequency[i].frequency > highest)
+			// 							highest = month_frequency[i].frequency;
+			// 					}
+			// 					highest = Math.ceil(highest / 5) * 5;
+			// 					for(i = 0; i < month_frequency.length; i++){
+			// 						//update array for chart
+			// 						month_frequency[i]["percent"] = (month_frequency[i].frequency * 1.0) / (highest * 1.0) * 100;
+			// 					}
+
+			// 					month_frequency[0]["month_label"] = "Jan";
+			// 					month_frequency[1]["month_label"] = "Feb";
+			// 					month_frequency[2]["month_label"] = "Mar";
+			// 					month_frequency[3]["month_label"] = "Apr";
+			// 					month_frequency[4]["month_label"] = "May";
+			// 					month_frequency[5]["month_label"] = "Jun";
+			// 					month_frequency[6]["month_label"] = "Jul";
+			// 					month_frequency[7]["month_label"] = "Aug";
+			// 					month_frequency[8]["month_label"] = "Sep";
+			// 					month_frequency[9]["month_label"] = "Oct";
+			// 					month_frequency[10]["month_label"] = "Nov";
+			// 					month_frequency[11]["month_label"] = "Dec";
+
+			// 					html_data["highest"] = highest;
+			// 					html_data["middle"] = highest / 2;
+								
+			// 				}
+			// 				pestdiseaseModel.getPestDiseaseList("Pest", function(err, pests){
+			// 					if(err)
+			// 						throw err;
+			// 					else{
+			// 						var i;
+			// 						// console.log(pests);
+			// 						for(i = 0; i < pests.length; i++){
+			// 							pests[i]["pd_type"] = "Pest";
+			// 							if(pests[i].last_diagnosed != null)
+			// 							pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'YYYY-MM-DD');
+			// 						}
+			// 						html_data["pests"] = pests;
+			// 					}
+			// 					html_data["total"] = new_total;
+			// 					html_data["month_frequency"] = month_frequency;
+			// 				});
+			// 			});
+			// 		});
+			// 	});
+			// });
+			
+			var start_date = new Date(req.session.cur_date);
+			start_date.setMonth(start_date.getMonth() - 12);
+			weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD') }, function(err, precip_data) {
+				if (err) {
+					throw err;
+				}
+				else {
+					var precip_details = processPrecipChartData(precip_data)
+					html_data['precip_data'] = JSON.stringify(precip_details.chart);
+					html_data['outlook'] = (precip_details.outlook);
+
+					farmModel.getAllFarms(function(err, farm_list) {
 						if (err)
 							throw err;
 						else {
-							reportModel.getCalendarList('new', function(err, fp_new) {
+							// Change active filters as needed
+							farm_list.forEach(function(item, index) {
+									farm_list[index]['checked'] = true;
+							});
+							html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
+
+							cropCalendarModel.getCropPlans(function(err, crop_plans) {
 								if (err)
 									throw err;
 								else {
-									var calendar_arr_new = fp_new.map(({ calendar_id }) => calendar_id);
-									reportModel.getInputResourcesUsed({ calendar_ids: calendar_arr_new }, function(err, input_new) {
-										if (err)
-											throw err;
-										else {
-											for (var i = 0; i < list.length; i++) {
+									const unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
+									const unique_farms = [...new Set(farm_list.map(e => e.farm_id).map(item => item))];
 
-												if (list[i].status == 'Pending') {
-													list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
-													list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
-													list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
+									var cycle_cont = [], checked;
+									unique_cycles.forEach(function(item, index) {
+										if (index <= 6)
+											checked = true;
+										else
+											checked = false;
 
-													upcoming.push(list[i]);
-												}
-
-												if (list[i].status == 'Completed') {
-													list[i].date_created = dataformatter.formatDate(new Date(list[i].date_created), 'YYYY-MM-DD');
-													list[i].date_due = dataformatter.formatDate(new Date(list[i].date_due), 'YYYY-MM-DD');
-													list[i].date_completed = dataformatter.formatDate(new Date(list[i].date_completed), 'YYYY-MM-DD');
-													list[i].notes = list[i].notes == null ? 'N/A' : list[i].notes;
-									
-													completed.push(list[i]);
-												}
-											}
-											var fp_obj = {
-												avg: analyzer.processMeanProductivity(fp_overview, input_resources),
-												cur: analyzer.processMeanProductivity(fp_new, input_new),
-												percentage: null,
-												max: 100
-											}
-											fp_obj.percentage = ((fp_obj.cur / fp_obj.avg) * 100).toFixed(2);
-
-											var standard = 100;
-											while (standard < fp_obj.percentage) {
-												standard += 100;
-												fp_obj.max = standard;
-											}
-
-											html_data['upcomingWoList'] = upcoming.slice(0, 10);
-											html_data['completedWoList'] =  completed.slice(0, 10);
-											html_data['fp'] = fp_obj;
-											
-
-											html_data["notifs"] = req.notifs;
-
-											pestdiseaseModel.getTotalDiagnosesPerPD2(null,null, function(err, total){
-												if(err)
-													throw err;
-												else{
-													var i,x, temp_total = [];
-													var pest = [];
-													var disease = [];
-													
-													temp_total = total;
-													
-												}
-												pestdiseaseModel.getDiagnosisFrequentStage2(null, null, null, null, function(err, frequency){
-													if(err)
-														throw err;
-													else{
-														// console.log(temp_total);
-														for(x = 0; x < temp_total.length; x++){
-															var freq_stage = "N/A", stage_count = 0;
-															for(i = 0; i < frequency.length; i++){
-																if(temp_total[x].pd_id == frequency[i].pd_id && temp_total[x].type == frequency[i].type){
-																	if(frequency[i].count > stage_count){
-																		stage_count = frequency[i].count;
-																		freq_stage = frequency[i].stage_diagnosed;
-																	}
-																}
-															}
-															temp_total[x]["frequent_stage"] = freq_stage;
-														}
-
-
-														for(x = 0; x < temp_total.length; x++){
-															if(temp_total[x].type == "Pest")
-																pest[x] = temp_total[x];
-															if(temp_total[x].type == "Disease")
-																disease[x] = temp_total[x];
-														}
-														var new_total = [];
-														for(i = 0; i < 5; i++){
-															new_total.push(temp_total[i]);
-														}
-														
-														new_total[0]["selected"] = true;
-
-														// console.log(new_total);
-
-													}
-
-													farmModel.getAllFarms(function(err, farms){
-														if(err)
-															throw err;
-														else{
-															html_data["farms"] = farms;
-														}
-
-														pestdiseaseModel.getTotalDiagnosesPerMonth(null, null, null, null, function(err, month_frequency){
-															if(err)
-																throw err;
-															else{
-																var i, highest = 0;
-																for(i = 0; i < month_frequency.length; i++){
-																	//get highest
-																	if(month_frequency[i].frequency > highest)
-																		highest = month_frequency[i].frequency;
-																}
-																highest = Math.ceil(highest / 5) * 5;
-																for(i = 0; i < month_frequency.length; i++){
-																	//update array for chart
-																	month_frequency[i]["percent"] = (month_frequency[i].frequency * 1.0) / (highest * 1.0) * 100;
-																}
-
-																month_frequency[0]["month_label"] = "Jan";
-																month_frequency[1]["month_label"] = "Feb";
-																month_frequency[2]["month_label"] = "Mar";
-																month_frequency[3]["month_label"] = "Apr";
-																month_frequency[4]["month_label"] = "May";
-																month_frequency[5]["month_label"] = "Jun";
-																month_frequency[6]["month_label"] = "Jul";
-																month_frequency[7]["month_label"] = "Aug";
-																month_frequency[8]["month_label"] = "Sep";
-																month_frequency[9]["month_label"] = "Oct";
-																month_frequency[10]["month_label"] = "Nov";
-																month_frequency[11]["month_label"] = "Dec";
-
-																html_data["highest"] = highest;
-																html_data["middle"] = highest / 2;
-																
-															}
-															pestdiseaseModel.getPestDiseaseList("Pest", function(err, pests){
-																if(err)
-																	throw err;
-																else{
-																	var i;
-																	// console.log(pests);
-																	for(i = 0; i < pests.length; i++){
-																		pests[i]["pd_type"] = "Pest";
-																		if(pests[i].last_diagnosed != null)
-																		pests[i].last_diagnosed = dataformatter.formatDate(dataformatter.formatDate(new Date(pests[i].last_diagnosed)), 'YYYY-MM-DD');
-																	}
-																	html_data["pests"] = pests;
-																}
-																html_data["total"] = new_total;
-																html_data["month_frequency"] = month_frequency;
-																var month = 2;
-																var start_date = new Date(req.session.cur_date);
-																start_date.setMonth(start_date.getMonth() - 12);
-																weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD') }, function(err, precip_data) {
-																	if (err)
-																		throw err;
-																	else {
-																		farmModel.getAllFarms(function(err, farm_list) {
-																			if (err)
-																				throw err;
-																			else {
-																				cropCalendarModel.getCropPlans(function(err, crop_plans) {
-																					if (err)
-																						throw err;
-																					else {
-																						const unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
-																						const unique_farms = [...new Set(farm_list.map(e => e.farm_id).map(item => item))];
-
-																						reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
-																							if (err)
-																								throw err;
-																							else {
-																								reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
-																									if (err)
-																										throw err;
-																									else {
-																										reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
-																											if (err)
-																												throw err;
-																											else {
-																												var production_chart = chart_formatter.formatProductionChart(production_chart_data);
-																												var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
-																												var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
-
-																												// Change active filters as needed
-																												farm_list.forEach(function(item, index) {
-																														farm_list[index]['checked'] = true;
-																												});
-																												var cycle_cont = [], checked;
-																												unique_cycles.forEach(function(item, index) {
-																													if (index <= 6)
-																														checked = true;
-																													else
-																														checked = false;
-
-																													cycle_cont.push({ cycle_name: unique_cycles[index], checked: checked });
-																												});
-
-																												html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
-																												html_data['crop_plans'] = cycle_cont;
-																												html_data['production_chart'] = JSON.stringify(production_chart);
-																												html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
-																												html_data['pd_overview_chart'] = { stage: JSON.stringify(pd_overview.stage), trend: JSON.stringify(pd_overview.trend) };
-
-																												var precip_details = processPrecipChartData(precip_data)
-																												html_data['precip_data'] = JSON.stringify(precip_details.chart);
-																												html_data['outlook'] = (precip_details.outlook);
-
-																												res.render('home', html_data);
-																											}
-																										});
-																												
-																									}
-																								});
-																										
-																							}
-																						});
-																					}
-																				});
-																			}
-																		});
-																												
-																	}
-																});
-																
-															});
-														});
-													});
-												});
-											});
-										}
+										cycle_cont.push({ cycle_name: unique_cycles[index], checked: checked });
 									});
+									html_data['crop_plans'] = cycle_cont;
+
+									if (unique_cycles.length != 0) {
+										reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
+											if (err)
+												throw err;
+											else {
+												var production_chart = chart_formatter.formatProductionChart(production_chart_data);
+												html_data['production_chart'] = JSON.stringify(production_chart);
+											}
+										});
+
+										reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
+											if (err)
+												throw err;
+											else {
+												var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
+												html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
+											}
+										});
+
+										reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
+											if (err)
+												throw err;
+											else {
+												var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
+												html_data['pd_overview_chart'] = { stage: JSON.stringify(pd_overview.stage), trend: JSON.stringify(pd_overview.trend) };
+											}
+										});
+									}	
 								}
 							});
-											
 						}
-					});
+						html_data["notifs"] = req.notifs;
+						
+						res.render('home', html_data);
+					});									
 				}
 			});
-							
 		}
 	});
 }
