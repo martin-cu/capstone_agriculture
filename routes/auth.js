@@ -299,10 +299,17 @@ router.get('/testAPI', materialController.testAPI);
 router.get('/getWeather', materialController.getWeather);
 
 
+
+router.get("/test_sample", globe.incomingWO);
+
 //Globe
 // router.get('/globe_api', globe.test_globe);
 // router.post('/globe_api2', globe.test_globe2);
 router.post('/globe_inbound', globe.globe_inbound_msg);
 router.get('/globe_inbound', globe.registerUser); //WHEN REGISTERING THROUGH SMS
+router.get('/userConvos', globe.getUserConversation); //Gets conversation per user
+router.get('/employeeDetails', userController.getEmployeeDetails);
+router.get("/sendSMS", globe.globe_outbound_msg);
+
 
 module.exports = router;

@@ -1,11 +1,21 @@
 const js = require('../public/js/session.js');
 const smsModel = require('../models/smsModel.js');
+const employeeModel = require('../models/employeeModel.js');
+const woModel = require('../models/workOrderModel.js');
+const cropCalendarModel = require('../models/cropCalendarModel.js');
+const farmModel = require('../models/farmModel.js');
 var request = require("request");
+const { text } = require('express');
+const dataformatter = require('../public/js/dataformatter.js');
+const { formatDate } = require('../public/js/dataformatter.js');
 
+//API Key for WEATHER API
+var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
 
-var app_id = 'X4kxHEG59nuXkT8ynri5KGuyR4xzHLbr'; //final
-var app_secret = '280f39f528dc56db22e5f31a4a87dad0969d5cce23f659e3e3e888a2371fe585'; //final
-var shortcode = '21585119'; //final
+var app_id = 'X4kxHEG59nuXkT8ynri5KGuyR4xzHLbr'; //final OLD
+var app_secret = '280f39f528dc56db22e5f31a4a87dad0969d5cce23f659e3e3e888a2371fe585'; //final OLD
+//var shortcode = '21585119'; //OLD
+var shortcode = "21663543"; //NEW
 
 
 
@@ -48,25 +58,61 @@ exports.globe_inbound_msg = function(req, res){
 
     //CHECK IF UNSUBSCRIBE
     if("unsubscribed" in req.body){
-        smsModel.removeAccessToken(req.body.subscriber_number, req.body.access_token, function(err, result){
+        smsModel.removeAccessToken(req.body.unsubscribed.subscriber_number, req.body.unsubscribed.access_token, function(err, result){
+        });
+        
+        smsModel.getEmployeeDetails({ key: "phone_number" , value : req.body.unsubscribed.subscriber_number}, function(err, employee_details){
+            if(err)
+                console.log(err);
+            else{
+                smsModel.insertOutboundMsg("YOU HAVE UNSUBSCRIBED", employee_details[0].employee_id, function(err, last_id){
+                    if(err)
+                        throw err;
+                    else{
+                        console.log("SUCCESSFULLY INSERTED OUTBOUND MSG");
+                    }
+                });
+            }
         });
     }
     else{
-        console.log(req.body.inboundSMSMessage);
+        // console.log(req.body.inboundSMSMessage);
 
         //get employee details using phone number
+        //SLICE 7 to remove 'tel:+63'
+        smsModel.getEmployeeDetails({ key: "phone_number" , value : req.body.inboundSMSMessageList.inboundSMSMessage[0].senderAddress.slice(7)}, function(err, employee_details){
+            if(err)
+                console.log(err);
+            else{
+                
+                if(employee_details.length > 0){
+                    var message = req.body.inboundSMSMessageList.inboundSMSMessage[0].message;
+                    var message_id = req.body.inboundSMSMessageList.inboundSMSMessage[0].messageId;
+                    var employee_id = employee_details[0].employee_id;
 
-        //Store message to db
+                    //Store message to db
+                    smsModel.insertInboundMsg(message, message_id, employee_id, function(err, success){
+                        
+                    });
+
+                    //POCESS MESSAGE
+                    var text_message = req.body.inboundSMSMessageList.inboundSMSMessage[0].message.slice(" ");
+                    var msg;
+                    switch (text_message[0]){
+                        case "1" : msg = getWeatherForecastMsg(employee_details[0]); break; //Weather Forecast
+                        case "2" : msg = getIncomingWos(employee_details[0]); break; //SEND "HELP"
+                        case "3" : msg = "PEST/DISEASE SYMPTOMS"; break; //INCOMING WORK ORDERS
+                        default : sendSMSActions(employee_details[0]); break;
+                    }
+                }
+            }
+        });
     }
     console.log("--------------------");
 
-   
-
-
-
     // this.globe_outbound_msg;
     // this.getAccessToken;
-    return;
+    return true;
 }
 
 
@@ -78,74 +124,333 @@ exports.registerUser = function(req,res){
     //Search in user tables the same number
     smsModel.addAccessToken(req.query.subscriber_number, req.query.access_token, function(err, result){
         if(err){
-          console.log(err);
+            console.log(err);
         }
         else{
-          console.log("SUCCESSFULLY UPDATED EMPLOYEE ACCESS TOKEN");
+            console.log("SUCCESSFULLY UPDATED EMPLOYEE ACCESS TOKEN");
+          
+            //SEND WELCOME MESSAGE TO USER
+            //create outbound message
+            smsModel.getEmployeeDetails({ key : "access_token", value : req.query.access_token}, function(err, employee){
+                if(err){
+                  throw err;
+                }
+                else{
+                    console.log(employee);
+                    if(employee.length > 0){
+                        var emp = employee[0];
+                        var msg = "Welcome to LA Rice CMS, " + emp.first_name + " " + emp.last_name + "!";
+                        console.log(msg);
+                        sendOutboundMsg(emp, msg);
+                        // smsModel.insertOutboundMsg(msg, emp.employee_id, function(err, last_id){
+                        //     if(err)
+                        //         throw err;
+                        //     else{
+                        //         var last = last_id.insertId;
+                        //         console.log(last_id.insertId);
+                        //         console.log(last);
+                        //         var message = { method: 'POST',
+                        //                         url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                        //                         qs: { 'access_token': emp.access_token },
+                        //                         headers: 
+                        //                         { 'Content-Type': 'application/json' },
+                        //                         body: 
+                        //                         { 'outboundSMSMessageRequest': 
+                        //                             { 'clientCorrelator': last,
+                        //                             'senderAddress': shortcode,
+                        //                             'outboundSMSTextMessage': { 'message': msg },
+                        //                             'address': emp.phone_number } },
+                        //                         json: true };
+                        //         sendOutboundMsg(message);
+                        //     }
+                        // });
+                    }
+                }
+            });
         }
     });
+    return true;
+}
 
 
-    //SEND WELCOME MESSAGE TO USER
-    //create outbound message
-    smsModel.getEmployeeDetails(req.query.access_token, function(err, employee){
-        if(err){
-          throw err;
-        }
+//SEND MESSAGE TO USER FROM APP
+exports.globe_outbound_msg = function(req, res){
+    console.log("sending outbound message");
+    console.log(req.query);
+    var employee_id = req.query.employee_id;
+    var message = req.query.message;
+    //GET EMPLOYEE DETAILS
+    smsModel.getEmployeeDetails({key : "employee_id", value : employee_id}, function(err, employee_details){
+        if(err)
+            throw err;
         else{
-            if(employee.length > 0){
-                var emp = employee[0];
-                var msg = "Welcome to LA Rice CMS, " + emp.first_name + " " + emp.last_name + "!";
+            if(employee_details.length > 0){
+                var emp = employee_details[0];
 
-                smsModel.insertOutboundMsg(msg, emp.employee_id, function(err, last_id){
-                    if(err)
-                        throw err;
-                    else{
-                        var last = last_id.insertId;
-                        console.log(last_id.insertId);
-                        console.log(last);
-                        var message = { method: 'POST',
-                        url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
-                        qs: { 'access_token': emp.access_token },
-                        headers: 
-                        { 'Content-Type': 'application/json' },
-                        body: 
-                        { 'outboundSMSMessageRequest': 
-                            { 'clientCorrelator': last,
-                              'senderAddress': shortcode,
-                              'outboundSMSTextMessage': { 'message': msg },
-                              'address': emp.phone_number } },
-                        json: true };
-                        sendOutboundMsg(message);
-                    }
-                });
+                if(emp.access_token == null){
+                    res.send("No access token");
+                }
+                else{
+                    sendOutboundMsg(emp, message);
+                    res.send("message sent");
+                }
             }
         }
     });
-
-    return {message : "Thank you"};
 }
 
 
-//SEND MESSAGE TO USER
-exports.globe_outbound_msg = function(req, res){
-    console.log("sending outbound message");
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      console.log(body);
+function sendOutboundMsg(emp, message){
+    smsModel.insertOutboundMsg(message, emp.employee_id, function(err, last_id){
+        if(err)
+            throw err;
+        else{
+            console.log("SUCCESSFULLY INSERTED OUTBOUND MSG");
+            var last = last_id.insertId;
+            var send_message = { method: 'POST',
+                            url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                            qs: { 'access_token': emp.access_token },
+                            headers: 
+                            { 'Content-Type': 'application/json' },
+                            body: 
+                            { 'outboundSMSMessageRequest': 
+                                { 'clientCorrelator': last,
+                                'senderAddress': shortcode,
+                                'outboundSMSTextMessage': { 'message': message },
+                                'address': emp.phone_number } },
+                            json: true };
+            request(send_message, function (error, response, body) {
+                if (error) throw new Error(error);
+                console.log(body);
+                });
+        }
     });
-  
 }
 
 
-function sendOutboundMsg(msg){
-    request(msg, function (error, response, body) {
-      if (error) throw new Error(error);
-      console.log(body);
+function getWeatherForecastMsg(employee){
+    var message = "-";
+    //Get assigned farm
+    employeeModel.queryEmployee({employee_id: employee.employee_id}, function(err, emp){ //change 24 to employee_id
+        if(err)
+            console.log(err);
+        else{
+            // console.log(emp);
+            var farm_name = emp[0].farm_name;
+            //get farm plots
+            var url = 'http://api.agromonitoring.com/agro/1.0/polygons?appid='+key;
+            request(url, {json : true}, function(err, polygon_list){
+                if (err)
+                    console.log(err);
+                else{
+                    var lat;
+                    var lon;
+                    // console.log(farm_name);
+                    // console.log(polygon_list.body);
+                    for(var i = 0 ; i < polygon_list.body.length; i++){
+                        // console.log(polygon_list.body[i]);
+                        if(polygon_list.body[i].name == farm_name){
+                            // console.log(polygon_list.body[i]);
+                            lat = polygon_list.body[i].center[1];
+						    lon = polygon_list.body[i].center[0];
+                            break;
+                        }
+                    }
+                    //get weather for farm
+                    var forecast_url = 'https://api.agromonitoring.com/agro/1.0/weather/forecast?lat='+lat+'&lon='+lon+'&appid='+key;
+                    request(forecast_url, { json: true }, function(err, response, forecast_body){
+                        if(err)
+                            console.log(err);
+                        else{
+                            console.log(forecast_body);
+                            forecast_body.dt = dataformatter.unixtoDate(forecast_body.dt);
+                            var hour_arr = [];
+                            for (var i = 0; i < forecast_body.length; i++) {
+                                forecast_body[i].dt = dataformatter.unixtoDate((forecast_body[i].dt));
+                                forecast_body[i]["date"] = dataformatter.formatDate(forecast_body[i].dt, 'mm DD, YYYY');
+                                hour_arr.push(dataformatter.formatDate(forecast_body[i].dt, 'HH:m'))
+                            }
+
+                            var dates = [];
+                            for(var i = 0; i < forecast_body.length; i++) {
+                                if(dates.includes(forecast_body[i].date)){
+                                    //dont add
+                                }
+                                else{
+                                    dates.push(forecast_body[i].date);
+                                }
+                            }
+
+                            var daily_weather = [];
+                            for(var i = 0; i < dates.length; i++){
+                                var temp = 0;
+                                var ctr = 0;
+                                var weather;
+                                for(var x = 0; x < forecast_body.length; x++){
+                                    if(forecast_body[x].date == dates[i]){
+                                        weather = forecast_body[x].weather[0].description;
+                                        temp =+ forecast_body[x].main.temp;
+                                        ctr++;
+                                    }
+                                }
+                                daily_weather.push({date : dates[i], weather : weather, temp : temp - 273.15});
+                            }
+                            console.log(daily_weather);
+                            //***** Get unique hour timestamps from forecast and filter data
+                            hour_arr = [...new Map(hour_arr.map(item => [item, item])).values()];
+
+                            //SET MESSAGE LAYOUT
+                            message = "WEATHER FORECAST\nFarm: " + farm_name;
+                            for(var i = 0 ; i < daily_weather.length; i++){
+                                message = message + "\n\nDate: " + daily_weather[i].date + "\nWeather: " + daily_weather[i].weather + "\nTemp: " + daily_weather[i].temp.toFixed(2) + " C";
+                            }
+                            console.log(message);
+                            
+                            
+                            sendOutboundMsg(employee, message);
+                        }
+                    });
+                }
+            })
+        }
     });
 }
 
+function getIncomingWos(employee){
+    employeeModel.queryEmployee({employee_id: employee.employee_id}, function(err, emp){
+        if(err)
+            console.log(err);
+        else{
+            //Get active crop calendar
+            var farm_name = emp[0].farm_name;
+            cropCalendarModel.getCurrentCropCalendar({farm_name : farm_name}, function(err, crop_calendar){
+                if(err)
+                    throw err;
+                else{
+                    console.log(crop_calendar);
+                    //Get work orders
+                    var wo_query = {
+                        where: {
+                            key: ['crop_calendar_id'],
+                            value: [crop_calendar[0].calendar_id]
+                        },
+                        order: ['work_order_table.date_start ASC']
+                    };
+                    woModel.getWorkOrders(wo_query, function(err, wos){
+                        if(err)
+                            throw err;
+                        else{
+                            var message = "WORK ORDERS\nFarm: " + farm_name + "\n";
+                            console.log(wos);
+                            var not_completed = [];
+                            for(var i = 0; i < wos.length; i++){
+                                if(wos[i].status != "Completed"){
+                                    not_completed.push(wos[i]); 
+                                    wos[i].date_start = dataformatter.formatDate(wos[i].date_start, 'mm DD, YYYY');
+                                    wos[i].date_due = dataformatter.formatDate(wos[i].date_due, 'mm DD, YYYY');
+                                    message = message + "\n\n" + wos[i].type + " (" + wos[i].notif_type + ")"+ "\nStart: " + wos[i].date_start + "\nDue: " + wos[i].date_due + "\nStatus: " + wos[i].status;
+                                }
+                            }
+                            console.log(message);
 
+                            //Send outbound message
+                            sendOutboundMsg(employee, message);
+                        }
+                    });    
+                }
+            });
+        }
+    });
+}
+
+exports.incomingWO = function(req, res){
+    employeeModel.queryEmployee({employee_id: 24}, function(err, emp){
+        if(err)
+            console.log(err);
+        else{
+            //Get active crop calendar
+            var farm_name = emp[0].farm_name;
+            cropCalendarModel.getCurrentCropCalendar({farm_name : farm_name}, function(err, crop_calendar){
+                if(err)
+                    throw err;
+                else{
+                    console.log(crop_calendar);
+                    //Get work orders
+                    var wo_query = {
+                        where: {
+                            key: ['crop_calendar_id'],
+                            value: [crop_calendar[0].calendar_id]
+                        },
+                        order: ['work_order_table.date_start ASC']
+                    };
+                    woModel.getWorkOrders(wo_query, function(err, wos){
+                        if(err)
+                            throw err;
+                        else{
+                            var message = "WORK ORDERS\nFarm: " + farm_name;
+                            console.log(wos);
+                            var not_completed = [];
+                            for(var i = 0; i < wos.length; i++){
+                                if(wos[i].status != "Completed"){
+                                    not_completed.push(wos[i]); 
+                                    wos[i].date_start = dataformatter.formatDate(wos[i].date_start, 'mm DD, YYYY');
+                                    wos[i].date_due = dataformatter.formatDate(wos[i].date_due, 'mm DD, YYYY');
+                                    message = message + "\n\n" + wos[i].type + " (" + wos[i].notif_type + ")"+ "\nStart: " + wos[i].date_start + "\nDue: " + wos[i].date_due + "\nStatus: " + wos[i].status;
+                                }
+                            }
+                            console.log(message);
+
+                            //Send outbound message
+                            sendOutboundMsg(employee, message);
+                        }
+                    });    
+                }
+            });
+        }
+    });
+}
+
+function sendSMSActions(employee){
+    var msg = "Below are the list of actions that can be performed.\n1 - Weather Forecast\n2 - Incoming work orders\n3 - Report Pest/Disease Symptoms\nTo complete action, send <number of desired action> to 21663543";
+
+    sendOutboundMsg(employee, msg);
+}
+
+
+
+
+
+
+//EXTERNAL SMS SEND
+exports.sendSMS = function(emp, message){
+    // console.log(emp);
+    smsModel.insertOutboundMsg(message, emp.employee_id, function(err, last_id){
+        if(err)
+            throw err;
+        else{
+            
+            var last = last_id.insertId;
+            var send_message = { method: 'POST',
+                            url: 'https://devapi.globelabs.com.ph/smsmessaging/v1/outbound/' + shortcode + '/requests',
+                            qs: { 'access_token': emp.access_token },
+                            headers: 
+                            { 'Content-Type': 'application/json' },
+                            body: 
+                            { 'outboundSMSMessageRequest': 
+                                { 'clientCorrelator': last,
+                                'senderAddress': shortcode,
+                                'outboundSMSTextMessage': { 'message': message },
+                                'address': emp.phone_number } },
+                            json: true };
+            request(send_message, function (error, response, body) {
+                if (error) throw new Error(error);
+                console.log(error);
+                console.log(body);
+                console.log("SUCCESSFULLY INSERTED OUTBOUND MSG");
+            });
+        }
+    });
+}
 
 
 
@@ -166,10 +471,20 @@ function sendOutboundMsg(msg){
 //SMS Pages
 exports.getSubscriptions = function(req, res) {
 	var html_data = {};
-  html_data["title"] = "SMS Management > Subscriptions";
+    html_data["title"] = "SMS Management > Subscriptions";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_subscriptions', req.session);
-  html_data["notifs"] = req.notifs;
-	res.render('sms_subscriptions', html_data);
+    html_data["notifs"] = req.notifs;
+
+    smsModel.getSubscriptionsList(function(err, list){
+        if(err)
+            throw err;
+        else{
+            html_data["list"] = list;
+        }
+        res.render('sms_subscriptions', html_data);
+    });
+
+	
 }
 
 exports.getAddSubscription = function(req, res) {
@@ -182,10 +497,42 @@ exports.getAddSubscription = function(req, res) {
 
 exports.getMessages = function(req, res) {
 	var html_data = {};
-  html_data["title"] = "SMS Management > Messages";
+    html_data["title"] = "SMS Management > Messages";
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'sms_messages', req.session);
-  html_data["notifs"] = req.notifs;
-	res.render('sms_messages', html_data);
+    html_data["notifs"] = req.notifs;
+
+    //Gets list of users registered to SMS feature
+    smsModel.getSubscriptions(function(err, subscriptions){
+        if(err)
+            throw err;
+        else{
+            subscriptions[0].first = true;
+            for(var i = 0; i < subscriptions.length; i++){
+                subscriptions[i].last_message = dataformatter.formatDate(new Date(subscriptions[i].last_message), 'mm DD, YYYY');
+            }
+            html_data["subscriptions"] = subscriptions;
+
+            
+        }
+        res.render('sms_messages', html_data);
+    });
+}
+
+exports.getUserConversation = function(req,res){
+    if(req.query.employee_id != null)
+        smsModel.getUserConverstation(req.query.employee_id, function(err, messages){
+            if(err)
+                throw err;
+            else{
+                for(var i = 0; i < messages.length; i++){
+                    messages[i].date = dataformatter.formatDate(new Date(messages[i].date), 'mm DD, YYYY');
+                }
+                // console.log(messages);
+                res.send(messages);
+            }
+        }); 
+     else
+        res.send(true);
 }
 
 

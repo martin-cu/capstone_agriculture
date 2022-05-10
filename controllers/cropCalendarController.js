@@ -2,11 +2,13 @@ const dataformatter = require('../public/js/dataformatter.js');
 const analyzer = require('../public/js/analyzer.js');
 const js = require('../public/js/session.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
+const employeeModel = require('../models/employeeModel.js');
 const nutrientModel = require('../models/nutrientModel.js');
 const materialModel = require('../models/materialModel.js');
 const farmModel = require('../models/farmModel.js');
 const workOrderModel = require('../models/workOrderModel.js');
 const pestDiseaseModel = require('../models/pestdiseaseModel.js');
+const globe = require('../controllers/smsController.js');
 var request = require('request');
 
 var key = '2ae628c919fc214a28144f699e998c0f'; // Paid API Key
@@ -437,7 +439,50 @@ exports.ajaxCreateCropPlan = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			res.send(plan);
+
+			//CODE OSMS3
+			//SEND SMS TO FARMERS OF THE SAME FARM
+
+			//Get employees of the farm subscribed to sms
+			employeeModel.getRelatedEmployees({farm_id : query.farm_id}, function(err, employees){
+				if(err)
+					throw err;
+				else{
+
+					//get farm name
+					farmModel.getAllFarms( function(err, farms){
+						if(err)
+							throw err;
+						else{
+							var farm_name;
+							for(var i = 0; i < farms.length; i++){
+								if(farms[i].farm_id == query.farm_id){
+									farm_name = farms[i].farm_name;
+								}
+							}
+							//get seed name
+							materialModel.getMaterials("Seed",{seed_id : query.seed_planted}, function(err, seed){
+								if(err)
+									throw err;
+								else{
+									console.log(query);
+									var msg = "NEW CROP CYCLE FOR " + farm_name + " (" + query.crop_plan + ")" + "\n\nRice: " + seed[0].name + "\nSeed Rate: " + query.seed_rate + " units" + "\nMethod: " + query.method + "\n\nLand Preparation: " + dataformatter.formatDate(new Date(query.land_prep_date), "mm DD, YYYY") + "\nSowing: " + dataformatter.formatDate(new Date(query.sowing_date), "mm DD, YYYY") + "\nExpected Harvest: " + dataformatter.formatDate(new Date(query.harvest_date), "mm DD, YYYY");
+									console.log(msg);
+
+									//send SMS
+									console.log(employees);
+									//For each employee, send SMS
+									for(var i = 0; i < employees.length; i++){
+										//SEND SMS TO EMPLOYEE ID
+										globe.sendSMS(employees[i], msg);
+									}
+									res.send(plan);
+								}
+							});
+						}
+					});
+				}
+			});
 		}
 	});
 }

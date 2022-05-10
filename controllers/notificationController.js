@@ -73,6 +73,13 @@ exports.getNotification = function(req, res, next) {
                             if (err)
                                 throw err;
                         });
+
+                        //CODE: OSMS1
+                        //CREATE SMS FOR NECESSARY PEOPLE 
+                        
+                        //CODE OSMS5
+                        //CHECK FOR WOS DUE TODAY
+
                     }
 
                     //Filter notifs with status 1
@@ -81,7 +88,6 @@ exports.getNotification = function(req, res, next) {
                             notif_list.splice(i, 1);
                             i--;
                         }
-                        
                     }
                     //Limit list to 10 notifs
                     notif_list = notif_list.slice(0, 10);
@@ -104,7 +110,7 @@ exports.getNotification = function(req, res, next) {
                     for (var i = 0; i < temp_arr.length; i++) {
                         temp_arr[i].date = dataformatter.formatDate(new Date(temp_arr[i].date), 'mm DD, YYYY');
                     }
-                    console.log(temp_arr);
+                    // console.log(temp_arr);
                     req.notifs = temp_arr;
 
                     return next();
