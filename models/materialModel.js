@@ -218,6 +218,14 @@ exports.registerFarmMaterial = function(data, next) {
 	mysql.query(sql, next);
 }
 
+exports.subtractFarmMaterial = function(data, filter, next) {
+	var sql = `update farm_materials set current_amount = (current_amount - ${data.qty}) where farm_id = ? and item_id = ? and item_type = ?`;
+	sql = mysql.format(sql, filter.farm_id);
+	sql = mysql.format(sql, filter.item_id);
+	sql = mysql.format(sql, filter.item_type);
+	mysql.query(sql, next);
+}
+
 exports.updateFarmMaterials = function(data, farm_mat_id, next){
 	var sql = "UPDATE farm_materials set ? WHERE ?";
 	sql = mysql.format(sql, data);

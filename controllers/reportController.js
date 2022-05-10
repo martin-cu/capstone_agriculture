@@ -318,7 +318,7 @@ exports.ajaxSeedChart = function(req, res) {
 
 					seed_chart = analyzer.processSeedChartData(seed_chart, seed_materials)
 					
-					res.send({ stringify: (seed_chart.data), obj: seed_chart, legends: legends });
+					res.send({ stringify: (seed_chart.data), obj: seed_chart.stringify, legends: seed_chart.legends });
 				}
 			});
 		}
@@ -341,7 +341,7 @@ exports.ajaxNutrientTimingChart = function(req, res) {
 						if (err)
 							throw err;
 						else {
-							var nutrient_chart_arr = nutrient_chart_arr = processNutrientChartData(sql_filter, seed_chart, nutrient_chart, pd_chart);
+							var nutrient_chart_arr = processNutrientChartData(sql_filter, seed_chart, nutrient_chart, pd_chart);
 
 							res.send({ obj: nutrient_chart_arr.dataset, legends: nutrient_chart_arr.legends });
 						}

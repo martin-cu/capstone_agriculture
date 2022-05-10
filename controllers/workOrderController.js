@@ -207,6 +207,7 @@ exports.getDetailedWO = function(req, res) {
 			html_data['farm_area'] = 0;
 			html_data['status_editable'] = true;
 			html_data['harvest_editable'] = details.type == 'Harvest' ? true : false;
+			html_data['farm_id'] = details.farm_id;
 			html_data['isCancellable'] = true;
 			switch (details.type) {
 				case 'Sow Seed':
@@ -262,8 +263,7 @@ exports.getDetailedWO = function(req, res) {
 											}
 											if (harvest_details.length == 0) 
 												harvest_details.push({});
-											console.log(details);
-											console.log(crop_calendar);
+
 											html_data['stage'] = crop_calendar.filter(e => e.calendar_id == details.crop_calendar_id)[0].stage2;
 											html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
 											html_data['harvest_details'] = harvest_details;
@@ -669,7 +669,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 			
 			var start_date = new Date(req.session.cur_date);
 			start_date.setMonth(start_date.getMonth() - 12);
-			weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD') }, function(err, precip_data) {
+			weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD'), end_date: dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD') }, function(err, precip_data) {
 				if (err) {
 					throw err;
 				}
@@ -705,7 +705,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 										cycle_cont.push({ cycle_name: unique_cycles[index], checked: checked });
 									});
 									html_data['crop_plans'] = cycle_cont;
-
+									console.log(unique_cycles.length);
 									if (unique_cycles.length != 0) {
 										reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
 											if (err)
@@ -713,33 +713,41 @@ exports.getWorkOrdersDashboard = function(req, res) {
 											else {
 												var production_chart = chart_formatter.formatProductionChart(production_chart_data);
 												html_data['production_chart'] = JSON.stringify(production_chart);
-											}
-										});
 
-										reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
-											if (err)
-												throw err;
-											else {
-												var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
-												html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
-											}
-										});
+												reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
+													if (err)
+														throw err;
+													else {
+														var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
+														html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
 
-										reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
-											if (err)
-												throw err;
-											else {
-												var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
-												html_data['pd_overview_chart'] = { stage: JSON.stringify(pd_overview.stage), trend: JSON.stringify(pd_overview.trend) };
+														reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
+															if (err)
+																throw err;
+															else {
+																var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
+																html_data['pd_overview_chart'] = { stage: JSON.stringify(pd_overview.stage), trend: JSON.stringify(pd_overview.trend) };
+															
+																html_data["notifs"] = req.notifs;
+
+																res.render('home', html_data);
+															}
+														});
+													}
+												});
+
 											}
 										});
+									}
+									else {
+										html_data["notifs"] = req.notifs;
+
+										res.render('home', html_data);
 									}	
 								}
+										
 							});
 						}
-						html_data["notifs"] = req.notifs;
-						
-						res.render('home', html_data);
 					});									
 				}
 			});
@@ -772,7 +780,7 @@ exports.ajaxEditStatus = function(req, res) {
 				});
 			}
 			else {
-				console.log(wo_list);
+
 				res.send('err');
 			} 
 		}
@@ -810,6 +818,7 @@ exports.editWorkOrder = function(req, res) {
 		work_order_id: req.body.wo_id
 	};
 	var update_forecast = false;
+	var completed = false;
 
 	if (!Array.isArray(req.body.sacks_harvested))
 		req.body.sacks_harvested = [req.body.true_sacks];
@@ -818,7 +827,7 @@ exports.editWorkOrder = function(req, res) {
 
 	if (query.status == 'Completed') {
 		query['date_completed'] = dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD');
-
+		completed = true;
 		if (query.type == 'Land Preparation') {
 			next_stage = 'Sow Seed';
 		}
@@ -908,6 +917,15 @@ exports.editWorkOrder = function(req, res) {
 							if (err)
 								throw err;
 							else {
+								if (completed) {
+									materialModel.subtractFarmMaterial({ qty: req.body[''+resource_type+'_qty'] }, { item_type: resource_type, farm_id: req.body.farm_id, item_id: req.body[''+resource_type+'_id'] }, function(err, subtract_result) {
+										if (err)
+											throw err;
+										else {
+
+										}
+									});
+								}
 								if (next_stage != null) {
 									var wo_list_query = {
 										where: {
@@ -1026,7 +1044,7 @@ exports.editWorkOrder = function(req, res) {
 											if (err)
 												throw err;
 											else {
-												console.log(calendar)
+
 												// Process query data here
 												var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
 													req.body.harvest_type, calendar[0].stage2, query.crop_calendar_id);
@@ -1055,7 +1073,7 @@ exports.editWorkOrder = function(req, res) {
 																var forecast_filter = {
 																	calendar_id: query.crop_calendar_id
 																}
-																console.log(forecast_update);
+
 																farmModel.updateForecastYieldRecord(forecast_update, forecast_filter, function(err, update_status) {
 																	if (err)
 																		throw err;
@@ -1113,7 +1131,6 @@ exports.editWorkOrder = function(req, res) {
 
 
 exports.createWO = function(req, res){
-	console.log(req.body.wo);
 	workOrderModel.createWorkOrder(req.body.wo, function(err, success){
 		res.send("goods");
 	});
