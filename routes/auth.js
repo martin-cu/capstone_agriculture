@@ -11,7 +11,7 @@ const reportController = require('../controllers/reportController');
 const openWeatherController = require('../controllers/openWeatherController');
 const notifController = require('../controllers/notificationController.js');
 const disasterController = require('../controllers/disasterController.js');
-const globe = require('../controllers/sms-mt');
+const globe = require('../controllers/smsController.js');
 
 const dataformatter = require('../public/js/dataformatter.js');
 
@@ -293,13 +293,16 @@ router.get("/notifications",  openWeatherController.updateWeatherData, notifCont
 
 
 
+
 router.get('/test', materialController.test);
 router.get('/testAPI', materialController.testAPI);
 router.get('/getWeather', materialController.getWeather);
 
 
 //Globe
-router.get('/globe_api', globe.test_globe);
-router.post('/globe_api2', globe.test_globe2);
+// router.get('/globe_api', globe.test_globe);
+// router.post('/globe_api2', globe.test_globe2);
+router.post('/globe_inbound', globe.globe_inbound_msg);
+router.get('/globe_inbound', globe.registerUser); //WHEN REGISTERING THROUGH SMS
 
 module.exports = router;

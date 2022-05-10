@@ -52,7 +52,8 @@
 
                                 {{!-- TAB 1 --}}
                                 <div class="tab-pane fade show active" id="activeUsers" role="tabpanel" aria-labelledby="active-users-tab">
-                                    <table class="table">
+                                    <table class="table table-striped table-bordered tablesorter" id="activeUsersTable">
+                                      <thead class="thead-dark" style="background-color: #212529 !important">
                                       <tr>
                                         <th class="text-left">Name</th>
                                         <th class="text-left">Position</th>
@@ -60,6 +61,7 @@
                                         <th>Access Level</th>
                                         <th></th>
                                       </tr>
+                                      </thead>
                                       {{#each employee_list.activeUsers}}
                                         <tr>
                                           <td class="text-left">
@@ -107,7 +109,8 @@
 
                                 {{!-- TAB 2 --}}
                                 <div class="tab-pane fade" id="activeEmployees" role="tabpanel" aria-labelledby="inactive-users-tab">
-                                    <table class="table">
+                                    <table class="table table-striped table-bordered tablesorter" id="activeEmployeesTable">
+                                      <thead class="thead-dark" style="background-color: #212529 !important">
                                       <tr>
                                         <th class="text-left">Name</th>
                                         <th class="text-left">Position</th>
@@ -115,6 +118,7 @@
                                         <th>Access Level</th>
                                         <th></th>
                                       </tr>
+                                      </thead>
                                       {{#each employee_list.isActiveEmployees}}
                                         <tr>
                                           <td class="text-left">
@@ -150,7 +154,8 @@
 
                                 {{!-- TAB 3 --}}
                                 <div class="tab-pane fade" id="inactiveUsers" role="tabpanel" aria-labelledby="inactive-users-tab">
-                                    <table class="table">
+                                    <table class="table table-striped table-bordered tablesorter" id="inactiveEmployeesTable">
+                                      <thead class="thead-dark" style="background-color: #212529 !important">
                                       <tr>
                                         <th class="text-left">Name</th>
                                         <th class="text-left">Position</th>
@@ -158,6 +163,7 @@
                                         <th>Access Level</th>
                                         <th></th>
                                       </tr>
+                                      </thead>
                                       {{#each employee_list.isInactiveEmployees}}
                                         <tr>
                                           <td class="text-left">
