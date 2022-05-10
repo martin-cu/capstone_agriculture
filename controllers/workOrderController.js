@@ -248,7 +248,7 @@ exports.getDetailedWO = function(req, res) {
 						if (err)
 							throw err;
 						else {
-							cropCalendarModel.getCropCalendars({ status: ['Completed', 'In-Progress', 'Cancelled', 'Active'], where: { key: 'calendar_id', val: details.crop_calendar_id } }, function(err, crop_calendar) {
+							cropCalendarModel.getCropCalendars({ status: ['Completed', 'In-Progress', 'Cancelled', 'Active'], where: { key: 'calendar_id', val: details.crop_calendar_id }, date: html_data.cur_date }, function(err, crop_calendar) {
 								if (err)
 									throw err;
 								else {
@@ -347,7 +347,7 @@ exports.createWorkOrder = function(req, res) {
 		notes: req.body.notes
 	};
 
-	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err,calendars) {
+	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'], date: req.session.cur_date }, function(err,calendars) {
 		if (err)
 			throw err;
 		else {
@@ -899,7 +899,7 @@ exports.editWorkOrder = function(req, res) {
 					else if (query.type == 'Sow Seed') {
 						resource_type = 'Seed'
 					}
-
+					// To add deduct farm material quantity here if next stage is null //
 					if (resource_type != null) {
 						var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
 							, req.body[''+resource_type+'_qty'], filter.work_order_id);
@@ -1022,7 +1022,7 @@ exports.editWorkOrder = function(req, res) {
 								else {
 									// Get current stage of crop calendar
 									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress', 'Completed'],
-									where: { key: 'calendar_id', val: req.body.crop_calendar_id } }, function(err, calendar) {
+									where: { key: 'calendar_id', val: req.body.crop_calendar_id }, date: req.session.cur_date }, function(err, calendar) {
 											if (err)
 												throw err;
 											else {
@@ -1081,7 +1081,7 @@ exports.editWorkOrder = function(req, res) {
 								else {
 									// Get current stage of crop calendar
 									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
-									where: { key: 'calendar_id', val: req.body.crop_calendar_id } }, function(err, calendar) {
+									where: { key: 'calendar_id', val: req.body.crop_calendar_id }, date: req.session.cur_date }, function(err, calendar) {
 										if (err)
 											throw err;
 										else {

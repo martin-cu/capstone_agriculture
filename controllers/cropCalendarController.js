@@ -142,7 +142,7 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'monitor_farms', req.session);
 
-	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
+	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'], date: html_data.cur_date }, function(err, list) {
 		if (err)
 			throw err;
 		else {
@@ -279,7 +279,7 @@ exports.getCropCalendarTab = function(req, res) {
 	var html_data = {};
 	html_data = js.init_session(html_data, 'role', 'name', 'username', 'crop_calendar', req.session);
 
-	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'] }, function(err, list) {
+	cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'], date: html_data.cur_date }, function(err, list) {
 		if (err)
 			throw err;
 		else {
@@ -335,7 +335,7 @@ exports.getCropCalendarTab = function(req, res) {
 						}
 					}
 
-					cropCalendarModel.getCropCalendars({ status: ['Completed'] }, function(err, past_calendars){
+					cropCalendarModel.getCropCalendars({ status: ['Completed'], date: html_data.cur_date }, function(err, past_calendars){
 						if(err)
 							throw err;
 						else{
@@ -443,7 +443,7 @@ exports.ajaxCreateCropPlan = function(req, res) {
 }
 
 exports.ajaxGetCropPlans = function(req, res) {
-
+	req.query['date'] = req.session.cur_date;
 	cropCalendarModel.getCropCalendars(req.query, function(err, plans) {
 		if (err)
 			throw err;

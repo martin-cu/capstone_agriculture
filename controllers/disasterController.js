@@ -22,7 +22,7 @@ exports.getDisasterManagement = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active']}, function(err, active_calendars) {
+			cropCalendarModel.getCropCalendars({ status: ['In-Progress', 'Active'], date: html_data.cur_date}, function(err, active_calendars) {
 				if (err)
 					throw err;
 				else {
@@ -64,7 +64,7 @@ exports.ajaxGetRecommendations = function(req, res) {
 		if (err)
 			throw err;
 		else {
-			cropCalendarModel.getCropCalendars({ where: { key: 'calendar_id', val: req.query.calendar_id }, status: [] }, function(err, active_calendars) {
+			cropCalendarModel.getCropCalendars({ where: { key: 'calendar_id', val: req.query.calendar_id }, status: [], date: html_data.cur_date }, function(err, active_calendars) {
 				if (err)
 					throw err;
 				else {

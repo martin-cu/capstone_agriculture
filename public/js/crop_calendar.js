@@ -620,12 +620,12 @@ $(document).ready(function() {
 
 				if (fr_plans.length != 0) {
 					if (fr_plans[0].calendar_id == null) {
-						$.post('/update_nutrient_plan', { update: { calendar_id: crop_plan.insertId, last_ndvi: ndvi_cont }, filter: { fr_plan_id: fr_plans[0].fr_plan_id } }, function(fr_plan_update) {
+						$.post('/update_nutrient_plan', { update: { calendar_id: crop_plan.insertId, last_ndvi: 0 }, filter: { fr_plan_id: fr_plans[0].fr_plan_id } }, function(fr_plan_update) {
 							fr_items = consolidateFRItems(wo_arr, fr_plans[0].fr_plan_id);
 						});
 					}
 					else {
-						$.post('/create_nutrient_plan', { farm_id: form_data.farm_id ,calendar_id: crop_plan.insertId, last_updated: formatDate(new Date(), 'YYYY-MM-DD'), last_ndvi: ndvi_cont }, function(nutrient_plan) {
+						$.post('/create_nutrient_plan', { farm_id: form_data.farm_id ,calendar_id: crop_plan.insertId, last_updated: formatDate(new Date(), 'YYYY-MM-DD'), last_ndvi: 0 }, function(nutrient_plan) {
 							fr_items = consolidateFRItems(wo_arr, nutrient_plan.insertId);
 						});
 					}

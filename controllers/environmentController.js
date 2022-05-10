@@ -1276,7 +1276,7 @@ exports.getFarmPestDiseases = function(req, res){
 										season_humidity : 65
 									}
 									var cc_query = {
-										status: ['In-Progress', 'Active', "Completed"]
+										status: ['In-Progress', 'Active', "Completed"], date: req.session.cur_date
 									}
 									cropCalendarModel.getCropCalendars(cc_query, function(err, crop_calendars){
 										if(err)
@@ -1520,7 +1520,7 @@ exports.ajaxGetFarmPestDiseaseProbability = function(req, res){
 							}
 
 							var cc_query = {
-								status: ['In-Progress', 'Active', "Completed"]
+								status: ['In-Progress', 'Active', "Completed"], date: req.session.cur_date
 							}
 							cropCalendarModel.getCropCalendars(cc_query, function(err, crop_calendars){
 								if(err)
@@ -2266,7 +2266,7 @@ exports.addDiagnosis = function(req,res){
 		else{
 			var farm_name = farm_data[0].farm_name;
 		}
-		var crop_calendar_query = { status: ['In-Progress', 'Active',"Completed"] , where : {key : "farm_name", val : farm_name}}
+		var crop_calendar_query = { status: ['In-Progress', 'Active',"Completed"] , where : {key : "farm_name", val : farm_name}, date: req.session.cur_date }
 		cropCalendarModel.getCropCalendars(crop_calendar_query, function(err, crop_calendar){
 			if(err)
 				throw err;
@@ -2757,7 +2757,7 @@ exports.getPDProbability = function(req, res){
 							season_humidity : 65
 						}
 						var cc_query = {
-							status: ['In-Progress', 'Active', "Completed"]
+							status: ['In-Progress', 'Active', "Completed"], date: req.session.cur_date
 						}
 
 						cropCalendarModel.getCropCalendars(cc_query, function(err, stage){
