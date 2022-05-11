@@ -442,8 +442,8 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 	var index = 0;
 
 	var input_obj = {
-		name: fp[0].seed_name, forecasted_yield: fp[0].forecast_yield+' cavans/ha', 
-		current_yield: fp[0].current_yield != null ? fp[0].current_yield+' cavans/ha' : 'N/A',
+		name: fp[0].seed_name, forecasted_yield: fp[0].forecast_yield == -1 ? `N/A` : `${fp[0].forecast_yield} cavans/ha`, 
+		current_yield: fp[0].current_yield != null ? Math.round(fp[0].current_yield*100)/100+' cavans/ha' : 'N/A',
 		total: fp[0].current_yield != null ? Math.round(fp[0].current_yield * fp[0].farm_area * 100)/100+' cavans': 'N/A'
 	}
 	
@@ -456,6 +456,10 @@ exports.processDetailedFarmProductivity = function(fp, resources) {
 		for (var i = index; i < input_types.length; i++) {
 			temp_arr = resources.filter(e => e.type == input_types[i]);
 
+			if (input_types[i] == 'Pesticide') {
+				console.log(temp_arr);
+				console.log(resources);
+			}
 			cont_obj = { title: input_types[i], rows: [], total: 0 };
 			for (var x = 0; x < temp_arr.length; x++) {
 				obj = { input: temp_arr[x].resource_name, qty: temp_arr[x].qty, units: temp_arr[x].resource_unit, 
