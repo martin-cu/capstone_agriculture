@@ -481,7 +481,6 @@ exports.getWorkOrdersPage = function(req, res) {
 }
 
 exports.getWorkOrdersDashboard = function(req, res) {
-	//console.log(req.notifs[0]);
 	var upcoming = [];
 	var completed = [];
 	var html_data = {};
