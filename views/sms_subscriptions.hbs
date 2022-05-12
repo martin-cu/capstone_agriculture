@@ -27,8 +27,6 @@
                         <li class="nav-item"><a id="active-subscriptions-tab" class="nav-link active" data-toggle="tab" href="#activeSubscriptions"role="tab" aria-controls="activeSubscriptions" aria-selected="true" 
                             style="background: #F0F0F0;">Active Subscriptions</a></li>
 
-                        <li class="nav-item"><a id="archived-subscriptions-tab" class="nav-link" data-toggle="tab" href="#archivedSubscriptions"role="tab" aria-controls="archivedSubscriptions" aria-selected="false" 
-                            style="background: #F0F0F0;">Archived</a></li>
                     </ul>
                         {{!-- <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"><i class="fas fa-ellipsis-v d-xxl-flex justify-content-xxl-end text-gray-400"></i></button>
                             <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
@@ -57,9 +55,11 @@
                                 {{#if writeable}}
                                 <div role="tablist" id="accordion-subscriptions" style="margin-bottom: 20px;">
                                     <div class="card shadow mb-4">
-                                        <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
+                                        {{!-- <div class="card-header" role="tab" style="background: #EDD172 !important; padding: 16px 20px;height: auto;">
                                             <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-subscriptions .item-subscriptions" href="#accordion-subscriptions .item-subscriptions" style="font-size: 16px;color: #584C33!important;font-weight: bold;">Create New Subscription</a></h5>
-                                        </div>
+                                        </div> --}}
+
+                                        <span style="color: red">NO CREATION OF SUBSCRIPTION (Should be done through SMS)<br> send "INFO" to 21585119</span>
                                         <div class="collapse item-subscriptions" role="tabpanel" data-parent="#accordion-subscriptions">
                                             
                                         <div class="card-body" style="color: #332c1f;">
@@ -170,66 +170,42 @@
                                 <table class="table table-striped table-bordered tablesorter" id="activeSubscriptionsTable">
                                     <thead class="thead-dark" style="background-color: #212529 !important">
                                         <tr style="background: #212529;">
-                                            <th>Subscription ID</th>
+                                            <th>Employee ID</th>
                                             <th>Name</th>
-                                            <th>Recipient(s)</th>
-                                            <th>Start Date</th>
-                                            <th>End Date</th>
-                                            <th>Status</th>
+                                            <th>Phone Number</th>
+                                            <th>Farm Assigned</th>
+                                            <th>Role</th>
+                                            <th>Access Token</th>
                                             <th></th>
                                         </tr>
 
                                     </thead>
 
                                     <tbody>
-                                        <tr>
-                                            <td>S-01</td>
-                                            <td>Subscription 1</td>
-                                            <td>All</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>Active</td>
-                                            <td> 
-                            
-                                                <div class="dropdown no-arrow">
-                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
-                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                        {{#each list}}
+                                            <tr>
+                                                <td>{{employee_id}}1</td>
+                                                <td>{{first_name}} {{last_name}}</td>
+                                                <td>{{phone_number}}</td>
+                                                <td>{{farm_name}}</td>
+                                                <td>{{position}}</td>
+                                                <td style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">{{access_token}}</td>
+                                                <td> 
+                                
+                                                    <div class="dropdown no-arrow">
+                                                        <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+                                                            <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
+                                                            <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                 
-                                            </td>                                        
-                                        </tr>
-
-                                        <tr>
-                                            <td>S-02</td>
-                                            <td>Subscription 2</td>
-                                            <td>Farm 1</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>Active</td>
-                                            <td> 
-                                                
-                                            {{!-- <button type="submit" class="btn btn-primary btn-sm" id="more"><i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i></button> --}}
-                                            
-                                                <div class="dropdown no-arrow">
-                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
-                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                    
+                                                </td>                                        
+                                            </tr>
+                                        {{/each}}
 
                                     </tbody>
 
@@ -266,54 +242,7 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr>
-                                            <td>S-01</td>
-                                            <td>Subscription 1</td>
-                                            <td>All</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>Active</td>
-                                            <td> 
-                            
-                                                <div class="dropdown no-arrow">
-                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
-                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
-                                                    </div>
-                                                </div>
-                                                 
-                                            </td>                                        
-                                        </tr>
-
-                                        <tr>
-                                            <td>S-02</td>
-                                            <td>Subscription 2</td>
-                                            <td>Farm 1</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>dd-mmm-yyyy hh:mm</td>
-                                            <td>Active</td>
-                                            <td> 
-                                                
-                                            {{!-- <button type="submit" class="btn btn-primary btn-sm" id="more"><i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i></button> --}}
-                                            
-                                                <div class="dropdown no-arrow">
-                                                    <button id="more" class="btn btn-primary btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-                                                        <i class="fa fa-ellipsis-h d-lg-flex justify-content-lg-center"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu notSidebar shadow dropdown-menu-end animated--fade-in">
-                                                        <a class="dropdown-item notSidebar" href="#" onclick='window.location=""'>&nbsp;View Details</a>
-                                                        {{!-- <a class="dropdown-item notSidebar" href="#">&nbsp;Update</a> --}}
-                                                        <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item notSidebar" href="#">&nbsp;Delete</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        
 
                                     </tbody>
 
