@@ -114,8 +114,8 @@ exports.getNotification = function(req, res, next) {
 
                     return next();
                 }
-            });
-                    
+            };
+             });     
         }
     });
 }
