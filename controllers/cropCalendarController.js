@@ -205,7 +205,8 @@ exports.getSummarizedFarmMonitoring = function(req, res) {
 											forecast = 'Forecasted Yield: N/A';
 										}
 										else {
-											forecast = 'Forecasted Yield: '+forecast[0].forecast+' cavans/ha';
+
+											forecast = forecast[0].forecast == -1 ? `Forecasted Yield: N/A` : `Forecasted Yield: ${forecast[0].forecast} cavans/ha`;
 										}
 
 									list[i]['forecast'] = forecast; 
