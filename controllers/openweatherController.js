@@ -114,16 +114,20 @@ exports.get14DWeatherForecast = function(req, res) {
 				}
 				query.push(weather_obj);
 				if (weather_obj.desc == 'heavy intensity rain') {
+					var time = new Date();
+					time = time.toLocaleTimeString();
 
 					notif_warning.push({
 						date: '"'+dataformatter.formatDate(new Date(), 'YYYY-MM-DD')+'"',
 						notification_title: '"Heavy Rainfall Alert"',
 						notification_desc: '"Expected heavy intensity rain on '+weather_obj.date+'"',
-						farm_id: 'null',
+						farm_id: '"null"',
 						url: '"/disaster_management"',
 						icon: '"exclamation-triangle"',
 						color: '"danger"',
-						status: 0
+						status: 0,
+						type: "'DISASTER_WARNING'",
+						time: time
 					});
 					disaster_log.push({
 						max_temp: Math.round((body.list[i].temp.max - 273.15) * 100) / 100,
@@ -204,8 +208,14 @@ exports.get14DWeatherForecast = function(req, res) {
 																if (err)
 																	throw err;
 																else {
-																	console.log(notif);
-																	res.send({});																		
+																	notifModel.createUserNotif(function(err, user_notif_status) {
+									                                    if (err)
+									                                        throw err;
+									                                    else {
+									                                    	console.log(notif);
+																			res.send({});	
+									                                    }
+									                                });																	
 																}
 															});
 														}

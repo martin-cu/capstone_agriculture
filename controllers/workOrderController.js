@@ -8,6 +8,7 @@ const materialModel = require('../models/materialModel.js');
 const pestdiseaseModel = require('../models/pestdiseaseModel.js');
 const cropCalendarModel = require('../models/cropCalendarModel.js');
 const farmModel = require('../models/farmModel.js');
+const notifModel = require('../models/notificationModel.js');
 const harvestModel = require('../models/harvestModel.js');
 const weatherForecastModel = require('../models/weatherForecastModel.js');
 const reportModel = require('../models/reportModel.js');
@@ -395,6 +396,34 @@ exports.createWorkOrder = function(req, res) {
 					else if (query.type == 'Sow Seed') {
 						resource_type = 'Seed;'
 					}
+					var time = new Date();
+					time = time.toLocaleTimeString();
+
+					var notif = {
+				        date : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD'),
+				        farm_id : selected_calendar.farm_id,
+				        notification_title : `New Work Order: ${result.insertId}`,
+				        notification_desc: `Scheduled ${req.body.wo_type} for ${selected_calendar.farm_name} from ${dataformatter.formatDate(new Date(req.body.start_date), 'YYYY-MM-DD')}`,
+				        url : `/farms/work_order&id=${result.insertId}`,
+				        icon : "digging",
+				        color : "primary",
+				        type: `NEW_WO`,
+				        time: time
+				    };
+				    notifModel.createNotif(notif, function(err, success){
+				        if (err) {
+				        	throw err;
+				        }
+				        else {
+				        	notifModel.createUserNotif(function(err, user_notif_status) {
+                                if (err)
+                                    throw err;
+                                else {
+                                    
+                                }
+                            });
+				        }
+				    });
 
 					if (resource_type != null) {
 						var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
@@ -431,39 +460,75 @@ exports.ajaxCreateWorkOrder = function(req, res) {
 	var resource_ids = req.body.resources.ids;
 	var resource_qty = req.body.resources.qty;
 
-	workOrderModel.createWorkOrder(query, function(err, result) {
+	var farm_query = { status: ['In-Progress', 'Active', 'Completed'], date: req.session.cur_date};
+	cropCalendarModel.getCropCalendarByID(farm_query, req.body.crop_calendar_id, function(err, farm_details) {
 		if (err)
 			throw err;
 		else {
-			var resource_type = null;
+			workOrderModel.createWorkOrder(query, function(err, result) {
+				if (err)
+					throw err;
+				else {
+					var resource_type = null;
 
-			if (query.type == 'Pesticide Application') {
-				resource_type = 'Pesticide';
-			}
-			else if (query.type == 'Fertilizer Application') {
-				resource_type = 'Fertilizer'
-			}
-			else if (query.type == 'Sow Seed') {
-				resource_type = 'Seed'
-			}
+					if (query.type == 'Pesticide Application') {
+						resource_type = 'Pesticide';
+					}
+					else if (query.type == 'Fertilizer Application') {
+						resource_type = 'Fertilizer'
+					}
+					else if (query.type == 'Sow Seed') {
+						resource_type = 'Seed'
+					}
+					var time = new Date();
+					time = time.toLocaleTimeString();
 
-			if (resource_type != null) {
-				var query_arr = consolidateResources(resource_type, resource_ids
-						, resource_qty, result.insertId);
+					var notif = {
+				        date : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD'),
+				        farm_id : farm_details[0].farm_id,
+				        notification_title : `New Work Order: ${result.insertId}`,
+				        notification_desc: `Scheduled ${req.body.wo_type} for ${farm_details[0].farm_name} from ${dataformatter.formatDate(new Date(req.body.start_date), 'YYYY-MM-DD')}`,
+				        url : `/farms/work_order&id=${result.insertId}`,
+				        icon : "digging",
+				        color : "primary",
+				        type: `NEW_WO`,
+				        time: time
+				    };
+				    notifModel.createNotif(notif, function(err, success){
+				        if (err) {
+				        	throw err;
+				        }
+				        else {
+				        	notifModel.createUserNotif(function(err, user_notif_status) {
+		                        if (err)
+		                            throw err;
+		                        else {
+		                            
+		                        }
+		                    });
+				        }
+				    });
 
-				workOrderModel.createWorkOrderResources(query_arr, function(err, resource_result) {
-					if (err)
-						throw err;
+					if (resource_type != null) {
+						var query_arr = consolidateResources(resource_type, resource_ids
+								, resource_qty, result.insertId);
+
+						workOrderModel.createWorkOrderResources(query_arr, function(err, resource_result) {
+							if (err)
+								throw err;
+							else {
+								res.send('/farms/work_order&id='+result.insertId);
+							}
+						});
+					}
 					else {
 						res.send('/farms/work_order&id='+result.insertId);
 					}
-				});
-			}
-			else {
-				res.send('/farms/work_order&id='+result.insertId);
-			}
+				}
+			})
 		}
-	})
+	});
+			
 }
 
 exports.ajaxGetWorkOrders = function(req, res) {
