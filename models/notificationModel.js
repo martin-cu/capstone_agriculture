@@ -47,7 +47,7 @@ exports.createUserNotif = function(next) {
 exports.createNotif = function(notif, next){
     if (Array.isArray(notif)) {
 
-        var sql = "insert into notification_table (date, notification_title, notification_desc, farm_id, url, icon, color, status, type) values ";
+        var sql = "insert into notification_table (date, notification_title, notification_desc, farm_id, url, icon, color, status, type, time) values ";
         for (var i = 0; i < notif.length; i++) {
             if (i != 0) {
                 sql += ', ';

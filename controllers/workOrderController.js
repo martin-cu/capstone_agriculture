@@ -286,55 +286,75 @@ exports.getDetailedWO = function(req, res) {
 					});
 				}
 				else {
-					if (type == 'Seed') {
-						var wo_list_query = {
-							where: {
-								key: ['crop_calendar_id', 'type'],
-								value: [details.crop_calendar_id, 'Land Preparation']
-							},
-							order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
-						};
-						workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
-							if (err)
-								throw err;
+
+					materialModel.getFarmMaterials(details.farm_id, function(err, inventory) {
+						if (err)
+							throw err;
+						else {
+							var filter_mats;
+							if (type == 'Seed') {
+								var wo_list_query = {
+									where: {
+										key: ['crop_calendar_id', 'type'],
+										value: [details.crop_calendar_id, 'Land Preparation']
+									},
+									order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+								};
+								workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+									if (err)
+										throw err;
+									else {
+										workOrderModel.getResourceDetails(query, type, function(err, resource_details) {
+											if (err)
+												throw err;
+											else {
+												resource_details.forEach(function(item, index) {
+													filter_mats = inventory.filter(e => e.item_name == item.material_name)[0];
+
+													resource_details[index]['inventory_qty'] = filter_mats.current_amount;
+												});
+
+												for (var i = 0; i < resource_details.length; i++) {
+													resource_details[i].qty = Math.round(resource_details[i].qty * 100) / 100;
+												}
+												html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
+												html_data['resources'] = resource_details;
+												html_data['resources']['title'] = type+'s:';
+												html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
+
+												html_data["notifs"] = req.notifs;
+												res.render('detailed_work_order', html_data);
+											}
+										});
+									}
+								});
+							}
 							else {
 								workOrderModel.getResourceDetails(query, type, function(err, resource_details) {
 									if (err)
 										throw err;
 									else {
-										for (var i = 0; i < resource_details.length; i++) {
-											resource_details[i].qty = Math.round(resource_details[i].qty * 100) / 100;
-										}
-										html_data['status_editable'] = wo_list[0].status == 'Completed' ? true : false;
+										resource_details.forEach(function(item, index) {
+											filter_mats = inventory.filter(e => e.item_name == item.material_name)[0];
+
+											resource_details[index]['inventory_qty'] = filter_mats.current_amount;
+										});
+
 										html_data['resources'] = resource_details;
 										html_data['resources']['title'] = type+'s:';
 										html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
-										html_data["notifs"] = req.notifs;
+										//console.log(html_data);
 										html_data["notifs"] = req.notifs;
 										res.render('detailed_work_order', html_data);
 									}
 								});
 							}
-						});
-					}
-					else {
-						workOrderModel.getResourceDetails(query, type, function(err, resource_details) {
-							if (err)
-								throw err;
-							else {
-								html_data['resources'] = resource_details;
-								html_data['resources']['title'] = type+'s:';
-								html_data['resources']['lbl'] = { name: type, item: type+'_id', qty: type+'_qty' };
-								html_data["notifs"] = req.notifs;
-								html_data["notifs"] = req.notifs;
-								res.render('detailed_work_order', html_data);
-							}
-						});
-					}
+						}
+					});
+							
 				}
 			}
 			else {
-				html_data["notifs"] = req.notifs;
 				html_data["notifs"] = req.notifs;
 				res.render('detailed_work_order', html_data);
 			}
@@ -934,114 +954,295 @@ exports.editWorkOrder = function(req, res) {
 	var type = req.body.type.split("-");
 	// console.log(type);
 	// console.log(req.body.status);
-	if((type[0] == "Apply pesticide" || type[0] == "Apply fungicide") && req.body.status == "Completed"){
-		//check if enough
-		workOrderModel.getDetailedWorkOrder({work_order_id : req.body.wo_id}, function(err, wo_details){
-			if(err)
-				throw err;
-			else{
-				materialModel.getFarmMaterials(wo_details[0].farm_id, function(err, farm_materials){
-					if(err)
-						throw err;
-					else{
-						var i; 
-						for(i = 0; i < farm_materials.length; i++){
+	// if((type[0] == "Apply pesticide" || type[0] == "Apply fungicide") && req.body.status == "Completed"){
+	// 	//check if enough
+	// 	workOrderModel.getDetailedWorkOrder({work_order_id : req.body.wo_id}, function(err, wo_details){
+	// 		if(err)
+	// 			throw err;
+	// 		else{
+	// 			materialModel.getFarmMaterials(wo_details[0].farm_id, function(err, farm_materials){
+	// 				if(err)
+	// 					throw err;
+	// 				else{
+	// 					var i; 
+	// 					for(i = 0; i < farm_materials.length; i++){
 							
-							if(farm_materials[i].item_type == "Pesticide" && farm_materials[i].item_name == type[1]){
-								// console.log( farm_materials[i].farm_mat_id);
-								// console.log("Found it");
-								// console.log(farm_materials[i].item_type);
-								// console.log(farm_materials[i].item_name);
-								// console.log(farm_materials[i].current_amount);
-								//check if enough
-								if(farm_materials[i].current_amount >= 5){
-									//subtract and add pesticide usage
-									materialModel.updateFarmMaterials({current_amount : farm_materials[i].current_amount - 5}, {farm_mat_id : farm_materials[i].farm_mat_id}, function(err, success){
+	// 						if(farm_materials[i].item_type == "Pesticide" && farm_materials[i].item_name == type[1]){
+	// 							// console.log( farm_materials[i].farm_mat_id);
+	// 							// console.log("Found it");
+	// 							// console.log(farm_materials[i].item_type);
+	// 							// console.log(farm_materials[i].item_name);
+	// 							// console.log(farm_materials[i].current_amount);
+	// 							//check if enough
+	// 							if(farm_materials[i].current_amount >= 5){
+	// 								//subtract and add pesticide usage
+	// 								materialModel.updateFarmMaterials({current_amount : farm_materials[i].current_amount - 5}, {farm_mat_id : farm_materials[i].farm_mat_id}, function(err, success){
 
-									});
-									var usage = {
-										pesticide_id : farm_materials[i].item_id,
-										farm_id : wo_details[0].farm_id,
-										amount : 5,
-										date_used : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD')
-									};
-									materialModel.addPesticideUsage(usage, function(err, success){
+	// 								});
+	// 								var usage = {
+	// 									pesticide_id : farm_materials[i].item_id,
+	// 									farm_id : wo_details[0].farm_id,
+	// 									amount : 5,
+	// 									date_used : dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD')
+	// 								};
+	// 								materialModel.addPesticideUsage(usage, function(err, success){
 
-									});
-								}
-								else{
-									console.log("not enough amount");
-									workOrderModel.updateWorkOrder({status : "In-Progress", date_completed : null}, filter, function(err, list){});
-								}
-								break;
-							}
-						}
-					}
-				});
-			}
-		});
-	}
-	workOrderModel.updateWorkOrder(query, filter, function(err, list) {
+	// 								});
+	// 							}
+	// 							else{
+	// 								console.log("not enough amount");
+	// 								workOrderModel.updateWorkOrder({status : "In-Progress", date_completed : null}, filter, function(err, list){});
+	// 							}
+	// 							break;
+	// 						}
+	// 					}
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+	// }
+
+	materialModel.getFarmMaterials(req.body.farm_id, function(err, farm_materials) {
 		if (err)
 			throw err;
 		else {
-			workOrderModel.deleteResourceRecord(filter, function(err, resource_delete) {
-				if (err)
-					throw err;
-				else {	
-					var resource_type = null;
-					if (query.type == 'Pesticide Application') {
-						resource_type = 'Pesticide';
-					}
-					else if (query.type == 'Fertilizer Application') {
-						resource_type = 'Fertilizer'
-					}
-					else if (query.type == 'Sow Seed') {
-						resource_type = 'Seed'
-					}
-					// To add deduct farm material quantity here if next stage is null //
-					if (resource_type != null) {
-						var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
-							, req.body[''+resource_type+'_qty'], filter.work_order_id);
+			var resource_type = null;
+			if (query.type == 'Pesticide Application') {
+				resource_type = 'Pesticide';
+			}
+			else if (query.type == 'Fertilizer Application') {
+				resource_type = 'Fertilizer'
+			}
+			else if (query.type == 'Sow Seed') {
+				resource_type = 'Seed'
+			}
 
-						workOrderModel.createWorkOrderResources(query_arr, function(err, resource_create) {
+			var inventory_control = true;
+			// Check if there is sufficient inventory amount
+			if (resource_type != null && query.status == 'Completed') {
+				var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
+						, req.body[''+resource_type+'_qty'], filter.work_order_id);
+
+				var filtered_mats;
+				query_arr.forEach(function(item) {
+					filtered_mats = farm_materials.filter(e => e.item_id == parseInt(item.item_id) && e.item_type == item.type)[0];
+					console.log(filtered_mats);
+					if (parseInt(filtered_mats.current_amount) < parseInt(item.qty)) {
+						inventory_control = false;
+					}
+				});
+			}
+
+			// Proceed to edit work order
+			if (inventory_control) {
+				workOrderModel.updateWorkOrder(query, filter, function(err, list) {
+					if (err)
+						throw err;
+					else {
+						workOrderModel.deleteResourceRecord(filter, function(err, resource_delete) {
 							if (err)
 								throw err;
-							else {
-								if (completed) {
-									materialModel.subtractFarmMaterial({ qty: req.body[''+resource_type+'_qty'] }, { item_type: resource_type, farm_id: req.body.farm_id, item_id: req.body[''+resource_type+'_id'] }, function(err, subtract_result) {
-										if (err)
-											throw err;
-										else {
+							else {	
+								// To add deduct farm material quantity here if next stage is null //
+								if (resource_type != null) {
+									var query_arr = consolidateResources(resource_type, req.body[''+resource_type+'_id']
+										, req.body[''+resource_type+'_qty'], filter.work_order_id);
 
-										}
-									});
-								}
-								if (next_stage != null) {
-									var wo_list_query = {
-										where: {
-											key: ['crop_calendar_id', 'type'],
-											value: [query.crop_calendar_id, next_stage]
-										},
-										order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
-									};
-									workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+									workOrderModel.createWorkOrderResources(query_arr, function(err, resource_create) {
 										if (err)
 											throw err;
 										else {
-											var edit_next_query = {
-												status: 'In-Progress'
-											};
-											workOrderModel.updateWorkOrder(edit_next_query, { work_order_id: wo_list[0].work_order_id }, function(err, next_status) {
-												if (err)
-													throw err;
+											if (completed) {
+												materialModel.subtractFarmMaterial({ qty: req.body[''+resource_type+'_qty'] }, { item_type: resource_type, farm_id: req.body.farm_id, item_id: req.body[''+resource_type+'_id'] }, function(err, subtract_result) {
+													if (err)
+														throw err;
+													else {
+														console.log(subtract_result);
+													}
+												});
+											}
+											if (next_stage != null) {
+												var wo_list_query = {
+													where: {
+														key: ['crop_calendar_id', 'type'],
+														value: [query.crop_calendar_id, next_stage]
+													},
+													order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+												};
+												workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+													if (err)
+														throw err;
+													else {
+														var edit_next_query = {
+															status: 'In-Progress'
+														};
+														workOrderModel.updateWorkOrder(edit_next_query, { work_order_id: wo_list[0].work_order_id }, function(err, next_status) {
+															if (err)
+																throw err;
+															else {
+																//Insert update crop calendar seed_planted here
+																console.log('1');
+																if (resource_type == 'Seed') {
+																	var cct_query = { seed_planted: query_arr[0].item_id };
+																	var cct_filter = { calendar_id: query.crop_calendar_id };
+																	cropCalendarModel.updateCropCalendar(cct_query, cct_filter, function(err, cct) {
+																		if (err)
+																			throw err;
+																		else {
+																			res.redirect('/farms/work_order&id='+filter.work_order_id);
+																		}
+																	});
+																}
+																else {
+																	res.redirect('/farms/work_order&id='+filter.work_order_id);
+																}
+															}
+														});
+													}
+												});
+											}
+											else {
+												//Insert update crop calendar seed_planted here
+												console.log('2');
+												if (resource_type == 'Seed') {
+													var cct_query = { seed_planted: query_arr[0].item_id };
+													var cct_filter = { calendar_id: query.crop_calendar_id };
+													cropCalendarModel.updateCropCalendar(cct_query, cct_filter, function(err, cct) {
+														if (err)
+															throw err;
+														else {
+															res.redirect('/farms/work_order&id='+filter.work_order_id);
+														}
+													});
+												}
 												else {
-													//Insert update crop calendar seed_planted here
-													console.log('1');
-													if (resource_type == 'Seed') {
-														var cct_query = { seed_planted: query_arr[0].item_id };
-														var cct_filter = { calendar_id: query.crop_calendar_id };
-														cropCalendarModel.updateCropCalendar(cct_query, cct_filter, function(err, cct) {
+													if (update_forecast) {
+														console.log('update forecast!');
+														// Get required farm details for updating yield forecast
+														cropCalendarModel.getYieldForecastVariables({ calendar_id: query.crop_calendar_id }, function(err, calendar_var) {
+															if (err)
+																throw err;
+															else {
+																var farm_name = calendar_var[0].farm_name
+																var start = dataformatter.formatDate(new Date(calendar_var[0].sowing_date), 'YYYY-MM-DD');
+																var end = dataformatter.formatDate(new Date(calendar_var[0].harvest_date), 'YYYY-MM-DD');
+																var redirect = 'work_order&id='+filter.work_order_id;
+																res.redirect('/create_complete_yield_forecast/'+farm_name+'/'+start+'/'+end+'/'+redirect+'/'+query.crop_calendar_id);
+															}
+														});
+																
+													}
+													else {
+														res.redirect('/farms/work_order&id='+filter.work_order_id);
+													}
+												}
+											}
+										}
+									})
+								}
+								else {
+									if (next_stage == 'Sow Seed') {
+										var wo_list_query = {
+											where: {
+												key: ['crop_calendar_id', 'type'],
+												value: [query.crop_calendar_id, next_stage]
+											},
+											order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
+										};
+										workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
+											if (err)
+												throw err;
+											else {
+												var edit_next_query = {
+													status: 'In-Progress'
+												};
+												console.log('Sow Seed');
+												workOrderModel.updateWorkOrder(edit_next_query, { work_order_id: wo_list[0].work_order_id }, function(err, next_status) {
+													if (err)
+														throw err;
+													else {
+														res.redirect('/farms/work_order&id='+filter.work_order_id);
+													}
+												});
+											}
+										});
+									}
+									else if (next_stage == 'End') {
+										// Insert partial harvests here
+										harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
+											if (err)
+												throw err;
+											else {
+												// Get current stage of crop calendar
+												cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress', 'Completed'],
+												where: { key: 'calendar_id', val: req.body.crop_calendar_id }, date: req.session.cur_date }, function(err, calendar) {
+														if (err)
+															throw err;
+														else {
+
+															// Process query data here
+															var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
+																req.body.harvest_type, calendar[0].stage2, query.crop_calendar_id);
+															harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
+																if (err)
+																	throw err;
+																else {
+																	var total_sacks = 0;
+																	for (var i = 0; i < req.body.sacks_harvested.length; i++)
+																		total_sacks += parseInt(req.body.sacks_harvested[i]);
+																	var calendar_query = {
+																		harvest_yield: total_sacks,
+																		status: 'Completed'
+																	};
+																	var calendar_filter = {
+																		calendar_id: query.crop_calendar_id
+																	}
+																	cropCalendarModel.updateCropCalendar(calendar_query, calendar_filter, function(err, editCalendar) {
+																		if (err)
+																			throw err;
+																		else {
+																			// Update actual harvest in forecast record
+																			var forecast_update = {
+																				harvested: total_sacks
+																			};
+																			var forecast_filter = {
+																				calendar_id: query.crop_calendar_id
+																			}
+
+																			farmModel.updateForecastYieldRecord(forecast_update, forecast_filter, function(err, update_status) {
+																				if (err)
+																					throw err;
+																				else {
+																					// Redirect
+																					res.redirect('/farms/work_order&id='+filter.work_order_id);
+																				}
+																			})
+																		}
+																	});
+																}
+															});
+														}
+													});
+												}
+											});
+									}
+									else if (query.type == 'Harvest') {
+										// Insert partial harvests here
+										harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
+											if (err)
+												throw err;
+											else {
+												// Get current stage of crop calendar
+												cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
+												where: { key: 'calendar_id', val: req.body.crop_calendar_id }, date: req.session.cur_date }, function(err, calendar) {
+													if (err)
+														throw err;
+													else {
+
+														// Process query data here
+														var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
+															req.body.harvest_type, calendar[0].stage, query.crop_calendar_id);
+														harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
 															if (err)
 																throw err;
 															else {
@@ -1049,173 +1250,25 @@ exports.editWorkOrder = function(req, res) {
 															}
 														});
 													}
-													else {
-														res.redirect('/farms/work_order&id='+filter.work_order_id);
-													}
-												}
-											});
-										}
-									});
-								}
-								else {
-									//Insert update crop calendar seed_planted here
-									console.log('2');
-									if (resource_type == 'Seed') {
-										var cct_query = { seed_planted: query_arr[0].item_id };
-										var cct_filter = { calendar_id: query.crop_calendar_id };
-										cropCalendarModel.updateCropCalendar(cct_query, cct_filter, function(err, cct) {
-											if (err)
-												throw err;
-											else {
-												res.redirect('/farms/work_order&id='+filter.work_order_id);
-											}
-										});
-									}
-									else {
-										if (update_forecast) {
-											console.log('update forecast!');
-											// Get required farm details for updating yield forecast
-											cropCalendarModel.getYieldForecastVariables({ calendar_id: query.crop_calendar_id }, function(err, calendar_var) {
-												if (err)
-													throw err;
-												else {
-													var farm_name = calendar_var[0].farm_name
-													var start = dataformatter.formatDate(new Date(calendar_var[0].sowing_date), 'YYYY-MM-DD');
-													var end = dataformatter.formatDate(new Date(calendar_var[0].harvest_date), 'YYYY-MM-DD');
-													var redirect = 'work_order&id='+filter.work_order_id;
-													res.redirect('/create_complete_yield_forecast/'+farm_name+'/'+start+'/'+end+'/'+redirect+'/'+query.crop_calendar_id);
-												}
-											});
-													
-										}
-										else {
-											res.redirect('/farms/work_order&id='+filter.work_order_id);
-										}
-									}
-								}
-							}
-						})
-					}
-					else {
-						if (next_stage == 'Sow Seed') {
-							var wo_list_query = {
-								where: {
-									key: ['crop_calendar_id', 'type'],
-									value: [query.crop_calendar_id, next_stage]
-								},
-								order: ['work_order_table.status ASC', 'work_order_table.date_due DESC']
-							};
-							workOrderModel.getWorkOrders(wo_list_query, function(err, wo_list) {
-								if (err)
-									throw err;
-								else {
-									var edit_next_query = {
-										status: 'In-Progress'
-									};
-									console.log('Sow Seed');
-									workOrderModel.updateWorkOrder(edit_next_query, { work_order_id: wo_list[0].work_order_id }, function(err, next_status) {
-										if (err)
-											throw err;
-										else {
-											res.redirect('/farms/work_order&id='+filter.work_order_id);
-										}
-									});
-								}
-							});
-						}
-						else if (next_stage == 'End') {
-							// Insert partial harvests here
-							harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
-								if (err)
-									throw err;
-								else {
-									// Get current stage of crop calendar
-									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress', 'Completed'],
-									where: { key: 'calendar_id', val: req.body.crop_calendar_id }, date: req.session.cur_date }, function(err, calendar) {
-											if (err)
-												throw err;
-											else {
-
-												// Process query data here
-												var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
-													req.body.harvest_type, calendar[0].stage2, query.crop_calendar_id);
-												harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
-													if (err)
-														throw err;
-													else {
-														var total_sacks = 0;
-														for (var i = 0; i < req.body.sacks_harvested.length; i++)
-															total_sacks += parseInt(req.body.sacks_harvested[i]);
-														var calendar_query = {
-															harvest_yield: total_sacks,
-															status: 'Completed'
-														};
-														var calendar_filter = {
-															calendar_id: query.crop_calendar_id
-														}
-														cropCalendarModel.updateCropCalendar(calendar_query, calendar_filter, function(err, editCalendar) {
-															if (err)
-																throw err;
-															else {
-																// Update actual harvest in forecast record
-																var forecast_update = {
-																	harvested: total_sacks
-																};
-																var forecast_filter = {
-																	calendar_id: query.crop_calendar_id
-																}
-
-																farmModel.updateForecastYieldRecord(forecast_update, forecast_filter, function(err, update_status) {
-																	if (err)
-																		throw err;
-																	else {
-																		// Redirect
-																		res.redirect('/farms/work_order&id='+filter.work_order_id);
-																	}
-																})
-															}
-														});
-													}
 												});
 											}
 										});
 									}
-								});
-						}
-						else if (query.type == 'Harvest') {
-							// Insert partial harvests here
-							harvestModel.deleteHarvestDetail({ cct_id: req.body.crop_calendar_id }, function(err, harvest_details) {
-								if (err)
-									throw err;
-								else {
-									// Get current stage of crop calendar
-									cropCalendarModel.getCropCalendars({ status: ['Active','In-Progress'],
-									where: { key: 'calendar_id', val: req.body.crop_calendar_id }, date: req.session.cur_date }, function(err, calendar) {
-										if (err)
-											throw err;
-										else {
-
-											// Process query data here
-											var harvest_query = processHarvestDetails(req.body.sacks_harvested, 
-												req.body.harvest_type, calendar[0].stage, query.crop_calendar_id);
-											harvestModel.createHarvestDetail(harvest_query, function(err, new_detail) {
-												if (err)
-													throw err;
-												else {
-													res.redirect('/farms/work_order&id='+filter.work_order_id);
-												}
-											});
-										}
-									});
+									else {
+										res.redirect('/farms/work_order&id='+filter.work_order_id);
+									}
 								}
-							});
-						}
-						else {
-							res.redirect('/farms/work_order&id='+filter.work_order_id);
-						}
+							}
+						});
 					}
-				}
-			});
+				});
+			}
+			// Send error message and redirect
+			else {
+				req.flash('error_msg', 'Update work order failed! Current inventory must be greater than desired value to be used!');
+				res.redirect('/farms/work_order&id='+filter.work_order_id);
+			}
+
 		}
 	});
 }

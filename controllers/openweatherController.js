@@ -127,7 +127,7 @@ exports.get14DWeatherForecast = function(req, res) {
 						color: '"danger"',
 						status: 0,
 						type: "'DISASTER_WARNING'",
-						time: time
+						time: `"time"`
 					});
 					disaster_log.push({
 						max_temp: Math.round((body.list[i].temp.max - 273.15) * 100) / 100,
