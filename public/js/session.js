@@ -20,7 +20,7 @@ exports.init_session = function(obj, role, name, username, tab, session) {
 
 	if (tab === 'dashboard') {
 		obj['home_tab'] = true;
-		obj['title'] = `Dashboard LA Rice Mill`;
+		obj['title'] = `Dashboard | LA Rice Mill`;
 	}
 	else if (tab === 'farms') {
 		obj['farm_tab'] = true;
@@ -192,6 +192,11 @@ exports.init_session = function(obj, role, name, username, tab, session) {
 	else if (tab === 'reports') {
 		obj['reports_tab'] = true;
 		obj['title'] = `Farm Productivity Reports | LA Rice Mill`;
+	}
+
+	// Reports
+	else if (tab === 'notification_tab') {
+		obj['title'] = `Notifications | LA Rice Mill`;
 	}
 	
 	return obj;

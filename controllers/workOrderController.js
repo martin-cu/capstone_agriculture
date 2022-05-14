@@ -767,6 +767,7 @@ exports.getWorkOrdersDashboard = function(req, res) {
 					var precip_details = processPrecipChartData(precip_data)
 					html_data['precip_data'] = JSON.stringify(precip_details.chart);
 					html_data['outlook'] = (precip_details.outlook);
+					console.log(precip_details.outlook);
 
 					farmModel.getAllFarms(function(err, farm_list) {
 						if (err)

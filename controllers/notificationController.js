@@ -156,7 +156,7 @@ exports.ajaxNotifList = function(req, res) {
 
 exports.getNotificationTab = function(req,res){
     var html_data = {};
-    html_data = js.init_session(html_data, 'role', 'name', 'username', 'user_management', req.session);
+    html_data = js.init_session(html_data, 'role', 'name', 'username', 'notification_tab', req.session);
     notifModel.getAllNotifs(function(err, notifs){
         if(err)
             throw err;

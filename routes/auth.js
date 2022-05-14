@@ -90,7 +90,7 @@ router.get("/ajaxGetWorkOrders", workOrderController.ajaxGetWorkOrders);
 //Account Management
 router.get('/login', (req, res) => {
 	var date = req.query.cur_date != undefined ? req.query.cur_date : dataformatter.formatDate(new Date(), 'YYYY-MM-DD');
-  res.render('login', { cur_date: date } );
+  res.render('login', { cur_date: date, title: 'Login | LA Rice Mill' } );
 });
 router.get('/initialize_account', userController.getInitializePassword);
 router.post('/initialize_password', userController.initializePassword);
