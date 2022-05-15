@@ -40,7 +40,7 @@ exports.getUserNotifs = function(data, next) {
 
 // Create notifs according to user role and notif type notif types = WO_REMINDER, MATERIAL_REQUEST, NEW_WO, SMS_QUERY, DISASTER_WARNING, RECOMMENDATION, LOW_STOCK, PD_DIAGNOSED
 exports.createUserNotif = function(next) {
-    var sql = `insert into user_notification_table (notif_id, user_id) ( ( select nt.notification_id, ut.user_id from notification_table nt join user_table ut where notification_id not in (select notif_id from user_notification_table) and ( type = 'WO_REMINDER' and access_level in (0,1) ) or ( type = 'MATERIAL_REQUEST' and access_level in (2) ) or ( type = 'NEW_WO' and access_level in (1) ) or ( type = 'SMS_QUERY' and access_level in (0,1) ) or ( type = 'LOW_STOCK' and access_level in (0,1,2) ) or ( type = 'PD_DIAGNOSED' and access_level in (0,1,2) ) or ( type = 'DISASTER_WARNING' and access_level in (0,1,2) ) or ( type = 'RECOMMENDATION' and access_level in (0,1) ) ) )`;
+    var sql = `insert into user_notification_table (notif_id, user_id) ( (SELECT nt.notification_id, ut.user_id FROM notification_table nt JOIN user_table ut WHERE notification_id NOT IN (SELECT notif_id FROM user_notification_table) AND (type = 'WO_REMINDER' AND access_level IN (0 , 1) OR type = 'MATERIAL_REQUEST' AND access_level IN (2) OR type = 'NEW_WO' AND access_level IN (1) OR type = 'SMS_QUERY' AND access_level IN (0 , 1) OR type = 'LOW_STOCK' AND access_level IN (0 , 1, 2) OR type = 'PD_DIAGNOSED' AND access_level IN (0 , 1, 2) OR type = 'DISASTER_WARNING' AND access_level IN (0 , 1, 2) OR type = 'RECOMMENDATION' AND access_level IN (0 , 1)) ) )`;
     mysql.query(sql, next);
 }
 
@@ -54,9 +54,9 @@ exports.createNotif = function(notif, next){
             }
             sql += ' ('+(Object.values(notif[i])).join(',')+')';
         }
-        // while (sql.includes('null')) {
-        //     sql = sql.replace('null', null);
-        // }
+        while (sql.includes('"null"')) {
+            sql = sql.replace('"null"', null);
+        }
     }
     else {
         var sql = "INSERT INTO notification_table SET ?";

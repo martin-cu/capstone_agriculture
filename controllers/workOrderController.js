@@ -777,91 +777,80 @@ exports.getWorkOrdersDashboard = function(req, res) {
 			// 	});
 			// });
 			
-			var start_date = new Date(req.session.cur_date);
-			start_date.setMonth(start_date.getMonth() - 12);
-			weatherForecastModel.getPrecipHistory({ date: dataformatter.formatDate(start_date, 'YYYY-MM-DD'), end_date: dataformatter.formatDate(new Date(req.session.cur_date), 'YYYY-MM-DD') }, function(err, precip_data) {
-				if (err) {
+			
+			html_data['precip_data'] = req.precip_data;
+			html_data['outlook'] = req.outlook;
+			farmModel.getAllFarms(function(err, farm_list) {
+				if (err)
 					throw err;
-				}
 				else {
-					var precip_details = processPrecipChartData(precip_data)
-					html_data['precip_data'] = JSON.stringify(precip_details.chart);
-					html_data['outlook'] = (precip_details.outlook);
-					console.log(precip_details.outlook);
+					// Change active filters as needed
+					farm_list.forEach(function(item, index) {
+							farm_list[index]['checked'] = true;
+					});
+					html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
 
-					farmModel.getAllFarms(function(err, farm_list) {
+					cropCalendarModel.getCropPlans(function(err, crop_plans) {
 						if (err)
 							throw err;
 						else {
-							// Change active filters as needed
-							farm_list.forEach(function(item, index) {
-									farm_list[index]['checked'] = true;
+							const unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
+							const unique_farms = [...new Set(farm_list.map(e => e.farm_id).map(item => item))];
+
+							var cycle_cont = [], checked;
+							unique_cycles.forEach(function(item, index) {
+								if (index <= 6)
+									checked = true;
+								else
+									checked = false;
+
+								cycle_cont.push({ cycle_name: unique_cycles[index], checked: checked });
 							});
-							html_data['farm_list'] = { lowland: farm_list.filter(e=>e.land_type=='Lowland'), upland: farm_list.filter(e=>e.land_type=='Upland') };
+							html_data['crop_plans'] = cycle_cont;
 
-							cropCalendarModel.getCropPlans(function(err, crop_plans) {
-								if (err)
-									throw err;
-								else {
-									const unique_cycles = [...new Set(crop_plans.map(e => e.crop_plan).map(item => item))];
-									const unique_farms = [...new Set(farm_list.map(e => e.farm_id).map(item => item))];
+							if (unique_cycles.length != 0) {
+								reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
+									if (err)
+										throw err;
+									else {
+										var production_chart = chart_formatter.formatProductionChart(production_chart_data);
+										html_data['production_chart'] = JSON.stringify(production_chart);
 
-									var cycle_cont = [], checked;
-									unique_cycles.forEach(function(item, index) {
-										if (index <= 6)
-											checked = true;
-										else
-											checked = false;
-
-										cycle_cont.push({ cycle_name: unique_cycles[index], checked: checked });
-									});
-									html_data['crop_plans'] = cycle_cont;
-
-									if (unique_cycles.length != 0) {
-										reportModel.getProductionOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, production_chart_data) {
+										reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
 											if (err)
 												throw err;
 											else {
-												var production_chart = chart_formatter.formatProductionChart(production_chart_data);
-												html_data['production_chart'] = JSON.stringify(production_chart);
+												var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
+												html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
 
-												reportModel.getFertilizerConsumption({ farm_id: unique_farms, cycles: unique_cycles }, function(err, nutrient_consumption_data) {
+												reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
 													if (err)
 														throw err;
 													else {
-														var nutrient_consumption_chart = chart_formatter.formatConsumptionChart(nutrient_consumption_data);
-														html_data['consumption_chart'] = JSON.stringify(nutrient_consumption_chart);
+														var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
+														html_data['pd_overview_chart'] = { stage: JSON.stringify(pd_overview.stage), trend: JSON.stringify(pd_overview.trend) };
+													
+														html_data["notifs"] = req.notifs;
 
-														reportModel.getPDOverview({ farm_id: unique_farms, cycles: unique_cycles }, function(err, pd_overview_data) {
-															if (err)
-																throw err;
-															else {
-																var pd_overview = chart_formatter.formatPDOverview(pd_overview_data);
-																html_data['pd_overview_chart'] = { stage: JSON.stringify(pd_overview.stage), trend: JSON.stringify(pd_overview.trend) };
-															
-																html_data["notifs"] = req.notifs;
-
-																res.render('home', html_data);
-															}
-														});
+														res.render('home', html_data);
 													}
 												});
-
 											}
 										});
-									}
-									else {
-										html_data["notifs"] = req.notifs;
 
-										res.render('home', html_data);
-									}	
-								}
-										
-							});
+									}
+								});
+							}
+							else {
+								html_data["notifs"] = req.notifs;
+
+								res.render('home', html_data);
+							}	
 						}
-					});									
+								
+					});
 				}
-			});
+			});		
 		}
 	});
 }
