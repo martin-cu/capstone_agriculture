@@ -91,9 +91,19 @@
 										<td colspan="3" class="bg-dark text-white">Drought</td>
 									</tr>
 									{{#if active_drought}}
+										{{#each active_drought}}
 										<tr>
-											<td colspan="3" class="text-center">N/A</td>
+											<td colspan="3">
+												<div class="d-flex flex-column">
+													<div>Classification: {{this.type}}</div>
+													<div>Summary:</div>
+
+													<div>{{this.description}}</div>
+													<div>Date Recorded: {{this.date_recorded}}</div>
+												</div>
+											</td>
 										</tr>
+										{{/each}}
 									{{else}}
 										<tr>
 											<td colspan="3" class="text-center">N/A</td>
@@ -199,9 +209,19 @@
 										<td colspan="3" class="bg-dark text-white">Drought</td>
 									</tr>
 									{{#if inactive_drought}}
+										{{#each inactive_drought}}
 										<tr>
-											<td colspan="3" class="text-center">N/A</td>
+											<td colspan="3">
+												<div class="d-flex flex-column">
+													<div>Classification: {{this.type}}</div>
+													<div>Summary:</div>
+
+													<div>{{this.description}}</div>
+													<div>Date Recorded: {{this.date_recorded}}</div>
+												</div>
+											</td>
 										</tr>
+										{{/each}}
 									{{else}}
 										<tr>
 											<td colspan="3" class="text-center">N/A</td>
