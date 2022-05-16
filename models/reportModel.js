@@ -33,6 +33,13 @@ function processOverviewFilter(data) {
 	return str;
 }
 
+exports.getUpcomingWOByStatus = function(data, next) {
+	var sql = `select count(*) as count, wot.status, wot.crop_calendar_id  from work_order_table wot join crop_calendar_table cct on wot.crop_calendar_id = cct.calendar_id where cct.status != 'Completed' and (yearweek(date('${data.date}'), 0) >= yearweek(wot.date_start, 0)) and (yearweek(date('${data.date}'), 0)-yearweek(wot.date_start, 0) <= 1 and yearweek(date('${data.date}'), 0)-yearweek(wot.date_start, 0)  >= -1) group by wot.crop_calendar_id, wot.status`;
+	mysql.query(sql, next);
+}
+
+
+
 exports.getCropCalendarNutrientRecommendations = function(data, next) {
 	var sql = `select count(*) as count, 'Nutrient Generated Recommendation' as record_type, calendar_id from fertilizer_recommendation_plan frp join fertilizer_recommendation_items fri using (fr_plan_id) where ?`;
 	for (var i = 0; i < data.calendar_ids.length; i++) {

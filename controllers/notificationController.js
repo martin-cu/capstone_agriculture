@@ -140,18 +140,28 @@ exports.updateSeenStatus = function(req, res) {
 }
 
 exports.ajaxNotifList = function(req, res) {
-    notifModel.getUserNotifs({ employee_id: req.session.employee_id }, function(err, user_notif_list) {
-        if (err)
-            throw err;
-        else {
-            user_notif_list = user_notif_list.filter(e => e.isSeen == 0);
-            user_notif_list.forEach(function(item, index) {
-                user_notif_list[index].date = dataformatter.formatDate(new Date(item.date), 'mm DD, YYYY');
-            });
+    if (req.session) {
+        notifModel.getUserNotifs({ employee_id: req.session.employee_id }, function(err, user_notif_list) {
+            if (err)
+                throw err;
+            else {
+                user_notif_list = user_notif_list.filter(e => e.isSeen == 0);
+                user_notif_list.forEach(function(item, index) {
+                    user_notif_list[index].date = dataformatter.formatDate(new Date(item.date), 'mm DD, YYYY');
+                });
 
-            res.send(user_notif_list);
-        }
-    });
+                res.send(user_notif_list);
+            }
+        });
+    }
+    else {
+        var date = req.session.cur_date;
+
+        req.session.destroy();
+
+        res.redirect(`/login?cur_date=${date}`);
+    }
+        
 }
 
 exports.getNotificationTab = function(req,res){
